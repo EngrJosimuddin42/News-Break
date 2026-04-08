@@ -1,11 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/home_controller.dart';
-import '../for_you_reaction_card.dart';
+import '../clip_card.dart';
+import '../people_card.dart';
+import 'category_news_card.dart';
 
 class ForYouTab extends GetView<HomeController> {
   const ForYouTab({super.key});
+
+  static const List<CategoryNewsItem> _items = [
+    CategoryNewsItem(
+      publisherName: 'shefinds',
+      publisherType: 'Partner publisher.',
+      followerCount: '833.3K',
+      imageUrl: 'https://images.unsplash.com/photo-1495020689067-958852a7765e?w=800',
+      label: 'OPINION',
+      timeAgo: '19h',
+      title: "'The View' Fans Think Whoopi Goldberg Has 'Lost Her Mind' After She Suggests Donald Trump's Iran War Is A Distraction From Nancy Guthrie...",
+      reactions: '1.4K',
+      likes: '1.4K',
+      comments: '4K',
+    ),
+    CategoryNewsItem(
+      publisherName: 'Variety',
+      publisherType: 'Partner publisher.',
+      followerCount: '1.2M',
+      imageUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800',
+      label: 'ENTERTAINMENT',
+      timeAgo: '3h',
+      title: 'Grammy-Winning Artist Announces Surprise Album Drop and World Tour Starting Next Month',
+      reactions: '3.4K',
+      likes: '5.6K',
+      comments: '2.2K',
+    ),
+    CategoryNewsItem(
+      publisherName: 'ESPN',
+      publisherType: 'Partner publisher.',
+      followerCount: '5.1M',
+      imageUrl: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800',
+      label: 'SPORTS',
+      timeAgo: '6h',
+      title: 'NBA Playoffs: Underdog Team Clinches Surprising Victory in Game 7 Overtime Thriller',
+      reactions: '8.9K',
+      likes: '12.4K',
+      comments: '7.8K',
+    ),
+    CategoryNewsItem(
+      publisherName: 'Healthline',
+      publisherType: 'Partner publisher.',
+      followerCount: '2.7M',
+      imageUrl: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=800',
+      label: 'HEALTH',
+      timeAgo: '9h',
+      title: 'New Study Reveals the Surprising Link Between Sleep Quality and Long-Term Cardiovascular Health',
+      reactions: '4.3K',
+      likes: '7.2K',
+      comments: '3.1K',
+    ),
+  ];
+
+  static const List<Map<String, String>> _clips = [
+    {
+      'title': 'Play Time',
+      'subtitle': 'Love for animals',
+      'imageUrl': 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400',
+    },
+    {
+      'title': 'City Life',
+      'subtitle': 'Urban stories',
+      'imageUrl': 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400',
+    },
+    {
+      'title': 'Nature Walk',
+      'subtitle': 'Explore outdoors',
+      'imageUrl': 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=400',
+    },
+  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +89,7 @@ class ForYouTab extends GetView<HomeController> {
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
-            itemCount: 10,
+            itemCount: 3,
             separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (_, i) => PeopleCard(
               name: 'Catherine',
@@ -38,29 +109,25 @@ class ForYouTab extends GetView<HomeController> {
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
-            itemCount: 3,
+            itemCount: _clips.length,
             separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (_, i) => ClipCard(
-              title: 'Play Time',
-              subtitle: 'Love for animals',
-              imageAsset: 'assets/images/clip_$i.png',
+              title: _clips[i]['title']!,
+              subtitle: _clips[i]['subtitle']!,
+              imageUrl: _clips[i]['imageUrl']!,
             ),
           ),
         ),
 
         const SizedBox(height: 16),
-        Column(
-          children: [
-            ForYouReactionCard(
-              publisherName: 'shefinds',
-              timeAgo: '19h',
-              title: "'The View' Fans Think Whoopi Goldberg Has 'Lost Her Mind'...",
-              imageAsset: 'assets/images/news_image.png',
-              onFollow: () => controller.onFollow('shefinds'),
-              onDismiss: () => controller.onDismiss('shefinds'),
-            ),
-          ],
-        )
+
+        // News Section
+        ...List.generate(
+          _items.length,
+              (index) => CategoryNewsCard(item: _items[index]),
+        ),
+
+        const SizedBox(height: 16),
       ],
     );
   }
@@ -68,112 +135,13 @@ class ForYouTab extends GetView<HomeController> {
   Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-      child: Text(title,
-          style: const TextStyle(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
-    );
-  }
-}
-
-class PeopleCard extends StatelessWidget {
-  final String name;
-  final String subtitle;
-  final VoidCallback onDismiss;
-  final VoidCallback onFollow;
-
-  const PeopleCard({
-    super.key,
-    required this.name,
-    required this.subtitle,
-    required this.onDismiss,
-    required this.onFollow,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      height: 160,
-      padding: EdgeInsets.all(6),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Color(0xFF434447)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              GestureDetector(
-                  onTap: onDismiss,
-                  child: const Icon(Icons.close, color: Colors.white54, size: 20)),
-            ],
-          ),
-          CircleAvatar(
-            radius: 22,
-            backgroundColor: Color(0xFF7A1CA4),
-            child: Text(name[0],
-                style: const TextStyle(color: Colors.white, fontSize: 20)),
-          ),
-          const SizedBox(height: 8),
-          Text(name, style: const TextStyle(color: Colors.white, fontSize: 16)),
-          Text(subtitle, style: const TextStyle(color: Colors.white54, fontSize: 11)),
-       SizedBox(height: 12),
-          SizedBox(
-            width: 125,
-            height: 36,
-            child: OutlinedButton(
-              onPressed: onFollow,
-              style: OutlinedButton.styleFrom(
-                backgroundColor: Color(0xFF3498FA),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              child: Text('+ Follow', style: AppTextStyles.buttonOutline),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ClipCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final String imageAsset;
-
-  const ClipCard({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.imageAsset,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Stack(
-        children: [
-          Image.asset(imageAsset, width: 120, height: 160, fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(width: 120, height: 160, color: Colors.grey[900])),
-          Positioned(
-            bottom: 0, left: 0, right: 0,
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              color: Colors.black54,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(subtitle, style: const TextStyle(color: Colors.white70, fontSize: 10)),
-                  Text(title, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
-                ],
-              ),
-            ),
-          ),
-        ],
+      child: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

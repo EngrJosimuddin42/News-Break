@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:news_break/app/modules/home/views/widgets/tabs/empty_tab_state.dart';
+import 'package:news_break/app/modules/home/views/widgets/tabs/beauty_tab.dart';
+import 'package:news_break/app/modules/home/views/widgets/tabs/empty_tab.dart';
+import 'package:news_break/app/modules/home/views/widgets/tabs/entertainment_tab.dart';
+import 'package:news_break/app/modules/home/views/widgets/tabs/food_tab.dart';
 import 'package:news_break/app/modules/home/views/widgets/tabs/for_you_tab.dart';
+import 'package:news_break/app/modules/home/views/widgets/tabs/health_tab.dart';
 import 'package:news_break/app/modules/home/views/widgets/tabs/reactions_tab.dart';
+import 'package:news_break/app/modules/home/views/widgets/tabs/sports_tab.dart';
+import 'package:news_break/app/modules/home/views/widgets/tabs/weather_tab.dart';
 import '../../../theme/app_colors.dart';
 import '../controllers/home_controller.dart';
 import 'widgets/bottom_nav_bar.dart';
@@ -56,21 +62,21 @@ class HomeView extends GetView<HomeController> {
       case 1: // For you
         return const ForYouTab();
       case 2: // Local
-        return const EmptyStateTab();
+        return const EmptyTab();
       case 3: // Local Tv
-        return const EmptyStateTab();
+        return const EmptyTab();
       case 4: // Entertainment
-        return const EmptyStateTab();;
+        return const EntertainmentTab();
       case 5: // Sports
-        return const EmptyStateTab();
+        return const SportsTab();
       case 6: // Food
-        return const EmptyStateTab();
+        return const FoodTab();
       case 7: // Health
-        return const EmptyStateTab();
+        return const HealthTab();
       case 8: // Beauty
-        return const EmptyStateTab();
+        return const BeautyTab();
       case 9: // Weather
-        return const EmptyStateTab();
+        return const WeatherTab();
       default:
         return const ReactionsTab();
     }

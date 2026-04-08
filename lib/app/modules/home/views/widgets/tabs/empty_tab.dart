@@ -4,10 +4,10 @@ import '../../../../../theme/app_colors.dart';
 import '../../../controllers/home_controller.dart';
 
 
-class EmptyStateTab extends GetView<HomeController> {
+class EmptyTab extends GetView<HomeController> {
   final String message;
 
-  const EmptyStateTab({
+  const EmptyTab({
     super.key,
     this.message = 'No relevant articles',
   });

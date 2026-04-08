@@ -7,7 +7,7 @@ class NewsCard extends StatefulWidget {
   final String publisherMeta;
   final String timeAgo;
   final String title;
-  final String imageAsset;
+  final String imageUrl;
   final String likeCount;
   final String commentCount;
   final VoidCallback? onFollow;
@@ -19,7 +19,7 @@ class NewsCard extends StatefulWidget {
     required this.publisherMeta,
     required this.timeAgo,
     required this.title,
-    required this.imageAsset,
+    required this.imageUrl,
     this.likeCount = '1.4K',
     this.commentCount = '4K',
     this.onFollow,
@@ -176,8 +176,8 @@ class _NewsCardState extends State<NewsCard> {
             padding: const EdgeInsets.symmetric(horizontal: 68),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                widget.imageAsset,
+              child: Image.network(
+                widget.imageUrl, // ← change
                 width: double.infinity,
                 height: 220,
                 fit: BoxFit.cover,

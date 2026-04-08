@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../controllers/notification_controller.dart';
 import 'notification_news_item.dart';
 import 'notification_settings_view.dart';
 
 class NotificationView extends GetView<NotificationController> {
   const NotificationView({super.key});
-
-  static const List<String> _tabs = [
-    'News',
-    'Likes',
-    'Replies',
-    'Follows',
-    'Others',
-  ];
 
   static const List<Map<String, String>> _newsItems = [
     {
@@ -47,55 +41,41 @@ class NotificationView extends GetView<NotificationController> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: _tabs.length, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text('Notifications',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w700)),
+        title: const Text(
+          'Notifications',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
         centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined, color: Colors.white),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => const NotificationSettingsView()),
-            ),
+            onPressed: () => Get.to(() => const NotificationSettingsView()),
           ),
         ],
         bottom: TabBar(
-          controller: _tabController,
+          controller: controller.tabController,
           isScrollable: true,
           tabAlignment: TabAlignment.start,
           indicatorColor: Colors.white,
           indicatorWeight: 2,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.grey,
-          labelStyle: const TextStyle(
-              fontSize: 14, fontWeight: FontWeight.w600),
+          labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           unselectedLabelStyle: const TextStyle(fontSize: 14),
-          tabs: _tabs.map((t) => Tab(text: t)).toList(),
+          tabs: NotificationController.tabs.map((t) => Tab(text: t)).toList(),
         ),
       ),
       body: TabBarView(
-        controller: _tabController,
+        controller: controller.tabController,
         children: [
           _buildNewsTab(),
           _buildEmptyTab(),
@@ -110,7 +90,6 @@ class NotificationView extends GetView<NotificationController> {
   Widget _buildNewsTab() {
     return ListView(
       children: [
-        // Premium banner
         Container(
           margin: const EdgeInsets.all(12),
           padding: const EdgeInsets.all(16),
@@ -130,15 +109,10 @@ class NotificationView extends GetView<NotificationController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Try Premium for FREE',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700)),
+                        style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700)),
                     SizedBox(height: 4),
-                    Text(
-                      'Ad-free reading, boosted comments,\nsmarter recommendations and more.',
-                      style: TextStyle(color: Colors.white70, fontSize: 12),
-                    ),
+                    Text('Ad-free reading, boosted comments,\nsmarter recommendations and more.',
+                        style: TextStyle(color: Colors.white70, fontSize: 12)),
                   ],
                 ),
               ),
@@ -146,56 +120,43 @@ class NotificationView extends GetView<NotificationController> {
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.deepOrange,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 10),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
                 child: const Text('Upgrade',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13)),
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13)),
               ),
             ],
           ),
         ),
-
-        // Today section
         _sectionLabel('Today'),
-        ..._newsItems.take(2).map((item) => Column(
-          children: [
-            NotificationNewsItem(
-              category: item['category']!,
-              title: item['title']!,
-              source: item['source']!,
-              timeAgo: item['timeAgo']!,
-              imageUrl: item['imageUrl']!,
-              reactions: item['reactions']!,
-              comments: item['comments']!,
-              shares: item['shares']!,
-            ),
-            const Divider(color: Colors.white12, height: 1),
-          ],
-        )),
-
-        // Earlier section
+        ..._newsItems.take(2).map((item) => Column(children: [
+          NotificationNewsItem(
+            category: item['category']!,
+            title: item['title']!,
+            source: item['source']!,
+            timeAgo: item['timeAgo']!,
+            imageUrl: item['imageUrl']!,
+            reactions: item['reactions']!,
+            comments: item['comments']!,
+            shares: item['shares']!,
+          ),
+          const Divider(color: Colors.white12, height: 1),
+        ])),
         _sectionLabel('Earlier'),
-        ..._newsItems.skip(2).map((item) => Column(
-          children: [
-            NotificationNewsItem(
-              category: item['category']!,
-              title: item['title']!,
-              source: item['source']!,
-              timeAgo: item['timeAgo']!,
-              imageUrl: item['imageUrl']!,
-              reactions: item['reactions']!,
-              comments: item['comments']!,
-              shares: item['shares']!,
-            ),
-            const Divider(color: Colors.white12, height: 1),
-          ],
-        )),
+        ..._newsItems.skip(2).map((item) => Column(children: [
+          NotificationNewsItem(
+            category: item['category']!,
+            title: item['title']!,
+            source: item['source']!,
+            timeAgo: item['timeAgo']!,
+            imageUrl: item['imageUrl']!,
+            reactions: item['reactions']!,
+            comments: item['comments']!,
+            shares: item['shares']!,
+          ),
+          const Divider(color: Colors.white12, height: 1),
+        ])),
       ],
     );
   }
@@ -207,8 +168,7 @@ class NotificationView extends GetView<NotificationController> {
         children: [
           Icon(Icons.mail_outline, color: Colors.grey, size: 64),
           SizedBox(height: 16),
-          Text('No messages yet',
-              style: TextStyle(color: Colors.grey, fontSize: 14)),
+          Text('No messages yet', style: TextStyle(color: Colors.grey, fontSize: 14)),
         ],
       ),
     );
@@ -217,8 +177,7 @@ class NotificationView extends GetView<NotificationController> {
   Widget _sectionLabel(String label) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-      child: Text(label,
-          style: const TextStyle(color: Colors.grey, fontSize: 12)),
+      child: Text(label, style: const TextStyle(color: Colors.grey, fontSize: 12)),
     );
   }
 }

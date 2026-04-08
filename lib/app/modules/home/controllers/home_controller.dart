@@ -12,7 +12,9 @@ class HomeController extends GetxController {
   final RxInt selectedNavIndex = 0.obs;
 
   // Bottom nav
-  void onNavTap(int index) => selectedNavIndex.value = index;
+  void onNavTap(int index) {
+    selectedNavIndex.value = index;
+  }
 
   // Tab tap
   void onTabTap(int index) {

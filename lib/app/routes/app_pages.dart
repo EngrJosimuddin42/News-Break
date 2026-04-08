@@ -1,5 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import '../modules/community/bindings/community_binding.dart';
+import '../modules/community/views/community_view.dart';
 import '../modules/create_post/bindings/create_post_binding.dart';
 import '../modules/create_post/views/create_post_view.dart';
 import '../modules/edit_tabs/bindings/edit_tabs_binding.dart';
@@ -57,6 +58,11 @@ class AppPages {
       name: _Paths.NOTIFICATION,
       page: () => const NotificationView(),
       binding: NotificationBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMMUNITY,
+      page: () => const CommunityView(),
+      binding: CommunityBinding(),
     ),
   ];
 }

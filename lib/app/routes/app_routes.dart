@@ -9,6 +9,7 @@ abstract class Routes {
   static const EDIT_TABS = _Paths.EDIT_TABS;
   static const CREATE_POST = _Paths.CREATE_POST;
   static const NOTIFICATION = _Paths.NOTIFICATION;
+  static const COMMUNITY= _Paths.COMMUNITY;
 }
 
 abstract class _Paths {
@@ -20,4 +21,5 @@ abstract class _Paths {
   static const EDIT_TABS = '/edit-tabs';
   static const CREATE_POST = '/create-post';
   static const NOTIFICATION = '/notification';
+  static const COMMUNITY = '/community';
 }

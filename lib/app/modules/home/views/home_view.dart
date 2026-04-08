@@ -10,6 +10,8 @@ import 'package:news_break/app/modules/home/views/widgets/tabs/reactions_tab.dar
 import 'package:news_break/app/modules/home/views/widgets/tabs/sports_tab.dart';
 import 'package:news_break/app/modules/home/views/widgets/tabs/weather_tab.dart';
 import '../../../theme/app_colors.dart';
+import '../../community/views/community_view.dart';
+import '../../notification/views/notification_view.dart';
 import '../controllers/home_controller.dart';
 import 'widgets/bottom_nav_bar.dart';
 import 'widgets/home_app_bar.dart';
@@ -23,17 +25,30 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: const HomeAppBar(),
-      body: Column(
-        children: [
-          const HomeTabBar(),
-          const SizedBox(height: 8),
-          Expanded(
-            child: Obx(() => _buildTabContent(controller.selectedTabIndex.value)),
-          ),
-        ],
-      ),
+      body: Obx(() {
+        switch (controller.selectedNavIndex.value) {
+          case 0: // Home
+            return Column(
+              children: [
+                const HomeTabBar(),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: _buildTabContent(controller.selectedTabIndex.value),
+                ),
+              ],
+            );
+          case 2: // Notification
+            return const NotificationView();
+          case 3: // Community
+            return const CommunityView();
+          default:
+            return const Center(child: Text("Coming Soon"));
+        }
+      }),
 
-      bottomNavigationBar: const HomeBottomNavBar(),
+      bottomNavigationBar: SafeArea(
+        child: const HomeBottomNavBar(),
+      ),
 
       floatingActionButton: Obx(() {
         if (controller.selectedTabIndex.value == 0) {

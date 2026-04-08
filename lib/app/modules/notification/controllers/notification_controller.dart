@@ -1,7 +1,27 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class NotificationController extends GetxController {
-  final selectedTab = 0.obs;
+class NotificationController extends GetxController
+    with GetSingleTickerProviderStateMixin {
+  late TabController tabController;
 
-  void changeTab(int index) => selectedTab.value = index;
+  static const List<String> tabs = [
+    'News',
+    'Likes',
+    'Replies',
+    'Follows',
+    'Others',
+  ];
+
+  @override
+  void onInit() {
+    super.onInit();
+    tabController = TabController(length: tabs.length, vsync: this);
+  }
+
+  @override
+  void onClose() {
+    tabController.dispose();
+    super.onClose();
+  }
 }

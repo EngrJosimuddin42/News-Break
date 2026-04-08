@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../routes/app_pages.dart';
+import '../views/create_post_view.dart';
 
 class CreatePostController extends GetxController {
   final TextEditingController textController = TextEditingController();
@@ -13,11 +13,21 @@ class CreatePostController extends GetxController {
   void onBack() => Get.back();
 
   void onTagLocation() async {
-    final result = await Get.toNamed(Routes.TAG_LOCATION);
+    final result = await showModalBottomSheet(
+      context: Get.context!,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      constraints: const BoxConstraints(
+        maxWidth: double.infinity,
+      ),
+      useSafeArea: true,
+      builder: (context) => const TagLocationSheet(),
+    );
+
     if (result != null) {
-      // handle selected location
     }
   }
+
 
   void onAddMedia() {}
 

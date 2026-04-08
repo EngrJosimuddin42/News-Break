@@ -19,14 +19,13 @@ class EditTabsView extends GetView<EditTabsController> {
           child: Text('Cancel', style: AppTextStyles.bodyMedium),
         ),
         leadingWidth: 80,
-        title: Text('Edit Top Tabs', style: AppTextStyles.headlineLarge),
+        title: Text('Edit Top Tabs', style: AppTextStyles.headlineSmall),
         centerTitle: true,
         actions: [
           TextButton(
             onPressed: controller.onSave,
             child: Text('Save',
-                style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.primary)),
+                style: AppTextStyles.bodyMedium),
           ),
         ],
       ),
@@ -52,9 +51,8 @@ class EditTabsView extends GetView<EditTabsController> {
                   contentPadding: EdgeInsets.zero,
                   leading: GestureDetector(
                     onTap: () => controller.removeFromSelected(topic),
-                    child: Image.asset('assets/icons/ic_remove.png',
-                        width: 24, height: 24,
-                        color: AppColors.primary),
+                    child: Image.asset('assets/icons/remove.png',
+                        width: 24, height: 24),
                   ),
                   title: Text(topic, style: AppTextStyles.bodyMedium),
                 );
@@ -72,9 +70,8 @@ class EditTabsView extends GetView<EditTabsController> {
                   contentPadding: EdgeInsets.zero,
                   leading: GestureDetector(
                     onTap: () => controller.addToSelected(topic),
-                    child: Image.asset('assets/icons/ic_add_circle.png',
-                        width: 24, height: 24,
-                        color: Colors.green),
+                    child: Image.asset('assets/icons/add_circle.png',
+                        width: 24, height: 24),
                   ),
                   title: Text(topic, style: AppTextStyles.bodyMedium),
                 );

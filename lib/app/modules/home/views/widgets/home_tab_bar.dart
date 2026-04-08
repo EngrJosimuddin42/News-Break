@@ -10,12 +10,14 @@ class HomeTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = Get.find<HomeController>();
-    return Obx(() => SizedBox(
+
+    return SizedBox(
       height: 40,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
+        physics: const ClampingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: c.tabs.length + 1, // +1 for edit icon
+        itemCount: c.tabs.length + 1,
         separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (_, i) {
           // First item = edit icon
@@ -35,31 +37,40 @@ class HomeTabBar extends StatelessWidget {
               ),
             );
           }
+
           final tabIndex = i - 1;
-          final isSelected = c.selectedTabIndex.value == tabIndex;
-          return GestureDetector(
-            onTap: () => c.onTabTap(tabIndex),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-              decoration: BoxDecoration(
-                color: isSelected ? AppColors.white : Colors.transparent,
-                borderRadius: BorderRadius.circular(20),
-                border: isSelected
-                    ? null
-                    : Border.all(color: Colors.transparent),
-              ),
-              child: Text(
-                c.tabs[tabIndex],
-                style: AppTextStyles.bodySmall.copyWith(
-                  color: isSelected ? AppColors.background : AppColors.white,
-                  fontWeight:
-                  isSelected ? FontWeight.w600 : FontWeight.w400,
+
+          return Obx(() {
+            final isSelected = c.selectedTabIndex.value == tabIndex;
+            return GestureDetector(
+              onTap: () => c.onTabTap(tabIndex),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: isSelected ? AppColors.white : Colors.transparent,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isSelected ? AppColors.white : Colors.white24,
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  c.tabs[tabIndex],
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: isSelected
+                        ? AppColors.background
+                        : AppColors.white,
+                    fontWeight: isSelected
+                        ? FontWeight.w600
+                        : FontWeight.w400,
+                  ),
                 ),
               ),
-            ),
-          );
+            );
+          });
         },
       ),
-    ));
+    );
   }
 }

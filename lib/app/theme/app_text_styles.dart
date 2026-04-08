@@ -60,17 +60,17 @@ class AppTextStyles {
     height: 1.3,
   );
 
-  static TextStyle get headlineMedium => GoogleFonts.cormorantGaramond(
-    fontSize: 30,
-    fontWeight: FontWeight.w500,
-    color: AppColors.textOnDarkSecondary,
+  static TextStyle get headlineMedium => GoogleFonts.inter(   //
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: AppColors.surface,
     height: 1.3,
   );
 
-  static TextStyle get headlineSmall => GoogleFonts.dmSans(
-    fontSize: 18,
-    fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+  static TextStyle get headlineSmall => GoogleFonts.inter(  //
+    fontSize: 14,
+    fontWeight: FontWeight.w700,
+    color: AppColors.surface,
     height: 1.4,
   );
 
@@ -127,10 +127,10 @@ class AppTextStyles {
     letterSpacing: 0.2,
   );
 
-  static TextStyle get buttonOutline => GoogleFonts.dmSans(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+  static TextStyle get buttonOutline => GoogleFonts.inter(  //
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: AppColors.surface,
     letterSpacing: 0.2,
   );
 

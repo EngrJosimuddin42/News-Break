@@ -133,7 +133,7 @@ class _NewsCardState extends State<NewsCard> {
                   fontSize: 14,
                 );
 
-                // title overflow হচ্ছে কিনা check করো
+                // title overflow check
                 final textPainter = TextPainter(
                   text: TextSpan(text: widget.title, style: textStyle),
                   maxLines: 1,
@@ -142,12 +142,10 @@ class _NewsCardState extends State<NewsCard> {
 
                 final isOverflowing = textPainter.didExceedMaxLines;
 
-                // ছোট title — সরাসরি দেখাও
                 if (!isOverflowing) {
                   return Text(widget.title, style: textStyle);
                 }
 
-                // বড় title — tap করলে expand/collapse
                 return GestureDetector(
                   onTap: () => setState(() => _isExpanded = !_isExpanded),
                   child: _isExpanded

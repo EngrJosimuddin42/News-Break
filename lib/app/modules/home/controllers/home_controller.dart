@@ -15,7 +15,9 @@ class HomeController extends GetxController {
   void onNavTap(int index) => selectedNavIndex.value = index;
 
   // Tab tap
-  void onTabTap(int index) => selectedTabIndex.value = index;
+  void onTabTap(int index) {
+    selectedTabIndex.value = index;
+  }
 
   // App bar actions
   void onEditTabs() => Get.toNamed(Routes.EDIT_TABS, arguments: tabs);

@@ -19,7 +19,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: 16,
       title: Row(
         children: [
-          Text('Choose Your Location', style: AppTextStyles.headlineLarge),
+          Text('Choose Your Location', style: AppTextStyles.headlineMedium),
           const SizedBox(width: 6),
           Container(
             width: 18,

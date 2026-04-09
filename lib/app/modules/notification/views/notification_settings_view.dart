@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 
 class NotificationSettingsView extends StatefulWidget {
   const NotificationSettingsView({super.key});
@@ -29,14 +30,11 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
         backgroundColor: Colors.black,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 18),
+          child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
         ),
-        title: const Text('Notification Settings',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600)),
-        centerTitle: false,
+        title:Text('Notification Settings',
+        style:AppTextStyles.displaySmall),
+        centerTitle: true,
       ),
       body: ListView(
         children: [
@@ -49,27 +47,42 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Number of Notification',
-                    style: TextStyle(color: Colors.white, fontSize: 14)),
+                 Text('Number of Notification',
+                     style: AppTextStyles.headlineMedium.copyWith(fontWeight: FontWeight.w400)),
                 const SizedBox(height: 2),
-                const Text('Control the frequency of notifications',
-                    style: TextStyle(color: Colors.grey, fontSize: 12)),
+                Text('Control the frequency of notifications',
+                    style: AppTextStyles.overline),
                 Slider(
                   value: _frequency,
-                  onChanged: (val) => setState(() => _frequency = val),
+                  divisions: 2,
+                  onChanged: (val) {
+                    setState(() {
+                      _frequency = val;
+                    });
+                  },
                   activeColor: Colors.blue,
                   inactiveColor: Colors.grey[800],
                 ),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Low', style: TextStyle(color: Colors.grey, fontSize: 11)),
+                    // Low Text
+                    Text('Low',
+                      style: _frequency == 0.0
+                          ? AppTextStyles.small
+                          : AppTextStyles.overline),
+
+                    // Normal Text
                     Text('Normal',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600)),
-                    Text('High', style: TextStyle(color: Colors.grey, fontSize: 11)),
+                      style: _frequency == 0.5
+                          ? AppTextStyles.small
+                          : AppTextStyles.overline),
+
+                    // High Text
+                    Text('High',
+                      style: _frequency == 1.0
+                          ? AppTextStyles.small
+                          : AppTextStyles.overline),
                   ],
                 ),
               ],
@@ -184,7 +197,7 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
       {bool showLabel = true}) {
     return SwitchListTile(
       title: showLabel
-          ? Text(label, style: const TextStyle(color: Colors.white, fontSize: 14))
+          ? Text(label, style: AppTextStyles.headlineMedium.copyWith(fontWeight: FontWeight.w400),)
           : const SizedBox.shrink(),
       value: value,
       onChanged: onChanged,

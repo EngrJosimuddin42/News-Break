@@ -20,20 +20,17 @@ class AppTextStyles {
     height: 1.15,
   );
 
-  static TextStyle get displaySmall => GoogleFonts.cormorantGaramond(
-    fontSize: 28,
+  static TextStyle get displaySmall => GoogleFonts.inter(  //
+    fontSize: 18,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    color: AppColors.surface,
     height: 1.2,
   );
 
-  // Display Italic (for "Finally", "your profile" etc.)
-  static TextStyle get displayItalic => GoogleFonts.cormorantGaramond(
-    fontSize: 36,
-    fontWeight: FontWeight.w400,
-    fontStyle: FontStyle.italic,
-    color: AppColors.accent,
-    height: 1.15,
+  static TextStyle get small => GoogleFonts.inter(  //
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    color: AppColors.surface,
   );
 
   static TextStyle get displayItalicLarge => GoogleFonts.cormorantGaramond(
@@ -44,11 +41,10 @@ class AppTextStyles {
     height: 1.1,
   );
 
-  static TextStyle get displayItalicSmall => GoogleFonts.cormorantGaramond(
-    fontSize: 30,
-    fontWeight: FontWeight.w400,
-    fontStyle: FontStyle.italic,
-    color: AppColors.accent,
+  static TextStyle get textSmall => GoogleFonts.inter(   //
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    color: AppColors.overlay,
     height: 1.2,
   );
 
@@ -97,10 +93,10 @@ class AppTextStyles {
   );
 
   // Label
-  static TextStyle get labelLarge => GoogleFonts.dmSans(
+  static TextStyle get labelLarge => GoogleFonts.inter(  //
     fontSize: 14,
-    fontWeight: FontWeight.w500,
-    color: AppColors.textPrimary,
+    fontWeight: FontWeight.w400,
+    color: AppColors.surface,
     letterSpacing: 0.1,
   );
 
@@ -111,19 +107,18 @@ class AppTextStyles {
     letterSpacing: 0.5,
   );
 
-  static TextStyle get labelSmall => GoogleFonts.dmSans(
+  static TextStyle get labelSmall => GoogleFonts.inter(  //
     fontSize: 12,
-    fontWeight: FontWeight.w500,
-    color: AppColors.textOnDarkSecondary,
+    fontWeight: FontWeight.w400,
+    color: AppColors.primary,
     letterSpacing: 0.5,
-    textBaseline: TextBaseline.alphabetic,
   );
 
   // Button
-  static TextStyle get button => GoogleFonts.outfit(
+  static TextStyle get button => GoogleFonts.inter(  //
     fontSize: 16,
     fontWeight: FontWeight.w500,
-    color: AppColors.textOnDark,
+    color: AppColors.surface,
     letterSpacing: 0.2,
   );
 
@@ -135,17 +130,17 @@ class AppTextStyles {
   );
 
   // Caption / Overline
-  static TextStyle get caption => GoogleFonts.dmSans(
-    fontSize: 11,
+  static TextStyle get caption => GoogleFonts.inter(  //
+    fontSize: 14,
     fontWeight: FontWeight.w400,
-    color: AppColors.textTertiary,
+    color: AppColors.surface,
     letterSpacing: 0.4,
   );
 
-  static TextStyle get overline => GoogleFonts.dmSans(
-    fontSize: 10,
-    fontWeight: FontWeight.w600,
-    color: AppColors.accent,
+  static TextStyle get overline => GoogleFonts.inter(  //
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textOnDark,
     letterSpacing: 1.5,
   );
 

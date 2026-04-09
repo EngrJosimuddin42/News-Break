@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../../widgets/options_bottom_sheet.dart';
 import 'community_report_sheet.dart';
 
 class CommunityPostCard extends StatelessWidget {
@@ -34,7 +37,7 @@ class CommunityPostCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CircleAvatar(
-                radius: 20,
+                radius: 24,
                 backgroundImage: NetworkImage(userImageUrl),
                 backgroundColor: Colors.grey[800],
               ),
@@ -44,20 +47,19 @@ class CommunityPostCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(userName,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600)),
+                        style: AppTextStyles.bodyMedium),
                     const SizedBox(height: 2),
                     Text(text,
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 13, height: 1.4)),
+                      style: AppTextStyles.bodyLarge.copyWith(
+                          color: Color(0xFF929292)),
+                    ),
                   ],
                 ),
               ),
               GestureDetector(
-                onTap: () => _showOptionsSheet(context),
-                child: const Icon(Icons.more_vert, color: Colors.grey, size: 20),
+                onTap: () => OptionsBottomSheet.show(context, reportSheet: const CommunityReportSheet()),
+                child: const Icon(
+                    Icons.more_vert, color: Color(0xFF959595), size: 24),
               ),
             ],
           ),
@@ -65,31 +67,48 @@ class CommunityPostCard extends StatelessWidget {
           // Images
           if (imageUrls.isNotEmpty) ...[
             const SizedBox(height: 10),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Column(
-                children: imageUrls.map((url) => Image.network(
-                  url,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
-                    height: 160, color: Colors.grey[900],
-                  ),
-                )).toList(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Column(
+                  children: imageUrls.map((url) =>
+                      Image.network(
+                        url,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) =>
+                            Container(
+                              height: 160, color: Colors.grey[900],
+                            ),
+                      )).toList(),
+                ),
               ),
             ),
           ],
 
           // Engagement
           const SizedBox(height: 10),
-          Row(
-            children: [
-              _engagementItem(Icons.favorite_border, likes),
-              const SizedBox(width: 16),
-              _engagementItem(Icons.chat_bubble_outline, comments),
-              const SizedBox(width: 16),
-              _engagementItem(Icons.share_outlined, shares),
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 65),
+            child: Row(
+              children: [
+                Image.asset('assets/icons/heart.png', width: 20, height: 20),
+                const SizedBox(width: 4),
+                Text(likes, style: AppTextStyles.bodyLarge.copyWith(
+                    color: AppColors.surface)),
+                const SizedBox(width: 20),
+                Image.asset('assets/icons/comment.png', width: 20, height: 20),
+                const SizedBox(width: 4),
+                Text(comments, style: AppTextStyles.bodyLarge.copyWith(
+                    color: AppColors.surface)),
+                const SizedBox(width: 20),
+                Image.asset('assets/icons/share.png', width: 20, height: 20),
+                const SizedBox(width: 4),
+                Text(shares, style: AppTextStyles.bodyLarge.copyWith(
+                    color: AppColors.surface)),
+              ],
+            ),
           ),
           const SizedBox(height: 12),
           const Divider(color: Colors.white12, height: 1),
@@ -97,72 +116,4 @@ class CommunityPostCard extends StatelessWidget {
       ),
     );
   }
-
-  Widget _engagementItem(IconData icon, String count) {
-    return Row(
-      children: [
-        Icon(icon, color: Colors.grey, size: 18),
-        const SizedBox(width: 4),
-        Text(count, style: const TextStyle(color: Colors.grey, fontSize: 13)),
-      ],
-    );
   }
-
-  void _showOptionsSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: const Color(0xFF2C2C2E),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (_) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 8),
-          Container(
-            width: 36, height: 4,
-            decoration: BoxDecoration(
-              color: Colors.grey[600],
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 8),
-          _optionTile(Icons.thumb_down_outlined, Colors.white,
-              'Show less about: Donald Trump', Colors.white,
-                  () => Navigator.pop(context)),
-          _optionTile(Icons.thumb_down_outlined, Colors.white,
-              'Show less about: Iran', Colors.white,
-                  () => Navigator.pop(context)),
-          _optionTile(Icons.block, Colors.white,
-              'Block source: The guardian', Colors.white,
-                  () => Navigator.pop(context)),
-          _optionTile(Icons.flag_outlined, Colors.red,
-              'Report', Colors.red, () {
-                Navigator.pop(context);
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (_) => const CommunityReportSheet(),
-                );
-              }),
-          const Divider(color: Colors.white12),
-          _optionTile(Icons.auto_fix_high, Colors.blueAccent,
-              'Ask/request/report anything', Colors.white,
-                  () => Navigator.pop(context)),
-          const SizedBox(height: 16),
-        ],
-      ),
-    );
-  }
-
-  Widget _optionTile(IconData icon, Color iconColor, String text,
-      Color textColor, VoidCallback onTap) {
-    return ListTile(
-      leading: Icon(icon, color: iconColor, size: 20),
-      title: Text(text, style: TextStyle(color: textColor, fontSize: 14)),
-      onTap: onTap,
-      dense: true,
-    );
-  }
-}

@@ -1,11 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 import '../controllers/notification_controller.dart';
 import 'notification_news_item.dart';
 import 'notification_settings_view.dart';
 
-class NotificationView extends GetView<NotificationController> {
-  const NotificationView({super.key});
+// ── AppBar ──────────────────────────────────────
+class NotificationAppBar extends GetView<NotificationController>
+    implements PreferredSizeWidget {
+  const NotificationAppBar({super.key});
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 48);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.black,
+      title:Text('Notifications',
+       style: AppTextStyles.displaySmall,
+      ),
+      centerTitle: true,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.settings_outlined, color: Colors.white),
+          onPressed: () => Get.to(() => const NotificationSettingsView()),
+        ),
+      ],
+      bottom: TabBar(
+        controller: controller.tabController,
+        isScrollable: true,
+        tabAlignment: TabAlignment.center,
+        indicatorColor: Colors.white,
+        indicatorWeight: 2,
+        dividerColor: Colors.transparent,
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.grey,
+        labelStyle: AppTextStyles.labelLarge,
+        unselectedLabelStyle: const TextStyle(fontSize: 14),
+        tabs: NotificationController.tabs.map((t) => Tab(text: t)).toList(),
+      ),
+    );
+  }
+}
+
+// ── Body ────────────────────────────────────────
+class NotificationBody extends GetView<NotificationController> {
+  const NotificationBody({super.key});
 
   static const List<Map<String, String>> _newsItems = [
     {
@@ -42,48 +84,15 @@ class NotificationView extends GetView<NotificationController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text(
-          'Notifications',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined, color: Colors.white),
-            onPressed: () => Get.to(() => const NotificationSettingsView()),
-          ),
-        ],
-        bottom: TabBar(
-          controller: controller.tabController,
-          isScrollable: true,
-          tabAlignment: TabAlignment.start,
-          indicatorColor: Colors.white,
-          indicatorWeight: 2,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.grey,
-          labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-          unselectedLabelStyle: const TextStyle(fontSize: 14),
-          tabs: NotificationController.tabs.map((t) => Tab(text: t)).toList(),
-        ),
-      ),
-      body: TabBarView(
-        controller: controller.tabController,
-        children: [
-          _buildNewsTab(),
-          _buildEmptyTab(),
-          _buildEmptyTab(),
-          _buildEmptyTab(),
-          _buildEmptyTab(),
-        ],
-      ),
+    return TabBarView(
+      controller: controller.tabController,
+      children: [
+        _buildNewsTab(),
+        _buildEmptyTab(),
+        _buildEmptyTab(),
+        _buildEmptyTab(),
+        _buildEmptyTab(),
+      ],
     );
   }
 
@@ -91,44 +100,48 @@ class NotificationView extends GetView<NotificationController> {
     return ListView(
       children: [
         Container(
+          height: 100,
+          width: 335,
           margin: const EdgeInsets.all(12),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             image: const DecorationImage(
-              image: NetworkImage(
-                  'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(Colors.black54, BlendMode.darken),
-            ),
+              image: AssetImage('assets/images/premium_bg.jpg'),
+              fit: BoxFit.cover),
           ),
           child: Row(
             children: [
-              const Expanded(
+               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Try Premium for FREE',
-                        style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700)),
+                       style: AppTextStyles.buttonOutline,
+                    ),
                     SizedBox(height: 4),
-                    Text('Ad-free reading, boosted comments,\nsmarter recommendations and more.',
-                        style: TextStyle(color: Colors.white70, fontSize: 12)),
+                    Text(
+                      'Ad-free reading, boosted comments,\nsmarter recommendations and more.',
+                    style: AppTextStyles.textSmall.copyWith(color: Color(0xFFF3DAD5)),
+                    ),
                   ],
                 ),
               ),
               ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepOrange,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  backgroundColor: Color(0xFFFD5F5C),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(48)),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16)),
+                child: Text('Upgrade',
+                style: AppTextStyles.bodySmall.copyWith(color:AppColors.surface),
                 ),
-                child: const Text('Upgrade',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13)),
               ),
             ],
           ),
         ),
+
         _sectionLabel('Today'),
         ..._newsItems.take(2).map((item) => Column(children: [
           NotificationNewsItem(
@@ -143,6 +156,7 @@ class NotificationView extends GetView<NotificationController> {
           ),
           const Divider(color: Colors.white12, height: 1),
         ])),
+
         _sectionLabel('Earlier'),
         ..._newsItems.skip(2).map((item) => Column(children: [
           NotificationNewsItem(
@@ -162,13 +176,18 @@ class NotificationView extends GetView<NotificationController> {
   }
 
   Widget _buildEmptyTab() {
-    return const Center(
+    return  Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.mail_outline, color: Colors.grey, size: 64),
+          Image.asset('assets/images/message.png',
+            width: 90,
+            height: 90,
+            fit: BoxFit.contain,
+          ),
           SizedBox(height: 16),
-          Text('No messages yet', style: TextStyle(color: Colors.grey, fontSize: 14)),
+          Text('No messages yet',
+              style: AppTextStyles.overline),
         ],
       ),
     );
@@ -177,7 +196,8 @@ class NotificationView extends GetView<NotificationController> {
   Widget _sectionLabel(String label) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-      child: Text(label, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+      child: Text(label,
+          style:AppTextStyles.textSmall),
     );
   }
 }

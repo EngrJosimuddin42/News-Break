@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 
-class ReportBottomSheet extends StatefulWidget {
-  const ReportBottomSheet({super.key});
+class NotificationReportSheet extends StatefulWidget {
+  const NotificationReportSheet({super.key});
 
   @override
-  State<ReportBottomSheet> createState() => _ReportBottomSheetState();
+  State<NotificationReportSheet> createState() => _ReportBottomSheetState();
 }
 
-class _ReportBottomSheetState extends State<ReportBottomSheet> {
+class _ReportBottomSheetState extends State<NotificationReportSheet> {
   // Steps: 0 = select reason, 1 = sub-reason, 2 = confirm, 3 = success
   int _step = 0;
   String? _selectedReason;
@@ -43,8 +45,8 @@ class _ReportBottomSheetState extends State<ReportBottomSheet> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFF2C2C2E),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        color: Color(0xFF252525),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
       ),
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -73,7 +75,7 @@ class _ReportBottomSheetState extends State<ReportBottomSheet> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildHeader('Select a reason', showBack: false),
+        _buildHeader('Select a reason'),
         const Divider(color: Colors.white12, height: 1),
         ListView.builder(
           shrinkWrap: true,
@@ -84,17 +86,17 @@ class _ReportBottomSheetState extends State<ReportBottomSheet> {
             groupValue: _selectedReason,
             onChanged: (val) => setState(() => _selectedReason = val),
             title: Text(_reasons[i],
-                style: const TextStyle(color: Colors.white, fontSize: 14)),
+            style: AppTextStyles.caption),
             activeColor: Colors.white,
             dense: true,
           ),
         ),
         _buildButtons(
           onCancel: () => Navigator.pop(context),
-          onNext: _selectedReason == null
-              ? null
-              : () => setState(() => _step = 1),
-          nextLabel: 'Next',
+          onNext: () {
+            if (_selectedReason != null) setState(() => _step = 1);
+          },
+          nextLabel: 'Submit',
         ),
         const SizedBox(height: 16),
       ],
@@ -107,8 +109,7 @@ class _ReportBottomSheetState extends State<ReportBottomSheet> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildHeader('How is it $_selectedReason', showBack: true,
-            onBack: () => setState(() => _step = 0)),
+        _buildHeader('How is it $_selectedReason',onBack: () => setState(() => _step = 0)),
         const Divider(color: Colors.white12, height: 1),
         ListView.builder(
           shrinkWrap: true,
@@ -119,16 +120,16 @@ class _ReportBottomSheetState extends State<ReportBottomSheet> {
             groupValue: _selectedSubReason,
             onChanged: (val) => setState(() => _selectedSubReason = val),
             title: Text(subs[i],
-                style: const TextStyle(color: Colors.white, fontSize: 14)),
+              style: AppTextStyles.caption),
             activeColor: Colors.white,
             dense: true,
           ),
         ),
         _buildButtons(
           onCancel: () => Navigator.pop(context),
-          onNext: _selectedSubReason == null
-              ? null
-              : () => setState(() => _step = 2),
+          onNext: () {
+            if (_selectedSubReason != null) setState(() => _step = 2);
+          },
           nextLabel: 'Next',
         ),
         const SizedBox(height: 16),
@@ -141,20 +142,19 @@ class _ReportBottomSheetState extends State<ReportBottomSheet> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildHeader('You are about to submit a report',
-            showBack: true, onBack: () => setState(() => _step = 1)),
+        _buildHeader('You are about to submit a report',onBack: () => setState(() => _step = 1)),
         const Divider(color: Colors.white12, height: 1),
         Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'We only remove content that goes against our community standard. Review your report details below.',
-                style: TextStyle(color: Colors.white70, fontSize: 13, height: 1.5),
-              ),
+               Text('We only remove content that goes against our community standard. Review your report details below.',
+                style: AppTextStyles.caption),
               const SizedBox(height: 16),
               _infoField('Why are you reporting this?', _selectedReason ?? ''),
+              const SizedBox(height: 12),
+              const Divider(color: Colors.white12, height: 1),
               const SizedBox(height: 12),
               _infoField('How is it $_selectedReason?', _selectedSubReason ?? ''),
             ],
@@ -163,18 +163,18 @@ class _ReportBottomSheetState extends State<ReportBottomSheet> {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           child: SizedBox(
-            width: double.infinity,
+            width: 311,
+            height: 48,
             child: ElevatedButton(
               onPressed: () => setState(() => _step = 3),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
+                backgroundColor:AppColors.surface,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(vertical: 20),
               ),
-              child: const Text('Submit',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+              child:Text('Submit',
+                  style:AppTextStyles.bodySmall),
             ),
           ),
         ),
@@ -185,41 +185,40 @@ class _ReportBottomSheetState extends State<ReportBottomSheet> {
 
   // Step 3 — Success
   Widget _buildSuccess() {
-    return Padding(
+    return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 8),
           Container(
-            width: 48,
-            height: 48,
+            width: 30, height: 30,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: Colors.green, width: 2),
             ),
-            child: const Icon(Icons.check, color: Colors.green, size: 28),
+            child: const Icon(Icons.check, color: Colors.green, size: 20),
           ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'Thanx for reporting this',
-            style: TextStyle(
-                color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+            style: AppTextStyles.labelLarge,
           ),
           const SizedBox(height: 24),
           SizedBox(
-            width: double.infinity,
+            width:311,
+            height: 48,
             child: ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(vertical: 20),
               ),
-              child: const Text('Done',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+              child:Text('Done',
+                  style:AppTextStyles.bodySmall),
             ),
           ),
           const SizedBox(height: 8),
@@ -228,28 +227,19 @@ class _ReportBottomSheetState extends State<ReportBottomSheet> {
     );
   }
 
-  Widget _buildHeader(String title,
-      {required bool showBack, VoidCallback? onBack}) {
+  Widget _buildHeader(String title, {VoidCallback? onBack}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
       child: Row(
         children: [
-          if (showBack)
-            GestureDetector(
-              onTap: onBack,
-              child: const Icon(Icons.arrow_back_ios,
-                  color: Colors.white, size: 18),
-            )
-          else
-            const SizedBox(width: 18),
+          GestureDetector(
+            onTap: onBack ?? () => Navigator.pop(context),
+            child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+          ),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600),
+            child: Text(title,
+              style: AppTextStyles.caption,
               textAlign: TextAlign.center,
             ),
           ),
@@ -264,7 +254,7 @@ class _ReportBottomSheetState extends State<ReportBottomSheet> {
 
   Widget _buildButtons({
     required VoidCallback onCancel,
-    required VoidCallback? onNext,
+    required VoidCallback onNext,
     required String nextLabel,
   }) {
     return Padding(
@@ -275,30 +265,29 @@ class _ReportBottomSheetState extends State<ReportBottomSheet> {
             child: OutlinedButton(
               onPressed: onCancel,
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.white38),
+                side: const BorderSide(color: Color(0xFF959595)),
+                minimumSize: const Size(140, 60),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(vertical: 20),
               ),
-              child: const Text('Cancel',
-                  style: TextStyle(color: Colors.white, fontSize: 15)),
+              child: Text('Cancel',
+                  style: AppTextStyles.bodySmall.copyWith(color: Color(0xFFC4C4C4))),
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: ElevatedButton(
-              onPressed: onNext,
+              onPressed: () { onNext();},
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                onNext != null ? Colors.white : Colors.white24,
-                foregroundColor: Colors.black,
+                backgroundColor:AppColors.surface,
+                minimumSize: const Size(140, 60),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(vertical: 20),
               ),
               child: Text(nextLabel,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 15)),
+                   style:AppTextStyles.bodySmall),
             ),
           ),
         ],
@@ -311,18 +300,10 @@ class _ReportBottomSheetState extends State<ReportBottomSheet> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label,
-            style: const TextStyle(color: Colors.grey, fontSize: 12)),
+           style: AppTextStyles.labelSmall.copyWith(color: Color(0xFF6C6C6C))),
         const SizedBox(height: 6),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white24),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Text(value,
-              style: const TextStyle(color: Colors.white, fontSize: 14)),
-        ),
+        Text(value,
+              style: AppTextStyles.textSmall.copyWith(color: Color(0xFFD9D9D9))),
       ],
     );
   }

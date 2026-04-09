@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 
 class CommunityInsightView extends StatelessWidget {
   const CommunityInsightView({super.key});
@@ -44,29 +45,35 @@ class CommunityInsightView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: const Icon(Icons.arrow_back_ios, color: Colors.black, size: 18),
+          child: const Icon(Icons.arrow_back_ios, color: Color(0xFF959595), size: 20),
         ),
-        title: const Text(
-          'Community insight center',
-          style: TextStyle(
-              color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
+        title: Text('Community insight center',
+          style:AppTextStyles.displaySmall,
         ),
-        centerTitle: false,
+        centerTitle: true,
       ),
-      body: ListView.separated(
+      body: Column(
+          children: [
+          const SizedBox(height: 10),
+        Expanded(
+          child: Container(
+            width: double.infinity,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+        ),
+      child:ListView.builder(
         padding: const EdgeInsets.symmetric(vertical: 8),
         itemCount: _items.length,
-        separatorBuilder: (_, __) => const Divider(height: 1, color: Color(0xFFEEEEEE)),
         itemBuilder: (_, i) {
           final item = _items[i];
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -87,18 +94,12 @@ class CommunityInsightView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        item['title']!,
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600),
-                      ),
+                      Text(item['title']!,
+                       style: AppTextStyles.bodySmall),
                       const SizedBox(height: 4),
                       Text(
                         item['subtitle']!,
-                        style: const TextStyle(
-                            color: Colors.grey, fontSize: 12, height: 1.4),
+                      style: AppTextStyles.labelSmall,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -109,22 +110,31 @@ class CommunityInsightView extends StatelessWidget {
                 OutlinedButton(
                   onPressed: () {},
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.black38),
+                    side: const BorderSide(color: Color(0xFFA9A9A9)),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
+                        borderRadius: BorderRadius.circular(44)),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 6),
+                        horizontal: 25, vertical: 14),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  child: const Text('Join',
-                      style: TextStyle(color: Colors.black, fontSize: 13)),
+                  child:Text('Join',
+                  style: AppTextStyles.bodySmall),
                 ),
               ],
             ),
           );
         },
       ),
+          ),
+        ),
+    Container(
+    height: 40,
+    color: Colors.black,
+    width: double.infinity,
+    ),
+    ],
+    ),
     );
   }
 }

@@ -11,7 +11,7 @@ class HomeBottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = Get.find<HomeController>();
     final items = [
-      {'icon': 'assets/icons/refresh_circle.png', 'label': 'Refresh'},
+      {'icon': 'assets/icons/home.png', 'label': 'Home'},
       {'icon': 'assets/icons/reels.png', 'label': 'Reels'},
       {'icon': 'assets/icons/notification.png', 'label': 'Notification'},
       {'icon': 'assets/icons/actions_lovely.png', 'label': 'Community'},
@@ -41,7 +41,7 @@ class HomeBottomNavBar extends StatelessWidget {
                     width: 24,
                     height: 24,
                     color: isSelected
-                        ? AppColors.primary
+                        ? AppColors.red
                         : AppColors.textSecondary,
                   ),
                   const SizedBox(height: 4),
@@ -50,7 +50,7 @@ class HomeBottomNavBar extends StatelessWidget {
                     style: AppTextStyles.bodySmall.copyWith(
                       fontSize: 10,
                       color: isSelected
-                          ? AppColors.primary
+                          ? AppColors.red
                           : AppColors.textSecondary,
                     ),
                   ),

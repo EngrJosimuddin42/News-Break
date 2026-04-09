@@ -1,16 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 import '../controllers/community_controller.dart';
 import 'community_insight_view.dart';
 import 'community_post_card.dart';
 
-class CommunityView extends GetView<CommunityController> {
-  const CommunityView({super.key});
+// ── AppBar
+class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CommunityAppBar({super.key});
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.black,
+      title:Text('Community',
+       style: AppTextStyles.displaySmall),
+      centerTitle: true,
+      actions: [
+        GestureDetector(
+          onTap: () => Get.to(() => const CommunityInsightView()),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: Image.asset(
+              'assets/icons/hashtag.png',
+              width: 28,
+              height: 28,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ── Body ────────────────────────────────────────
+class CommunityBody extends GetView<CommunityController> {
+  const CommunityBody({super.key});
 
   static const List<Map<String, dynamic>> _posts = [
     {
-      'userName': 'Amalia',
-      'userImageUrl': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
+      'userName': 'Haris',
+      'userImageUrl': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
       'text': 'Lorem ipsum dolor sit amet consectetur. Ut sed elementum pellentesque erat. In nisl facilisis ornare felis cras purus amet cursus.',
       'imageUrls': [
         'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600',
@@ -21,10 +55,10 @@ class CommunityView extends GetView<CommunityController> {
       'shares': '67',
     },
     {
-      'userName': 'Amalia',
-      'userImageUrl': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
+      'userName': 'Jordan',
+      'userImageUrl': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
       'text': 'Lorem ipsum dolor sit amet consectetur. Ut sed elementum pellentesque erat. In nisl facilisis ornare felis cras purus amet cursus.',
-      'imageUrls': <String>[],
+      'imageUrls': ['https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=600'],
       'likes': '980',
       'comments': '2.1K',
       'shares': '34',
@@ -33,143 +67,127 @@ class CommunityView extends GetView<CommunityController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text(
-          'Community',
-          style: TextStyle(
-              color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700),
-        ),
-        centerTitle: true,
-        actions: [
-          GestureDetector(
-            onTap: () => Get.to(() => const CommunityInsightView()),
-            child: Container(
-              margin: const EdgeInsets.only(right: 16),
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white38),
-              ),
-              child: const Center(
-                child: Text('#',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700)),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: ListView(
-        children: [
-          // Ad banner
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1C1C1E),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=100',
-                    width: 44,
-                    height: 44,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) =>
-                        Container(width: 44, height: 44, color: Colors.grey[800]),
+    return ListView(
+      children: [
+        // Ad banner
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Row(
+                children: [
+                  ClipOval(
+                    child: Image.asset(
+                      'assets/images/publisher.png',
+                      width: 48,
+                      height: 48,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => CircleAvatar(
+                        radius: 21,
+                        backgroundColor: Colors.grey[800],
+                        child: Text('F',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                const Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('FoodRadar', style: AppTextStyles.bodyMedium),
+                        Text(
+                          'Find Free Food Near You Instantly. 100% Free, No Ads.',
+                          style: AppTextStyles.labelMedium.copyWith(color: const Color(0xFF929292)),
+                          maxLines: 2,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text('FoodRadar',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600)),
-                      Text('Find Free Food Near You Instantly. 100% Free, No Ads..',
-                          style: TextStyle(color: Colors.grey, fontSize: 11),
-                          maxLines: 2),
+                      GestureDetector(
+                        onTap: () {},
+                        child: const Icon(Icons.close, color: Colors.grey, size: 20),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:AppColors.surface,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          padding: EdgeInsets.zero,
+                          minimumSize: const Size(75, 40),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          elevation: 0,
+                        ),
+                        child: Text('Open',
+                          style: AppTextStyles.bodyMedium.copyWith(color: Color(0xFF242424)),
+                            ),
+                      ),
                     ],
                   ),
-                ),
-                const SizedBox(width: 8),
-                OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white38),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: const Text('Open',
-                      style: TextStyle(color: Colors.white, fontSize: 12)),
-                ),
-                const SizedBox(width: 8),
-                const Icon(Icons.close, color: Colors.grey, size: 16),
-              ],
+                ],
+              ),
             ),
+            const Divider(color: Colors.white12, height: 1),
+          ],
+        ),
+
+        // Create post row
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          child: Row(
+            children: [
+              const CircleAvatar(
+                radius: 20,
+                backgroundImage: NetworkImage(
+                    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100'),
+                backgroundColor: Colors.grey,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Amalia', style: AppTextStyles.bodyMedium),
+                    Text("What's on your mind?",
+                      style: AppTextStyles.labelMedium.copyWith(color: const Color(0xFF929292)),
+                    ),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: controller.onCreatePost,
+                child: Image.asset('assets/icons/edit.png', width: 22, height: 22),
+              ),
+              const SizedBox(width: 16),
+              GestureDetector(
+                onTap: controller.onCreateImage,
+                child: Image.asset('assets/icons/image.png', width: 22, height: 22),
+              ),
+            ],
           ),
+        ),
 
-          // Create post row
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            child: Row(
-              children: [
-                const CircleAvatar(
-                  radius: 20,
-                  backgroundImage: NetworkImage(
-                      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100'),
-                  backgroundColor: Colors.grey,
-                ),
-                const SizedBox(width: 10),
-                const Expanded(
-                  child: Text("What's on your mind?",
-                      style: TextStyle(color: Colors.grey, fontSize: 14)),
-                ),
-                GestureDetector(
-                  onTap: controller.onCreatePost,
-                  child: const Icon(Icons.edit_outlined,
-                      color: Colors.grey, size: 22),
-                ),
-                const SizedBox(width: 16),
-                GestureDetector(
-                  onTap: controller.onCreateImage,
-                  child: const Icon(Icons.image_outlined,
-                      color: Colors.grey, size: 22),
-                ),
-              ],
-            ),
-          ),
+        const Divider(color: Colors.white12, height: 1),
+        const SizedBox(height: 4),
 
-          const Divider(color: Colors.white12, height: 1),
-          const SizedBox(height: 4),
-
-          // Posts
-          ..._posts.map((post) => CommunityPostCard(
-            userName: post['userName'],
-            userImageUrl: post['userImageUrl'],
-            text: post['text'],
-            imageUrls: List<String>.from(post['imageUrls']),
-            likes: post['likes'],
-            comments: post['comments'],
-            shares: post['shares'],
-          )),
-        ],
-      ),
+        // Posts
+        ..._posts.map((post) => CommunityPostCard(
+          userName: post['userName'],
+          userImageUrl: post['userImageUrl'],
+          text: post['text'],
+          imageUrls: List<String>.from(post['imageUrls']),
+          likes: post['likes'],
+          comments: post['comments'],
+          shares: post['shares'],
+        )),
+      ],
     );
   }
 }

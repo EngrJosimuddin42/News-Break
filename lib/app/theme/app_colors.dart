@@ -21,7 +21,7 @@ class AppColors {
   static const Color textPrimary1 = Color(0xFFC4C4C4);  //
   static const Color textPrimary2 = Color(0xFF5B8FA8);
   static const Color textTertiary = Color(0xFFAAAAAA);
-  static const Color textOnDark = Color(0xFFFFFFFF);
+  static const Color textOnDark = Color(0xFF959595);  //
   static const Color textOnDarkSecondary = Color(0xFF3D2817);
 
   // Input Fields
@@ -40,7 +40,7 @@ class AppColors {
   static const Color border = Color(0xFFCACACA);
 
   // Overlay
-  static const Color overlay = Color(0x80000000);
+  static const Color overlay = Color(0xFFA6A6A6);
   static const Color overlayLight = Color(0x40000000);
 
   // AI Badge
@@ -53,7 +53,7 @@ class AppColors {
 
   //other
   static const Color background = Color(0xFF242424);  //
-  static const Color primary = Color(0xFFE53935);
+  static const Color primary = Color(0xFF9C9C9C);   //
   static const Color white = Colors.white;
   static const Color buttonBorder = Color(0xFF444444);
   static const Color textSecondary = Color(0xFF9E9E9E);
@@ -62,6 +62,6 @@ class AppColors {
   static const Color googleBlue = Color(0xFF4285F4);
   static const Color googleGreen = Color(0xFF34A853);
   static const Color googleYellow = Color(0xFFFBBC05);
-  static const Color googleRed = Color(0xFFEA4335);
+  static const Color red = Color(0xFFFE5C5A);  //
 
 }

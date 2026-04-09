@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 
 class CommunityReportSheet extends StatefulWidget {
   const CommunityReportSheet({super.key});
@@ -53,16 +54,15 @@ class _CommunityReportSheetState extends State<CommunityReportSheet> {
                 onTap: () => Navigator.pop(context),
                 child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 18),
               ),
-              const Expanded(
-                child: Text(
-                  'Select a reason',
-                  style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
+              Expanded(
+                child: Text('Select a reason',
+                 style:AppTextStyles.caption ,
                   textAlign: TextAlign.center,
                 ),
               ),
               GestureDetector(
                 onTap: () => Navigator.pop(context),
-                child: const Icon(Icons.close, color: Colors.white, size: 20),
+                child: const Icon(Icons.close, color: Colors.white, size: 24),
               ),
             ],
           ),
@@ -79,7 +79,7 @@ class _CommunityReportSheetState extends State<CommunityReportSheet> {
             groupValue: _selectedReason,
             onChanged: (val) => setState(() => _selectedReason = val),
             title: Text(_reasons[i],
-                style: const TextStyle(color: Colors.white, fontSize: 14)),
+                style:AppTextStyles.caption),
             activeColor: Colors.white,
             dense: true,
           ),
@@ -94,24 +94,29 @@ class _CommunityReportSheetState extends State<CommunityReportSheet> {
                 child: OutlinedButton(
                   onPressed: () => Navigator.pop(context),
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white38),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    fixedSize: const Size(140, 48),
+                    side: const BorderSide(color: Color(0xFF959595)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                   ),
-                  child: const Text('Cancel', style: TextStyle(color: Colors.white, fontSize: 15)),
+                  child:Text('Cancel', style: AppTextStyles.bodySmall.copyWith(color: Color(0xFFC4C4C4)),),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: ElevatedButton(
-                  onPressed: _selectedReason == null ? null : () => setState(() => _step = 1),
+                  onPressed: () {
+                    if (_selectedReason != null) {
+                      setState(() => _step = 1);
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _selectedReason != null ? Colors.white : Colors.white24,
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    fixedSize: const Size(140, 48),
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                   ),
-                  child: const Text('Submit', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                  child:Text('Submit', style: AppTextStyles.bodySmall.copyWith(color: Color(0xFF242424)),),
                 ),
               ),
             ],
@@ -122,37 +127,38 @@ class _CommunityReportSheetState extends State<CommunityReportSheet> {
   }
 
   Widget _buildSuccess() {
-    return Padding(
+    return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 8),
           Container(
-            width: 48, height: 48,
+            width: 30, height: 30,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: Colors.green, width: 2),
             ),
-            child: const Icon(Icons.check, color: Colors.green, size: 28),
+            child: const Icon(Icons.check, color: Colors.green, size: 20),
           ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'Thanx for reporting this',
-            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+            style: AppTextStyles.labelLarge,
           ),
           const SizedBox(height: 24),
           SizedBox(
-            width: double.infinity,
+            width: 311,
             child: ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.black,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(vertical: 20),
               ),
-              child: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+              child:Text('Done', style: AppTextStyles.bodySmall.copyWith(color: Color(0xFF242424)),),
             ),
           ),
           const SizedBox(height: 8),

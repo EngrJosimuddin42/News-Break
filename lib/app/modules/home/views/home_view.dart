@@ -22,75 +22,83 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: const HomeAppBar(),
-      body: Obx(() {
-        switch (controller.selectedNavIndex.value) {
-          case 0: // Home
-            return Column(
-              children: [
-                const HomeTabBar(),
-                const SizedBox(height: 8),
-                Expanded(
-                  child: _buildTabContent(controller.selectedTabIndex.value),
-                ),
-              ],
+    return Obx(() {
+      final navIndex = controller.selectedNavIndex.value;
+
+      // Notification
+      if (navIndex == 2) {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          appBar: const NotificationAppBar(),
+          body: const NotificationBody(),
+          bottomNavigationBar: SafeArea(child: const HomeBottomNavBar()),
+        );
+      }
+
+      // Community
+      if (navIndex == 3) {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          appBar: const CommunityAppBar(),
+          body: const CommunityBody(),
+          bottomNavigationBar: SafeArea(child: const HomeBottomNavBar()),
+        );
+      }
+
+      // Home (default)
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: const HomeAppBar(),
+        body: Column(
+          children: [
+            const HomeTabBar(),
+            const SizedBox(height: 8),
+            Expanded(
+              child: Obx(() =>
+                  _buildTabContent(controller.selectedTabIndex.value)),
+            ),
+          ],
+        ),
+        bottomNavigationBar: SafeArea(child: const HomeBottomNavBar()),
+        floatingActionButton: Obx(() {
+          if (controller.selectedTabIndex.value == 0) {
+            return FloatingActionButton(
+              onPressed: controller.onCreatePost,
+              backgroundColor: AppColors.backgroundAss,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Image.asset('assets/icons/plump_feather_pen.png',
+                  width: 24, height: 24),
             );
-          case 2: // Notification
-            return const NotificationView();
-          case 3: // Community
-            return const CommunityView();
-          default:
-            return const Center(child: Text("Coming Soon"));
-        }
-      }),
-
-      bottomNavigationBar: SafeArea(
-        child: const HomeBottomNavBar(),
-      ),
-
-      floatingActionButton: Obx(() {
-        if (controller.selectedTabIndex.value == 0) {
-          return FloatingActionButton(
-            onPressed: controller.onCreatePost,
-            backgroundColor: AppColors.backgroundAss,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Image.asset('assets/icons/plump_feather_pen.png',
-              width: 24,
-              height: 24,
-            ),
-          );
-        } else {
+          }
           return const SizedBox.shrink();
-        }
-      }),
-    );
+        }),
+      );
+    });
   }
 
   Widget _buildTabContent(int index) {
     switch (index) {
-      case 0: // Reactions
+      case 0:
         return const ReactionsTab();
-      case 1: // For you
+      case 1:
         return const ForYouTab();
-      case 2: // Local
+      case 2:
         return const EmptyTab();
-      case 3: // Local Tv
+      case 3:
         return const EmptyTab();
-      case 4: // Entertainment
+      case 4:
         return const EntertainmentTab();
-      case 5: // Sports
+      case 5:
         return const SportsTab();
-      case 6: // Food
+      case 6:
         return const FoodTab();
-      case 7: // Health
+      case 7:
         return const HealthTab();
-      case 8: // Beauty
+      case 8:
         return const BeautyTab();
-      case 9: // Weather
+      case 9:
         return const WeatherTab();
       default:
         return const ReactionsTab();

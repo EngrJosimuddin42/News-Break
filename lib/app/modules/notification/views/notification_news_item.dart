@@ -53,7 +53,10 @@ class NotificationNewsItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 // Engagement row
-                Row(
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Row(
                   children: [
                     Image.asset(
                       'assets/icons/reactions.png',
@@ -77,6 +80,7 @@ class NotificationNewsItem extends StatelessWidget {
                         style: AppTextStyles.labelSmall.copyWith(color: Color(0xFFAAB6C6))),
                   ],
                 ),
+          ),
               ],
             ),
           ),

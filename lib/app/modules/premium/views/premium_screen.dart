@@ -102,10 +102,8 @@ class PremiumScreen extends GetView<PremiumController> {
                 ),
               )),
               const SizedBox(height: 8),
-              Center(
-                  child:Obx(() => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
+              Obx(() => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _pricingCard(
                     isSelected: controller.isYearly.value,
@@ -116,7 +114,6 @@ class PremiumScreen extends GetView<PremiumController> {
                     original: '\$59.99',
                     onTap: () => controller.selectPlan(true),
                   ),
-                  const SizedBox(width: 300),
                    _pricingCard(
                     isSelected: !controller.isYearly.value,
                     plan: 'Monthly',
@@ -126,7 +123,7 @@ class PremiumScreen extends GetView<PremiumController> {
                     onTap: () => controller.selectPlan(false),
                   ),
                 ],
-              ))),
+              )),
               const SizedBox(height: 32),
               SizedBox(
                 width: 311,
@@ -203,7 +200,7 @@ class PremiumScreen extends GetView<PremiumController> {
           if (badge != null)
             Positioned(
               top: 0,
-              left: 12,
+              left: 45,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(

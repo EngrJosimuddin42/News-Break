@@ -47,6 +47,57 @@ class NotificationAppBar extends GetView<NotificationController>
   }
 }
 
+// ── Follow Notification Item ─────────────────────
+class FollowNotificationItem extends StatelessWidget {
+  final String name;
+  final String avatarUrl;
+  final String timeAgo;
+  final bool isHighlighted;
+
+  const FollowNotificationItem({
+    super.key,
+    required this.name,
+    required this.avatarUrl,
+    required this.timeAgo,
+    this.isHighlighted = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: isHighlighted
+            ? const Color(0xFF2C3C53)
+            : Colors.transparent,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+          CircleAvatar(
+          radius: 24,
+          backgroundImage: NetworkImage(avatarUrl),
+        ),
+        const SizedBox(width: 12),
+        // Text info
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(name,
+                style: AppTextStyles.labelLarge),
+              const SizedBox(height: 2),
+              Text('Started Following you',
+                style: AppTextStyles.labelSmall.copyWith(color:AppColors.light)),
+              const SizedBox(height: 2),
+              Text(timeAgo,
+                style: AppTextStyles.labelSmall.copyWith(color:AppColors.accentLight)),
+            ],
+          ),
+        ),
+          ],
+        ),
+    );
+  }
+}
+
 // ── Body ────────────────────────────────────────
 class NotificationBody extends GetView<NotificationController> {
   const NotificationBody({super.key});
@@ -84,17 +135,69 @@ class NotificationBody extends GetView<NotificationController> {
     },
   ];
 
+  // Sample followers data
+  static const List<Map<String, String>> _followItems = [
+    {
+      'name': 'Banny',
+      'avatarUrl':
+      'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=100',
+      'timeAgo': '1h',
+      'highlighted': 'true',
+    },
+    {
+      'name': 'James K.',
+      'avatarUrl':
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
+      'timeAgo': '3h',
+      'highlighted': 'false',
+    },
+    {
+      'name': 'Sophia Lee',
+      'avatarUrl':
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
+      'timeAgo': '5h',
+      'highlighted': 'false',
+    },
+    {
+      'name': 'Marcus T.',
+      'avatarUrl':
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100',
+      'timeAgo': '1d',
+      'highlighted': 'false',
+    },
+  ];
+
+
   @override
   Widget build(BuildContext context) {
     return TabBarView(
       controller: controller.tabController,
       children: [
-        _buildNewsTab(),
-        _buildEmptyTab(),
-        _buildEmptyTab(),
-        _buildEmptyTab(),
-        _buildEmptyTab(),
+        _buildNewsTab(),   // News    — index 0
+        _buildEmptyTab(),  // Likes   — index 1
+        _buildEmptyTab(),  // Replies — index 2
+        _buildFollowsTab(), // Follows — index 3
+        _buildEmptyTab(),  // Others  — index 4
       ],
+    );
+  }
+
+// ── Follows Tab ──────────────────────────────
+  Widget _buildFollowsTab() {
+    if (_followItems.isEmpty) return _buildEmptyTab();
+    return ListView.separated(
+      itemCount: _followItems.length,
+      separatorBuilder: (_, __) =>
+      const Divider(color: Colors.white12, height: 1),
+      itemBuilder: (context, index) {
+        final item = _followItems[index];
+        return FollowNotificationItem(
+          name: item['name']!,
+          avatarUrl: item['avatarUrl']!,
+          timeAgo: item['timeAgo']!,
+          isHighlighted: item['highlighted'] == 'true',
+        );
+      },
     );
   }
 

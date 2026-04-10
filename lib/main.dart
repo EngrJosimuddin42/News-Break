@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'app/core/bindings/app_binding.dart';
 import 'app/routes/app_pages.dart';
 
 void main() {
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.black,
         fontFamily: 'Roboto',
       ),
+      initialBinding: AppBinding(),
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     );

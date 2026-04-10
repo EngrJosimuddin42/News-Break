@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../../theme/app_colors.dart';
 
 class NotificationSettingsView extends StatefulWidget {
   const NotificationSettingsView({super.key});
@@ -19,7 +20,7 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
   bool _forYou = true;
   bool _localDeals = true;
   bool _commentReplies = true;
-  bool _doNotDisturb = false;
+  bool _doNotDisturb = true;
   double _frequency = 0.5;
 
   @override
@@ -48,7 +49,7 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                  Text('Number of Notification',
-                     style: AppTextStyles.headlineMedium.copyWith(fontWeight: FontWeight.w400)),
+                     style: AppTextStyles.large),
                 const SizedBox(height: 2),
                 Text('Control the frequency of notifications',
                     style: AppTextStyles.overline),
@@ -94,17 +95,12 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
 
           _sectionLabel('Notification Topics'),
 
-          _sectionLabel('Local News'),
-          Padding(
-            padding: const EdgeInsets.only(left: 16, bottom: 4),
-            child: const Text(
-              'Stay informed of local alerts, weather updates, news stories easily.',
-              style: TextStyle(color: Colors.grey, fontSize: 12),
-            ),
+          _labelWithToggle(
+            'Local News',
+            'Stay informed of local alerts, weather updates, news stories easily.',
+            _localNews,
+                (val) => setState(() => _localNews = val),
           ),
-          _switchTile('', _localNews,
-                  (val) => setState(() => _localNews = val),
-              showLabel: false),
 
           _labelWithToggle(
             'Breaking News',
@@ -164,25 +160,22 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Lock Screen Notifications',
-                    style: TextStyle(color: Colors.white, fontSize: 14)),
+                Text('Lock Screen Notifications',
+                    style: AppTextStyles.large),
                 const SizedBox(height: 2),
-                const Text(
-                  'Enable to display latest news stories on lock screen',
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-                const SizedBox(height: 8),
+                 Text('Enable to display latest news stories on lock screen',
+                  style: AppTextStyles.overline),
+                const SizedBox(height: 24),
                 OutlinedButton(
                   onPressed: () {},
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white38),
+                    minimumSize: const Size(100, 50),
+                    side: BorderSide(color:AppColors.textGreen),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 8),
-                  ),
-                  child: const Text('Enable',
-                      style: TextStyle(color: Colors.white, fontSize: 13)),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8)),
+                  child: Text('Enable',
+                      style: AppTextStyles.large.copyWith(color: AppColors.textGreen)),
                 ),
               ],
             ),
@@ -195,14 +188,23 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
 
   Widget _switchTile(String label, bool value, ValueChanged<bool> onChanged,
       {bool showLabel = true}) {
-    return SwitchListTile(
-      title: showLabel
-          ? Text(label, style: AppTextStyles.headlineMedium.copyWith(fontWeight: FontWeight.w400),)
-          : const SizedBox.shrink(),
-      value: value,
-      onChanged: onChanged,
-      activeColor: Colors.blue,
-      dense: true,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          if (showLabel) Text(label, style: AppTextStyles.large),
+          Transform.scale(
+            scale: 0.7,
+            child: Switch(
+              value: value,
+              onChanged: onChanged,
+              activeColor: AppColors.textGreen,
+              thumbColor: const WidgetStatePropertyAll(Colors.black),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -222,18 +224,21 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title,
-                    style: const TextStyle(color: Colors.white, fontSize: 14)),
+                    style: AppTextStyles.large),
                 const SizedBox(height: 2),
                 Text(subtitle,
-                    style:
-                    const TextStyle(color: Colors.grey, fontSize: 12)),
+                    style: AppTextStyles.overline),
               ],
             ),
           ),
-          Switch(
-            value: value,
-            onChanged: onChanged,
-            activeColor: Colors.blue,
+          Transform.scale(
+            scale: 0.7,
+            child: Switch(
+              value: value,
+              onChanged: onChanged,
+              activeColor: AppColors.textGreen,
+              thumbColor: const WidgetStatePropertyAll(Colors.black),
+            ),
           ),
         ],
       ),
@@ -244,10 +249,7 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
       child: Text(label,
-          style: const TextStyle(
-              color: Colors.white,
-              fontSize: 15,
-              fontWeight: FontWeight.w600)),
+          style: AppTextStyles.button.copyWith(color:AppColors.textOnDark)),
     );
   }
 }

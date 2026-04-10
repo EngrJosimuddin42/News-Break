@@ -5,12 +5,10 @@ import 'app_colors.dart';
 class AppTextStyles {
   AppTextStyles._();
 
-  // Display - Cormorant Garamond (serif, editorial)
-  static TextStyle get displayLarge => GoogleFonts.cormorantGaramond(
-    fontSize: 48,
-    fontWeight: FontWeight.w500,
-    color: AppColors.textOnDark,
-    height: 1.1,
+  static TextStyle get display => GoogleFonts.inter(   //
+    fontSize: 10,
+    fontWeight: FontWeight.w400,
+    color: AppColors.surface,
   );
 
   static TextStyle get displayMedium => GoogleFonts.inter(   //
@@ -33,12 +31,10 @@ class AppTextStyles {
     color: AppColors.surface,
   );
 
-  static TextStyle get displayItalicLarge => GoogleFonts.cormorantGaramond(
-    fontSize: 48,
-    fontWeight: FontWeight.w500,
-    fontStyle: FontStyle.italic,
-    color: AppColors.accent,
-    height: 1.1,
+  static TextStyle get large => GoogleFonts.inter(   //
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: AppColors.surface,
   );
 
   static TextStyle get textSmall => GoogleFonts.inter(   //
@@ -145,10 +141,10 @@ class AppTextStyles {
   );
 
   // Splash specific
-  static TextStyle get splashBrand => GoogleFonts.cormorantGaramond(
-    fontSize: 52,
-    fontWeight: FontWeight.w700,
-    color: AppColors.primary,
+  static TextStyle get success => GoogleFonts.inter(
+    fontSize: 28,
+    fontWeight: FontWeight.w600,
+    color: AppColors.success,
     height: 1.0,
   );
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../premium/bindings/premium_binding.dart';
+import '../../premium/views/premium_screen.dart';
 import '../controllers/notification_controller.dart';
 import 'notification_news_item.dart';
 import 'notification_settings_view.dart';
@@ -128,7 +130,10 @@ class NotificationBody extends GetView<NotificationController> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () => Get.to(
+                      () => const PremiumScreen(),
+                  binding: PremiumBinding(),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFFFD5F5C),
                   shape: RoundedRectangleBorder(

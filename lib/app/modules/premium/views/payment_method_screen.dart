@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import 'congrats_screen.dart';
+import '../controllers/premium_controller.dart';
 
-class PaymentMethodScreen extends StatefulWidget {
+class PaymentMethodScreen extends GetView<PremiumController> {
   const PaymentMethodScreen({super.key});
-
-  @override
-  State<PaymentMethodScreen> createState() => _PaymentMethodScreenState();
-}
-
-class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
-  String? _selected;
 
   static const _methods = ['Bkash', 'Nagad', 'Rocket'];
 
@@ -23,9 +17,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         backgroundColor: Colors.black,
         leading: GestureDetector(
           onTap: () => Get.back(),
-          child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 18),
+          child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
         ),
-        title: Text('Payment Method', style: AppTextStyles.labelLarge),
+        title: Text('Payment Method', style: AppTextStyles.displaySmall),
         centerTitle: true,
         elevation: 0,
       ),
@@ -33,58 +27,56 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const SizedBox(height: 8),
-            ..._methods.map((method) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: GestureDetector(
-                onTap: () => setState(() => _selected = method),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1A1A1A),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: _selected == method
-                          ? const Color(0xFFFD5F5C)
-                          : Colors.transparent,
-                      width: 1.5,
+            const SizedBox(height: 30),
+            Obx(() => Column(
+              children: _methods.map((method) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: GestureDetector(
+                  onTap: () => controller.selectPaymentMethod(method),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF333333),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(method, style: AppTextStyles.caption),
+                        Icon(
+                          controller.selectedMethod.value == method
+                              ? Icons.check_circle_outline
+                              : Icons.radio_button_unchecked,
+                          color: controller.selectedMethod.value == method
+                              ? AppColors.linkColor
+                              : AppColors.gray,
+                          size: 22,
+                        ),
+                      ],
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(method, style: AppTextStyles.caption),
-                      Icon(
-                        _selected == method
-                            ? Icons.check_circle_outline
-                            : Icons.radio_button_unchecked,
-                        color: _selected == method
-                            ? const Color(0xFFFD5F5C)
-                            : Colors.grey,
-                        size: 22,
-                      ),
-                    ],
-                  ),
                 ),
-              ),
+              )).toList(),
             )),
             const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              height: 52,
+
+            Obx(() => controller.selectedMethod.value == null
+                ? const SizedBox.shrink()
+                : SizedBox(
+              width: 311,
+              height: 48,
               child: ElevatedButton(
-                onPressed: _selected == null
-                    ? null
-                    : () => Get.to(() => const CongratsScreen()),
+                onPressed: () => controller.processPayment(),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: _selected == null
-                      ? const Color(0xFFFD5F5C).withOpacity(0.4)
-                      : const Color(0xFFFD5F5C),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  backgroundColor:AppColors.linkColor,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
-                child: Text('Continue',
-                    style: AppTextStyles.labelLarge.copyWith(color: Colors.white)),
+                child: controller.isLoading.value
+                    ? const CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
+                    : Text('Continue',
+                    style: AppTextStyles.labelLarge),
               ),
+            ),
             ),
             const SizedBox(height: 24),
           ],

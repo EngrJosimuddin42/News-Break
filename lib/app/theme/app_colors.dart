@@ -5,18 +5,18 @@ class AppColors {
 
   // Primary Brand Colors
   static const Color primaryLight = Color(0xFF4A2E22);
-  static const Color accent = Color(0xFFA89888);
+  static const Color accent = Color(0xFFA89888);  //
   static const Color accentLight = Color(0xFFB08070);
 
 
   // Background
-  static const Color background1 = Color(0x33B29888);
+  static const Color gray = Color(0xFFA6A7AC);
   static const Color backgroundAss = Color(0xFF215C96); //
   static const Color surface = Color(0xFFFFFFFF);    //
   static const Color surfaceVariant = Color(0xFFF0EBE6);
 
   // Text
-  static const Color textPrimary = Color(0xFF1C1C1C);
+  static const Color textPrimary = Color(0xFF7A1CA4);
   static const Color textGreen = Color(0xFF3498FA);  //
   static const Color textPrimary1 = Color(0xFFC4C4C4);  //
   static const Color textPrimary2 = Color(0xFF5B8FA8);
@@ -30,7 +30,7 @@ class AppColors {
   static const Color inputFocused = Color(0xFF2C1810);
 
   // Status
-  static const Color success = Color(0xFF4CAF50);
+  static const Color success = Color(0xFFF0F0F0);
   static const Color error = Color(0xFFE53935);
   static const Color warning = Color(0xFFFFC107);
   static const Color info = Color(0xFF6B9BC4);

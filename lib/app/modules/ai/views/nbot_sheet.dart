@@ -26,7 +26,7 @@ class _NBotSheetState extends State<NBotSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.89,
+      height: MediaQuery.of(context).size.height * 0.80,
       decoration: const BoxDecoration(
         color: Color(0xFF252525),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -70,34 +70,28 @@ class _NBotSheetState extends State<NBotSheet> {
                 Text('People also ask/request/report',
                   style:AppTextStyles.overline,
                 ),
-                const SizedBox(height: 10),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                const SizedBox(height: 16),
+                Wrap(spacing: 14,runSpacing: 14,
                   children: _suggestions.map((s) => GestureDetector(
                     onTap: () => setState(() => _textController.text = s),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2C2C2E),
-                        borderRadius: BorderRadius.circular(20),
+                        color: const Color(0xFF383838),
+                        borderRadius: BorderRadius.circular(60),
                       ),
                       child: Text(s,
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 12)),
+                          style: AppTextStyles.labelMedium.copyWith(fontSize: 11)),
                     ),
                   )).toList(),
                 ),
               ],
             ),
           ),
-
+          SizedBox(height: 32),
           // Input bar
           Padding(
-            padding: EdgeInsets.only(
-              left: 16,
-              right: 16,
+            padding: EdgeInsets.only(left: 16, right: 16,
               bottom: MediaQuery.of(context).viewInsets.bottom + 16,
             ),
             child: Container(
@@ -111,18 +105,20 @@ class _NBotSheetState extends State<NBotSheet> {
                   Expanded(
                     child: TextField(
                       controller: _textController,
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                      style: AppTextStyles.labelMedium,
                       decoration: const InputDecoration(
                         hintText: 'Ask/Request/Report anything',
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
-                        border: InputBorder.none,
                       ),
                     ),
                   ),
                   GestureDetector(
                     onTap: () {},
-                    child: const Icon(Icons.send_rounded,
-                        color: Colors.blueAccent, size: 24),
+                    child: Image.asset(
+                      'assets/icons/send.png',
+                      width: 32,
+                      height: 32,
+                    ),
                   ),
                 ],
               ),

@@ -4,6 +4,7 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../core/controllers/auth_controller.dart';
 import '../../ai/views/nbot_sheet.dart';
 import '../views/creator_onboard_view.dart';
+import '../views/edit_profile_view.dart';
 
 class MeController extends GetxController {
 
@@ -78,7 +79,8 @@ class MeController extends GetxController {
   }
 
   void onCreatorDashboard() => Get.to(() => const CreatorOnboardView());
-  void onCompleteProfile() {}
+
+  void onCompleteProfile() => Get.to(() => const EditProfileView());
 
   void onClearAll(BuildContext context) {
     showDialog(

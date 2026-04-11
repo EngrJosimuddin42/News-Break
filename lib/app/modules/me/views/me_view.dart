@@ -259,8 +259,7 @@ class MeBody extends GetView<MeController> {
                         controller.tabs[0] == 'Content'
                         ? 'Creator dashboard'
                         : 'Become a creator',
-                    style: const TextStyle(
-                        color: Colors.white, fontSize: 13),
+                    style: const TextStyle(color: Colors.white, fontSize: 13),
                   ),
                 ),
               ),

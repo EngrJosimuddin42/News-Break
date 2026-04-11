@@ -55,6 +55,7 @@ class HomeTabBar extends StatelessWidget {
                     width: 1,
                   ),
                 ),
+                child: Center(
                 child: Text(
                   c.tabs[tabIndex],
                   style: AppTextStyles.bodySmall.copyWith(
@@ -66,6 +67,7 @@ class HomeTabBar extends StatelessWidget {
                         : FontWeight.w400,
                   ),
                 ),
+              ),
               ),
             );
           });

@@ -91,7 +91,7 @@ class _NewsCardState extends State<NewsCard> {
                       const SizedBox(height: 2),
                       Row(
                         children: [
-                         Image.asset('assets/icons/person.png'),
+                         Image.asset('assets/icons/person.png',height: 14,width: 14),
                           const SizedBox(width: 3),
                           Text(
                             widget.publisherMeta,

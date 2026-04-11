@@ -11,6 +11,7 @@ import 'package:news_break/app/modules/home/views/widgets/tabs/sports_tab.dart';
 import 'package:news_break/app/modules/home/views/widgets/tabs/weather_tab.dart';
 import '../../../theme/app_colors.dart';
 import '../../community/views/community_view.dart';
+import '../../me/views/me_view.dart';
 import '../../notification/views/notification_view.dart';
 import '../controllers/home_controller.dart';
 import 'widgets/bottom_nav_bar.dart';
@@ -41,6 +42,15 @@ class HomeView extends GetView<HomeController> {
           backgroundColor: Colors.black,
           appBar: const CommunityAppBar(),
           body: const CommunityBody(),
+          bottomNavigationBar: SafeArea(child: const HomeBottomNavBar()),
+        );
+      }
+
+      if (navIndex == 4) {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          appBar: const MeAppBar(),
+          body: const MeBody(),
           bottomNavigationBar: SafeArea(child: const HomeBottomNavBar()),
         );
       }

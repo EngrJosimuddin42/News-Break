@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../routes/app_pages.dart';
+import '../../ai/views/nbot_sheet.dart';
 
 class HomeController extends GetxController {
   // Tab list
@@ -23,6 +25,16 @@ class HomeController extends GetxController {
 
   // App bar actions
   void onEditTabs() => Get.toNamed(Routes.EDIT_TABS, arguments: tabs);
+
+  void onAI() {
+    showModalBottomSheet(
+      context: Get.context!,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const NBotSheet(),
+    );
+  }
+
   void onSearch() {}
   void onLocation() {}
 

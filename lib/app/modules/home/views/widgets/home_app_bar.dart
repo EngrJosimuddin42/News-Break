@@ -40,7 +40,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          onPressed: c.onCreatePost,
+          onPressed: c.onAI,
           icon: Image.asset('assets/icons/add.png', width: 22, height: 22),
         ),
         IconButton(

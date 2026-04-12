@@ -4,6 +4,7 @@ import '../../../core/controllers/auth_controller.dart';
 import '../../../routes/app_pages.dart';
 import '../../ai/views/nbot_sheet.dart';
 import '../../location/views/choose_location_sheet.dart';
+import '../../search/views/search_view.dart';
 
 class HomeController extends GetxController {
   // Tab list
@@ -42,7 +43,7 @@ class HomeController extends GetxController {
     );
   }
 
-  void onSearch() {}
+  void onSearch() => Get.to(() => const SearchView());
 
 
   void onLocation() {

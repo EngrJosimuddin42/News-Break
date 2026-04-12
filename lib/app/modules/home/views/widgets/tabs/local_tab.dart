@@ -58,8 +58,7 @@ class LocalTab extends GetView<HomeController> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            'assets/images/socket.png',
+          Image.asset('assets/images/socket.png',
             width: 130,
             height: 130,
           ),
@@ -75,8 +74,7 @@ class LocalTab extends GetView<HomeController> {
               minimumSize: const Size(90, 50),
               side: const BorderSide(color: AppColors.linkColor),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(60)),
-            ),
+                  borderRadius: BorderRadius.circular(60))),
             child: Text('Try Again',
               style: AppTextStyles.caption.copyWith(color: AppColors.linkColor),
             ),
@@ -109,24 +107,32 @@ class LocalTab extends GetView<HomeController> {
           // Temperature row
           Row(
             children: [
-              Text('44°F',
-                 style: AppTextStyles.displaySmall),
+              Text('44°F', style: AppTextStyles.displaySmall),
               const SizedBox(width: 8),
               Image.asset('assets/icons/weather_cloudy.png'),
               SizedBox(width: 24),
               // Forecast days
-              ..._weatherDays.map((day) => Padding(
-                padding: const EdgeInsets.only(left: 12),
-                child: Column(
-                  children: [
-                    Text(day['day']!, style:AppTextStyles.display.copyWith(color:AppColors.textOnDark)),
-                    const SizedBox(height: 4),
-                    Image.asset(day['icon']!, width: 20, height: 20),
-                    const SizedBox(height: 4),
-                    Text(day['temp']!, style:AppTextStyles.display.copyWith(color:AppColors.textOnDark)),
-                  ],
+              Flexible(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: _weatherDays.map((day) => Padding(
+                      padding: const EdgeInsets.only(left: 12),
+                      child: Column(
+                        children: [
+                          Text(day['day']!,
+                              style: AppTextStyles.display.copyWith(color: AppColors.textOnDark)),
+                          const SizedBox(height: 4),
+                          Image.asset(day['icon']!, width: 20, height: 20),
+                          const SizedBox(height: 4),
+                          Text(day['temp']!,
+                              style: AppTextStyles.display.copyWith(color: AppColors.textOnDark)),
+                        ],
+                      ),
+                    )).toList(),
+                  ),
                 ),
-              )),
+              ),
             ],
           ),
 
@@ -226,14 +232,20 @@ class _RainChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final barPaint = Paint() ..color = AppColors.chart;
-
     final gridPaint = Paint() ..color = AppColors.stroke
       ..strokeWidth = 1;
 
-    // Grid lines — dashed
+// Grid lines
     for (int i = 0; i < 4; i++) {
-    final y = size.height * i / 3;
-    _drawDashedLine(canvas, Offset(0, y), Offset(size.width, y), gridPaint);
+      final y = size.height * i / 3;
+      final double currentMargin = (i == 0) ? 30.0 : 10.0;
+      final Offset startPoint = Offset(currentMargin, y);
+      final Offset endPoint = Offset(size.width - currentMargin, y);
+      if (i == 3) {
+        canvas.drawLine(startPoint, endPoint, gridPaint);
+      } else {
+        _drawDashedLine(canvas, startPoint, endPoint, gridPaint);
+      }
     }
 
     // Bars
@@ -251,15 +263,14 @@ class _RainChartPainter extends CustomPainter {
       );
     }
 
-    // ৪. X-axis Labels (Now, 10PM...)
+    // X-axis Labels (Now, 10PM...)
     final labels = ['Now', '10PM', '04AM', '10AM'];
     final labelStyle = TextStyle(color: Colors.white38, fontSize: 10);
     for (int i = 0; i < labels.length; i++) {
       final xPos = i * (size.width / (labels.length - 1));
       final tp = TextPainter(
         text: TextSpan(text: labels[i], style: labelStyle),
-        textDirection: TextDirection.ltr,
-      )..layout();
+        textDirection: TextDirection.ltr)..layout();
       double xOffset = xPos - (tp.width / 2);
       if (i == 0) xOffset = 0;
       if (i == labels.length - 1) xOffset = size.width - tp.width;
@@ -268,18 +279,19 @@ class _RainChartPainter extends CustomPainter {
 
 
     // Y labels
-    final yStyle = AppTextStyles.labelSmall.copyWith(color: Color(0xFF9291A5));
-    final yLabels = {'in': 0.0, '0.07': size.height * (0.07 / 0.08)};
-
+    final yStyle = AppTextStyles.labelSmall.copyWith(color: const Color(0xFF9291A5));
+    final yLabels = {'in': 0.0, '0.07': size.height * (0.08 / 0.08)};
     yLabels.forEach((text, yPos) {
       final tp = TextPainter(
         text: TextSpan(text: text, style: yStyle),
         textDirection: TextDirection.ltr,
       )..layout();
-      tp.paint(
-        canvas,
-        Offset(0, text == 'in' ? 0 : size.height - yPos - 70),
-      );
+
+      if (text == 'in') {
+        tp.paint(canvas, const Offset(0, -55));
+      } else {
+        tp.paint(canvas, Offset(0, (size.height - yPos) - (tp.height / 2)));
+      }
     });
 
     // Date label on tallest bar
@@ -287,10 +299,8 @@ class _RainChartPainter extends CustomPainter {
     final dateTp = TextPainter(
       text: TextSpan(
         text: dateLabel,
-        style: const TextStyle(color: Colors.white, fontSize: 9),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
+        style: const TextStyle(color: Colors.white, fontSize: 9)),
+      textDirection: TextDirection.ltr)..layout();
     final tallestIndex = 4; // 0.08 value
     final tallestX = tallestIndex * (size.width / barData.length) + barWidth / 2;
     final tallestHeight = size.height * barData[tallestIndex] / 0.08;

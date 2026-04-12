@@ -6,7 +6,6 @@ import '../../../core/controllers/auth_controller.dart';
 import '../../../widgets/premium_banner.dart';
 import '../controllers/me_controller.dart';
 import 'history_item.dart';
-import 'creator_onboard_view.dart';
 
 // ── AppBar
 class MeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -184,15 +183,18 @@ class MeBody extends GetView<MeController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Avatar
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.blueAccent.withOpacity(0.3),
+              GestureDetector(
+                onTap: controller.onCompleteProfile,
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xFF8DC0F9),
+                  ),
+                  alignment: Alignment.center,
+                  child: Image.asset('assets/icons/person.png',height: 32,width: 32,fit: BoxFit.contain,color:AppColors.surface),
                 ),
-                child: const Icon(Icons.person,
-                    color: Colors.blueAccent, size: 36),
               ),
               const SizedBox(width: 16),
               // Stats
@@ -245,18 +247,17 @@ class MeBody extends GetView<MeController> {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () =>
-                      Get.to(() => const CreatorOnboardView()),
+                  onPressed: () => controller.selectedTab.value == 0
+                      ? controller.onCreatorDashboard()
+                      : controller.onBecomeCreator(),
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white38),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
                   child: Text(
-                    controller.selectedTab.value == 0 &&
-                        controller.tabs[0] == 'Content'
+                    controller.selectedTab.value == 0
                         ? 'Creator dashboard'
                         : 'Become a creator',
                     style: const TextStyle(color: Colors.white, fontSize: 13),
@@ -271,12 +272,10 @@ class MeBody extends GetView<MeController> {
                     side: const BorderSide(color: Colors.white38),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
                   child: const Text('Complete profile',
-                      style: TextStyle(
-                          color: Colors.white, fontSize: 13)),
+                      style: TextStyle(color: Colors.white, fontSize: 13)),
                 ),
               ),
             ],
@@ -305,20 +304,39 @@ class MeBody extends GetView<MeController> {
 
     switch (tabName) {
       case 'Content':
-        return const Padding(
-          padding: EdgeInsets.only(top: 60),
-          child: Column(
-            children: [
-              Text('No Content',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600)),
-              SizedBox(height: 8),
-              Text("You haven't posted anything. Yet.",
-                  style: TextStyle(color: Colors.grey, fontSize: 13)),
-            ],
-          ),
+        return Column(
+          children: [
+            // Sub chips
+            Obx(() => Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+              child: Row(
+                children: [
+                  _chip('Videos',
+                      controller.selectedChipIndex.value == 0,
+                          () => controller.updateChip(0)),
+                  const SizedBox(width: 8),
+                  _chip('Posts',
+                      controller.selectedChipIndex.value == 1,
+                          () => controller.updateChip(1)),
+                  const SizedBox(width: 8),
+                  _chip('Community',
+                      controller.selectedChipIndex.value == 2,
+                          () => controller.updateChip(2)),
+                ],
+              ),
+            )),
+
+            const SizedBox(height: 40),
+            const Text('No Post',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600)),
+            const SizedBox(height: 8),
+            const Text('This feature will be coming soon.',
+                style: TextStyle(color: Colors.grey, fontSize: 13)),
+            const SizedBox(height: 40),
+          ],
         );
       case 'Reactions':
         return const Padding(

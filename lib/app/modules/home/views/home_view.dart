@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/modules/home/views/widgets/tabs/beauty_tab.dart';
-import 'package:news_break/app/modules/home/views/widgets/tabs/empty_tab.dart';
+import 'package:news_break/app/modules/home/views/widgets/tabs/local_tab.dart';
+import 'package:news_break/app/modules/home/views/widgets/tabs/local_tv_tab.dart';
 import 'package:news_break/app/modules/home/views/widgets/tabs/entertainment_tab.dart';
 import 'package:news_break/app/modules/home/views/widgets/tabs/food_tab.dart';
 import 'package:news_break/app/modules/home/views/widgets/tabs/for_you_tab.dart';
@@ -95,9 +96,9 @@ class HomeView extends GetView<HomeController> {
       case 1:
         return const ForYouTab();
       case 2:
-        return const EmptyTab();
+        return const LocalTab();
       case 3:
-        return const EmptyTab();
+        return const LocalTvTab();
       case 4:
         return const EntertainmentTab();
       case 5:

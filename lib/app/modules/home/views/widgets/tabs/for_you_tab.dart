@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../controllers/home_controller.dart';
+import '../ad_video_card.dart';
 import '../clip_card.dart';
 import '../people_card.dart';
 import 'category_news_card.dart';
@@ -123,8 +124,16 @@ class ForYouTab extends GetView<HomeController> {
 
         // News Section
         ...List.generate(
-          _items.length,
-              (index) => CategoryNewsCard(item: _items[index]),
+          controller.isLoggedIn ? _items.length + 1 : _items.length,
+              (index) {
+            if (controller.isLoggedIn && index == 1) {
+              return const AdVideoCard();
+            }
+            final itemIndex = (controller.isLoggedIn && index > 1)
+                ? index - 1
+                : index;
+            return CategoryNewsCard(item: _items[itemIndex]);
+          },
         ),
 
         const SizedBox(height: 16),

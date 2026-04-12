@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../core/controllers/auth_controller.dart';
 import '../../ai/views/nbot_sheet.dart';
+import '../views/creator_dashboard_view.dart';
 import '../views/creator_onboard_view.dart';
 import '../views/edit_profile_view.dart';
 
@@ -45,8 +46,10 @@ class MeController extends GetxController {
   ].obs;
 
   var selectedChipIndex = 0.obs;
-
   void updateChip(int index) => selectedChipIndex.value = index;
+
+  var selectedContentChipIndex = 0.obs;
+  void updateContentChip(int index) => selectedContentChipIndex.value = index;
 
   void deleteSingleHistoryItem(String id) {
     historyItems.removeWhere((item) => item['id'] == id);
@@ -78,7 +81,10 @@ class MeController extends GetxController {
     );
   }
 
-  void onCreatorDashboard() => Get.to(() => const CreatorOnboardView());
+
+  void onBecomeCreator() => Get.to(() => const CreatorOnboardView());
+
+  void onCreatorDashboard() => Get.to(() => const CreatorDashboardView());
 
   void onCompleteProfile() => Get.to(() => const EditProfileView());
 

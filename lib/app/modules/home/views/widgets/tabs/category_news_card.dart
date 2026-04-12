@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CategoryNewsItem {
   final String publisherName;
   final String publisherType;
   final String followerCount;
   final String imageUrl;
+  final String? videoUrl;
   final String label;
   final String timeAgo;
   final String title;
@@ -19,6 +22,7 @@ class CategoryNewsItem {
     required this.publisherType,
     required this.followerCount,
     required this.imageUrl,
+    this.videoUrl,
     required this.label,
     required this.timeAgo,
     required this.title,
@@ -51,19 +55,18 @@ class CategoryNewsCard extends StatelessWidget {
             child: Row(
               children: [
                 ClipOval(
-                  child: Image.asset(
-                    'assets/images/publisher.png',
+                  child: Image.asset('assets/images/publisher.png',
                     width: 42,
                     height: 42,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => CircleAvatar(
-                      radius: 21,
-                      backgroundColor: Colors.grey[800],
-                      child: Text(
-                        item.publisherName[0].toUpperCase(),
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
+                    errorBuilder: (_, __, ___) =>
+                        CircleAvatar(
+                          radius: 21,
+                          backgroundColor: Colors.grey[800],
+                          child: Text(item.publisherName[0].toUpperCase(),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -72,19 +75,12 @@ class CategoryNewsCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        children: [
-                          Text(
-                            item.publisherName,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                        children: [Text(item.publisherName,
+                          style: AppTextStyles.bodyMedium,
+                        ),
                           if (item.isVerified) ...[
                             const SizedBox(width: 4),
-                            Image.asset(
-                              'assets/icons/verified.png',
+                            Image.asset('assets/icons/verified.png',
                               width: 20,
                               height: 20,
                             ),
@@ -92,94 +88,53 @@ class CategoryNewsCard extends StatelessWidget {
                         ],
                       ),
                       Text(
-                        '${item.publisherType} · ${item.followerCount} followers',
-                        style: TextStyle(
-                          color: Colors.grey.shade400,
-                          fontSize: 11,
-                        ),
+                        '${item.publisherType} · ${item
+                            .followerCount} followers',
+                        style: AppTextStyles.overline.copyWith(
+                            color: AppColors.textTertiary),
                       ),
                     ],
                   ),
                 ),
                 TextButton(
                   onPressed: () {},
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: const Text(
-                    'Follow',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  child: Text('Follow',
+                    style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.textGreen),
                   ),
                 ),
                 GestureDetector(
                   onTap: () {},
-                  child: Icon(Icons.close, color: Colors.grey.shade400, size: 18),
+                  child: Icon(Icons.close,
+                      color: Color(0xFF6C6C6C), size: 20),
                 ),
               ],
             ),
           ),
 
-          // News Image
-          ClipRRect(
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: item.imageUrl.startsWith('http')
-                  ? Image.network(
-                item.imageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  color: Colors.grey.shade800,
-                  child: const Center(
-                    child: Icon(Icons.image, color: Colors.grey, size: 48),
-                  ),
-                ),
-              )
-                  : Container(
-                color: Colors.grey.shade800,
-                child: const Center(
-                  child: Icon(Icons.image, color: Colors.grey, size: 48),
-                ),
-              ),
-            ),
-          ),
+          // Media (Video or Image)
+          _buildMedia(),
 
-          // Content
+          // Label + time
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
             child: Row(
               children: [
-                Text(
-                  item.label,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.5,
-                  ),
+                Text(item.label,
+                  style: AppTextStyles.overline,
                 ),
-                Text(
-                  ' · ${item.timeAgo}',
-                  style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
+                Text(' · ${item.timeAgo}',
+                  style: AppTextStyles.labelSmall,
                 ),
               ],
             ),
           ),
+
+          // Title
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
-            child: Text(
-              item.title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                height: 1.4,
-              ),
+            child: Text(item.title,
+              style: AppTextStyles.buttonOutline,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
@@ -191,46 +146,116 @@ class CategoryNewsCard extends StatelessWidget {
             child: Row(
               children: [
                 Image.asset('assets/icons/reactions.png',
-                  width: 50,
-                  height: 20,
-                ),
+                    width: 50, height: 20),
                 const SizedBox(width: 4),
                 Text(item.reactions,
-                    style: TextStyle(color: Colors.grey.shade400, fontSize: 12)),
+                    style: AppTextStyles.labelMedium),
                 const SizedBox(width: 60),
-                // Like
                 Row(children: [
                   Image.asset('assets/icons/like.png',
-                    width: 20,
-                    height: 20,
-                  ),
+                      width: 20, height: 20),
                   const SizedBox(width: 4),
-                  Text(item.likes, style: TextStyle(color: Colors.grey.shade400, fontSize: 12)),
+                  Text(item.likes,
+                      style: AppTextStyles.labelMedium),
                 ]),
                 const SizedBox(width: 16),
-                // Comment
                 Row(children: [
                   Image.asset('assets/icons/comment.png',
-                    width: 20,
-                    height: 20,
-                  ),
+                      width: 20, height: 20),
                   const SizedBox(width: 4),
-                  Text(item.comments, style: TextStyle(color: Colors.grey.shade400, fontSize: 12)),
+                  Text(item.comments,
+                      style: AppTextStyles.labelMedium),
                 ]),
                 const SizedBox(width: 16),
-                // Share
                 Row(children: [
                   Image.asset('assets/icons/share.png',
-                    width: 20,
-                    height: 20,
-                  ),
+                      width: 20, height: 20),
                   const SizedBox(width: 4),
-                  Text('Share', style: TextStyle(color: Colors.grey.shade400, fontSize: 12)),
+                  Text('Share',
+                      style: AppTextStyles.labelMedium),
                 ]),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // ── Media widget ─────────────────────────────
+  Widget _buildMedia() {
+    if (item.videoUrl != null) {
+      return AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Stack(
+          children: [
+            // Thumbnail image
+            Image.network(
+              item.imageUrl,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) =>
+                  Container(
+                    color: Colors.grey.shade800,
+                    child: const Center(
+                      child: Icon(Icons.image, color: Colors.grey, size: 48),
+                    ),
+                  ),
+            ),
+
+            // Play/Pause overlay
+            if (item.videoUrl != null)
+              Positioned.fill(
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () async {
+                      final Uri url = Uri.parse(item.videoUrl!);
+                      if (!await launchUrl(url)) {
+
+                      }
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color:AppColors.overlayLight,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.play_arrow_rounded,
+                        color: AppColors.surface,
+                        size: 40,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
+    }
+
+    // Normal image
+    return ClipRRect(
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: item.imageUrl.startsWith('http')
+            ? Image.network(
+          item.imageUrl,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) =>
+              Container(
+                color: Colors.grey.shade800,
+                child: const Center(
+                  child: Icon(Icons.image, color: Colors.grey, size: 48),
+                ),
+              ),
+        )
+            : Container(
+          color: Colors.grey.shade800,
+          child: const Center(
+            child: Icon(Icons.image, color: Colors.grey, size: 48),
+          ),
+        ),
       ),
     );
   }

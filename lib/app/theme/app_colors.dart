@@ -20,7 +20,7 @@ class AppColors {
   static const Color textGreen = Color(0xFF3498FA);  //
   static const Color textPrimary1 = Color(0xFFC4C4C4);  //
   static const Color textPrimary2 = Color(0xFF5B8FA8);
-  static const Color textTertiary = Color(0xFFAAAAAA);
+  static const Color textTertiary = Color(0xFF929292);  //
   static const Color textOnDark = Color(0xFF959595);  //
   static const Color textOnDarkSecondary = Color(0xFF3D2817);
 
@@ -30,18 +30,20 @@ class AppColors {
   static const Color inputFocused = Color(0xFF2C1810);
 
   // Status
-  static const Color success = Color(0xFFF0F0F0);
+  static const Color success = Color(0xFFF0F0F0); //
   static const Color error = Color(0xFFE53935);
   static const Color warning = Color(0xFFFFC107);
-  static const Color info = Color(0xFFA0A0A0);
+  static const Color info = Color(0xFFA0A0A0);  //
 
-  // Divider & Border
+  // Divider & Border & chart
   static const Color divider = Color(0xFFE8E0D8);
   static const Color border = Color(0xFFCACACA);
+  static const Color chart = Color(0xFF68B1FD);
+  static const Color stroke = Color(0xFFE5E5EF);
 
   // Overlay
   static const Color overlay = Color(0xFFA6A6A6);
-  static const Color overlayLight = Color(0x40000000);
+  static const Color overlayLight = Color(0xFF242424);
 
   // AI Badge
   static const Color aiBadge = Color(0xFF4A90D9);

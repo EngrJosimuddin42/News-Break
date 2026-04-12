@@ -414,6 +414,17 @@ class _EditProfileViewState extends State<EditProfileView> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 8),
+            // ✅ এটা যোগ করুন
+            ListTile(
+              leading: const Icon(Icons.info_outline, color: Colors.white),
+              title: const Text('About this profile',
+                  style: TextStyle(color: Colors.white, fontSize: 15)),
+              onTap: () {
+                Navigator.pop(context);
+                _showAboutProfile();
+              },
+            ),
+            const Divider(color: Colors.white12, height: 1),
             ListTile(
               leading: const Icon(Icons.delete_outline, color: Colors.red),
               title: const Text('Delete account',
@@ -460,6 +471,66 @@ class _EditProfileViewState extends State<EditProfileView> {
                 style: TextStyle(color: Colors.red)),
           ),
         ],
+      ),
+    );
+  }
+
+  // ── About profile dialog ─────────────────────
+  void _showAboutProfile() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: const Color(0xFF2C2C2E),
+        title: const Text('About this profile',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              _nameController.text,
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 16),
+            const Divider(color: Colors.white12, height: 1),
+            const SizedBox(height: 16),
+            const Text('Joined',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600)),
+            const SizedBox(height: 4),
+            const Text('Since april 2024',
+                style: TextStyle(color: Colors.white70, fontSize: 13)),
+            const SizedBox(height: 16),
+            const Divider(color: Colors.white12, height: 1),
+            const SizedBox(height: 12),
+            RichText(
+              text: const TextSpan(
+                style: TextStyle(
+                    color: Colors.grey, fontSize: 12, height: 1.5),
+                children: [
+                  TextSpan(
+                      text: 'All content is required to comply with our '),
+                  TextSpan(
+                    text: 'Community Standards',
+                    style: TextStyle(color: Colors.blueAccent),
+                  ),
+                  TextSpan(
+                      text:
+                      '. Please help us keep ous community safe by reporting any violations.'),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

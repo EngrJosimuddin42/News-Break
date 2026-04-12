@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../core/controllers/auth_controller.dart';
 import '../../../routes/app_pages.dart';
 import '../../ai/views/nbot_sheet.dart';
+import '../../location/views/choose_location_sheet.dart';
 
 class HomeController extends GetxController {
   // Tab list
@@ -12,6 +14,11 @@ class HomeController extends GetxController {
 
   final RxInt selectedTabIndex = 0.obs;
   final RxInt selectedNavIndex = 0.obs;
+
+  // Auth check
+  bool get isLoggedIn => AuthController.to.user.value != null;
+  String get userName => AuthController.to.user.value?.name ?? '';
+
 
   // Bottom nav
   void onNavTap(int index) {
@@ -36,13 +43,39 @@ class HomeController extends GetxController {
   }
 
   void onSearch() {}
-  void onLocation() {}
+
+
+  void onLocation() {
+    showModalBottomSheet(
+      context: Get.context!,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const ChooseLocationSheet(),
+    );
+  }
+
+
+  final selectedLocation = Rxn<Map<String, String>>();
+  void setLocation(Map<String, String> location) {
+    selectedLocation.value = location;
+  }
+  String get locationTitle => selectedLocation.value?['city'] ?? 'Choose Your Location';
+
 
   // FAB — create post
-  void onCreatePost() => Get.toNamed(Routes.CREATE_POST);
+  void onCreatePost() {
+    if (isLoggedIn) {
+      Get.toNamed(Routes.CREATE_POST);
+    } else {
+      Get.toNamed(Routes.SIGNIN);
+    }
+  }
 
   // News card actions
-  void onFollow(String publisher) {}
+  void onFollow(String publisher) {
+    if (!isLoggedIn) Get.toNamed(Routes.SIGNIN);
+  }
+
   void onDismiss(String publisher) {}
   void onTryAgain() {}
 }

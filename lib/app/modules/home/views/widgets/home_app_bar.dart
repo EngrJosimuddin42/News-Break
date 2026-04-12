@@ -17,27 +17,32 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: AppColors.background,
       elevation: 0,
       titleSpacing: 16,
-      title: Row(
-        children: [
-          Text('Choose Your Location', style: AppTextStyles.headlineMedium),
-          const SizedBox(width: 6),
-          Container(
-            width: 18,
-            height: 18,
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              shape: BoxShape.circle,
-            ),
-            child: const Center(
-              child: Icon(
-                Icons.keyboard_arrow_down_rounded,
-                color: AppColors.background,
-                size: 15,
+      title: GestureDetector(
+        onTap: c.onLocation,
+        child: Obx(() => Row(
+          children: [
+            Text(c.locationTitle,
+              style: AppTextStyles.headlineMedium),
+            const SizedBox(width: 6),
+            Container(
+              width: 18,
+              height: 18,
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                shape: BoxShape.circle,
+              ),
+              child: const Center(
+                child: Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: AppColors.background,
+                  size: 15,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        )),
       ),
+
       actions: [
         IconButton(
           onPressed: c.onAI,

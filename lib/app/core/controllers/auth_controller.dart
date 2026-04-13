@@ -10,7 +10,6 @@ class AuthController extends GetxController {
           ? user.value!.name[0].toUpperCase()
           : 'A';
 
-  // TODO: এখানে API থেকে user load
   @override
   void onInit() {
     super.onInit();
@@ -18,10 +17,11 @@ class AuthController extends GetxController {
   }
 
   void _loadUser() {
-    // Dummy data — পরে API দিয়ে replace
+    // Dummy data — after replace by API
     user.value = UserModel(
       name: 'Amalia',
       email: 'amalia@example.com',
+      profileImageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
     );
   }
 
@@ -29,11 +29,44 @@ class AuthController extends GetxController {
     user.value = null;
     Get.offAllNamed('/login');
   }
+
+  void updateProfile({
+    required String name,
+    required String email,
+    String? bio,
+    String? website,
+    String? gender,
+    String? birthYear,
+  }) {
+    user.value = UserModel(
+      name: name,
+      email: email,
+      bio: bio,
+      website: website,
+      gender: gender,
+      birthYear: birthYear,
+      profileImageUrl: user.value?.profileImageUrl,
+    );
+  }
+
 }
 
 class UserModel {
   final String name;
   final String email;
+  final String? bio;
+  final String? website;
+  final String? gender;
+  final String? birthYear;
+  final String? profileImageUrl;
 
-  UserModel({required this.name, required this.email});
+  UserModel({
+    required this.name,
+    required this.email,
+    this.bio,
+    this.website,
+    this.gender,
+    this.birthYear,
+    this.profileImageUrl
+  });
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 
 class ManageLocationView extends StatefulWidget {
   const ManageLocationView({super.key});
@@ -57,30 +59,26 @@ class _ManageLocationViewState extends State<ManageLocationView> {
                 children: [
                   GestureDetector(
                     onTap: () => Get.back(),
-                    child: const Icon(Icons.arrow_back_ios,
-                        color: Colors.white, size: 20),
+                    child:Icon(Icons.arrow_back_ios, color:AppColors.textOnDark, size: 20),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Container(
                       height: 44,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2C2C2E),
-                        borderRadius: BorderRadius.circular(10),
+                        color: const Color(0xFF121212),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       child: TextField(
                         controller: _searchController,
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 14),
-                        decoration: const InputDecoration(
+                        style: AppTextStyles.labelLarge,
+                        decoration:InputDecoration(
                           hintText: 'Enter an address or zip code',
-                          hintStyle: TextStyle(
-                              color: Colors.grey, fontSize: 13),
+                          hintStyle: AppTextStyles.overline.copyWith(fontSize: 14),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
                               horizontal: 12, vertical: 12),
-                          suffixIcon: Icon(Icons.search,
-                              color: Colors.grey, size: 18),
+                          suffixIcon: Icon(Icons.search,color: AppColors.textOnDark, size: 20),
                         ),
                       ),
                     ),
@@ -92,12 +90,11 @@ class _ManageLocationViewState extends State<ManageLocationView> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 14, vertical: 10),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2C2C2E),
-                        borderRadius: BorderRadius.circular(8),
+                        color: const Color(0xFF343434),
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Text('Skip',
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 14)),
+                      child:Text('Skip',
+                          style:AppTextStyles.bodyMedium),
                     ),
                   ),
                 ],
@@ -124,74 +121,80 @@ class _ManageLocationViewState extends State<ManageLocationView> {
 
           // ── Bottom Ad banner ─────────────────
           Positioned(
-            bottom: 24,
-            left: 12,
-            right: 12,
+            bottom: 32,
+            left: 16,
+            right: 16,
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 12, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               decoration: BoxDecoration(
-                color: const Color(0xFF1C1C1E),
+                color: const Color(0xFF444447),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=100',
-                      width: 44,
-                      height: 44,
+                  ClipOval(
+                    child: Image.asset(
+                      'assets/images/publisher.png',
+                      width: 48,
+                      height: 48,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                        width: 44,
-                        height: 44,
-                        color: Colors.grey[800],
-                      ),
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  const Expanded(
+                  const SizedBox(width: 12),
+                  Expanded(
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('FoodRadar',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600)),
-                        Text(
-                          'Find Free Food Near You Instantly. 100% Free, No Ads.',
-                          style: TextStyle(
-                              color: Colors.grey, fontSize: 11),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('FoodRadar',
+                           style: AppTextStyles.bodyMedium),
+                            GestureDetector(
+                              onTap: () {},
+                              child: const Icon(Icons.close, color: Colors.grey, size: 20),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 6),
+
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Expanded(
+                              child: Text('Find Free Food Near You Instantly. 100% Free, No Ads.',
+                          style:AppTextStyles.overline,
                           maxLines: 2,
+                                  overflow: TextOverflow.ellipsis
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: const Color(0xFF242424),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                minimumSize: Size.zero,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                              child: Text('Open',
+                                  style: AppTextStyles.bodyMedium.copyWith(color: Color(0xFF242424))),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      minimumSize: Size.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    child: const Text('Open',
-                        style: TextStyle(fontSize: 13)),
-                  ),
-                  const SizedBox(width: 8),
-                  const Icon(Icons.close,
-                      color: Colors.grey, size: 16),
                 ],
               ),
             ),
-          ),
+          )
         ],
       ),
     );

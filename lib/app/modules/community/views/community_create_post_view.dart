@@ -129,7 +129,9 @@ class _CreatePostViewState extends State<CommunityCreatePostView> {
                 SizedBox(
                   width:335,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.back();
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF656565),
                       shape: RoundedRectangleBorder(

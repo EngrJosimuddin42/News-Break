@@ -141,17 +141,16 @@ class AppTextStyles {
   );
 
   // Splash specific
-  static TextStyle get success => GoogleFonts.inter(
+  static TextStyle get success => GoogleFonts.inter(   //
     fontSize: 28,
     fontWeight: FontWeight.w600,
     color: AppColors.success,
     height: 1.0,
   );
 
-  static TextStyle get splashTagline => GoogleFonts.cormorantGaramond(
+  static TextStyle get tagline => GoogleFonts.inter(  //
     fontSize: 24,
-    fontWeight: FontWeight.w500,
-    fontStyle: FontStyle.italic,
-    color: AppColors.accent,
+    fontWeight: FontWeight.w600,
+    color: AppColors.surface,
   );
 }

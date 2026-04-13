@@ -264,7 +264,7 @@ class _RainChartPainter extends CustomPainter {
     }
 
     // X-axis Labels (Now, 10PM...)
-    final labels = ['Now', '10PM', '04AM', '10AM'];
+    final labels = ['Now', '10 PM', '04 AM', '10 AM'];
     final labelStyle = TextStyle(color: Colors.white38, fontSize: 10);
     for (int i = 0; i < labels.length; i++) {
       final xPos = i * (size.width / (labels.length - 1));

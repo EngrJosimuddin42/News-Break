@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../../../core/controllers/auth_controller.dart';
 import 'category_news_card.dart';
@@ -61,13 +62,13 @@ class _WeatherTabState extends State<WeatherTab> {
     {'time': '03AM', 'icon': 'assets/icons/weather_night.png', 'temp': '30°'},
     {'time': '04AM', 'icon': 'assets/icons/weather_night.png', 'temp': '30°'},
     {'time': '05AM', 'icon': 'assets/icons/weather_cloudy.png', 'temp': '30°'},
-    {'time': '06AM', 'icon': 'assets/icons/weather_sunny.png', 'temp': '30°'},
+    {'time': '06AM', 'icon': 'assets/icons/weather_storm.png', 'temp': '30°'},
   ];
 
   static const List<Map<String, String>> _dailyForecast = [
     {'time': 'Today', 'icon': 'assets/icons/weather_cloudy.png', 'temp': '30°/40°'},
     {'time': 'Mon', 'icon': 'assets/icons/weather_sunny.png', 'temp': '28°/38°'},
-    {'time': 'Tue', 'icon': 'assets/icons/weather_rainy.png', 'temp': '25°/35°'},
+    {'time': 'Tue', 'icon': 'assets/icons/sunrise.png', 'temp': '25°/35°'},
     {'time': 'Wed', 'icon': 'assets/icons/weather_storm.png', 'temp': '22°/32°'},
     {'time': 'Thu', 'icon': 'assets/icons/weather_sunny.png', 'temp': '27°/37°'},
   ];
@@ -93,6 +94,12 @@ class _WeatherTabState extends State<WeatherTab> {
       padding: const EdgeInsets.only(bottom: 16),
       children: [
         _buildWeatherWidget(),
+
+        const SizedBox(height: 16),
+        const Divider(color: Colors.white12, height: 6),
+        const SizedBox(height: 16),
+
+
         ..._items.map((item) => CategoryNewsCard(item: item)),
       ],
     );
@@ -102,35 +109,43 @@ class _WeatherTabState extends State<WeatherTab> {
     return Container(
       margin: const EdgeInsets.all(12),
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1C1C1E),
-        borderRadius: BorderRadius.circular(16),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Temperature + icon
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('44°',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 48,
-                          fontWeight: FontWeight.w300)),
-                  Text('30°/40°  Cloudy',
-                      style: TextStyle(color: Colors.grey.shade400, fontSize: 13)),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('44°',
+                          style: AppTextStyles.tagline),
+                      const SizedBox(width: 6),
+                      Image.asset(
+                        'assets/icons/weather_cloudy.png',
+                        width: 48,
+                        height: 48,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(text: '30°/40°',
+                          style: AppTextStyles.overline),
+                        TextSpan(text: '  Cloudy',
+                          style: AppTextStyles.small.copyWith(color: Color(0xFFC4C4C4)))
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
-              ),
-              const SizedBox(width: 12),
-              Image.asset(
-                'assets/icons/weather_cloudy.png',
-                width: 48,
-                height: 48,
-                errorBuilder: (_, __, ___) =>
-                const Icon(Icons.cloud, color: Colors.grey, size: 48),
               ),
             ],
           ),
@@ -139,35 +154,41 @@ class _WeatherTabState extends State<WeatherTab> {
 
           // Activities
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _activityItem('assets/icons/hiking.png', 'Hiking'),
+              _activityItem(
+                'assets/icons/emoji.png',
+                'assets/icons/mountain.png',
+                'Hiking',
+              ),
               const SizedBox(width: 16),
-              _activityItem('assets/icons/gardening.png', 'Gardening'),
+              _activityItem(
+                'assets/icons/emoji.png',      // topIconPath
+                'assets/icons/leaves.png',   // bottomIconPath
+                'Gardening',                    // label
+              ),
             ],
           ),
 
           const SizedBox(height: 16),
-          const Divider(color: Colors.white12, height: 1),
-          const SizedBox(height: 12),
+          const Divider(color: Colors.white12, height: 6),
+          const SizedBox(height: 16),
 
           // Forecasts header
           Row(
             children: [
-              const Text('Forecasts',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
+              Text('Forecasts',
+                  style: AppTextStyles.bodyMedium),
               const Spacer(),
-              const Icon(Icons.wb_sunny_outlined, color: Colors.grey, size: 14),
-              const SizedBox(width: 4),
-              const Text('4:48 PM',
-                  style: TextStyle(color: Colors.grey, fontSize: 11)),
-              const SizedBox(width: 12),
-              const Icon(Icons.nights_stay_outlined, color: Colors.grey, size: 14),
-              const SizedBox(width: 4),
-              const Text('5:48 AM',
-                  style: TextStyle(color: Colors.grey, fontSize: 11)),
+              Image.asset('assets/icons/sunrise.png'),
+              const SizedBox(width: 6),
+              Text('4:48 PM',
+                  style:AppTextStyles.display.copyWith(color: Color(0xFFC4C4C4))),
+              const SizedBox(width: 24),
+              Image.asset('assets/icons/sunset.png'),
+              const SizedBox(width: 6),
+              Text('5:48 AM',
+                  style:AppTextStyles.display.copyWith(color: Color(0xFFC4C4C4)))
             ],
           ),
 
@@ -198,22 +219,41 @@ class _WeatherTabState extends State<WeatherTab> {
     );
   }
 
-  Widget _activityItem(String iconPath, String label) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2E),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Image.asset(iconPath, width: 32, height: 32,
-              errorBuilder: (_, __, ___) =>
-              const Icon(Icons.hiking, color: Colors.white, size: 32)),
-          const SizedBox(height: 6),
-          Text(label, style: const TextStyle(color: Colors.white70, fontSize: 12)),
-        ],
-      ),
+
+  Widget _activityItem(String topIcon, String bottomIcon, String label) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 70,
+          height: 100,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(
+            border: Border.all(color: Color(0xFF4C4C4C), width: 1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Image.asset(
+                topIcon,
+                width: 24,
+                height: 24,
+              ),
+              Image.asset(
+                bottomIcon,
+                width: 24,
+                height: 24,
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 10),
+        Text(label,
+          style:AppTextStyles.overline
+        ),
+      ],
     );
   }
 
@@ -223,14 +263,14 @@ class _WeatherTabState extends State<WeatherTab> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : const Color(0xFF2C2C2E),
+          color: isSelected ?AppColors.surface: const Color(0xFF2C2C2E),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(label,
             style: TextStyle(
-              color: isSelected ? Colors.black : Colors.white70,
+              color: isSelected ?AppColors.background: AppColors.surface,
               fontSize: 13,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w400,
             )),
       ),
     );
@@ -242,22 +282,18 @@ class _WeatherTabState extends State<WeatherTab> {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: const Color(0xFF2C2C2E),
+        border: Border.all(color: Color(0xFF333333)),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         children: [
           Text(item['time']!,
-              style: const TextStyle(color: Colors.grey, fontSize: 11)),
+              style: AppTextStyles.display.copyWith(color: AppColors.textOnDark)),
           const SizedBox(height: 6),
-          Image.asset(item['icon']!, width: 24, height: 24,
-              errorBuilder: (_, __, ___) =>
-              const Icon(Icons.wb_cloudy, color: Colors.grey, size: 24)),
+          Image.asset(item['icon']!, width: 24, height: 24),
           const SizedBox(height: 6),
           Text(item['temp']!,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500)),
+              style:AppTextStyles.display),
         ],
       ),
     );

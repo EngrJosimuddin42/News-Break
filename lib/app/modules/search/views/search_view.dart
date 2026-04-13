@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -53,38 +55,33 @@ class _SearchViewState extends State<SearchView> {
                 children: [
                   GestureDetector(
                     onTap: () => Get.back(),
-                    child: const Icon(Icons.arrow_back_ios,
-                        color: Colors.white, size: 18),
+                    child: Icon(Icons.arrow_back_ios, color:AppColors.textOnDark, size: 20),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Container(
                       height: 40,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1C1C1E),
-                        borderRadius: BorderRadius.circular(10),
+                        color: const Color(0xFF121212),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       child: TextField(
                         controller: _searchController,
                         autofocus: true,
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 14),
-                        onChanged: (val) =>
-                            setState(() => _query = val),
+                        style: AppTextStyles.caption,
+                        onChanged: (val) => setState(() => _query = val),
                         decoration: InputDecoration(
                           hintText: 'Search',
                           hintStyle: const TextStyle(
                               color: Colors.grey, fontSize: 14),
-                          prefixIcon: const Icon(Icons.search,
-                              color: Colors.grey, size: 18),
+                          prefixIcon: const Icon(Icons.search, color: Colors.grey, size: 20),
                           suffixIcon: _query.isNotEmpty
                               ? GestureDetector(
                             onTap: () {
                               _searchController.clear();
                               setState(() => _query = '');
                             },
-                            child: const Icon(Icons.cancel,
-                                color: Colors.grey, size: 18),
+                            child: const Icon(Icons.cancel, color: Colors.grey, size: 20),
                           )
                               : null,
                           border: InputBorder.none,
@@ -99,90 +96,78 @@ class _SearchViewState extends State<SearchView> {
             ),
 
             // Trending label
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(16, 4, 16, 12),
-              child: Text(
-                'Treading',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              child: Text('Treading',
+                style: AppTextStyles.button),
             ),
 
-            // Filter + list
+            // Big card containing all items
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1C1C1E),
-                  borderRadius: BorderRadius.circular(10),
+                  color: const Color(0xFF0B0B0B),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Color(0xFF737373)),
                 ),
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   children: [
                     // Find an item field
-                    TextField(
-                      controller: _filterController,
-                      style: const TextStyle(
-                          color: Colors.white, fontSize: 14),
-                      onChanged: (_) => setState(() {}),
-                      decoration: const InputDecoration(
-                        hintText: 'Find an item',
-                        hintStyle:
-                        TextStyle(color: Colors.grey, fontSize: 14),
-                        contentPadding: EdgeInsets.fromLTRB(16, 14, 16, 14),
-                        border: InputBorder.none,
+                    Container(
+                      decoration: BoxDecoration(
+                         color: const Color(0xFF0B0B0B),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Color(0xFFE6E6E6)),
+                      ),
+                      child: TextField(
+                        controller: _filterController,
+                        style: AppTextStyles.caption,
+                        onChanged: (_) => setState(() {}),
+                        decoration: InputDecoration(
+                          hintText: 'Find an item',
+                          hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                          contentPadding:
+                          EdgeInsets.fromLTRB(16, 14, 16, 14),
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
-                    const Divider(color: Colors.white12, height: 1),
 
-                    // List items
+                    const SizedBox(height: 8),
+
+                    // Each item — separate card
                     ..._filteredItems.map((item) {
                       final isSelected = _selectedItem == item;
-                      return Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () =>
-                                setState(() => _selectedItem = item),
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(
-                                  16, 14, 16, 14),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? const Color(0xFF1A2A3A)
-                                    : Colors.transparent,
-                                border: isSelected
-                                    ? Border.all(
-                                    color: Colors.blue.shade700,
-                                    width: 1)
-                                    : null,
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      item,
-                                      style: TextStyle(
-                                        color: isSelected
-                                            ? Colors.blue
-                                            : Colors.white,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                  if (isSelected)
-                                    Icon(Icons.check,
-                                        color: Colors.blue.shade400,
-                                        size: 18),
-                                ],
-                              ),
+                      return GestureDetector(
+                        onTap: () =>
+                            setState(() => _selectedItem = item),
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          padding:
+                          const EdgeInsets.fromLTRB(16, 14, 16, 14),
+                          decoration: BoxDecoration(
+                            color:const Color(0xFF121212),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: isSelected
+                                  ? AppColors.textGreen
+                                  : Color(0xFF121212),
+                              width: 1,
                             ),
                           ),
-                          if (item != _filteredItems.last)
-                            const Divider(
-                                color: Colors.white12, height: 1),
-                        ],
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(item,
+                                  style: AppTextStyles.caption),
+                              ),
+                              if (isSelected)
+                                Icon(Icons.check, color:AppColors.textGreen, size: 20),
+                            ],
+                          ),
+                        ),
                       );
                     }),
                   ],

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 
 class NBotSheet extends StatefulWidget {
@@ -113,9 +115,10 @@ class _NBotSheetState extends State<NBotSheet> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {},
-                    child: Image.asset(
-                      'assets/icons/send.png',
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Image.asset('assets/icons/send.png',
                       width: 32,
                       height: 32,
                     ),

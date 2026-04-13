@@ -4,6 +4,7 @@ import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../core/controllers/auth_controller.dart';
 import '../../../widgets/premium_banner.dart';
+import '../../home/controllers/home_controller.dart';
 import '../controllers/me_controller.dart';
 import 'history_item.dart';
 
@@ -99,78 +100,9 @@ class MeBody extends GetView<MeController> {
 
   Widget _buildLoggedOutTabContent(BuildContext context) {
     final tab = controller.selectedTab.value;
-    if (tab == 0) {
-      // Saved
-      return Column(
-        children: [
-          Obx(() => Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-            child: Row(
-              children: [
-                _chip('All',
-                  controller.selectedChipIndex.value == 0,() => controller.updateChip(0),
-                ),
-                const SizedBox(width: 8),
-                _chip('Mini Drama',
-                  controller.selectedChipIndex.value == 1,() => controller.updateChip(1),
-                ),
-              ],
-            ),
-          )),
-          const SizedBox(height: 40),
-          Text('No  Saved articles',
-             style:AppTextStyles.bodyMedium),
-          const SizedBox(height: 8),
-          Text("You haven't saved anything. Yet.",
-              style:AppTextStyles.overline),
-          const SizedBox(height: 40),
-        ],
-      );
-    } else {
-      // History
-      return Obx(() => controller.hasHistory.value
-          ? Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-            child: Row(
-              children: [
-                const Icon(Icons.visibility_off_outlined,
-                    color: Colors.grey, size: 16),
-                const SizedBox(width: 6),
-                Text('Visible only to you',
-                    style:AppTextStyles.labelMedium.copyWith(color: AppColors.info)),
-                const Spacer(),
-                GestureDetector(
-                  onTap: () => controller.onClearAll(context),
-                  child:Text('Clear All',
-                      style:AppTextStyles.small.copyWith(color:Color(0xFF3498FA))),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          const Divider(color: Colors.white12, height: 1),
-          const SizedBox(height: 16),
-          ...controller.historyItems.map((item) => Column(
-            key: ValueKey(item['id']),
-            children: [
-              HistoryItem(
-                id: item['id']!,
-                title: item['title']!,
-                source: item['source']!,
-                timeAgo: item['timeAgo']!,
-                videoUrl: item['videoUrl']!,
-                thumbnailUrl: item['thumbnailUrl']!,
-              ),
-              const Divider( color: Colors.white12, height: 1),
-            ],
-          )),
-        ],
-      )
-          : _buildNoHistoryView());
-    }
+    return tab == 0 ? _buildSharedSavedView() : _buildSharedHistoryView(context);
   }
+
 
   // ── Logged In ───────────────────────────────
   Widget _buildLoggedIn(BuildContext context) {
@@ -213,33 +145,31 @@ class MeBody extends GetView<MeController> {
         ),
 
         // Name + meta
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Text('Malia',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            AuthController.to.user.value?.name ?? 'User',
+            style:AppTextStyles.bodyMedium.copyWith(color: Color(0xFFC4C4C4)),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
           child: Row(
             children: [
-              const Icon(Icons.person_outline,
-                  color: Colors.grey, size: 14),
+             Image.asset('assets/icons/person.png',height: 14,width: 14),
               const SizedBox(width: 4),
-              const Text('user since Mar 2026',
-                  style: TextStyle(color: Colors.grey, fontSize: 12)),
+              Text('user since Mar 2026', // After come from API
+                style: AppTextStyles.labelSmall.copyWith(color: AppColors.info)),
               const SizedBox(width: 12),
-              const Icon(Icons.location_on_outlined,
-                  color: Colors.grey, size: 14),
+            Image.asset('assets/icons/location1.png',height: 14,width: 14),
               const SizedBox(width: 4),
-              const Text('New York',
-                  style: TextStyle(color: Colors.grey, fontSize: 12)),
+              Text(
+                Get.find<HomeController>().locationTitle,
+                style:AppTextStyles.overline),
             ],
           ),
         ),
-
+        SizedBox(height: 8),
         // Action buttons
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -251,17 +181,17 @@ class MeBody extends GetView<MeController> {
                       ? controller.onCreatorDashboard()
                       : controller.onBecomeCreator(),
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white38),
+                    minimumSize: const Size(160, 50),
+                    backgroundColor: Color(0xFF1D1D1D),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: Text(
                     controller.selectedTab.value == 0
                         ? 'Creator dashboard'
                         : 'Become a creator',
-                    style: const TextStyle(color: Colors.white, fontSize: 13),
-                  ),
+                    style: AppTextStyles.buttonOutline),
                 ),
               ),
               const SizedBox(width: 12),
@@ -269,13 +199,14 @@ class MeBody extends GetView<MeController> {
                 child: OutlinedButton(
                   onPressed: controller.onCompleteProfile,
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white38),
+                    minimumSize: const Size(160, 50),
+                    backgroundColor: Color(0xFF1D1D1D),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: const Text('Complete profile',
-                      style: TextStyle(color: Colors.white, fontSize: 13)),
+                  child:Text('Complete profile',
+                      style:AppTextStyles.buttonOutline),
                 ),
               ),
             ],
@@ -288,7 +219,8 @@ class MeBody extends GetView<MeController> {
         const PremiumBanner(),
 
         const SizedBox(height: 16),
-
+        const Divider(color: Colors.white12, height: 1),
+        const SizedBox(height: 16),
         // Tabs
         _buildTabBar(context, controller.tabs),
 
@@ -327,107 +259,35 @@ class MeBody extends GetView<MeController> {
             )),
 
             const SizedBox(height: 40),
-            const Text('No Post',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600)),
+            Text('No Post',
+                style: AppTextStyles.bodyMedium),
             const SizedBox(height: 8),
-            const Text('This feature will be coming soon.',
-                style: TextStyle(color: Colors.grey, fontSize: 13)),
+            Text('This feature will be coming soon.',
+                style:AppTextStyles.overline ),
             const SizedBox(height: 40),
           ],
         );
       case 'Reactions':
-        return const Padding(
+        return Padding(
           padding: EdgeInsets.only(top: 60),
           child: Column(
             children: [
               Text('No Reactions',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600)),
+                  style:AppTextStyles.bodyMedium),
               SizedBox(height: 8),
-              Text(
-                "This user hasn't commented on\nor reacted to any articles. Yet.",
+              Text("This user hasn't commented on\nor reacted to any articles. Yet.",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey, fontSize: 13),
+                style:AppTextStyles.overline,
               ),
             ],
           ),
         );
+
       case 'Saved':
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                child: Obx(() => Row(
-                children: [
-                      _chip( 'All',
-                           controller.selectedChipIndex.value == 0,() => controller.updateChip(0)
-                      ),
-                  const SizedBox(width: 8),
-                  _chip('Mini Drama',
-                      controller.selectedChipIndex.value == 1, () => controller.updateChip(1)
-                  ),
-                ],
-                )),
-            ),
-            const SizedBox(height: 40),
-            const Text('No  Saved articles',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600)),
-            const SizedBox(height: 8),
-            const Text("You haven't saved anything. Yet.",
-                style: TextStyle(color: Colors.grey, fontSize: 13)),
-            const SizedBox(height: 40),
-          ],
-        );
+        return _buildSharedSavedView();
+
       case 'History':
-        return Obx(() => controller.hasHistory.value
-            ? Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-              child: Row(
-                children: [
-                  const Icon(Icons.visibility_off_outlined,
-                      color: Colors.grey, size: 16),
-                  const SizedBox(width: 6),
-                  const Text('Visible only to you',
-                      style: TextStyle(
-                          color: Colors.grey, fontSize: 12)),
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: () =>
-                        controller.onClearAll(context),
-                    child: const Text('Clear All',
-                        style: TextStyle(
-                            color: Colors.blue, fontSize: 12)),
-                  ),
-                ],
-              ),
-            ),
-            ...controller.historyItems.map((item) => Column(
-              key: ValueKey(item['id']),
-              children: [
-                HistoryItem(
-                  id: item['id']!,
-                  title: item['title']!,
-                  source: item['source']!,
-                  timeAgo: item['timeAgo']!,
-                  videoUrl: item['videoUrl']!,
-                  thumbnailUrl: item['thumbnailUrl']!,
-                ),
-                const Divider(color: Colors.white12, height: 1),
-              ],
-            )),
-          ],
-        )
-            : _buildNoHistoryView());
+        return _buildSharedHistoryView(context);
       default:
         return const SizedBox();
     }
@@ -448,24 +308,14 @@ class MeBody extends GetView<MeController> {
                   padding: const EdgeInsets.only(right: 24),
                   child: Column(
                     children: [
-                      Text(
-                        tabs[i],
-                        style: TextStyle(
-                          color: selected
-                              ? Colors.white
-                              : Colors.grey,
-                          fontSize: 14,
-                          fontWeight: selected
-                              ? FontWeight.w600
-                              : FontWeight.normal,
-                        ),
-                      ),
+                      Text(tabs[i],
+                        style: AppTextStyles.caption),
                       const SizedBox(height: 4),
                       if (selected)
                         Container(
                           height: 2,
-                          width: 24,
-                          color: Colors.white,
+                          width: 50,
+                          color: AppColors.surface,
                         ),
                     ],
                   ),
@@ -474,9 +324,6 @@ class MeBody extends GetView<MeController> {
             }),
           ),
         ),
-        const SizedBox(height: 16),
-        const Divider(color: Colors.white12, height: 1),
-        const SizedBox(height: 16),
       ],
     ));
   }
@@ -516,14 +363,86 @@ class MeBody extends GetView<MeController> {
     return Column(
       children: [
         Text(count,
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w700)),
+            style:AppTextStyles.bodyMedium),
         Text(label,
-            style:
-            const TextStyle(color: Colors.grey, fontSize: 11)),
+            style:AppTextStyles.overline.copyWith(color: Color(0xFFA7A7A7))),
       ],
     );
   }
+
+  Widget _buildSharedSavedView() {
+    return Column(
+      children: [
+        Obx(() =>
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+              child: Row(
+                children: [
+                  _chip('All',
+                    controller.selectedChipIndex.value == 0, () =>
+                        controller.updateChip(0),
+                  ),
+                  const SizedBox(width: 8),
+                  _chip('Mini Drama',
+                    controller.selectedChipIndex.value == 1, () =>
+                        controller.updateChip(1),
+                  ),
+                ],
+              ),
+            )),
+        const SizedBox(height: 40),
+        Text('No  Saved articles',
+            style: AppTextStyles.bodyMedium),
+        const SizedBox(height: 8),
+        Text("You haven't saved anything. Yet.",
+            style: AppTextStyles.overline),
+        const SizedBox(height: 40),
+      ],
+    );
+  }
+
+  Widget _buildSharedHistoryView(BuildContext context) {
+    return Obx(() => controller.hasHistory.value
+        ? Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+          child: Row(
+            children: [
+              const Icon(Icons.visibility_off_outlined,
+                  color: Colors.grey, size: 16),
+              const SizedBox(width: 6),
+              Text('Visible only to you',
+                  style:AppTextStyles.labelMedium.copyWith(color: AppColors.info)),
+              const Spacer(),
+              GestureDetector(
+                onTap: () => controller.onClearAll(context),
+                child:Text('Clear All',
+                    style:AppTextStyles.small.copyWith(color:Color(0xFF3498FA))),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        const Divider(color: Colors.white12, height: 1),
+        const SizedBox(height: 16),
+        ...controller.historyItems.map((item) => Column(
+          key: ValueKey(item['id']),
+          children: [
+            HistoryItem(
+              id: item['id']!,
+              title: item['title']!,
+              source: item['source']!,
+              timeAgo: item['timeAgo']!,
+              videoUrl: item['videoUrl']!,
+              thumbnailUrl: item['thumbnailUrl']!,
+            ),
+            const Divider( color: Colors.white12, height: 1),
+          ],
+        )),
+      ],
+    )
+        : _buildNoHistoryView());
+  }
+
 }

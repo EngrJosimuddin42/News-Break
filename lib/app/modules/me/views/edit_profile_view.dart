@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
+
+import '../../../core/controllers/auth_controller.dart';
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});
@@ -9,26 +13,31 @@ class EditProfileView extends StatefulWidget {
 }
 
 class _EditProfileViewState extends State<EditProfileView> {
-  final _nameController = TextEditingController(text: 'Amy');
-  final _userNameController = TextEditingController(text: 'Amy');
-  final _bioController = TextEditingController(text: 'Amy');
-  final _websiteController = TextEditingController(text: 'www.sdfsf.com');
-  final _emailController = TextEditingController(text: 'ab@gmail.com');
+  late TextEditingController _nameController;
+  late TextEditingController _userNameController;
+  late TextEditingController _bioController;
+  late TextEditingController _websiteController;
+  late TextEditingController _emailController;
 
-  String _selectedBirthYear = '12/12/2005';
-  String _selectedGender = 'Female';
+  late String _selectedBirthYear;
+  late String _selectedGender;
 
-  static const List<String> _genders = [
-    'Female',
-    'Male',
-    'Non-binary',
-    'Prefer not to say',
-  ];
+  @override
+  void initState() {
+    super.initState();
 
-  static final List<String> _years = List.generate(
-    80,
-        (i) => (1944 + i).toString(),
-  );
+    final user = AuthController.to.user.value;
+
+    //  If user data is available, it will be displayed; otherwise, a default value will be used.
+    _nameController = TextEditingController(text: user?.name ?? 'Amy');
+    _userNameController = TextEditingController(text: user?.name.toLowerCase().replaceAll(' Amy', 'Amy') ?? 'Amy');
+    _bioController = TextEditingController(text: 'Amy');
+    _websiteController = TextEditingController(text: 'www.sdfsf.com');
+    _emailController = TextEditingController(text: user?.email ?? 'ab@gmail.com');
+
+    _selectedBirthYear = '12/12/2005';
+    _selectedGender = 'Female';
+  }
 
   @override
   void dispose() {
@@ -40,6 +49,17 @@ class _EditProfileViewState extends State<EditProfileView> {
     super.dispose();
   }
 
+  static const List<String> _genders = [
+    'Female',
+    'Male',
+    'Non-binary',
+    'Prefer not to say',
+  ];
+
+  static final List<String> _years = List.generate(
+    80,(i) => (1944 + i).toString(),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,20 +68,13 @@ class _EditProfileViewState extends State<EditProfileView> {
         backgroundColor: Colors.black,
         leading: GestureDetector(
           onTap: () => Get.back(),
-          child: const Icon(Icons.arrow_back_ios,
-              color: Colors.white, size: 18),
+          child: Icon(Icons.arrow_back_ios,color:AppColors.textOnDark, size: 20),
         ),
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(
-              color: Colors.white,
-              fontSize: 17,
-              fontWeight: FontWeight.w600),
-        ),
+        title: Text('Edit Profile',
+          style: AppTextStyles.displaySmall),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
+          IconButton(icon: const Icon(Icons.more_vert, color: Colors.white),
             onPressed: _showMoreOptions,
           ),
         ],
@@ -78,16 +91,19 @@ class _EditProfileViewState extends State<EditProfileView> {
                     onTap: _showPhotoOptions,
                     child: Column(
                       children: [
-                        CircleAvatar(
-                          radius: 36,
+                        Obx(() => CircleAvatar(
+                          radius: 24,
                           backgroundColor: Colors.grey[800],
-                          child: const Icon(Icons.person,
-                              color: Colors.white, size: 40),
-                        ),
+                          backgroundImage: AuthController.to.user.value?.profileImageUrl != null
+                              ? NetworkImage(AuthController.to.user.value!.profileImageUrl!)
+                              : null,
+                          child: AuthController.to.user.value?.profileImageUrl == null
+                              ? Image.asset('assets/icons/person.png')
+                              : null,
+                        )),
                         const SizedBox(height: 8),
-                        const Text('Edit Photo',
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 13)),
+                        Text('Edit Photo',
+                            style:AppTextStyles.labelLarge),
                       ],
                     ),
                   ),
@@ -108,25 +124,26 @@ class _EditProfileViewState extends State<EditProfileView> {
 
                   // Website
                   _inputField('Website', _websiteController),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 24),
 
                   // Get content prompt
-                  Row(
+                  Align(
+                    alignment: Alignment.center,
+                    child:Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
+                      Container(width: 10, height: 10,
+                        decoration: BoxDecoration(
+                          color:AppColors.linkColor,
                           shape: BoxShape.circle,
                         ),
                       ),
                       const SizedBox(width: 8),
-                      const Text(
-                        'Get content you\'ll really like! Tell us more.',
-                        style: TextStyle(color: Colors.white, fontSize: 13),
+                       Text('Get content you`ll really like! Tell us more.',
+                        style:AppTextStyles.overline.copyWith(color: Color(0xFFDBDBDB)) ,
                       ),
                     ],
+                  ),
                   ),
 
                   const SizedBox(height: 12),
@@ -161,20 +178,25 @@ class _EditProfileViewState extends State<EditProfileView> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
             child: SizedBox(
-              width: double.infinity,
-              height: 50,
+              width: 335,
+              height: 48,
               child: ElevatedButton(
-                onPressed: () => Get.back(),
+                onPressed: () {
+                  AuthController.to.updateProfile(
+                    name: _nameController.text,
+                    email: _emailController.text,
+                    bio: _bioController.text,
+                    website: _websiteController.text,
+                    gender: _selectedGender,
+                    birthYear: _selectedBirthYear,
+                  );
+                  Get.back();},
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE57373),
+                  backgroundColor:AppColors.linkColor,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                child: const Text('Save',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600)),
+                      borderRadius: BorderRadius.circular(8))),
+                child: Text('Save',
+                    style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600)),
               ),
             ),
           ),
@@ -190,20 +212,23 @@ class _EditProfileViewState extends State<EditProfileView> {
         TextInputType keyboardType = TextInputType.text,
       }) {
     return Container(
+      height: 60,
+      alignment: Alignment.center,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.white24),
+        border: Border.all(color: AppColors.textOnDark),
         borderRadius: BorderRadius.circular(8),
       ),
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
-        style: const TextStyle(color: Colors.white, fontSize: 14),
+        textAlignVertical: TextAlignVertical.center,
+        style:AppTextStyles.labelLarge.copyWith(color: Color(0xFFF3F3F3)),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(color: Colors.grey, fontSize: 12),
+          labelStyle:AppTextStyles.display.copyWith(color: AppColors.textOnDark),
           border: InputBorder.none,
           contentPadding:
-          const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
     );
@@ -221,7 +246,7 @@ class _EditProfileViewState extends State<EditProfileView> {
         padding:
         const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.white24),
+          border: Border.all(color: AppColors.textOnDark),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -231,17 +256,14 @@ class _EditProfileViewState extends State<EditProfileView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(label,
-                      style: const TextStyle(
-                          color: Colors.grey, fontSize: 12)),
+                      style: AppTextStyles.display.copyWith(color: AppColors.textOnDark)),
                   const SizedBox(height: 2),
                   Text(value,
-                      style: const TextStyle(
-                          color: Colors.white, fontSize: 14)),
+                      style: AppTextStyles.labelLarge.copyWith(color: Color(0xFFF3F3F3))),
                 ],
               ),
             ),
-            const Icon(Icons.keyboard_arrow_down,
-                color: Colors.white, size: 20),
+            Icon(Icons.keyboard_arrow_down, color:AppColors.textOnDark, size: 20),
           ],
         ),
       ),
@@ -250,7 +272,7 @@ class _EditProfileViewState extends State<EditProfileView> {
 
   // ── Birth year picker ────────────────────────
   void _showBirthYearPicker() {
-    String tempYear = _selectedBirthYear.split('/').last;
+    String tempYear = _selectedBirthYear;
     final controller = FixedExtentScrollController(
       initialItem: _years.indexOf(tempYear).clamp(0, _years.length - 1),
     );
@@ -258,49 +280,54 @@ class _EditProfileViewState extends State<EditProfileView> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: const Color(0xFF2C2C2E),
-        title: const Text('Birth Year',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600),
+        backgroundColor: const Color(0xFF242424),
+        title: Text('Birth Year',
+            style: AppTextStyles.displaySmall,
             textAlign: TextAlign.center),
         content: SizedBox(
-          height: 150,
+          height: 250,
           child: ListWheelScrollView.useDelegate(
             controller: controller,
-            itemExtent: 40,
+            itemExtent: 60,
             perspective: 0.005,
-            onSelectedItemChanged: (i) => tempYear = _years[i],
+            onSelectedItemChanged: (i) {
+              tempYear = _years[i];
+            },
             childDelegate: ListWheelChildBuilderDelegate(
-              builder: (_, i) => Center(
-                child: Text(
-                  _years[i],
-                  style: TextStyle(
-                    color: i == _years.indexOf(tempYear)
-                        ? Colors.white
-                        : Colors.grey,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
+              builder: (context, i) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _years[i],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 40),
+                      child: Divider(color: Colors.white12, height: 10),
+                    ),
+                  ],
+                );
+              },
               childCount: _years.length,
             ),
           ),
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel',
-                style: TextStyle(color: Colors.grey)),
+            onPressed: () => Get.back(),
+            child: Text('Cancel', style: AppTextStyles.labelLarge),
           ),
+          const Spacer(),
           TextButton(
             onPressed: () {
               setState(() => _selectedBirthYear = tempYear);
-              Navigator.pop(context);
+              Get.back();
             },
-            child: const Text('Ok',
-                style: TextStyle(color: Colors.white)),
+            child: Text('Ok', style: AppTextStyles.labelLarge),
           ),
         ],
       ),
@@ -312,42 +339,41 @@ class _EditProfileViewState extends State<EditProfileView> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: const Color(0xFF2C2C2E),
-        title: const Text('Gender',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600),
+        backgroundColor: const Color(0xFF242424),
+        title:Text('Gender',
+            style: AppTextStyles.displaySmall,
             textAlign: TextAlign.center),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: _genders
-              .map((g) => Column(
-            children: [
+          content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: _genders.map((gender) {
+                bool isLast = gender == _genders.last;
+                return Column(
+                  children: [
               GestureDetector(
                 onTap: () {
-                  setState(() => _selectedGender = g);
-                  Navigator.pop(context);
+                  setState(() => _selectedGender = gender);
+                  Get.back();
                 },
                 child: Padding(
-                  padding:
-                  const EdgeInsets.symmetric(vertical: 12),
-                  child: Text(g,
-                      style: const TextStyle(
-                          color: Colors.white, fontSize: 15)),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Text(gender,
+                      style: AppTextStyles.labelLarge),
                 ),
               ),
-              if (g != _genders.last)
-                const Divider(color: Colors.white12, height: 1),
-            ],
-          ))
-              .toList(),
-        ),
+                    if (isLast)
+                      const Divider(color: Colors.white12, height: 2, thickness: 1,
+                      ),
+                  ],
+                );
+              }).toList(),
+          ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel',
-                style: TextStyle(color: Colors.grey)),
+            onPressed:(){
+              Get.back();
+              },
+            child:Text('Cancel',
+                style: AppTextStyles.labelLarge),
           ),
         ],
       ),
@@ -359,42 +385,41 @@ class _EditProfileViewState extends State<EditProfileView> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: const Color(0xFF2C2C2E),
-        title: const Text('Choose your photo',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600),
+        backgroundColor: const Color(0xFF242424),
+        title: Text('Choose your photo',
+            style: AppTextStyles.displaySmall,
             textAlign: TextAlign.center),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: const Padding(
+              onTap: () {
+                  Get.back();
+              },
+              child:  Padding(
                 padding: EdgeInsets.symmetric(vertical: 12),
                 child: Text('Take a picture',
-                    style:
-                    TextStyle(color: Colors.white, fontSize: 15)),
+                    style:AppTextStyles.labelLarge),
               ),
             ),
-            const Divider(color: Colors.white12, height: 1),
             GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: const Padding(
+              onTap: () {
+                Get.back();
+              },
+              child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 12),
                 child: Text('Choose from gallery',
-                    style:
-                    TextStyle(color: Colors.white, fontSize: 15)),
-              ),
+                    style:AppTextStyles.labelLarge)),
             ),
           ],
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel',
-                style: TextStyle(color: Colors.grey)),
+            onPressed: () {
+              Get.back();
+            },
+            child:Text('Cancel',
+                style:AppTextStyles.caption),
           ),
         ],
       ),
@@ -405,38 +430,60 @@ class _EditProfileViewState extends State<EditProfileView> {
   void _showMoreOptions() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xFF2C2C2E),
+      backgroundColor: const Color(0xFF282828),
+      constraints: const BoxConstraints(
+        maxWidth: double.infinity),
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (_) => SafeArea(
-        child: Column(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 8),
-            // ✅ এটা যোগ করুন
-            ListTile(
-              leading: const Icon(Icons.info_outline, color: Colors.white),
-              title: const Text('About this profile',
-                  style: TextStyle(color: Colors.white, fontSize: 15)),
-              onTap: () {
-                Navigator.pop(context);
-                _showAboutProfile();
-              },
+            Container(
+              width: 36, height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[600],
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-            const Divider(color: Colors.white12, height: 1),
-            ListTile(
-              leading: const Icon(Icons.delete_outline, color: Colors.red),
-              title: const Text('Delete account',
-                  style: TextStyle(color: Colors.red, fontSize: 15)),
-              onTap: () {
-                Navigator.pop(context);
-                _showDeleteConfirm();
-              },
+            const SizedBox(height: 12),
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFF444444),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListTile(
+                leading: const Icon(Icons.info_outline, color: Colors.white),
+                title: Text('About this profile', style: AppTextStyles.caption),
+                onTap: () {
+                  Get.back();
+                  _showAboutProfile();
+                },
+              ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFF444444),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListTile(
+                leading: Image.asset('assets/icons/delete.png', color: AppColors.linkColor, width: 22),
+                title: Text('Delete account',
+                    style: AppTextStyles.caption.copyWith(color: AppColors.linkColor)),
+                onTap: () {
+                  Get.back();
+                  _showDeleteConfirm();
+                },
+              ),
+            ),
           ],
         ),
+      ),
       ),
     );
   }
@@ -446,29 +493,28 @@ class _EditProfileViewState extends State<EditProfileView> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: const Color(0xFF2C2C2E),
-        title: const Text('Are you sure you want to delete account?',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.w600)),
-        content: const Text(
+        backgroundColor: const Color(0xFF333333),
+        title:Text('Are you sure you want to delete account?',
+            style:AppTextStyles.labelLarge,
+          textAlign: TextAlign.center),
+        content: Text(
           'Deleting your account is permanent and means you won\'t be able to recover all your data, including saved articles, comments and followed medias.',
-          style: TextStyle(color: Colors.white70, fontSize: 13),
-        ),
+          style:AppTextStyles.labelLarge,
+            textAlign: TextAlign.center),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel',
-                style: TextStyle(color: Colors.white70)),
+            onPressed: () {
+              Get.back();
+            },
+            child:Text('Cancel',
+                style:AppTextStyles.headlineMedium),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
-              // TODO: delete account logic
+              Get.back();
             },
-            child: const Text('Delete',
-                style: TextStyle(color: Colors.red)),
+            child: Text('Delete',
+                style: AppTextStyles.headlineMedium.copyWith(color: AppColors.linkColor)),
           ),
         ],
       ),
@@ -480,12 +526,9 @@ class _EditProfileViewState extends State<EditProfileView> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: const Color(0xFF2C2C2E),
-        title: const Text('About this profile',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600),
+        backgroundColor: const Color(0xFF333333),
+        title: Text('About this profile',
+            style:AppTextStyles.headlineMedium,
             textAlign: TextAlign.center),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -493,35 +536,27 @@ class _EditProfileViewState extends State<EditProfileView> {
           children: [
             Text(
               _nameController.text,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600),
-            ),
+              style:AppTextStyles.bodyMedium),
             const SizedBox(height: 16),
             const Divider(color: Colors.white12, height: 1),
             const SizedBox(height: 16),
-            const Text('Joined',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600)),
+            Text('Joined',
+                style: AppTextStyles.bodyMedium),
             const SizedBox(height: 4),
-            const Text('Since april 2024',
-                style: TextStyle(color: Colors.white70, fontSize: 13)),
+            Text('Since april 2024',
+                style:AppTextStyles.labelLarge.copyWith(color: Color(0xFFC4C4C4))),
             const SizedBox(height: 16),
             const Divider(color: Colors.white12, height: 1),
             const SizedBox(height: 12),
             RichText(
-              text: const TextSpan(
-                style: TextStyle(
-                    color: Colors.grey, fontSize: 12, height: 1.5),
+              text:TextSpan(
+                style: AppTextStyles.overline,
                 children: [
                   TextSpan(
                       text: 'All content is required to comply with our '),
                   TextSpan(
                     text: 'Community Standards',
-                    style: TextStyle(color: Colors.blueAccent),
+                    style: AppTextStyles.overline.copyWith(color: Color(0xFF56CCF2)),
                   ),
                   TextSpan(
                       text:

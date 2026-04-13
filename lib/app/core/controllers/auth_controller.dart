@@ -10,16 +10,12 @@ class AuthController extends GetxController {
           ? user.value!.name[0].toUpperCase()
           : 'A';
 
-  @override
-  void onInit() {
-    super.onInit();
-    _loadUser();
-  }
-
-  void _loadUser() {
-    // Dummy data — after replace by API
+  void loginWithUser({required String name, required String email}) {     // Dummy data — after replace by API
     user.value = UserModel(
       name: 'Amalia',
+      username: 'amalia_rose',
+      bio: 'Flutter Enthusiast & Content Creator',
+      website: 'https://www.amaliarose.dev',
       email: 'amalia@example.com',
       profileImageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
     );
@@ -32,27 +28,30 @@ class AuthController extends GetxController {
 
   void updateProfile({
     required String name,
+    String? username,
     required String email,
     String? bio,
     String? website,
     String? gender,
     String? birthYear,
+    String? newImageUrl,
   }) {
     user.value = UserModel(
       name: name,
+      username: username,
       email: email,
       bio: bio,
       website: website,
       gender: gender,
       birthYear: birthYear,
-      profileImageUrl: user.value?.profileImageUrl,
+      profileImageUrl: newImageUrl ?? user.value?.profileImageUrl,
     );
   }
-
 }
 
 class UserModel {
   final String name;
+  final String? username;
   final String email;
   final String? bio;
   final String? website;
@@ -62,6 +61,7 @@ class UserModel {
 
   UserModel({
     required this.name,
+    this.username,
     required this.email,
     this.bio,
     this.website,

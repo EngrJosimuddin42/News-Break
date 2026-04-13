@@ -18,25 +18,21 @@ class _EditProfileViewState extends State<EditProfileView> {
   late TextEditingController _bioController;
   late TextEditingController _websiteController;
   late TextEditingController _emailController;
-
   late String _selectedBirthYear;
   late String _selectedGender;
 
   @override
   void initState() {
     super.initState();
-
     final user = AuthController.to.user.value;
 
-    //  If user data is available, it will be displayed; otherwise, a default value will be used.
-    _nameController = TextEditingController(text: user?.name ?? 'Amy');
-    _userNameController = TextEditingController(text: user?.name.toLowerCase().replaceAll(' Amy', 'Amy') ?? 'Amy');
-    _bioController = TextEditingController(text: 'Amy');
-    _websiteController = TextEditingController(text: 'www.sdfsf.com');
-    _emailController = TextEditingController(text: user?.email ?? 'ab@gmail.com');
-
-    _selectedBirthYear = '12/12/2005';
-    _selectedGender = 'Female';
+    _nameController = TextEditingController(text: user?.name ?? '');
+    _userNameController = TextEditingController(text: user?.username ?? '');
+    _bioController = TextEditingController(text: user?.bio ?? '');
+    _websiteController = TextEditingController(text: user?.website ?? '');
+    _emailController = TextEditingController(text: user?.email ?? '');
+    _selectedBirthYear = user?.birthYear ?? '2005';
+    _selectedGender = user?.gender ?? 'Female';
   }
 
   @override
@@ -184,6 +180,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                 onPressed: () {
                   AuthController.to.updateProfile(
                     name: _nameController.text,
+                    username: _userNameController.text,
                     email: _emailController.text,
                     bio: _bioController.text,
                     website: _websiteController.text,

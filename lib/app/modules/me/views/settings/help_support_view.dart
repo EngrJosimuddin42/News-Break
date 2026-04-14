@@ -10,7 +10,6 @@ class HelpSupportView extends StatefulWidget {
 
 class _HelpSupportViewState extends State<HelpSupportView> {
   final TextEditingController _searchController = TextEditingController();
-  int _selectedTab = 0; // 0 = Newsbreak, 1 = Help Center
 
   static const List<String> _categories = [
     'Advertising',
@@ -57,51 +56,40 @@ class _HelpSupportViewState extends State<HelpSupportView> {
       ),
       body: Column(
         children: [
-          // Tab bar
+          // ── স্ক্রিনশটের মতো লোগো এবং টেক্সট সেকশন
           Container(
-            color: Colors.white,
+            height: 50,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border(bottom: BorderSide(color: Color(0xFFEEEEEE))),
+            ),
             child: Row(
               children: [
-                _tab('Newsbreak', 0),
-                _tab('Help Center', 1),
+                // Newsbreak Logo + Text
+                Image.asset('assets/images/newsbreak_logo.png', width: 24, height: 24), // আপনার লোগো পাথ
+                const SizedBox(width: 8),
+                const Text('Newsbreak',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold)),
+                const SizedBox(width: 30),
+                // Help Center Text
+                const Text('Help Center',
+                    style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500)),
               ],
             ),
           ),
           const Divider(height: 1, color: Color(0xFFEEEEEE)),
 
           Expanded(
-            child: _selectedTab == 0
-                ? _buildNewsbreakTab()
-                : _buildHelpCenterTab(),
+            child:_buildNewsbreakTab()
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _tab(String label, int index) {
-    final isSelected = _selectedTab == index;
-    return GestureDetector(
-      onTap: () => setState(() => _selectedTab = index),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: isSelected ? Colors.red : Colors.transparent,
-              width: 2,
-            ),
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.red : Colors.grey,
-            fontSize: 14,
-            fontWeight:
-            isSelected ? FontWeight.w600 : FontWeight.normal,
-          ),
-        ),
       ),
     );
   }
@@ -176,8 +164,11 @@ class _HelpSupportViewState extends State<HelpSupportView> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: _categories.map((cat) {
+              bool isClickable = cat == 'Advertising' || cat == 'Publishers';
               return GestureDetector(
-                onTap: () => Get.to(() => HelpDetailView(title: cat)),
+                onTap: isClickable
+                    ? () => Get.to(() => HelpDetailView(title: cat))
+                    : null,
                 child: Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(bottom: 10),
@@ -227,154 +218,8 @@ class _HelpSupportViewState extends State<HelpSupportView> {
         )),
 
         const SizedBox(height: 16),
-        _buildFooter(),
+        const AppFooter(),
         const SizedBox(height: 24),
-      ],
-    );
-  }
-
-  // ── Help Center Tab ──────────────────────────
-  Widget _buildHelpCenterTab() {
-    return ListView(
-      children: [
-        // Breadcrumb
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () => setState(() => _selectedTab = 0),
-                child: const Text('NewsBreak Help Center',
-                    style: TextStyle(color: Colors.red, fontSize: 12)),
-              ),
-              const Text(' > Advertising',
-                  style: TextStyle(color: Colors.grey, fontSize: 12)),
-            ],
-          ),
-        ),
-
-        // Search
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFFEEEEEE)),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const TextField(
-              decoration: InputDecoration(
-                hintText: 'search',
-                hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
-                prefixIcon:
-                Icon(Icons.search, color: Colors.grey, size: 18),
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(vertical: 10),
-              ),
-            ),
-          ),
-        ),
-
-        // Article content
-        const Padding(
-          padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
-          child: Text('Advertising',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700)),
-        ),
-
-        ..._helpSections.map((section) => Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(section['title']!,
-                  style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
-              const SizedBox(height: 6),
-              Text(section['body']!,
-                  style: const TextStyle(
-                      color: Colors.black87,
-                      fontSize: 13,
-                      height: 1.5)),
-              const SizedBox(height: 8),
-            ],
-          ),
-        )),
-
-        const SizedBox(height: 16),
-        _buildFooter(),
-        const SizedBox(height: 24),
-      ],
-    );
-  }
-
-  static const List<Map<String, String>> _helpSections = [
-    {
-      'title': 'How to get started',
-      'body':
-      'Lorem ipsum dolor sit amet consectetur. Nulla mauris etiam risus at congue. Cursus odio nunc quis congue magna integer enim fringilla.',
-    },
-    {
-      'title': 'Creating a profile',
-      'body':
-      'Lorem ipsum dolor sit amet consectetur. Nulla mauris etiam risus at congue. Cursus odio nunc quis congue magna integer enim fringilla.',
-    },
-    {
-      'title': 'Troubleshooting',
-      'body':
-      'Lorem ipsum dolor sit amet consectetur. Nulla mauris etiam risus at congue. Cursus odio nunc quis congue magna integer enim fringilla.',
-    },
-    {
-      'title': 'App Campaigns',
-      'body':
-      'Lorem ipsum dolor sit amet consectetur. Nulla mauris etiam risus at congue. Cursus odio nunc quis congue magna integer enim fringilla.',
-    },
-  ];
-
-  Widget _buildFooter() {
-    return Column(
-      children: [
-        const Divider(height: 1, color: Color(0xFFEEEEEE)),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {},
-                child: const Text('Terms of Use',
-                    style: TextStyle(color: Colors.grey, fontSize: 11)),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Text('|',
-                    style: TextStyle(color: Colors.grey, fontSize: 11)),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: const Text('Privacy Policy',
-                    style: TextStyle(color: Colors.grey, fontSize: 11)),
-              ),
-            ],
-          ),
-        ),
-        const Text('© 2020 Particle Media. All Rights Reserved.',
-            style: TextStyle(color: Colors.grey, fontSize: 10)),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('English (US)',
-                style: TextStyle(color: Colors.grey, fontSize: 11)),
-            const Icon(Icons.keyboard_arrow_down,
-                color: Colors.grey, size: 16),
-          ],
-        ),
       ],
     );
   }
@@ -429,13 +274,31 @@ class HelpDetailView extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Tab bar
+          // ── স্ক্রিনশটের মতো লোগো এবং টেক্সট সেকশন
           Container(
-            color: Colors.white,
+            height: 50,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border(bottom: BorderSide(color: Color(0xFFEEEEEE))),
+            ),
             child: Row(
               children: [
-                _tabItem('Newsbreak', false),
-                _tabItem('Help Center', true),
+                // Newsbreak Logo + Text
+                Image.asset('assets/images/newsbreak_logo.png', width: 24, height: 24), // আপনার লোগো পাথ
+                const SizedBox(width: 8),
+                const Text('Newsbreak',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold)),
+                const SizedBox(width: 30),
+                // Help Center Text
+                const Text('Help Center',
+                    style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500)),
               ],
             ),
           ),
@@ -449,12 +312,9 @@ class HelpDetailView extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                   child: Row(
                     children: [
-                      GestureDetector(
-                        onTap: () => Get.back(),
-                        child: const Text('NewsBreak Help Center',
+                        const Text('NewsBreak Help Center',
                             style: TextStyle(
                                 color: Colors.red, fontSize: 12)),
-                      ),
                       Text(' > $title',
                           style: const TextStyle(
                               color: Colors.grey, fontSize: 12)),
@@ -521,7 +381,7 @@ class HelpDetailView extends StatelessWidget {
                 )),
 
                 const SizedBox(height: 24),
-                _buildFooter(),
+                const AppFooter(),
                 const SizedBox(height: 24),
               ],
             ),
@@ -530,29 +390,14 @@ class HelpDetailView extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _tabItem(String label, bool isSelected) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: isSelected ? Colors.red : Colors.transparent,
-            width: 2,
-          ),
-        ),
-      ),
-      child: Text(label,
-          style: TextStyle(
-            color: isSelected ? Colors.red : Colors.grey,
-            fontSize: 14,
-            fontWeight:
-            isSelected ? FontWeight.w600 : FontWeight.normal,
-          )),
-    );
-  }
 
-  Widget _buildFooter() {
+class AppFooter extends StatelessWidget {
+  const AppFooter({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         const Divider(height: 1, color: Color(0xFFEEEEEE)),
@@ -561,15 +406,21 @@ class HelpDetailView extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Terms of Use',
-                  style: TextStyle(color: Colors.grey, fontSize: 11)),
+              GestureDetector(
+                onTap: () {},
+                child: const Text('Terms of Use',
+                    style: TextStyle(color: Colors.grey, fontSize: 11)),
+              ),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Text('|',
                     style: TextStyle(color: Colors.grey, fontSize: 11)),
               ),
-              const Text('Privacy Policy',
-                  style: TextStyle(color: Colors.grey, fontSize: 11)),
+              GestureDetector(
+                onTap: () {},
+                child: const Text('Privacy Policy',
+                    style: TextStyle(color: Colors.grey, fontSize: 11)),
+              ),
             ],
           ),
         ),
@@ -581,8 +432,7 @@ class HelpDetailView extends StatelessWidget {
           children: [
             Text('English (US)',
                 style: TextStyle(color: Colors.grey, fontSize: 11)),
-            Icon(Icons.keyboard_arrow_down,
-                color: Colors.grey, size: 16),
+            Icon(Icons.keyboard_arrow_down, color: Colors.grey, size: 16),
           ],
         ),
       ],

@@ -43,7 +43,6 @@ class AppColors {
 
   // Overlay
   static const Color overlay = Color(0xFFA6A6A6);
-  static const Color overlayLight = Color(0xFF242424);
 
   // AI Badge
   static const Color aiBadge = Color(0xFF4A90D9);

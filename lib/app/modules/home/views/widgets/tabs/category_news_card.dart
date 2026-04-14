@@ -218,7 +218,7 @@ class CategoryNewsCard extends StatelessWidget {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color:AppColors.overlayLight,
+                        color:AppColors.background,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(Icons.play_arrow_rounded,

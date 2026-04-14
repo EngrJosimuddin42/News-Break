@@ -18,6 +18,7 @@ class MeController extends GetxController {
 
   final selectedTab = 0.obs;
   final hasHistory = true.obs;
+  final isCreator = false.obs;
 
   var historyItems = [
     {
@@ -65,7 +66,20 @@ class MeController extends GetxController {
   final loggedInTabs = ['Content', 'Reactions', 'Saved', 'History'];
   final loggedOutTabs = ['Saved', 'History'];
 
-  List<String> get tabs => isLoggedIn ? loggedInTabs : loggedOutTabs;
+  List<String> get tabs {
+    if (!isLoggedIn) return loggedOutTabs;
+    if (isCreator.value) {
+      return loggedInTabs;
+    } else {
+      return loggedInTabs.where((tab) => tab != 'Content').toList();
+    }
+  }
+
+  void completeOnboarding() {
+    isCreator.value = true;
+    selectedTab.value = 0;
+    update();
+  }
 
   void onLogin() => Get.toNamed('/signin');
 

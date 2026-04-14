@@ -357,16 +357,16 @@ class _ChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final gridPaint = Paint()
-      ..color = Colors.grey.shade100
+      ..color = Color(0xFFCFCFCF)
       ..strokeWidth = 1;
 
     final axisPaint = Paint()
-      ..color = Colors.grey.shade200
+      ..color = Color(0xFFCFCFCF)
       ..strokeWidth = 1;
 
     // Y-axis labels
     final labels = ['4', '3', '2', '1', '0'];
-    final textStyle = TextStyle(color: Colors.grey.shade400, fontSize: 10);
+    final textStyle = AppTextStyles.overline.copyWith(color: AppColors.textTertiary);
 
     for (int i = 0; i < labels.length; i++) {
       final y = (size.height / (labels.length - 1)) * i;

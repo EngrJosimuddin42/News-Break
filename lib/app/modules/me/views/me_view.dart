@@ -88,7 +88,7 @@ class MeBody extends GetView<MeController> {
               const SizedBox(height: 16),
 
               // Tabs
-              _buildTabBar(context, ['Saved', 'History']),
+              Obx(() => _buildTabBar(context, ['Saved', 'History'])),
 
               Obx(() => _buildLoggedOutTabContent(context)),
             ],
@@ -176,9 +176,9 @@ class MeBody extends GetView<MeController> {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () => controller.selectedTab.value == 0
-                      ? controller.onCreatorDashboard()
-                      : controller.onBecomeCreator(),
+                  onPressed: controller.isCreator.value
+                      ? controller.onCreatorDashboard
+                      : controller.onBecomeCreator,
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(160, 50),
                     backgroundColor: Color(0xFF1D1D1D),
@@ -187,9 +187,9 @@ class MeBody extends GetView<MeController> {
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: Text(
-                    controller.selectedTab.value == 0
-                        ? 'Creator dashboard'
-                        : 'Become a creator',
+                      controller.isCreator.value
+                          ? 'Creator dashboard'
+                          : 'Become a creator',
                     style: AppTextStyles.buttonOutline),
                 ),
               ),
@@ -221,7 +221,7 @@ class MeBody extends GetView<MeController> {
         const Divider(color: Colors.white12, height: 1),
         const SizedBox(height: 16),
         // Tabs
-        _buildTabBar(context, controller.tabs),
+        Obx(() => _buildTabBar(context, controller.tabs)),
 
         Obx(() => _buildLoggedInTabContent(context)),
       ],
@@ -293,7 +293,7 @@ class MeBody extends GetView<MeController> {
   }
 
   Widget _buildTabBar(BuildContext context, List<String> tabs) {
-    return Obx(() => Column(
+    return Column(
       children: [
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -324,7 +324,7 @@ class MeBody extends GetView<MeController> {
           ),
         ),
       ],
-    ));
+    );
   }
 
   Widget _chip(String label, bool isSelected, VoidCallback onTap) {

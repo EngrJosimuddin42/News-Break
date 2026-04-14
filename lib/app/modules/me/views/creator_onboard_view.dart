@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
+
+import '../controllers/me_controller.dart';
 
 class CreatorOnboardView extends StatefulWidget {
   const CreatorOnboardView({super.key});
@@ -19,6 +23,7 @@ class _CreatorOnboardViewState extends State<CreatorOnboardView> {
       'subtitle': 'Lorem ipsum dolor sit amet consectetur. Tempus consectetur placerat facilisis sed diam malesuada libero interdum. Elit nulla non sit et cursus.',
       'likes': '2.5k',
       'comments': '1.2k',
+      'followers': '1.3k',
     },
     {
       'imageUrl': 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
@@ -26,13 +31,15 @@ class _CreatorOnboardViewState extends State<CreatorOnboardView> {
       'subtitle': 'Lorem ipsum dolor sit amet consectetur. Tempus consectetur placerat facilisis sed diam malesuada libero interdum. Elit nulla non sit et cursus.',
       'likes': '2.5k',
       'comments': '1.2k',
+      'followers': '1.3k',
     },
     {
-      'imageUrl': 'https://images.unsplash.com/photo-1452780212442-1b8b41d4a5b9?w=800',
+      'imageUrl': 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800',
       'title': 'Capture Moments',
       'subtitle': 'Lorem ipsum dolor sit amet consectetur. Tempus consectetur placerat facilisis sed diam malesuada libero interdum. Elit nulla non sit et cursus.',
       'likes': '2.5k',
       'comments': '1.2k',
+      'followers': '1.3k',
     },
   ];
 
@@ -90,34 +97,52 @@ class _CreatorOnboardViewState extends State<CreatorOnboardView> {
                     child: Column(
                       children: [
                         // Timer icon
-                        Container(
-                          width: 44,
-                          height: 44,
-                          child: Image.asset('assets/images/timer.png'),
+                        Stack(
+                          children: [
+                            Container(
+                              width: 44,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: AssetImage('assets/images/timer.png'),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                width: 18,
+                                height: 18,
+                                decoration: BoxDecoration(
+                                  color:AppColors.textGreen,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.add, color: Colors.white, size: 14),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 16),
                         // Like
-                        const Icon(Icons.thumb_up_outlined, color: Colors.white, size: 32),
+                        const Icon(Icons.thumb_up_outlined, color: Colors.white, size: 44),
                         Text(slide['likes'] ?? '0',
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 12)),
+                            style:AppTextStyles.buttonOutline),
                         const SizedBox(height: 16),
                         // Comment
-                        Image.asset('assets/icons/comment.png', color: Colors.white, width: 44,height: 44),
+                        Image.asset('assets/icons/comment2.png', color: Colors.white, width: 44,height: 44),
                         Text(slide['comments'] ?? '0',
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 12)),
+                            style:AppTextStyles.buttonOutline),
                         const SizedBox(height: 16),
                         // Share
-                        const Icon(Icons.share_outlined,
-                            color: Colors.white, size: 24),
-                        const Text('Share',
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 12)),
+                        Image.asset('assets/icons/share1.png',height: 44,width: 44),
+                        Text('Share',
+                            style:AppTextStyles.buttonOutline),
                         const SizedBox(height: 16),
                         // More
-                        const Icon(Icons.more_horiz,
-                            color: Colors.white, size: 24),
+                        const Icon(Icons.more_vert, color: Colors.white, size: 32),
                       ],
                     ),
                   ),
@@ -130,28 +155,20 @@ class _CreatorOnboardViewState extends State<CreatorOnboardView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          '1.3k Followers',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w700),
-                        ),
+                        Align(
+                            alignment: Alignment.center,
+                            child: Text('${slide['followers'] ?? '0'} Followers',
+                          style: AppTextStyles.button.copyWith(fontSize: 34),
+                        )),
                         const SizedBox(height: 8),
                         Text(
                           slide['title']!,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600),
+                          style: AppTextStyles.button.copyWith(fontSize: 26),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           slide['subtitle']!,
-                          style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 12,
-                              height: 1.4),
+                          style: AppTextStyles.display,
                           maxLines: 4,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -161,7 +178,7 @@ class _CreatorOnboardViewState extends State<CreatorOnboardView> {
 
                   // Page indicators
                   Positioned(
-                    bottom: 72,
+                    bottom: 82,
                     left: 0,
                     right: 0,
                     child: Row(
@@ -170,12 +187,12 @@ class _CreatorOnboardViewState extends State<CreatorOnboardView> {
                         _slides.length,
                             (i) => Container(
                           margin: const EdgeInsets.symmetric(horizontal: 3),
-                          width: _currentPage == i ? 16 : 6,
-                          height: 6,
+                          width: _currentPage == i ? 8 : 8,
+                          height: 8,
                           decoration: BoxDecoration(
                             color: _currentPage == i
                                 ? Colors.white
-                                : Colors.white38,
+                                : Color(0xFF6E6D6D),
                             borderRadius: BorderRadius.circular(3),
                           ),
                         ),
@@ -185,22 +202,23 @@ class _CreatorOnboardViewState extends State<CreatorOnboardView> {
 
                   // Create Now button
                   Positioned(
-                    bottom: 16,
-                    left: 16,
-                    right: 16,
+                    bottom: 26,
+                    left: 20,
+                    right: 20,
                     child: ElevatedButton(
-                      onPressed: () => Get.back(),
+                      onPressed: () {
+                        Get.find<MeController>().completeOnboarding();
+                        Get.back();
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(8)),
                         padding:
                         const EdgeInsets.symmetric(vertical: 14),
                       ),
-                      child: const Text('Create Now',
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.w600)),
+                      child:Text('Create Now',
+                          style:AppTextStyles.bodyMedium.copyWith(color: AppColors.background)),
                     ),
                   ),
 
@@ -210,8 +228,7 @@ class _CreatorOnboardViewState extends State<CreatorOnboardView> {
                     left: 16,
                     child: GestureDetector(
                       onTap: () => Get.back(),
-                      child: const Icon(Icons.arrow_back_ios,
-                          color: Colors.white, size: 20),
+                      child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
                     ),
                   ),
                 ],

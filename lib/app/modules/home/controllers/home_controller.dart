@@ -4,6 +4,7 @@ import '../../../core/controllers/auth_controller.dart';
 import '../../../routes/app_pages.dart';
 import '../../ai/views/nbot_sheet.dart';
 import '../../location/views/choose_location_sheet.dart';
+import '../../location/views/manage_location_view.dart';
 import '../../search/views/search_view.dart';
 
 class HomeController extends GetxController {
@@ -45,8 +46,12 @@ class HomeController extends GetxController {
 
   void onSearch() => Get.to(() => const SearchView());
 
+  void onManageLocation() {
+    Get.to(() => const ManageLocationView());
+  }
 
-  void onLocation() {
+
+  void onChooseLocation() {
     showModalBottomSheet(
       context: Get.context!,
       isScrollControlled: true,

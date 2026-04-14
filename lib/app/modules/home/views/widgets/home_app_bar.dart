@@ -18,7 +18,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       titleSpacing: 16,
       title: GestureDetector(
-        onTap: c.onLocation,
+        onTap: c.onChooseLocation,
         child: Obx(() => Row(
           children: [
             Text(c.locationTitle,
@@ -53,7 +53,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: Image.asset('assets/icons/search.png', width: 22, height: 22),
         ),
         IconButton(
-          onPressed: c.onLocation,
+          onPressed: c.onManageLocation,
           icon: Image.asset('assets/icons/location.png', width: 22, height: 22),
         ),
       ],

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:news_break/app/modules/location/views/choose_location_sheet.dart';
+import 'package:news_break/app/modules/me/views/settings/about/about_view.dart';
+import 'package:news_break/app/modules/me/views/settings/discover_app_view.dart';
+import 'package:news_break/app/modules/me/views/settings/help_support_view.dart';
 import 'package:news_break/app/modules/me/views/settings/location_view.dart';
 import 'package:news_break/app/modules/me/views/settings/privacy_view.dart';
-import '../../../core/controllers/auth_controller.dart';
-import '../../notification/views/notification_settings_view.dart';
+import 'package:news_break/app/modules/me/views/settings/send_feedback_sheet.dart';
+import '../../../../core/controllers/auth_controller.dart';
+import '../../../notification/views/notification_settings_view.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -96,10 +99,24 @@ class _SettingsViewState extends State<SettingsView> {
                 const SizedBox(height: 8),
 
                 // Help center
-                _plainTile('Help center', () {}),
-                _plainTile('Send feedback', () {}),
-                _plainTile('Discover app', () {}),
-                _plainTile('About us', () {}),
+                _plainTile('Help center', () => Get.to(() => const HelpSupportView())),
+
+                // Send feedback — bottom sheet
+                _plainTile('Send feedback', () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => const SendFeedbackSheet(),
+                  );
+                }),
+
+                // Discover app
+                _plainTile('Discover app', () => Get.to(() => const DiscoverAppView())),
+
+                // About us
+                _plainTile('About us', () => Get.to(() => const AboutView())),
+
               ],
             ),
           ),

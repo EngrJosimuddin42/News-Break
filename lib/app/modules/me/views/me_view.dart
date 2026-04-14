@@ -115,9 +115,7 @@ class MeBody extends GetView<MeController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Avatar
-              GestureDetector(
-                onTap: controller.onCompleteProfile,
-                child: Container(
+                Container(
                   width: 60,
                   height: 60,
                   decoration: BoxDecoration(
@@ -127,7 +125,6 @@ class MeBody extends GetView<MeController> {
                   alignment: Alignment.center,
                   child: Image.asset('assets/icons/person.png',height: 32,width: 32,fit: BoxFit.contain,color:AppColors.surface),
                 ),
-              ),
               const SizedBox(width: 16),
               // Stats
               Expanded(
@@ -147,10 +144,12 @@ class MeBody extends GetView<MeController> {
         // Name + meta
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: GestureDetector(
+            onTap: () => _showAboutProfile(context),
           child: Text(
             AuthController.to.user.value?.name ?? 'User',
-            style:AppTextStyles.bodyMedium.copyWith(color: Color(0xFFC4C4C4)),
-          ),
+            style:AppTextStyles.bodyMedium.copyWith(color: Color(0xFFC4C4C4))),
+         ),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
@@ -243,7 +242,7 @@ class MeBody extends GetView<MeController> {
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
               child: Row(
                 children: [
-                  _chip('Videos',
+                  _chip('Reels',
                       controller.selectedChipIndex.value == 0,
                           () => controller.updateChip(0)),
                   const SizedBox(width: 8),
@@ -262,7 +261,7 @@ class MeBody extends GetView<MeController> {
             Text('No Post',
                 style: AppTextStyles.bodyMedium),
             const SizedBox(height: 8),
-            Text('This feature will be coming soon.',
+            Text(' You haven`t posted anything.Yet.',
                 style:AppTextStyles.overline ),
             const SizedBox(height: 40),
           ],
@@ -443,6 +442,63 @@ class MeBody extends GetView<MeController> {
       ],
     )
         : _buildNoHistoryView());
+  }
+
+  // ── About profile bottom sheet ─────────────────────
+  void _showAboutProfile(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      constraints: const BoxConstraints(
+          maxWidth: double.infinity),
+      isScrollControlled: true,
+      builder: (_) => Container(
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: Color(0xFF333333),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text('About this profile',
+                  style: AppTextStyles.headlineMedium,
+                  textAlign: TextAlign.center),
+            ),
+            const SizedBox(height: 24),
+            Text(AuthController.to.user.value?.name ?? 'User',
+                style: AppTextStyles.bodyMedium),
+            const SizedBox(height: 16),
+            const Divider(color: Colors.white12, height: 1),
+            const SizedBox(height: 16),
+            Text('Joined',
+                style: AppTextStyles.bodyMedium),
+            const SizedBox(height: 4),
+            Text('Since April 2024',
+                style: AppTextStyles.labelLarge.copyWith(color: const Color(0xFFC4C4C4))),
+            const SizedBox(height: 16),
+            const Divider(color: Colors.white12, height: 1),
+            const SizedBox(height: 12),
+            RichText(
+              text: TextSpan(
+                style: AppTextStyles.overline,
+                children: [
+                  const TextSpan(text: 'All content is required to comply with our '),
+                  TextSpan(
+                    text: 'Community Standards',
+                    style: AppTextStyles.overline.copyWith(color: const Color(0xFF56CCF2)),
+                  ),
+                  const TextSpan(
+                      text: '. Please help us keep our community safe by reporting any violations.'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
 }

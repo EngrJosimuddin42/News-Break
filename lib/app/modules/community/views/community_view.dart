@@ -97,8 +97,7 @@ class CommunityBody extends GetView<CommunityController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('FoodRadar', style: AppTextStyles.bodyMedium),
-                        Text(
-                          'Find Free Food Near You Instantly. 100% Free, No Ads.',
+                        Text('Find Free Food Near You Instantly. 100% Free, No Ads.',
                           style: AppTextStyles.labelMedium.copyWith(color: const Color(0xFF929292)),
                           maxLines: 2,
                         ),
@@ -162,12 +161,12 @@ class CommunityBody extends GetView<CommunityController> {
                 ),
               ),
               GestureDetector(
-                onTap: controller.onCreatePost,
+                onTap: controller.onEditProfile,
                 child: Image.asset('assets/icons/edit.png', width: 22, height: 22),
               ),
               const SizedBox(width: 16),
               GestureDetector(
-                onTap: controller.onCreateImage,
+                onTap: controller.onCreatePost,
                 child: Image.asset('assets/icons/image.png', width: 22, height: 22),
               ),
             ],

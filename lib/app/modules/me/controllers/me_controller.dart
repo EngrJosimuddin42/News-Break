@@ -6,7 +6,7 @@ import '../../ai/views/nbot_sheet.dart';
 import '../views/creator_dashboard_view.dart';
 import '../views/creator_onboard_view.dart';
 import '../views/edit_profile_view.dart';
-import '../views/settings_view.dart';
+import '../views/settings/settings_view.dart';
 
 class MeController extends GetxController {
 

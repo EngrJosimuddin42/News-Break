@@ -454,21 +454,6 @@ class _EditProfileViewState extends State<EditProfileView> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ListTile(
-                leading: const Icon(Icons.info_outline, color: Colors.white),
-                title: Text('About this profile', style: AppTextStyles.caption),
-                onTap: () {
-                  Get.back();
-                  _showAboutProfile();
-                },
-              ),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFF444444),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ListTile(
                 leading: Image.asset('assets/icons/delete.png', color: AppColors.linkColor, width: 22),
                 title: Text('Delete account',
                     style: AppTextStyles.caption.copyWith(color: AppColors.linkColor)),
@@ -514,55 +499,6 @@ class _EditProfileViewState extends State<EditProfileView> {
                 style: AppTextStyles.headlineMedium.copyWith(color: AppColors.linkColor)),
           ),
         ],
-      ),
-    );
-  }
-
-  // ── About profile dialog ─────────────────────
-  void _showAboutProfile() {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        backgroundColor: const Color(0xFF333333),
-        title: Text('About this profile',
-            style:AppTextStyles.headlineMedium,
-            textAlign: TextAlign.center),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              _nameController.text,
-              style:AppTextStyles.bodyMedium),
-            const SizedBox(height: 16),
-            const Divider(color: Colors.white12, height: 1),
-            const SizedBox(height: 16),
-            Text('Joined',
-                style: AppTextStyles.bodyMedium),
-            const SizedBox(height: 4),
-            Text('Since april 2024',
-                style:AppTextStyles.labelLarge.copyWith(color: Color(0xFFC4C4C4))),
-            const SizedBox(height: 16),
-            const Divider(color: Colors.white12, height: 1),
-            const SizedBox(height: 12),
-            RichText(
-              text:TextSpan(
-                style: AppTextStyles.overline,
-                children: [
-                  TextSpan(
-                      text: 'All content is required to comply with our '),
-                  TextSpan(
-                    text: 'Community Standards',
-                    style: AppTextStyles.overline.copyWith(color: Color(0xFF56CCF2)),
-                  ),
-                  TextSpan(
-                      text:
-                      '. Please help us keep ous community safe by reporting any violations.'),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

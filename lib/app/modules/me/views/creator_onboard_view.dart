@@ -17,16 +17,22 @@ class _CreatorOnboardViewState extends State<CreatorOnboardView> {
       'imageUrl': 'https://images.unsplash.com/photo-1504703395950-b89145a5425b?w=800',
       'title': 'Read Real News',
       'subtitle': 'Lorem ipsum dolor sit amet consectetur. Tempus consectetur placerat facilisis sed diam malesuada libero interdum. Elit nulla non sit et cursus.',
+      'likes': '2.5k',
+      'comments': '1.2k',
     },
     {
       'imageUrl': 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
       'title': 'Be a Voice',
       'subtitle': 'Lorem ipsum dolor sit amet consectetur. Tempus consectetur placerat facilisis sed diam malesuada libero interdum. Elit nulla non sit et cursus.',
+      'likes': '2.5k',
+      'comments': '1.2k',
     },
     {
       'imageUrl': 'https://images.unsplash.com/photo-1452780212442-1b8b41d4a5b9?w=800',
       'title': 'Capture Moments',
       'subtitle': 'Lorem ipsum dolor sit amet consectetur. Tempus consectetur placerat facilisis sed diam malesuada libero interdum. Elit nulla non sit et cursus.',
+      'likes': '2.5k',
+      'comments': '1.2k',
     },
   ];
 
@@ -85,28 +91,20 @@ class _CreatorOnboardViewState extends State<CreatorOnboardView> {
                       children: [
                         // Timer icon
                         Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white24,
-                            border: Border.all(color: Colors.white38),
-                          ),
-                          child: const Icon(Icons.timer_outlined,
-                              color: Colors.white, size: 20),
+                          width: 44,
+                          height: 44,
+                          child: Image.asset('assets/images/timer.png'),
                         ),
                         const SizedBox(height: 16),
                         // Like
-                        const Icon(Icons.thumb_up_outlined,
-                            color: Colors.white, size: 24),
-                        const Text('2.5k',
+                        const Icon(Icons.thumb_up_outlined, color: Colors.white, size: 32),
+                        Text(slide['likes'] ?? '0',
                             style: TextStyle(
                                 color: Colors.white, fontSize: 12)),
                         const SizedBox(height: 16),
                         // Comment
-                        const Icon(Icons.chat_bubble_outline,
-                            color: Colors.white, size: 24),
-                        const Text('2.5k',
+                        Image.asset('assets/icons/comment.png', color: Colors.white, width: 44,height: 44),
+                        Text(slide['comments'] ?? '0',
                             style: TextStyle(
                                 color: Colors.white, fontSize: 12)),
                         const SizedBox(height: 16),

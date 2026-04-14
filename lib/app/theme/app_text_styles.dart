@@ -140,6 +140,13 @@ class AppTextStyles {
     letterSpacing: 1.5,
   );
 
+  static TextStyle get chart => GoogleFonts.inter(   //
+    fontSize: 20,
+    fontWeight: FontWeight.w400,
+    color: AppColors.background,
+    height: 1.0,
+  );
+
   // Splash specific
   static TextStyle get success => GoogleFonts.inter(   //
     fontSize: 28,

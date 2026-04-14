@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 
 class CreatorDashboardView extends StatefulWidget {
   const CreatorDashboardView({super.key});
@@ -12,12 +14,25 @@ class _CreatorDashboardViewState extends State<CreatorDashboardView>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedTab = 0;
-  String _selectedRange = 'Last 7 Days';
+  String _currentLabel = 'Last 7 days';
+  String _currentDate = 'Mar 25 - Mar 31';
+
 
   static const List<Map<String, String>> _dateRanges = [
     {'label': 'Last 7 days', 'sub': 'Mar 25 - Mar 31'},
     {'label': 'Last 28 days', 'sub': 'Mar 4 - Mar 31'},
     {'label': 'Last 60 days', 'sub': 'Jan 31 - Mar 31'},
+  ];
+
+
+  final List<Map<String, dynamic>> _engagementStats = [
+    {'label': 'Impressions', 'value': '12.5K', 'percent': '2.4%', 'isSelected': true},
+    {'label': 'Likes', 'value': '850', 'percent': '1.2%', 'isSelected': false},
+  ];
+
+  final List<Map<String, dynamic>> _followerStats = [
+    {'label': 'Total Followers', 'value': '1,250', 'percent': '5.0%', 'isSelected': true},
+    {'label': 'Followers', 'value': '45', 'percent': '0.5%', 'isSelected': false},
   ];
 
   @override
@@ -40,34 +55,28 @@ class _CreatorDashboardViewState extends State<CreatorDashboardView>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Get.back(),
-          child: const Icon(Icons.arrow_back_ios,
-              color: Colors.black, size: 18),
-        ),
-        title: const Text(
-          'Creator Dashboard',
-          style: TextStyle(
-              color: Colors.black,
-              fontSize: 17,
-              fontWeight: FontWeight.w600),
-        ),
+          child:Icon(Icons.arrow_back_ios,color:AppColors.textOnDark, size: 20)),
+        title: Text('Creator Dashboard',
+          style: AppTextStyles.displaySmall),
         centerTitle: true,
-        bottom: TabBar(
+        bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(48),
+            child: ColoredBox(
+              color: Colors.white,
+              child: TabBar(
           controller: _tabController,
-          labelColor: Colors.black,
-          unselectedLabelColor: Colors.grey,
-          indicatorColor: Colors.black,
+          indicatorColor: Colors.grey,
           indicatorWeight: 2,
-          labelStyle: const TextStyle(
-              fontSize: 14, fontWeight: FontWeight.w600),
-          tabs: const [
-            Tab(text: 'Engagement'),
-            Tab(text: 'Followers'),
-          ],
+          labelStyle: AppTextStyles.bodySmall,
+          unselectedLabelStyle:AppTextStyles.caption.copyWith(color:AppColors.background),
+          tabs: const [Tab(text: 'Engagement'), Tab(text: 'Followers')],
         ),
+      )
+    ),
       ),
       body: TabBarView(
         controller: _tabController,
@@ -81,70 +90,68 @@ class _CreatorDashboardViewState extends State<CreatorDashboardView>
 
   // ── Engagement Tab ───────────────────────────
   Widget _buildEngagementTab() {
+    final selectedStat = _engagementStats.firstWhere((element) => element['isSelected'] == true,
+      orElse: () => _engagementStats[0]);
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         _buildDateRow(),
         const SizedBox(height: 16),
-        // Stats cards
         Row(
-          children: [
-            Expanded(
-              child: _statCard(
-                label: 'Impressions',
-                value: '0',
-                percent: '0.0%',
-                isSelected: true,
+          children: _engagementStats.map((stat) {
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    right: stat == _engagementStats.last ? 0 : 12),
+                child: _statCard(
+                  label: stat['label'],
+                  value: stat['value'],
+                  percent: stat['percent'],
+                  isSelected: stat['isSelected'],
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _statCard(
-                label: 'Likes',
-                value: '0',
-                percent: '0.0%',
-                isSelected: false,
-              ),
-            ),
-          ],
+            );
+          }).toList(),
         ),
         const SizedBox(height: 16),
-        _buildChart(title: 'Impressions'),
+        _buildChart(
+          title: selectedStat['label'],
+          value: selectedStat['value'],
+        ),
       ],
     );
   }
 
   // ── Followers Tab ────────────────────────────
   Widget _buildFollowersTab() {
+    final selectedFollowerStat = _followerStats.firstWhere((element) => element['isSelected'] == true,
+      orElse: () => _followerStats[0]);
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         _buildDateRow(),
         const SizedBox(height: 16),
         Row(
-          children: [
-            Expanded(
-              child: _statCard(
-                label: 'Total Followers',
-                value: '0',
-                percent: '0.0%',
-                isSelected: true,
+          children: _followerStats.map((stat) {
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    right: stat == _followerStats.last ? 0 : 12),
+                child: _statCard(
+                  label: stat['label'],
+                  value: stat['value'],
+                  percent: stat['percent'],
+                  isSelected: stat['isSelected'],
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _statCard(
-                label: 'Followers',
-                value: '0',
-                percent: '0.0%',
-                isSelected: false,
-              ),
-            ),
-          ],
+            );
+          }).toList(),
         ),
         const SizedBox(height: 16),
-        _buildChart(title: 'Total Followers'),
-      ],
+        _buildChart(
+          title: selectedFollowerStat['label'],
+          value: selectedFollowerStat['value'],
+        ),      ],
     );
   }
 
@@ -153,26 +160,23 @@ class _CreatorDashboardViewState extends State<CreatorDashboardView>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-          'Mar 17 - Mar 17',
-          style: TextStyle(color: Colors.grey, fontSize: 13),
+        Text(_currentDate,
+          style: AppTextStyles.caption.copyWith(color: AppColors.textOnDark),
         ),
         GestureDetector(
           onTap: _showDateRangePicker,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(20),
+             color: AppColors.success,
+              borderRadius: BorderRadius.circular(38),
             ),
             child: Row(
               children: [
-                Text(_selectedRange,
-                    style: const TextStyle(
-                        color: Colors.black, fontSize: 12)),
+                Text(_currentLabel,
+                    style:AppTextStyles.caption.copyWith(color: Color(0xFF606060))),
                 const SizedBox(width: 4),
-                const Icon(Icons.keyboard_arrow_down,
-                    size: 16, color: Colors.black),
+                const Icon(Icons.keyboard_arrow_down,size: 16, color: Color(0xFF636363)),
               ],
             ),
           ),
@@ -192,85 +196,64 @@ class _CreatorDashboardViewState extends State<CreatorDashboardView>
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isSelected
-            ? const Color(0xFFE8F0FE)
-            : Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(10),
+            ? const Color(0xFFE6F2FE)
+            : const Color(0xFFFFFFFF),
+        border: Border.all(
+          color: isSelected
+              ? const Color(0xFF3498FA)
+              : const Color(0xFFE5E5E5),
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Text(
-                label,
-                style: TextStyle(
-                  color: isSelected ? Colors.blue : Colors.black87,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              Text(label,
+                style: AppTextStyles.bodySmall.copyWith(color: isSelected?AppColors.textGreen :AppColors.background)),
               const SizedBox(width: 4),
-              Icon(Icons.info_outline,
-                  size: 14,
-                  color:
-                  isSelected ? Colors.blue : Colors.grey),
+              Icon(Icons.info_outline, size: 16, color: isSelected ? AppColors.textGreen : AppColors.background),
             ],
           ),
-          const SizedBox(height: 6),
-          Text(
-            value,
-            style: TextStyle(
-              color: isSelected ? Colors.blue : Colors.black,
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          Text(
-            percent,
-            style: TextStyle(
-              color: isSelected ? Colors.blue : Colors.grey,
-              fontSize: 12,
-            ),
-          ),
+          const SizedBox(height: 8),
+          Text(value,
+            style: AppTextStyles.headlineLarge.copyWith(color: isSelected ? AppColors.textGreen :AppColors.background)),
+          Text(percent,
+            style: AppTextStyles.caption.copyWith(color: isSelected ? AppColors.textGreen :AppColors.background)),
         ],
       ),
     );
   }
 
   // ── Chart ────────────────────────────────────
-  Widget _buildChart({required String title}) {
+  Widget _buildChart({required String title, required String value}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade200),
-        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Color(0xFFE4E4E4)),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title,
-              style: const TextStyle(
-                  color: Colors.black87,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500)),
+              style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w400)),
           const SizedBox(height: 4),
-          const Text('0',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700)),
-          const SizedBox(height: 16),
-          SizedBox(
-            height: 160,
+          Text(value,
+              style: AppTextStyles.chart),
+          const SizedBox(height: 32),
+          SizedBox(height: 160,
             child: CustomPaint(
               size: const Size(double.infinity, 160),
               painter: _ChartPainter(),
             ),
           ),
           const SizedBox(height: 8),
-          const Center(
-            child: Text('March 17',
-                style: TextStyle(color: Colors.grey, fontSize: 12)),
+           Center(
+            child: Text(_currentDate,
+                style:AppTextStyles.overline),
           ),
         ],
       ),
@@ -279,82 +262,90 @@ class _CreatorDashboardViewState extends State<CreatorDashboardView>
 
   // ── Date range picker ────────────────────────
   void _showDateRangePicker() {
-    String tempSelected = _selectedRange;
+    String tempSelected = _currentLabel;
 
-    showModalBottomSheet(
+    showDialog(
       context: context,
-      backgroundColor: const Color(0xFF2C2C2E),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (_) => StatefulBuilder(
-        builder: (_, setModalState) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 12),
-            Container(
-              width: 36, height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey[600],
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      'Select Date Range',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600),
-                      textAlign: TextAlign.center,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => AlertDialog(
+          backgroundColor: const Color(0xFF252525),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          contentPadding: EdgeInsets.zero,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 36, height: 4,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[600],
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text('Select Date Range',
+                            style: AppTextStyles.bodyMedium,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: const Icon(Icons.close,
-                        color: Colors.white, size: 20),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(color: Colors.white12, height: 1),
-            ..._dateRanges.map((range) {
-              final isSelected = tempSelected == range['label'];
-              return Column(
-                children: [
-                  ListTile(
-                    onTap: () {
-                      setModalState(
-                              () => tempSelected = range['label']!);
-                      setState(
-                              () => _selectedRange = range['label']!);
-                      Navigator.pop(context);
-                    },
-                    title: Text(range['label']!,
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 14)),
-                    subtitle: Text(range['sub']!,
-                        style: const TextStyle(
-                            color: Colors.grey, fontSize: 12)),
-                    trailing: Icon(
-                      isSelected
-                          ? Icons.radio_button_checked
-                          : Icons.radio_button_unchecked,
-                      color:
-                      isSelected ? Colors.red : Colors.grey,
-                      size: 20,
+                    GestureDetector(
+                      onTap: () {
+                        Get.back();
+                      },
+                      child: Icon(Icons.close,color:AppColors.surface, size: 20),
                     ),
+                  ],
+                ),
+              ),
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Column(
+                    children: _dateRanges.map((range) {
+                      final isSelected = tempSelected == range['label'];
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color:Color(0xFF333333),
+                          borderRadius: BorderRadius.circular(8)),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                          onTap: () {
+                            setModalState(() => tempSelected = range['label']!);
+                            setState(() {
+                              _currentLabel = range['label']!;
+                              _currentDate = range['sub']!;
+                            });
+                            Get.back();
+                          },
+                          title: Text( range['label']!,
+                            style:AppTextStyles.caption),
+                          subtitle: Text(range['sub']!,
+                            style:AppTextStyles.caption),
+                          trailing: Icon( isSelected ? Icons.check_circle_outline: Icons.radio_button_unchecked,
+                            color: isSelected ? AppColors.linkColor: Color(0xFFA6A7AC),
+                            size: 20,
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
-                  const Divider(color: Colors.white12, height: 1),
-                ],
-              );
-            }),
-            const SizedBox(height: 16),
-          ],
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
         ),
       ),
     );
@@ -366,6 +357,10 @@ class _ChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final gridPaint = Paint()
+      ..color = Colors.grey.shade100
+      ..strokeWidth = 1;
+
+    final axisPaint = Paint()
       ..color = Colors.grey.shade200
       ..strokeWidth = 1;
 
@@ -375,27 +370,40 @@ class _ChartPainter extends CustomPainter {
 
     for (int i = 0; i < labels.length; i++) {
       final y = (size.height / (labels.length - 1)) * i;
-      // Grid line
+
+      // হরাইজন্টাল লাইনগুলো একটু ডানে বেশি বাড়ানো হয়েছে (size.width + 10)
       canvas.drawLine(
-        Offset(20, y),
-        Offset(size.width, y),
+        Offset(30, y),
+        Offset(size.width + 10, y),
         gridPaint,
       );
-      // Label
+
+      // Y-axis এর টেক্সট লেবেল
       final tp = TextPainter(
         text: TextSpan(text: labels[i], style: textStyle),
         textDirection: TextDirection.ltr,
       )..layout();
-      tp.paint(canvas, Offset(0, y - 6));
+      tp.paint(canvas, Offset(5, y - 6));
     }
 
-    // X-axis line
-    final axisPaint = Paint()
-      ..color = Colors.grey.shade300
-      ..strokeWidth = 1;
+
+    double startX = 60; // লেবেল থেকে একটু দূরে
+    double endX = size.width - 30; // শেষ লাইনের পজিশন
+    double midX = (startX + endX) / 2; // মাঝখানের লাইনের পজিশন
+
+    List<double> xPositions = [startX, midX, endX];
+    for (double x in xPositions) {
+      canvas.drawLine(
+        Offset(x, -20), // উপর থেকে
+        Offset(x, size.height), // নিচ পর্যন্ত
+        gridPaint,
+      );
+    }
+
+    // X-axis মেইন বেস লাইন
     canvas.drawLine(
-      Offset(20, size.height),
-      Offset(size.width, size.height),
+      Offset(startX - 10, size.height), // বামে একটু বাড়ানো
+      Offset(size.width + 10, size.height), // ডানে গ্রিডের বাইরে বাড়ানো
       axisPaint,
     );
   }

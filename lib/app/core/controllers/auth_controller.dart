@@ -12,6 +12,11 @@ class AuthController extends GetxController {
   var selectedLanguage = 'English'.obs;
   var isDarkMode = true.obs;
   var selectedTextSize = 'Medium'.obs;
+  var isLocationVisible = true.obs;
+
+  void toggleLocationVisible(bool value) {
+    isLocationVisible.value = value;
+  }
 
   void changeLanguage(String lang) {
     selectedLanguage.value = lang;

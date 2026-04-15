@@ -23,6 +23,7 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
+    Get.lazyPut(() => NotificationController());
     return Obx(() {
       bool isDark = AuthController.to.isDarkMode.value;
       String lang = AuthController.to.selectedLanguage.value;

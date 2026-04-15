@@ -1,34 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 
 class DiscoverAppView extends StatelessWidget {
   const DiscoverAppView({super.key});
 
   static const List<Map<String, String>> _apps = [
     {
-      'name': 'CrimeRadar',
-      'subtitle': 'Crime map & police audio',
-      'imageUrl': 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=100',
+      'name': 'WeatherNow',
+      'subtitle': 'Live radar & storm alerts',
+      'imageUrl': 'https://images.unsplash.com/photo-1592210454359-9043f067919b?w=200', // Weather/Storm
     },
     {
-      'name': 'CrimeRadar',
-      'subtitle': 'Crime map & police audio',
-      'imageUrl': 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=100',
+      'name': 'TrafficWatch',
+      'subtitle': 'Real-time road conditions',
+      'imageUrl': 'https://images.unsplash.com/photo-1545147986-a9d6f210df77?w=200', // Traffic/City Road
     },
     {
-      'name': 'CrimeRadar',
-      'subtitle': 'Crime map & police audio',
-      'imageUrl': 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=100',
+      'name': 'EcoAlert',
+      'subtitle': 'Air quality & pollution index',
+      'imageUrl': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200', // Nature/Air
     },
     {
-      'name': 'CrimeRadar',
-      'subtitle': 'Crime map & police audio',
-      'imageUrl': 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=100',
+      'name': 'EmergencyPlus',
+      'subtitle': 'Quick access to emergency help',
+      'imageUrl': 'https://images.unsplash.com/photo-1587393820429-aa214cf0ede3?w=200', // Ambulance/Health
     },
     {
-      'name': 'CrimeRadar',
-      'subtitle': 'Crime map & police audio',
-      'imageUrl': 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=100',
+      'name': 'CityEvents',
+      'subtitle': 'Local events & festivals',
+      'imageUrl': 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=200', // Events/Festival
     },
   ];
 
@@ -41,27 +43,23 @@ class DiscoverAppView extends StatelessWidget {
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Get.back(),
-          child: const Icon(Icons.arrow_back_ios,
-              color: Colors.white, size: 18),
+          child:Icon(Icons.arrow_back_ios, color: AppColors.surface, size: 20),
         ),
-        title: const Text('Discover App',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-                fontWeight: FontWeight.w600)),
+        title:Text('Discover App',
+            style: AppTextStyles.displaySmall),
         centerTitle: true,
       ),
       body: ListView.separated(
         itemCount: _apps.length,
         separatorBuilder: (_, __) =>
-        const Divider(color: Colors.white12, height: 1),
+        const Divider(color: Color(0xFF323232), height: 1),
         itemBuilder: (_, i) {
           final app = _apps[i];
           return ListTile(
             contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16, vertical: 8),
             leading: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
               child: Image.network(
                 app['imageUrl']!,
                 width: 56,
@@ -71,19 +69,14 @@ class DiscoverAppView extends StatelessWidget {
                   width: 56,
                   height: 56,
                   color: Colors.grey[800],
-                  child: const Icon(Icons.apps,
-                      color: Colors.white, size: 28),
+                  child: const Icon(Icons.apps, color: Colors.white, size: 28),
                 ),
               ),
             ),
             title: Text(app['name']!,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600)),
+                style:AppTextStyles.headlineMedium),
             subtitle: Text(app['subtitle']!,
-                style: const TextStyle(
-                    color: Colors.grey, fontSize: 12)),
+                style:AppTextStyles.caption),
             onTap: () {},
           );
         },

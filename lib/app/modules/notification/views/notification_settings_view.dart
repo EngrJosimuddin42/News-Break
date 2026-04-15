@@ -1,30 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../theme/app_colors.dart';
+import '../controllers/notification_controller.dart';
 
-class NotificationSettingsView extends StatefulWidget {
+class NotificationSettingsView extends StatelessWidget {
   const NotificationSettingsView({super.key});
 
   @override
-  State<NotificationSettingsView> createState() =>
-      _NotificationSettingsViewState();
-}
-
-class _NotificationSettingsViewState extends State<NotificationSettingsView> {
-  bool _allowNotification = true;
-  bool _soundVibration = true;
-  bool _localNews = true;
-  bool _breakingNews = true;
-  bool _recommendedReactions = true;
-  bool _followedReactions = true;
-  bool _forYou = true;
-  bool _localDeals = true;
-  bool _commentReplies = true;
-  bool _doNotDisturb = true;
-  double _frequency = 0.5;
-
-  @override
   Widget build(BuildContext context) {
+    final NotificationController controller = Get.put(NotificationController());
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -37,11 +24,10 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
         style:AppTextStyles.displaySmall),
         centerTitle: true,
       ),
-      body: ListView(
+        body: Obx(() => ListView(
         children: [
-          _switchTile('Allow Notification', _allowNotification,
-                  (val) => setState(() => _allowNotification = val)),
-
+          _switchTile('Allow Notification', controller.allowNotification.value,
+                  (val) => controller.allowNotification.value = val),
           // Frequency slider
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
@@ -54,13 +40,9 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
                 Text('Control the frequency of notifications',
                     style: AppTextStyles.overline),
                 Slider(
-                  value: _frequency,
+                  value: controller.frequency.value,
                   divisions: 2,
-                  onChanged: (val) {
-                    setState(() {
-                      _frequency = val;
-                    });
-                  },
+                  onChanged: (val) => controller.frequency.value = val,
                   activeColor: Colors.blue,
                   inactiveColor: Colors.grey[800],
                 ),
@@ -69,19 +51,19 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
                   children: [
                     // Low Text
                     Text('Low',
-                      style: _frequency == 0.0
+                      style: controller.frequency.value == 0.0
                           ? AppTextStyles.small
                           : AppTextStyles.overline),
 
                     // Normal Text
                     Text('Normal',
-                      style: _frequency == 0.5
+                      style: controller.frequency.value == 0.5
                           ? AppTextStyles.small
                           : AppTextStyles.overline),
 
                     // High Text
                     Text('High',
-                      style: _frequency == 1.0
+                      style: controller.frequency.value == 1.0
                           ? AppTextStyles.small
                           : AppTextStyles.overline),
                   ],
@@ -90,70 +72,62 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
             ),
           ),
 
-          _switchTile('Sound & Vibration', _soundVibration,
-                  (val) => setState(() => _soundVibration = val)),
+          _switchTile('Sound & Vibration', controller.soundVibration.value,
+                (val) => controller.soundVibration.value = val),
 
           _sectionLabel('Notification Topics'),
 
           _labelWithToggle(
             'Local News',
             'Stay informed of local alerts, weather updates, news stories easily.',
-            _localNews,
-                (val) => setState(() => _localNews = val),
-          ),
+            controller.localNews.value,
+                (val) => controller.localNews.value = val),
 
           _labelWithToggle(
             'Breaking News',
             'Get notified when a major story breaks out',
-            _breakingNews,
-                (val) => setState(() => _breakingNews = val),
-          ),
+            controller.breakingNews.value,
+                (val) => controller.breakingNews.value = val),
 
           _labelWithToggle(
             'Recommended Reactions',
             'Reaction notifications from real people, based on your interests.',
-            _recommendedReactions,
-                (val) => setState(() => _recommendedReactions = val),
-          ),
+            controller.recommendedReactions.value,
+                (val) => controller.recommendedReactions.value = val),
 
           _labelWithToggle(
             'Followed Reactions',
             'Reaction notifications from people you follow.',
-            _followedReactions,
-                (val) => setState(() => _followedReactions = val),
-          ),
+            controller.followedReactions.value,
+                (val) => controller.followedReactions.value = val),
 
           _labelWithToggle(
             'For You',
             'Stories based on your interests and topics you follow.',
-            _forYou,
-                (val) => setState(() => _forYou = val),
-          ),
+            controller.forYou.value,
+                (val) => controller.forYou.value = val),
 
           _labelWithToggle(
             'Local Deals and Events',
             'Promotions and upcoming events.',
-            _localDeals,
-                (val) => setState(() => _localDeals = val),
-          ),
+            controller.localDeals.value,
+                (val) => controller.localDeals.value = val),
 
           _sectionLabel('Message'),
 
           _labelWithToggle(
             'Comment Replies',
             'Get notified when someone replied to comments you left.',
-            _commentReplies,
-                (val) => setState(() => _commentReplies = val),
-          ),
+            controller.commentReplies.value,
+                (val) => controller.commentReplies.value = val),
 
           _sectionLabel('Other Settings'),
 
           _labelWithToggle(
             'Do Not Disturb',
             'Notifications will be silenced during the selected time.',
-            _doNotDisturb,
-                (val) => setState(() => _doNotDisturb = val),
-          ),
+            controller.doNotDisturb.value,
+                (val) => controller.doNotDisturb.value = val),
 
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
@@ -183,6 +157,7 @@ class _NotificationSettingsViewState extends State<NotificationSettingsView> {
           const SizedBox(height: 32),
         ],
       ),
+    )
     );
   }
 

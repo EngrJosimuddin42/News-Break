@@ -99,7 +99,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                         )),
                         const SizedBox(height: 8),
                         Text('Edit Photo',
-                            style:AppTextStyles.labelLarge),
+                            style:AppTextStyles.caption),
                       ],
                     ),
                   ),
@@ -219,7 +219,7 @@ class _EditProfileViewState extends State<EditProfileView> {
         controller: controller,
         keyboardType: keyboardType,
         textAlignVertical: TextAlignVertical.center,
-        style:AppTextStyles.labelLarge.copyWith(color: Color(0xFFF3F3F3)),
+        style:AppTextStyles.caption.copyWith(color: Color(0xFFF3F3F3)),
         decoration: InputDecoration(
           labelText: label,
           labelStyle:AppTextStyles.display.copyWith(color: AppColors.textOnDark),
@@ -256,7 +256,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                       style: AppTextStyles.display.copyWith(color: AppColors.textOnDark)),
                   const SizedBox(height: 2),
                   Text(value,
-                      style: AppTextStyles.labelLarge.copyWith(color: Color(0xFFF3F3F3))),
+                      style: AppTextStyles.caption.copyWith(color: Color(0xFFF3F3F3))),
                 ],
               ),
             ),
@@ -316,7 +316,7 @@ class _EditProfileViewState extends State<EditProfileView> {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: Text('Cancel', style: AppTextStyles.labelLarge),
+            child: Text('Cancel', style: AppTextStyles.caption),
           ),
           const Spacer(),
           TextButton(
@@ -324,7 +324,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               setState(() => _selectedBirthYear = tempYear);
               Get.back();
             },
-            child: Text('Ok', style: AppTextStyles.labelLarge),
+            child: Text('Ok', style: AppTextStyles.caption),
           ),
         ],
       ),
@@ -354,7 +354,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Text(gender,
-                      style: AppTextStyles.labelLarge),
+                      style: AppTextStyles.caption),
                 ),
               ),
                     if (isLast)
@@ -370,7 +370,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               Get.back();
               },
             child:Text('Cancel',
-                style: AppTextStyles.labelLarge),
+                style: AppTextStyles.caption),
           ),
         ],
       ),
@@ -396,7 +396,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               child:  Padding(
                 padding: EdgeInsets.symmetric(vertical: 12),
                 child: Text('Take a picture',
-                    style:AppTextStyles.labelLarge),
+                    style:AppTextStyles.caption),
               ),
             ),
             GestureDetector(
@@ -406,7 +406,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 12),
                 child: Text('Choose from gallery',
-                    style:AppTextStyles.labelLarge)),
+                    style:AppTextStyles.caption)),
             ),
           ],
         ),
@@ -477,11 +477,11 @@ class _EditProfileViewState extends State<EditProfileView> {
       builder: (_) => AlertDialog(
         backgroundColor: const Color(0xFF333333),
         title:Text('Are you sure you want to delete account?',
-            style:AppTextStyles.labelLarge,
+            style:AppTextStyles.caption,
           textAlign: TextAlign.center),
         content: Text(
           'Deleting your account is permanent and means you won\'t be able to recover all your data, including saved articles, comments and followed medias.',
-          style:AppTextStyles.labelLarge,
+          style:AppTextStyles.caption,
             textAlign: TextAlign.center),
         actions: [
           TextButton(

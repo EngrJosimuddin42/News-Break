@@ -149,7 +149,7 @@ class HistoryItem extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                       Text( 'Remove from history',
-                        style: AppTextStyles.labelLarge,
+                        style: AppTextStyles.caption,
                       ),
                     ],
                   ),

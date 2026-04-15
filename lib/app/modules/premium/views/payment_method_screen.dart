@@ -74,7 +74,7 @@ class PaymentMethodScreen extends GetView<PremiumController> {
                 child: controller.isLoading.value
                     ? const CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
                     : Text('Continue',
-                    style: AppTextStyles.labelLarge),
+                    style: AppTextStyles.caption),
               ),
             ),
             ),

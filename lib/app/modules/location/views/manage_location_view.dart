@@ -71,7 +71,7 @@ class _ManageLocationViewState extends State<ManageLocationView> {
                       ),
                       child: TextField(
                         controller: _searchController,
-                        style: AppTextStyles.labelLarge,
+                        style: AppTextStyles.caption,
                         decoration:InputDecoration(
                           hintText: 'Enter an address or zip code',
                           hintStyle: AppTextStyles.overline.copyWith(fontSize: 14),

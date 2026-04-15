@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:news_break/app/theme/app_colors.dart';
 
 import '../../../home/controllers/home_controller.dart';
 import '../../../location/views/manage_location_view.dart';
@@ -50,30 +51,19 @@ class _LocationState extends State<LocationView> {
     return Scaffold(
       backgroundColor: const Color(0xFF1B1B1E),
       appBar: AppBar(
-        backgroundColor: Color(0xFF1C1C1E),
+        backgroundColor: Colors.black,
         leading: IconButton(
           onPressed: () => Get.back(),
-          icon: const Icon(Icons.arrow_back_ios,color: Colors.white),
+          icon:Icon(Icons.arrow_back_ios,color:AppColors.textOnDark,size: 20),
         ),
       ),
       body: Container(
       decoration: const BoxDecoration(
-        color: Color(0xFF1C1C1E),
+        color: Colors.black,
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       child: Column(
         children: [
-          // Handle bar
-          const SizedBox(height: 12),
-          Container(
-            width: 36, height: 4,
-            decoration: BoxDecoration(
-              color: Colors.grey[600],
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 12),
-
           // Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),

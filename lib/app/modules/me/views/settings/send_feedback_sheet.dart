@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 
 class SendFeedbackSheet extends StatefulWidget {
   const SendFeedbackSheet({super.key});
@@ -22,15 +24,11 @@ class _SendFeedbackSheetState extends State<SendFeedbackSheet> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: Color(0xFF282828),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
-        left: 16,
-        right: 16,
-        top: 16,
-      ),
+        bottom: MediaQuery.of(context).viewInsets.bottom + 30, top: 30),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +38,7 @@ class _SendFeedbackSheetState extends State<SendFeedbackSheet> {
             child: Container(
               width: 36, height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: Color(0xFF444444),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -48,16 +46,9 @@ class _SendFeedbackSheetState extends State<SendFeedbackSheet> {
           const SizedBox(height: 16),
 
           // Title
-          const Center(
-            child: Text(
-              'Share your feedback',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
+          Center(
+            child: Text('Share your feedback',
+              style: AppTextStyles.displaySmall.copyWith(fontWeight: FontWeight.w700))),
           const SizedBox(height: 16),
 
           // Star rating
@@ -69,10 +60,12 @@ class _SendFeedbackSheetState extends State<SendFeedbackSheet> {
                   onTap: () => setState(() => _rating = i + 1),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: Icon(
-                      i < _rating ? Icons.star : Icons.star_border,
-                      color: Colors.orange,
-                      size: 32,
+                    child: Image.asset(
+                      i < _rating
+                          ? 'assets/icons/star.png'
+                          : 'assets/icons/star1.png',
+                      width: 32,
+                      height: 32,
                     ),
                   ),
                 );
@@ -80,59 +73,63 @@ class _SendFeedbackSheetState extends State<SendFeedbackSheet> {
             ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
 
-          // Label
-          const Text('Write your feedback',
-              style: TextStyle(color: Colors.black87, fontSize: 13)),
-          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Label
+                Text('Write your feedback',
+                  style: AppTextStyles.overline.copyWith(fontSize: 14, color: Colors.white70),
+                ),
+                const SizedBox(height: 12),
 
-          // Text area
-          Container(
-            height: 120,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: TextField(
-              controller: _feedbackController,
-              maxLines: null,
-              expands: true,
-              style: const TextStyle(color: Colors.black, fontSize: 13),
-              decoration: const InputDecoration(
-                hintText: 'Write your feedback here...',
-                hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.all(12),
-              ),
+                // Text area
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Color(0xFFE5E5E5)),
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.surface
+                  ),
+                  child: TextField(
+                    controller: _feedbackController,
+                    maxLines: null,
+                    expands: true,
+                    style:AppTextStyles.overline.copyWith(color: Color(0xFFB7B7B7)),
+                    decoration: InputDecoration(
+                      hintText: 'Write your feedback here...',
+                      hintStyle: AppTextStyles.overline.copyWith(color: Color(0xFFB7B7B7)),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(12),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-
           const SizedBox(height: 16),
 
           // Send button
-          SizedBox(
-            width: double.infinity,
+          Center(
+            child: SizedBox(
+            width: 335,
             height: 48,
             child: ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
-                Get.snackbar('Thank you!', 'Your feedback has been sent.',
-                    backgroundColor: Colors.green,
-                    colorText: Colors.white);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFE57373),
+                backgroundColor:AppColors.linkColor,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-              child: const Text('Send Feedback',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
+                    borderRadius: BorderRadius.circular(8))),
+              child: Text('Send Feedback',
+                  style:AppTextStyles.bodyMedium.copyWith(color: AppColors.background)),
             ),
           ),
+    )
         ],
       ),
     );

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:news_break/app/modules/me/views/settings/about/shared_view.dart';
+import 'package:news_break/app/modules/me/views/settings/about/legal_view.dart';
+import 'package:news_break/app/modules/premium/views/premium_screen.dart';
+
+import '../../../../premium/bindings/premium_binding.dart';
 
 class AboutView extends StatelessWidget {
   const AboutView({super.key});
@@ -67,13 +70,14 @@ class AboutView extends StatelessWidget {
             const SizedBox(height: 32),
 
             // Buttons
-            _actionButton('Terms of Use', () => Get.to(() => const TermsOfUseView())),
+            _actionButton(
+              'Terms of Use', () => Get.to(() => const LegalView(type: LegalType.terms))),
             const SizedBox(height: 12),
-            _actionButton('Legal Notices', () => Get.to(() => const LegalNoticeView())),
+            _actionButton('Legal Notices', () => Get.to(() => const LegalView(type: LegalType.notice))),
             const SizedBox(height: 12),
-            _actionButton('Privacy Policy', () => Get.to(() => const PrivacyPolicyView())),
+            _actionButton('Privacy Policy', () => Get.to(() => const LegalView(type: LegalType.privacy))),
             const SizedBox(height: 12),
-            _actionButton('Check for Update', () {}),
+            _actionButton('Check for Update', () => Get.to(() => const PremiumScreen(),binding: PremiumBinding())),
           ],
         ),
       ),

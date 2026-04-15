@@ -88,14 +88,6 @@ class AppTextStyles {
     height: 1.4,
   );
 
-  // Label
-  static TextStyle get labelLarge => GoogleFonts.inter(  //
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    color: AppColors.surface,
-    letterSpacing: 0.1,
-  );
-
   static TextStyle get labelMedium => GoogleFonts.inter(  //
     fontSize: 12,
     fontWeight: FontWeight.w400,

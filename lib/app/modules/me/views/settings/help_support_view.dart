@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'about/sub_pages/help_widgets.dart';
+
 class HelpSupportView extends StatefulWidget {
   const HelpSupportView({super.key});
 
@@ -218,7 +220,7 @@ class _HelpSupportViewState extends State<HelpSupportView> {
         )),
 
         const SizedBox(height: 16),
-        const AppFooter(),
+        HelpWidgets.helpFooter(),
         const SizedBox(height: 24),
       ],
     );
@@ -381,61 +383,13 @@ class HelpDetailView extends StatelessWidget {
                 )),
 
                 const SizedBox(height: 24),
-                const AppFooter(),
+                HelpWidgets.helpFooter(),
                 const SizedBox(height: 24),
               ],
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-
-class AppFooter extends StatelessWidget {
-  const AppFooter({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Divider(height: 1, color: Color(0xFFEEEEEE)),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {},
-                child: const Text('Terms of Use',
-                    style: TextStyle(color: Colors.grey, fontSize: 11)),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Text('|',
-                    style: TextStyle(color: Colors.grey, fontSize: 11)),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: const Text('Privacy Policy',
-                    style: TextStyle(color: Colors.grey, fontSize: 11)),
-              ),
-            ],
-          ),
-        ),
-        const Text('© 2020 Particle Media. All Rights Reserved.',
-            style: TextStyle(color: Colors.grey, fontSize: 10)),
-        const SizedBox(height: 8),
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('English (US)',
-                style: TextStyle(color: Colors.grey, fontSize: 11)),
-            Icon(Icons.keyboard_arrow_down, color: Colors.grey, size: 16),
-          ],
-        ),
-      ],
     );
   }
 }

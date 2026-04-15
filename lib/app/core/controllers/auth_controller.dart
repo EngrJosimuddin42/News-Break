@@ -1,9 +1,29 @@
 import 'package:get/get.dart';
 
+import '../../modules/signin/bindings/signin_binding.dart';
+import '../../modules/signin/views/signin_view.dart';
+
 class AuthController extends GetxController {
   static AuthController get to => Get.find();
 
   final user = Rxn<UserModel>();
+
+
+  var selectedLanguage = 'English'.obs;
+  var isDarkMode = true.obs;
+  var selectedTextSize = 'Medium'.obs;
+
+  void changeLanguage(String lang) {
+    selectedLanguage.value = lang;
+  }
+
+  void toggleDarkMode(bool value) {
+    isDarkMode.value = value;
+  }
+
+  void changeTextSize(String size) {
+    selectedTextSize.value = size;
+  }
 
   String get userInitial =>
       user.value?.name.isNotEmpty == true
@@ -23,7 +43,10 @@ class AuthController extends GetxController {
 
   void logout() {
     user.value = null;
-    Get.offAllNamed('/login');
+
+    Get.offAll( () => const SignInView(),
+      binding: SignInBinding(),
+    );
   }
 
   void updateProfile({

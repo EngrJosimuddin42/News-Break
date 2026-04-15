@@ -6,7 +6,10 @@ import 'package:news_break/app/modules/me/views/settings/help_support_view.dart'
 import 'package:news_break/app/modules/me/views/settings/location_view.dart';
 import 'package:news_break/app/modules/me/views/settings/privacy_view.dart';
 import 'package:news_break/app/modules/me/views/settings/send_feedback_sheet.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../../core/controllers/auth_controller.dart';
+import '../../../notification/controllers/notification_controller.dart';
 import '../../../notification/views/notification_settings_view.dart';
 
 class SettingsView extends StatefulWidget {
@@ -17,19 +20,20 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  bool _darkMode = true;
 
   @override
   Widget build(BuildContext context) {
+    return Obx(() {
+      bool isDark = AuthController.to.isDarkMode.value;
+      String lang = AuthController.to.selectedLanguage.value;
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: isDark ? Colors.black : Colors.blueGrey,
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Get.back(),
-          child: const Icon(Icons.arrow_back_ios,
-              color: Colors.white, size: 18),
+          child: Icon(Icons.arrow_back_ios, color: AppColors.textOnDark, size: 20),
         ),
       ),
       body: Column(
@@ -41,7 +45,7 @@ class _SettingsViewState extends State<SettingsView> {
 
                 // Manage Location
                 _settingsTile(
-                  icon: Icons.location_on_outlined,
+                  iconPath: 'assets/icons/location1.png',
                   title: 'Manage Location',
                   subtitle: 'Manage your primary and followed location',
                   onTap: () => Get.to(() => const LocationView()),
@@ -49,70 +53,84 @@ class _SettingsViewState extends State<SettingsView> {
 
                 // Notification
                 _settingsTile(
-                  icon: Icons.notifications_outlined,
+                  iconPath: 'assets/icons/notification.png',
                   title: 'Notification',
                   subtitle: 'Choose what and how often to get alerted',
-                  trailing: const Text('on',
-                      style: TextStyle(color: Colors.grey, fontSize: 13)),
-                  onTap: () =>
-                      Get.to(() => const NotificationSettingsView()),
+                  trailing: Obx(() {
+                    final notificationCtrl = Get.find<NotificationController>();
+                    return Text( notificationCtrl.allowNotification.value ? 'on' : 'off',
+                      style: AppTextStyles.overline,
+                    );
+                  }),
+                  onTap: () => Get.to(() => const NotificationSettingsView()),
                 ),
 
                 // Privacy
                 _settingsTile(
-                  icon: Icons.shield_outlined,
+                  iconPath: 'assets/icons/privacy.png',
                   title: 'Privacy',
                   subtitle: 'Choose your privacy settings',
                   onTap: () => Get.to(() => const PrivacyView()),
                 ),
 
                 // Dark mode
-                _settingsTile(
-                  icon: Icons.dark_mode_outlined,
-                  title: 'Dark mode',
-                  trailing: Switch(
-                    value: _darkMode,
-                    onChanged: (val) => setState(() => _darkMode = val),
-                    activeColor: Colors.blue,
-                  ),
-                  onTap: () => setState(() => _darkMode = !_darkMode),
-                ),
+                    _settingsTile(
+                      iconPath: 'assets/icons/dark_mode.png',
+                      title: 'Dark mode',
+                      trailing: Transform.scale(
+                        scale: 0.7,
+                        child: Switch(
+                          value: AuthController.to.isDarkMode.value,
+                          onChanged: (bool newValue) {
+                            AuthController.to.toggleDarkMode(newValue);
+                          },
+                          activeColor: AppColors.textGreen,
+                          thumbColor: const WidgetStatePropertyAll(
+                              Colors.black),
+                        ),
+                      ),
+                      onTap: () {
+                        AuthController.to.toggleDarkMode(
+                            !AuthController.to.isDarkMode.value);
+                      },
+                    ),
 
                 // Language
-                _settingsTile(
-                  icon: Icons.language_outlined,
-                  title: 'Language',
-                  trailing: const Text('English',
-                      style: TextStyle(color: Colors.grey, fontSize: 13)),
-                  onTap: () => _showLanguagePicker(),
-                ),
+                    _settingsTile(
+                      iconPath: 'assets/icons/language.png',
+                      title: 'Language',
+                      trailing: Text(lang, style: AppTextStyles.overline),
+                      onTap: () => _showLanguagePicker(),
+                    ),
 
                 // Text size
                 _settingsTile(
-                  icon: Icons.text_fields,
+                  iconPath: 'assets/icons/text.png',
                   title: 'Text size',
-                  trailing: const Text('Medium',
-                      style: TextStyle(color: Colors.grey, fontSize: 13)),
+                  trailing: Obx(() => Text(AuthController.to.selectedTextSize.value, style: AppTextStyles.overline)),
                   onTap: () => _showTextSizePicker(),
                 ),
 
                 const SizedBox(height: 8),
 
                 // Help center
-                _plainTile('Help center', () => Get.to(() => const HelpSupportView())),
+                _plainTile(
+                    'Help center', () => Get.to(() => const HelpSupportView())),
 
                 // Send feedback — bottom sheet
                 _plainTile('Send feedback', () {
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
+                    constraints: const BoxConstraints(
+                        maxWidth: double.infinity),
                     builder: (_) => const SendFeedbackSheet(),
                   );
                 }),
 
                 // Discover app
-                _plainTile('Discover app', () => Get.to(() => const DiscoverAppView())),
+                _plainTile('Discover app', () =>
+                    Get.to(() => const DiscoverAppView())),
 
                 // About us
                 _plainTile('About us', () => Get.to(() => const AboutView())),
@@ -128,29 +146,23 @@ class _SettingsViewState extends State<SettingsView> {
             return Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
               child: GestureDetector(
-                onTap: () => AuthController.to.logout(),
+                onTap: () => _showLogoutDialog(context),
                 child: Container(
-                  width: double.infinity,
+                  width: 335,
+                  height: 70,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE57373),
+                    color: AppColors.linkColor,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
                     children: [
-                      const Text(
-                        'Log out',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      Text('Log out',
+                        style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w400)
                       ),
                       const SizedBox(height: 2),
-                      Text(
-                        user.email,
-                        style: const TextStyle(
-                            color: Colors.white70, fontSize: 12),
+                      Text(user.email,
+                        style:AppTextStyles.labelSmall.copyWith(color:AppColors.background),
                       ),
                     ],
                   ),
@@ -162,10 +174,12 @@ class _SettingsViewState extends State<SettingsView> {
       ),
     );
   }
+  );
+  }
 
   // ── Settings tile ────────────────────────────
   Widget _settingsTile({
-    required IconData icon,
+    required String iconPath,
     required String title,
     String? subtitle,
     Widget? trailing,
@@ -178,22 +192,22 @@ class _SettingsViewState extends State<SettingsView> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: Colors.white, size: 22),
-            const SizedBox(width: 14),
+            Image.asset(
+              iconPath,
+              width: 14,
+              height: 14,
+            ),
+            const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500)),
+                      style: AppTextStyles.large),
                   if (subtitle != null) ...[
                     const SizedBox(height: 2),
                     Text(subtitle,
-                        style: const TextStyle(
-                            color: Colors.grey, fontSize: 12)),
+                        style: AppTextStyles.overline),
                   ],
                 ],
               ),
@@ -212,67 +226,174 @@ class _SettingsViewState extends State<SettingsView> {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
         child: Text(title,
-            style: const TextStyle(color: Colors.white, fontSize: 15)),
+            style: AppTextStyles.large),
       ),
     );
   }
 
   // ── Language picker ──────────────────────────
   void _showLanguagePicker() {
-    final languages = ['English', 'Spanish', 'French', 'German', 'Chinese'];
-    showModalBottomSheet(
+    showDialog(
       context: context,
-      backgroundColor: const Color(0xFF2C2C2E),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (_) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 16),
-          const Text('Language',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600)),
-          const SizedBox(height: 8),
-          ...languages.map((lang) => ListTile(
-            title: Text(lang,
-                style: const TextStyle(color: Colors.white)),
-            onTap: () => Navigator.pop(context),
-          )),
-          const SizedBox(height: 16),
-        ],
+      builder: (context) => Dialog(
+        backgroundColor: const Color(0xFF282828),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(width: 24),
+                  Text('Language',
+                      style: AppTextStyles.displaySmall.copyWith(fontWeight: FontWeight.w500)),
+                  GestureDetector(
+                    onTap: () {
+                      Get.back();
+                      },
+                    child: const Icon(Icons.close, color: Colors.white, size: 20),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 50),
+
+              _buildLanguageButton('English'),
+
+              const SizedBox(height: 12),
+
+              _buildLanguageButton('Bangla'),
+
+              const SizedBox(height: 12)
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  // ── Text size picker ─────────────────────────
-  void _showTextSizePicker() {
-    final sizes = ['Small', 'Medium', 'Large'];
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: const Color(0xFF2C2C2E),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+  Widget _buildLanguageButton(String lang) {
+    return GestureDetector(
+    onTap: () {
+      AuthController.to.changeLanguage(lang);
+      Get.back();
+    },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          color: AppColors.linkColor,
+          borderRadius: BorderRadius.circular(70),
+        ),
+        child: Center(
+          child: Text(lang,
+            style:AppTextStyles.bodySmall),
+        ),
       ),
-      builder: (_) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 16),
-          const Text('Text size',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600)),
-          const SizedBox(height: 8),
-          ...sizes.map((size) => ListTile(
-            title: Text(size,
-                style: const TextStyle(color: Colors.white)),
-            onTap: () => Navigator.pop(context),
-          )),
-          const SizedBox(height: 16),
-        ],
+    );
+  }
+
+  void _showTextSizePicker() {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: const Color(0xFF282828),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  onPressed: () => Get.back(),
+                  icon: const Icon(Icons.close, color: Colors.white, size: 20),
+                ),
+              ),
+
+              _buildTextSizeOption('Small'),
+              const Divider(color: Color(0xFFDEDEE8), height: 1),
+              _buildTextSizeOption('Medium'),
+              const Divider(color: Color(0xFFDEDEE8), height: 1),
+              _buildTextSizeOption('Large'),
+              const SizedBox(height: 10),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextSizeOption(String size) {
+    return Obx(() {
+      bool isSelected = AuthController.to.selectedTextSize.value == size;
+      return ListTile(
+        title: Text(size,
+          style: AppTextStyles.caption,
+        ),
+        trailing: Container(
+          padding: const EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: isSelected ? Color(0xFF257A5D): Color(0xFFA6A7AC),
+              width: 2,
+            ),
+          ),
+          child: isSelected
+              ? Icon(Icons.check, size: 14, color: Color(0xFF257A5D))
+              : const SizedBox(width: 14, height: 14),
+        ),
+        onTap: () {
+          AuthController.to.changeTextSize(size);
+          Get.back();
+        },
+      );
+    });
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: const Color(0xFF282828),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Log out',
+                style: AppTextStyles.caption.copyWith(fontSize: 18)),
+              const SizedBox(height: 12),
+              Text('Are you sure you want to log out?',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.labelMedium),
+              const SizedBox(height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // Cancel Button
+                  GestureDetector(
+                    onTap: () => Get.back(),
+                    child:Text('Cancel',
+                      style: AppTextStyles.headlineMedium),
+                  ),
+                  // Logout Button
+                  GestureDetector(
+                    onTap: () {
+                      Get.back();
+                      AuthController.to.logout();
+                    },
+                    child:Text('Logout',
+                      style:  AppTextStyles.headlineMedium.copyWith(color: AppColors.linkColor),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

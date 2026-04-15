@@ -108,7 +108,7 @@ class _ChooseLocationSheetState extends State<ChooseLocationSheet> {
                     ),
                     child: TextField(
                       controller: _searchController,
-                      style: AppTextStyles.labelLarge,
+                      style: AppTextStyles.caption,
                       onChanged: (val) =>
                           setState(() => _query = val),
                       onTap: () =>
@@ -183,7 +183,7 @@ class _ChooseLocationSheetState extends State<ChooseLocationSheet> {
           Row(
             children: [
               Text("Couldn't load your location",
-                  style:AppTextStyles.labelLarge.copyWith(color: AppColors.textOnDark)),
+                  style:AppTextStyles.caption.copyWith(color: AppColors.textOnDark)),
               const Spacer(),
               GestureDetector(
                 onTap: () {},
@@ -214,7 +214,7 @@ class _ChooseLocationSheetState extends State<ChooseLocationSheet> {
         return ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(loc['city']!,
-              style:AppTextStyles.labelLarge),
+              style:AppTextStyles.caption),
           subtitle: Text(loc['zip']!,
               style: AppTextStyles.overline),
           onTap: () {

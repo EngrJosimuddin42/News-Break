@@ -108,11 +108,10 @@ class MeController extends GetxController {
       context: context,
       builder: (_) => AlertDialog(
         backgroundColor: const Color(0xFF2C2C2E),
-        title: Text('Clear history?', style: AppTextStyles.labelLarge),
+        title: Text('Clear history?', style: AppTextStyles.caption),
         content: Text(
           'Are you sure you want to clear your browsing history? This action cannot be undone.',
-          style: AppTextStyles.labelLarge,
-        ),
+          style: AppTextStyles.caption),
         actions: [
           TextButton(
             onPressed: () => Get.back(),

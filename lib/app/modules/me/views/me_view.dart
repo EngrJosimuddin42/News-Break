@@ -477,7 +477,7 @@ class MeBody extends GetView<MeController> {
                 style: AppTextStyles.bodyMedium),
             const SizedBox(height: 4),
             Text('Since April 2024',
-                style: AppTextStyles.labelLarge.copyWith(color: const Color(0xFFC4C4C4))),
+                style: AppTextStyles.caption.copyWith(color: const Color(0xFFC4C4C4))),
             const SizedBox(height: 16),
             const Divider(color: Colors.white12, height: 1),
             const SizedBox(height: 12),

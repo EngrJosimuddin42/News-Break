@@ -145,8 +145,7 @@ class _CommunityReportSheetState extends State<CommunityReportSheet> {
           const SizedBox(height: 16),
           Text(
             'Thanx for reporting this',
-            style: AppTextStyles.labelLarge,
-          ),
+            style: AppTextStyles.caption),
           const SizedBox(height: 24),
           SizedBox(
             width: 311,

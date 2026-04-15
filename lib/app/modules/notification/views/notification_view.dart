@@ -38,7 +38,7 @@ class NotificationAppBar extends GetView<NotificationController>
         dividerColor: Colors.transparent,
         labelColor: Colors.white,
         unselectedLabelColor: Colors.grey,
-        labelStyle: AppTextStyles.labelLarge,
+        labelStyle: AppTextStyles.caption,
         unselectedLabelStyle: const TextStyle(fontSize: 14),
         tabs: NotificationController.tabs.map((t) => Tab(text: t)).toList(),
       ),
@@ -81,7 +81,7 @@ class FollowNotificationItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(name,
-                style: AppTextStyles.labelLarge),
+                style: AppTextStyles.caption),
               const SizedBox(height: 2),
               Text('Started Following you',
                 style: AppTextStyles.labelSmall.copyWith(color:AppColors.light)),

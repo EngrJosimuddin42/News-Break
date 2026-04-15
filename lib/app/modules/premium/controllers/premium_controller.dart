@@ -19,8 +19,6 @@ class PremiumController extends GetxController {
 
     try {
       isLoading.value = true;
-
-      // TODO: API call here
       await Future.delayed(const Duration(seconds: 2));
 
       isLoading.value = false;

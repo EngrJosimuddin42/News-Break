@@ -1,23 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../../../../../controllers/who_are_we_controller.dart';
 import 'help_widgets.dart';
 
 class WhoAreWeView extends StatelessWidget {
-  const WhoAreWeView({super.key});
+  WhoAreWeView({super.key});
 
-  static const List<Map<String, String>> _team = [
-    {
-      'name': 'Wynston Alberts',
-      'role': 'Trust & Safety',
-      'imageUrl':
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200',
-    },
-    {
-      'name': 'Wynston Alberts',
-      'role': 'Trust & Safety',
-      'imageUrl':
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200',
-    },
-  ];
+  final WhoAreWeController controller = Get.put(WhoAreWeController());
 
   @override
   Widget build(BuildContext context) {
@@ -27,120 +17,73 @@ class WhoAreWeView extends StatelessWidget {
       body: Column(
         children: [
           const HelpTabBar(),
-          const Divider(height: 1, color: Color(0xFFEEEEEE)),
-          Expanded(
-            child: ListView(
-              children: [
-                // About Us
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      HelpWidgets.redChip('About Us'),
-                      const SizedBox(height: 8),
-                      const Text('We\'er NewsBreak',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700)),
-                      const SizedBox(height: 6),
-                      const Text(
-                        'Lorem ipsum dolor sit amet consectetur. Lectus bibendum eu mauris praesent eu iaculis. Elit ac in quam purus.',
-                        style: TextStyle(color: Colors.black54, fontSize: 13, height: 1.5),
-                      ),
-                      const SizedBox(height: 12),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600',
-                          height: 160,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Container(
-                            height: 160, color: Colors.grey[200],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+        Expanded(
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(color: Colors.red),
+                );
+              }
 
-                // Our Story
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              return ListView(
+              children: [
+                // About & Story
+                ...controller.aboutSections.map((section) => Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      HelpWidgets.redChip('Our Story'),
+                      HelpWidgets.redChip(section.chip),
                       const SizedBox(height: 8),
-                      const Text('We\'er NewsBreak',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700)),
-                      const SizedBox(height: 6),
-                      const Text(
-                        'Lorem ipsum dolor sit amet consectetur. Lectus bibendum eu mauris praesent eu iaculis. Elit ac in quam purus.',
-                        style: TextStyle(color: Colors.black54, fontSize: 13, height: 1.5),
-                      ),
+                      Text(section.title,
+                          style: AppTextStyles.chart.copyWith(color: Colors.black)),
+                      const SizedBox(height: 12),
+                      Text(section.desc,
+                        style:AppTextStyles.overline.copyWith(color: Color(0xFF6C6C6C))),
                       const SizedBox(height: 12),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600',
-                          height: 160,
+                          section.image,
                           width: double.infinity,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fitWidth,
                           errorBuilder: (_, __, ___) => Container(
-                            height: 160, color: Colors.grey[200],
+                            height: 160,
+                            color: Colors.grey[200],
+                            child: const Icon(Icons.broken_image, color: Colors.grey),
                           ),
                         ),
                       ),
+                      const SizedBox(height: 16),
                     ],
                   ),
-                ),
+                )),
 
                 // Team
-                const Padding(
+                Padding(
                   padding: EdgeInsets.all(16),
                   child: Text('Some people we\'d like\nyou to meet',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700)),
-                ),
+                      style:AppTextStyles.head )),
 
-                ..._team.map((member) => Padding(
+                ...controller.teamList.map((member) => Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Column(
                     children: [
                       CircleAvatar(
                         radius: 36,
-                        backgroundImage:
-                        NetworkImage(member['imageUrl']!),
-                      ),
+                        backgroundImage: NetworkImage(member.imageUrl)),
                       const SizedBox(height: 8),
-                      Text(member['name']!,
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600)),
-                      Text(member['role']!,
-                          style: const TextStyle(
-                              color: Colors.grey, fontSize: 12)),
-                      const SizedBox(height: 6),
-                      const Padding(
+                      Text(member.name,
+                          style: AppTextStyles.button.copyWith(color: Color(0xFF333333))),
+                      Text(member.role,
+                          style: AppTextStyles.textSmall.copyWith(color: Color(0xFF6C6C6C))),
+                      const SizedBox(height: 12),
+                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 24),
-                        child: Text(
-                          'Lorem ipsum dolor sit amet consectetur. Pulvinar vestibulum ipsum nulla id. Volutpat mattis et integer porttitor. Neque non tempor ante bibendum ipsum non.',
+                        child: Text(member.bio,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 12,
-                              height: 1.5),
-                        ),
+                          style: AppTextStyles.overline),
                       ),
                     ],
                   ),
@@ -148,8 +91,9 @@ class WhoAreWeView extends StatelessWidget {
 
                 HelpWidgets.helpFooter(),
               ],
-            ),
-          ),
+              );
+            }),
+        ),
         ],
       ),
     );

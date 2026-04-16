@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../../../../../controllers/what_we_do_controller.dart';
 import 'creator_page_view.dart';
 import 'help_widgets.dart';
 
 class WhatWeDoView extends StatelessWidget {
-  const WhatWeDoView({super.key});
+   WhatWeDoView({super.key});
+
+  final WhatWeDoController controller = Get.put(WhatWeDoController());
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +19,6 @@ class WhatWeDoView extends StatelessWidget {
       body: Column(
         children: [
           const HelpTabBar(),
-          const Divider(height: 1, color: Color(0xFFEEEEEE)),
           Expanded(
             child: ListView(
               children: [
@@ -25,86 +28,45 @@ class WhatWeDoView extends StatelessWidget {
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
-                      const Text('Over 50 Million Users',
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500)),
+                      Text(controller.userStats,
+                          style: AppTextStyles.caption.copyWith(color: AppColors.linkColor)),
                       const SizedBox(height: 8),
-                      const Text('Welcome to the nation\'s\nleading news app',
+                      Text(controller.welcomeHeadline,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700)),
+                          style: AppTextStyles.chart.copyWith(color: Colors.black)),
                       const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _phoneImage(),
-                          const SizedBox(width: 8),
-                          _phoneImage(),
-                        ],
-                      ),
+                      Image.asset(controller.heroImagePath)
                     ],
                   ),
                 ),
 
                 // Stay alert section
                 Container(
-                  color: const Color(0xFFF8F8F8),
+                  color: Colors.white,
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
-                      const Text('Stay alert,\nStay safe',
+                      Text(controller.safetyTitle,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w700)),
+                          style:AppTextStyles.headlineLarge.copyWith(fontWeight: FontWeight.w400)),
                       const SizedBox(height: 12),
-                      const Text(
-                        'Stay safe and informed with immediate access to local crime and police alerts and incident reports in your neighborhood',
+                       Text(controller.safetyDesc,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.black54, fontSize: 13, height: 1.5),
+                        style:AppTextStyles.caption.copyWith(color: Color(0xFF525C5E)),
                       ),
                       const SizedBox(height: 16),
-                      _phoneImage(wide: true),
-                    ],
+                      Image.asset(controller.safetyImagePath)                    ],
                   ),
                 ),
 
-                // Contributors
-                _ctaSection(
-                  tag: 'For Contributors',
-                  title: 'Share Your Stories',
-                  subtitle:
-                  'Earn recognition and revenue by sharing important stories from your community',
-                  buttonLabel: 'Become a contributor',
-                  onTap: () => Get.to(() => const CreatorPageView(pageKey: 'contributor')),
-                ),
-
-                // Publishers
-                _ctaSection(
-                  tag: 'For Publishers',
-                  title: 'Expand Your Reach',
-                  subtitle:
-                  'Broaden your audience and increase your visibility and revenue by sharing your content with millions of new readers on the platform',
-                  buttonLabel: 'Publish on NewsBreak',
-                  onTap: () => Get.to(() => const CreatorPageView(pageKey: 'publish')),
-                ),
-
-                // Advertisers
-                _ctaSection(
-                  tag: 'For Advertisers',
-                  title: 'Connect Effectively',
-                  subtitle:
-                  'Reach more than 40 million users across the U.S. and engage with your target audience at the right moment.',
-                  buttonLabel: 'Advertise on NewsBreak',
-                  onTap: () => Get.to(() => const CreatorPageView(pageKey: 'advertise')),
-                ),
-
+                // CTA Sections (Contributors, Publishers, Advertisers)
+                ...controller.ctaSections.map((section) => _ctaSection(
+                  tag: section.tag,
+                  title: section.title,
+                  subtitle: section.subtitle,
+                  buttonLabel: section.buttonLabel,
+                  onTap: () => Get.to(() => CreatorPageView(pageKey: section.pageKey)),
+                )),
                 HelpWidgets.helpFooter(),
               ],
             ),
@@ -114,17 +76,6 @@ class WhatWeDoView extends StatelessWidget {
     );
   }
 
-  Widget _phoneImage({bool wide = false}) {
-    return Container(
-      width: wide ? 200 : 90,
-      height: wide ? 130 : 160,
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Icon(Icons.phone_iphone, color: Colors.grey, size: 40),
-    );
-  }
 
   Widget _ctaSection({
     required String tag,
@@ -135,34 +86,32 @@ class WhatWeDoView extends StatelessWidget {
   }) {
     return Container(
       padding: const EdgeInsets.all(24),
+      width: double.infinity,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          HelpWidgets.redChip(tag),
+          Text(tag,
+            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.linkColor)),
           const SizedBox(height: 8),
           Text(title,
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700)),
+              style: AppTextStyles.title),
           const SizedBox(height: 8),
           Text(subtitle,
-              style: const TextStyle(
-                  color: Colors.black54, fontSize: 13, height: 1.5)),
-          const SizedBox(height: 16),
+              style:AppTextStyles.overline.copyWith(color: Color(0xFF525C5E))),
+          const SizedBox(height: 24),
           SizedBox(
-            width: double.infinity,
+            width: 190,
+            height: 48,
             child: ElevatedButton(
               onPressed: onTap,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.linkColor,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
+                    borderRadius: BorderRadius.circular(68)),
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
               child: Text(buttonLabel,
-                  style: const TextStyle(
-                      color: Colors.white, fontSize: 14)),
+                  style:AppTextStyles.buttonOutline),
             ),
           ),
         ],

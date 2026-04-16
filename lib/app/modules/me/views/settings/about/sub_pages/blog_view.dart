@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 import 'help_widgets.dart';
 
 class BlogView extends StatelessWidget {
@@ -9,57 +10,54 @@ class BlogView extends StatelessWidget {
     {
       'tag': 'Behind the byline',
       'title': 'Reviving local journalism',
-      'body':
-      'Lorem ipsum dolor sit amet consectetur. Lacus ut habitant id nec erat egestas libero lectus. Ipsum velit dictum sit ultrices porttitor. Tellus justo nascetur pellentesque praesent vitae viverra etiam ipsum a.',
+      'body': 'Lorem ipsum dolor sit amet consectetur. Lacus ut habitant id nec erat egestas libero lectus. Ipsum velit dictum sit ultrices porttitor. Tellus justo nascetur pellentesque praesent vitae viverra etiam ipsum a.',
       'author': 'Newsbreak',
       'date': 'March 4, 2026 16:00',
-      'imageUrl':
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600',
+      'imageUrl': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600',
     },
     {
       'tag': 'Behind the byline',
       'title': 'Reviving local journalism',
-      'body':
-      'Lorem ipsum dolor sit amet consectetur. Lacus ut habitant id nec erat egestas libero lectus. Ipsum velit dictum sit ultrices porttitor. Tellus justo nascetur pellentesque praesent vitae viverra etiam ipsum a.',
+      'body': 'Lorem ipsum dolor sit amet consectetur. Lacus ut habitant id nec erat egestas libero lectus. Ipsum velit dictum sit ultrices porttitor. Tellus justo nascetur pellentesque praesent vitae viverra etiam ipsum a.',
       'author': 'Newsbreak',
       'date': 'March 4, 2026 16:00',
-      'imageUrl':
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600',
+      'imageUrl': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600',
     },
     {
       'tag': 'Behind the byline',
       'title': 'Reviving local journalism',
-      'body':
-      'Lorem ipsum dolor sit amet consectetur. Lacus ut habitant id nec erat egestas libero lectus. Ipsum velit dictum sit ultrices porttitor. Tellus justo nascetur pellentesque praesent vitae viverra etiam ipsum a.',
+      'body': 'Lorem ipsum dolor sit amet consectetur. Lacus ut habitant id nec erat egestas libero lectus. Ipsum velit dictum sit ultrices porttitor. Tellus justo nascetur pellentesque praesent vitae viverra etiam ipsum a.',
       'author': 'Newsbreak',
       'date': 'March 4, 2026 16:00',
-      'imageUrl':
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600',
+      'imageUrl': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600',
     },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: const Color(0xFF252F39),
       appBar: HelpWidgets.helpAppBar('Help Center'),
-        body: Column(
-            children: [
-            const HelpTabBar(),
-        const Divider(height: 1, color: Color(0xFFEEEEEE)),
-
-        Expanded(
-          child: ListView(
-        padding: const EdgeInsets.all(12),
+      body: Column(
         children: [
-          ..._posts.map((post) => _buildCard(post)),
-          const SizedBox(height: 8),
-          HelpWidgets.helpFooter(),
+          const HelpTabBar(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: _posts.map((post) => _buildCard(post)).toList(),
+                    ),
+                  ),
+                  HelpWidgets.helpFooter(),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
-        ),
-      ],
-    ),
     );
   }
 
@@ -67,7 +65,7 @@ class BlogView extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:AppColors.surface,
         borderRadius: BorderRadius.circular(12),
       ),
       clipBehavior: Clip.hardEdge,
@@ -75,18 +73,15 @@ class BlogView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Image
-          Image.network(
+             Image.network(
             post['imageUrl']!,
-            height: 180,
-            width: double.infinity,
-            fit: BoxFit.cover,
+              width: double.infinity,
+               fit: BoxFit.fitWidth,
             errorBuilder: (_, __, ___) => Container(
-              height: 180,
               color: Colors.grey[200],
               child: const Icon(Icons.image, color: Colors.grey, size: 48),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(14),
             child: Column(
@@ -94,45 +89,31 @@ class BlogView extends StatelessWidget {
               children: [
                 // Tag
                 Text(post['tag']!,
-                    style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500)),
+                    style:AppTextStyles.overline.copyWith(color: AppColors.background)),
                 const SizedBox(height: 6),
 
                 // Title
                 Text(post['title']!,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700)),
+                    style:AppTextStyles.bodySmall),
                 const SizedBox(height: 8),
 
                 // Body
                 Text(post['body']!,
-                    style: const TextStyle(
-                        color: Colors.black54,
-                        fontSize: 13,
-                        height: 1.5)),
+                    style: AppTextStyles.overline.copyWith(color: AppColors.background)),
                 const SizedBox(height: 12),
 
                 // Author + date
                 Row(
                   children: [
                     Text(post['author']!,
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600)),
-                    const Padding(
+                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textOnDark)),
+                    Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8),
                       child: Text('|',
-                          style: TextStyle(
-                              color: Colors.grey, fontSize: 12)),
+                          style: AppTextStyles.bodySmall.copyWith(color: AppColors.textOnDark)),
                     ),
                     Text(post['date']!,
-                        style: const TextStyle(
-                            color: Colors.grey, fontSize: 12)),
+                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textOnDark)),
                   ],
                 ),
               ],

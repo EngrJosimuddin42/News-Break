@@ -2,30 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/modules/me/views/settings/about/sub_pages/what_we_do_view.dart';
 import 'package:news_break/app/modules/me/views/settings/about/sub_pages/who_are_we_view.dart';
-
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 import 'blog_view.dart';
 import 'creator_page_view.dart';
 
 class HelpWidgets {
-  // ── Shared AppBar ────────────────────────────
-  static AppBar helpAppBar(String title) {
+  // Shared AppBar
+  static AppBar helpAppBar(String title, {bool showCloseIcon = true}) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       elevation: 0,
       leading: GestureDetector(
         onTap: () => Get.back(),
-        child: const Icon(Icons.arrow_back_ios, color: Colors.black, size: 18),
+        child:Icon(Icons.arrow_back_ios, color:AppColors.textOnDark, size: 20),
       ),
       title: Text(title,
-          style: const TextStyle(
-              color: Colors.black, fontSize: 17, fontWeight: FontWeight.w600)),
+          style: AppTextStyles.displaySmall),
       centerTitle: true,
       actions: [
+        if (showCloseIcon)
         GestureDetector(
           onTap: () => Get.back(),
-          child: const Padding(
+          child: Padding(
             padding: EdgeInsets.only(right: 16),
-            child: Icon(Icons.close, color: Colors.black, size: 20),
+            child: Icon(Icons.close, color:AppColors.textOnDark, size: 20),
           ),
         ),
       ],
@@ -34,58 +35,64 @@ class HelpWidgets {
 
 // ── Shared Footer ────────────────────────────
   static Widget helpFooter() {
-    return Column(
+    final String year = DateTime.now().year.toString();
+    return Container(
+        color:AppColors.surface,
+        width: double.infinity,
+        child: Column(
       children: [
-        const Divider(height: 1, color: Color(0xFFEEEEEE)),
+        SizedBox(height: 40),
+        const Divider(height: 2, color: Color(0xFFCCCCCC)),
+        SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Text('Terms of Use',
-                  style: TextStyle(color: Colors.grey, fontSize: 11)),
+                  style:AppTextStyles.overline.copyWith(color: AppColors.background)),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Text('|',
-                    style: TextStyle(color: Colors.grey, fontSize: 11)),
+                    style:AppTextStyles.overline.copyWith(color: AppColors.background)),
               ),
               Text('Privacy Policy',
-                  style: TextStyle(color: Colors.grey, fontSize: 11)),
+                  style:AppTextStyles.overline.copyWith(color: AppColors.background)),
             ],
           ),
         ),
-        const Text('© 2020 Particle Media. All Rights Reserved.',
-            style: TextStyle(color: Colors.grey, fontSize: 10)),
-        const SizedBox(height: 6),
-        const Row(
+        Text('© $year Particle Media. All Rights Reserved.',
+            style:AppTextStyles.overline),
+        const SizedBox(height: 8),
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('English (US)',
-                style: TextStyle(color: Colors.grey, fontSize: 11)),
-            Icon(Icons.keyboard_arrow_down, color: Colors.grey, size: 16),
+                style:AppTextStyles.overline.copyWith(color: AppColors.background)),
+            Icon(Icons.keyboard_arrow_down, color:AppColors.background, size: 20),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 32),
       ],
+    ),
     );
   }
 
-// ── Red chip ─────────────────────────────────
+// Red chip
   static Widget redChip(String label) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF0F0),
-        borderRadius: BorderRadius.circular(20),
+        color: const Color(0xFFFFEDED),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Text(label,
-          style: const TextStyle(
-              color: Colors.red, fontSize: 11, fontWeight: FontWeight.w500)),
+          style:AppTextStyles.buttonOutline.copyWith(color: Color(0xFFFF413F))),
     );
   }
 }
 
-// ── Shared Tab Bar with Dropdown ───────────────────────────
+// Shared Tab Bar with Dropdown
 class HelpTabBar extends StatefulWidget {
   const HelpTabBar({super.key});
 
@@ -138,10 +145,8 @@ class _HelpTabBarState extends State<HelpTabBar> {
               child: Container(
                 width: 160,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
+                  color: Color(0xFFE7EDED),
+                  borderRadius: BorderRadius.circular(8)),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: items.map((item) {
@@ -152,10 +157,10 @@ class _HelpTabBarState extends State<HelpTabBar> {
                             _removeOverlay();
                             switch (item) {
                               case 'What we do':
-                                Get.to(() => const WhatWeDoView());
+                                Get.to(() => WhatWeDoView());
                                 break;
                               case 'Who are we':
-                                Get.to(() => const WhoAreWeView());
+                                Get.to(() => WhoAreWeView());
                                 break;
                               case 'Careers':
                                 Get.to(() => const CreatorPageView(pageKey: 'careers'));
@@ -181,10 +186,9 @@ class _HelpTabBarState extends State<HelpTabBar> {
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                             color: Colors.transparent,
-                            child: Text(item, style: const TextStyle(color: Colors.black87, fontSize: 14)),
+                            child: Text(item, style: AppTextStyles.caption.copyWith(color: Color(0xFF252F39))),
                           ),
                         ),
-                        if (item != items.last) Divider(height: 1, color: Colors.grey.shade200),
                       ],
                     );
                   }).toList(),
@@ -201,9 +205,11 @@ class _HelpTabBarState extends State<HelpTabBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Color(0xFFE7EDED),
+      width:double.infinity,
       height: 48,
-      child: SingleChildScrollView(
+      child: Center(
+        child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: List.generate(_tabs.length, (i) {
@@ -218,6 +224,7 @@ class _HelpTabBarState extends State<HelpTabBar> {
             );
           }),
         ),
+      ),
       ),
     );
   }

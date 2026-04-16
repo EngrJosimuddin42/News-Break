@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/modules/me/views/settings/about/about_view.dart';
 import 'package:news_break/app/modules/me/views/settings/discover_app_view.dart';
-import 'package:news_break/app/modules/me/views/settings/help_support_view.dart';
+import 'package:news_break/app/modules/me/views/settings/help_center/help_support_view.dart';
 import 'package:news_break/app/modules/me/views/settings/location_view.dart';
 import 'package:news_break/app/modules/me/views/settings/privacy_view.dart';
 import 'package:news_break/app/modules/me/views/settings/send_feedback_sheet.dart';

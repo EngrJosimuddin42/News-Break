@@ -98,7 +98,7 @@ class _SendFeedbackSheetState extends State<SendFeedbackSheet> {
                     controller: _feedbackController,
                     maxLines: null,
                     expands: true,
-                    style:AppTextStyles.overline.copyWith(color: Color(0xFFB7B7B7)),
+                    style:AppTextStyles.overline.copyWith(color: Colors.black),
                     decoration: InputDecoration(
                       hintText: 'Write your feedback here...',
                       hintStyle: AppTextStyles.overline.copyWith(color: Color(0xFFB7B7B7)),
@@ -119,7 +119,7 @@ class _SendFeedbackSheetState extends State<SendFeedbackSheet> {
             height: 48,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                Get.back();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor:AppColors.linkColor,

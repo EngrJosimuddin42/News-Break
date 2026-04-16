@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:news_break/app/modules/reels/views/reels_comments_sheet.dart';
+import 'package:news_break/app/modules/reels/views/reels_options_sheets.dart';
+import 'package:news_break/app/modules/reels/views/user_profile_view.dart';
 
 // ── Reels View ───────────────────────────────
 class ReelsView extends StatefulWidget {
@@ -132,9 +136,7 @@ class _ReelsViewState extends State<ReelsView> {
                     backgroundImage: NetworkImage(reel['imageUrl']),
                   ),
                   GestureDetector(
-                    onTap: () => setState(() {
-                      _reelStates[index]['isFollowing'] = true;
-                    }),
+                    onTap: () => Get.to(() => const UserProfileView()),
                     child: Container(
                       width: 20,
                       height: 20,
@@ -181,6 +183,16 @@ class _ReelsViewState extends State<ReelsView> {
                 color: Colors.white,
                 count: reel['shares'],
                 onTap: () => _showShareSheet(reel),
+              ),
+
+              // bottom info এ more_vert icon
+              GestureDetector(
+                onTap: () => showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) => const ReelsOptionsSheet(),
+                ),
+                child: const Icon(Icons.more_vert, color: Colors.white, size: 20),
               ),
             ],
           ),
@@ -246,20 +258,32 @@ class _ReelsViewState extends State<ReelsView> {
         ),
 
         // Comment input
+        // Comment input
         Positioned(
           left: 16,
           right: 16,
           bottom: 50,
-          child: Container(
-            height: 36,
-            decoration: BoxDecoration(
-              color: Colors.white12,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white24),
+          child: GestureDetector(
+            // ১. এখানে onTap ফাংশনটি যুক্ত করা হয়েছে
+            onTap: () => showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (_) => const ReelsCommentsSheet(),
             ),
-            child: const Center(
-              child: Text('Write a comment...',
-                  style: TextStyle(color: Colors.white54, fontSize: 12)),
+            child: Container(
+              height: 36,
+              decoration: BoxDecoration(
+                color: Colors.white12,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.white24),
+              ),
+              child: const Center(
+                child: Text(
+                  'Write a comment...',
+                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                ),
+              ),
             ),
           ),
         ),

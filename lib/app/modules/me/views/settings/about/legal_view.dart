@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_break/app/modules/me/views/settings/about/sub_pages/help_widgets.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 
 enum LegalType { terms, privacy, notice }
 const Map<LegalType, Map<String, String>> _legalData = {
@@ -56,23 +57,22 @@ class SharedView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: HelpWidgets.helpAppBar(title),
+      appBar: HelpWidgets.helpAppBar(title,showCloseIcon: false),
       body: Column(
           children: [
           const HelpTabBar(),
-      const Divider(height: 1, color: Color(0xFFEEEEEE)),
 
       Expanded(
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            Text(subtitle, style: const TextStyle(color: Colors.red, fontSize: 18, fontWeight: FontWeight.w700, height: 1.3)),
-            const SizedBox(height: 8),
-            Text(lastUpdated, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+            Text(subtitle, style:AppTextStyles.headlineLarge.copyWith(fontWeight: FontWeight.w400)),
+            const SizedBox(height: 12),
+            Text(lastUpdated, style:AppTextStyles.caption.copyWith(color: Color(0xFF525C5E))),
             const SizedBox(height: 16),
-            Text(importantNotice, style: const TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w700, height: 1.5)),
+            Text(importantNotice, style:AppTextStyles.button.copyWith(color:Colors.black)),
             const SizedBox(height: 16),
-            Text(body, style: const TextStyle(color: Colors.black87, fontSize: 13, height: 1.6)),
+            Text(body, style:AppTextStyles.caption.copyWith(color: Colors.black)),
           ],
         ),
       ),

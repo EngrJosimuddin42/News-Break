@@ -18,6 +18,13 @@ class AppTextStyles {
     height: 1.15,
   );
 
+  static TextStyle get medium => GoogleFonts.inter(   //
+    fontSize: 13,
+    fontWeight: FontWeight.w600,
+    color: Colors.black,
+    height: 1.15,
+  );
+
   static TextStyle get displaySmall => GoogleFonts.inter(  //
     fontSize: 18,
     fontWeight: FontWeight.w600,
@@ -139,7 +146,6 @@ class AppTextStyles {
     height: 1.0,
   );
 
-  // Splash specific
   static TextStyle get success => GoogleFonts.inter(   //
     fontSize: 28,
     fontWeight: FontWeight.w600,
@@ -147,9 +153,29 @@ class AppTextStyles {
     height: 1.0,
   );
 
+  static TextStyle get head => GoogleFonts.inter(   //
+    fontSize: 20,
+    fontWeight: FontWeight.w500,
+    color: Colors.black,
+    height: 1.0,
+  );
+
+  static TextStyle get label => GoogleFonts.inter(   //
+    fontSize: 18,
+    fontWeight: FontWeight.w400,
+    color: Colors.black,
+    height: 1.0,
+  );
+
   static TextStyle get tagline => GoogleFonts.inter(  //
     fontSize: 24,
     fontWeight: FontWeight.w600,
     color: AppColors.surface,
+  );
+
+  static TextStyle get title => GoogleFonts.inter(  //
+    fontSize: 24,
+    fontWeight: FontWeight.w400,
+    color: AppColors.background,
   );
 }

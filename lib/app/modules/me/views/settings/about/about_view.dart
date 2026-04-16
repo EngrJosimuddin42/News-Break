@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/modules/me/views/settings/about/legal_view.dart';
 import 'package:news_break/app/modules/premium/views/premium_screen.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 
 import '../../../../premium/bindings/premium_binding.dart';
 
@@ -17,61 +19,40 @@ class AboutView extends StatelessWidget {
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Get.back(),
-          child: const Icon(Icons.arrow_back_ios,
-              color: Colors.white, size: 18),
+          child: Icon(Icons.arrow_back_ios, color:AppColors.textOnDark, size: 20),
         ),
-        title: const Text('About',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-                fontWeight: FontWeight.w600)),
+        title:Text('About',
+            style:AppTextStyles.displaySmall),
         centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            const SizedBox(height: 24),
-
+            const SizedBox(height: 60),
             // Logo
             Image.asset(
               'assets/images/newsbreak_logo.png',
-              width: 80,
-              height: 80,
-              errorBuilder: (_, __, ___) => Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Icon(Icons.newspaper,
-                    color: Colors.white, size: 48),
+              width: 100,
+              height: 100,
               ),
-            ),
-            const SizedBox(height: 12),
-
             // App name
-            const Text('Newsbreak',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700)),
+            Text('Newsbreak',
+                style: AppTextStyles.displaySmall),
             const SizedBox(height: 6),
 
             // Version
-            const Text('Version 26.10.1.4',
-                style: TextStyle(color: Colors.grey, fontSize: 13)),
+            Text('Version 26.10.1.4',
+                style:AppTextStyles.labelSmall),
             const SizedBox(height: 4),
 
-            const Text('NewsBreak is your personalized news app.',
-                style: TextStyle(color: Colors.grey, fontSize: 13)),
+            Text('NewsBreak is your personalized news app.',
+                style:AppTextStyles.labelSmall),
 
-            const SizedBox(height: 32),
+            const SizedBox(height: 48),
 
             // Buttons
-            _actionButton(
-              'Terms of Use', () => Get.to(() => const LegalView(type: LegalType.terms))),
+            _actionButton('Terms of Use', () => Get.to(() => const LegalView(type: LegalType.terms))),
             const SizedBox(height: 12),
             _actionButton('Legal Notices', () => Get.to(() => const LegalView(type: LegalType.notice))),
             const SizedBox(height: 12),
@@ -91,15 +72,12 @@ class AboutView extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.white24),
-          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color:AppColors.surface),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Center(
           child: Text(label,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500)),
+              style: AppTextStyles.caption),
         ),
       ),
     );

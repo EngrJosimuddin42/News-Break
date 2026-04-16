@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 import 'help_widgets.dart';
 
 class HelpPageData {
@@ -65,7 +67,6 @@ Widget _buildCreatorPage({
     body: Column(
       children: [
         const HelpTabBar(),
-        const Divider(height: 1, color: Color(0xFFEEEEEE)),
         Expanded(
           child: ListView(
             children: [
@@ -76,27 +77,21 @@ Widget _buildCreatorPage({
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(heroTitle,
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            height: 1.3)),
+                        style:AppTextStyles.chart.copyWith(color: Colors.black)),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Share your perspective on local life and turn everyday moments into stories your readers can\'t wait to open. Build a loyal community, deepen your connection, and keep your neighbors informed-on your terms.',
-                      style: TextStyle(color: Colors.black54, fontSize: 13, height: 1.5),
-                    ),
+                    Text('Share your perspective on local life and turn everyday moments into stories your readers can\'t wait to open. Build a loyal community, deepen your connection, and keep your neighbors informed-on your terms.',
+                      style:AppTextStyles.overline.copyWith(color: Color(0xFF6C6C6C))),
 
                     // Primary Button Logic
                     if (primaryButtonLabel != null) ...[
-                      const SizedBox(height: 16),
-                      _customButton(primaryButtonLabel, primaryOnTap, isPrimary: true),
+                      const SizedBox(height: 24),
+                    Center(child: _customButton(primaryButtonLabel, primaryOnTap, isPrimary: true)),
                     ],
 
                     // Secondary Button Logic
                     if (secondaryButtonLabel != null) ...[
                       const SizedBox(height: 10),
-                      _customButton(secondaryButtonLabel, secondaryOnTap ?? () {}, isPrimary: false),
+                    Center(child:_customButton(secondaryButtonLabel, secondaryOnTap ?? () {}, isPrimary: false)),
                     ],
                   ],
                 ),
@@ -106,11 +101,10 @@ Widget _buildCreatorPage({
               _buildMissionSection(chipLabel),
 
               // Stats Section
-              const Padding(
+             Center(child:Padding(
                 padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: Text('What NewsBreak brings to you?',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-              ),
+                    style:AppTextStyles.head))),
               ...stats.map((stat) => _buildStatTile(stat)),
 
               const SizedBox(height: 8),
@@ -125,25 +119,25 @@ Widget _buildCreatorPage({
 
 Widget _customButton(String label, VoidCallback onTap, {required bool isPrimary}) {
   return SizedBox(
-    width: double.infinity,
+    width: 335,
+    height: 48,
     child: isPrimary
         ? ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        backgroundColor: AppColors.linkColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(68)),
       ),
-      child: Text(label, style: const TextStyle(color: Colors.white, fontSize: 14)),
+      child: Text(label, style: AppTextStyles.buttonOutline),
     )
         : OutlinedButton(
       onPressed: onTap,
       style: OutlinedButton.styleFrom(
-        side: const BorderSide(color: Colors.black26),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        backgroundColor: Color(0xFFEDEDED),
+          side: BorderSide.none,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(68)),
       ),
-      child: Text(label, style: const TextStyle(color: Colors.black, fontSize: 14)),
+      child: Text(label, style: AppTextStyles.buttonOutline.copyWith(color: AppColors.linkColor)),
     ),
   );
 }
@@ -156,17 +150,17 @@ Widget _buildMissionSection(String chipLabel) {
       children: [
         HelpWidgets.redChip(chipLabel),
         const SizedBox(height: 8),
-        const Text('Calling all writers & video content creators.',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+        Text('Calling all writers & video content creators.',
+            style: AppTextStyles.chart.copyWith(color: Colors.black)),
         const SizedBox(height: 8),
-        const Text('Share your perspective on local life and turn everyday moments...',
-            style: TextStyle(color: Colors.black54, fontSize: 13)),
+        Text('Share your perspective on local life and turn everyday moments into stories your readers can’t wait to open. Build a loyal community, deepen your connection, and keep your neighbors informed-on your terms',
+            style:AppTextStyles.overline.copyWith(color: Color(0xFF6C6C6C))),
         const SizedBox(height: 16),
         Center(
           child: Container(
-            height: 160, width: 200,
-            decoration: BoxDecoration(color: const Color(0xFFEEF4FF), borderRadius: BorderRadius.circular(12)),
-            child: const Icon(Icons.person_outline, size: 80, color: Colors.blue),
+            width: double.infinity,
+            height: 180,
+            child:Image.asset('assets/images/help_person.png'),
           ),
         ),
       ],
@@ -180,12 +174,14 @@ Widget _buildStatTile(Map<String, String> stat) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(stat['number']!, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
-        Text(stat['label']!, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+        Text(stat['number']!, style:AppTextStyles.headlineLarge.copyWith(color: Colors.black)),
         const SizedBox(height: 4),
-        Text(stat['desc']!, style: const TextStyle(color: Colors.black54, fontSize: 12)),
+        Text(stat['label']!, style: AppTextStyles.label),
         const SizedBox(height: 8),
-        const Divider(color: Color(0xFFEEEEEE), height: 1),
+        const Divider(color: Color(0xFFEDEDED), height: 1),
+        const SizedBox(height: 8),
+        Text(stat['desc']!, style:AppTextStyles.caption.copyWith(color: Colors.black)),
+        const SizedBox(height: 8),
       ],
     ),
   );

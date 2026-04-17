@@ -10,17 +10,17 @@ class ShareSheet extends GetView<ReelsController> {
   const ShareSheet({super.key, required this.reel});
 
   static const List<Map<String, dynamic>> _shareOptions = [
-    {'label': 'Instagram', 'icon': Icons.camera_alt},
-    {'label': 'Share by Image', 'icon': Icons.image_outlined},
-    {'label': 'Copy link', 'icon': Icons.link},
-    {'label': 'Facebook', 'icon': Icons.facebook},
-    {'label': 'Email', 'icon': Icons.email_outlined},
-    {'label': 'Text message', 'icon': Icons.message_outlined},
-    {'label': 'WhatsApp', 'icon': Icons.chat_bubble_outline},
-    {'label': 'Facebook messenger', 'icon': Icons.messenger_outline},
-    {'label': 'X', 'icon': Icons.close},
-    {'label': 'Facebook groups', 'icon': Icons.group_outlined},
-    {'label': 'More', 'icon': Icons.more_horiz},
+    {'label': 'Instagram', 'icon': Icons.camera_alt, 'isAsset': false},
+    {'label': 'Share by Image', 'icon': Icons.image_outlined, 'isAsset': false},
+    {'label': 'Copy link', 'icon': Icons.link, 'isAsset': false},
+    {'label': 'Facebook', 'icon': Icons.facebook, 'isAsset': false},
+    {'label': 'Email', 'icon': Icons.email_outlined, 'isAsset': false},
+    {'label': 'Text message', 'icon': 'assets/icons/message.png', 'isAsset':true},
+    {'label': 'WhatsApp', 'icon': 'assets/icons/whatsup.png', 'isAsset': true},
+    {'label': 'Facebook messenger', 'icon': 'assets/icons/messenger.png', 'isAsset': true},
+    {'label': 'X', 'icon': 'assets/icons/x_logo.png', 'isAsset': true},
+    {'label': 'Facebook groups', 'icon': 'assets/icons/facebook_group.png', 'isAsset': true},
+    {'label': 'More', 'icon': Icons.more_horiz, 'isAsset': false},
   ];
 
   @override
@@ -93,13 +93,16 @@ class ShareSheet extends GetView<ReelsController> {
                       ] else ...[
                         Row(
                           children: [
-                            const CircleAvatar(radius: 10, backgroundImage: NetworkImage('https://via.placeholder.com/150')),
+                            CircleAvatar(
+                                radius: 10,
+                                backgroundImage: NetworkImage(reel.userProfileImage),
+                                backgroundColor: Colors.grey[800]),
                             const SizedBox(width: 8),
                             Text(reel.userName, style: AppTextStyles.labelSmall),
                           ],
                         ),
                         const SizedBox(height: 8),
-                        Text(reel.description, style: AppTextStyles.bodySmall, maxLines: 2, overflow: TextOverflow.ellipsis),
+                        Text(reel.description, style: AppTextStyles.small, maxLines: 2, overflow: TextOverflow.ellipsis),
                       ],
                     ],
                   ),
@@ -113,8 +116,8 @@ class ShareSheet extends GetView<ReelsController> {
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(16),
+                color:Color(0xFF333333),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: ListView.separated(
                 shrinkWrap: true,
@@ -124,8 +127,19 @@ class ShareSheet extends GetView<ReelsController> {
                 itemBuilder: (context, index) {
                   final option = _shareOptions[index];
                   return ListTile(
-                    title: Text(option['label'], style: const TextStyle(color: Colors.white, fontSize: 15)),
-                    trailing: Icon(option['icon'], color: Colors.white, size: 20),
+                    title: Text(option['label'], style: AppTextStyles.caption),
+                    trailing: option['isAsset']
+                        ? Image.asset(
+                      option['icon'],
+                      width: 20,
+                      height: 20,
+                      color: Colors.white,
+                    )
+                        : Icon(
+                      option['icon'],
+                      color: Colors.white,
+                      size: 20,
+                    ),
                     onTap: () {
                       controller.onShareOptionTap(reel.id ?? 0, option['label']);
                     },

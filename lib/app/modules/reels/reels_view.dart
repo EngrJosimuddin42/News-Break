@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:news_break/app/modules/reels/comments_sheet.dart';
-import 'package:news_break/app/modules/reels/three_dot_sheet.dart';
+import 'package:news_break/app/modules/reels/comments/comments_sheet.dart';
+import 'package:news_break/app/modules/reels/three_dot/three_dot_sheet.dart';
 import 'package:news_break/app/modules/reels/share_sheet.dart';
-import 'package:news_break/app/modules/reels/user_profile_view.dart';
+import 'package:news_break/app/modules/reels/profile_view.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/reels/reels_controller.dart';
@@ -125,7 +125,7 @@ class _ReelsViewState extends State<ReelsView> {
             children: [
               // Timer icon
               GestureDetector(
-                onTap: () => Get.to(() => const UserProfileView()),
+                onTap: () => Get.to(() => const ProfileView()),
                 child: Stack(
                 children: [
                   Container(
@@ -181,7 +181,7 @@ class _ReelsViewState extends State<ReelsView> {
                     context: context,
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
-                    builder: (_) => const ReelsCommentsSheet(),
+                    builder: (_) => const CommentsSheet(),
                   );
                 },
               ),
@@ -193,13 +193,10 @@ class _ReelsViewState extends State<ReelsView> {
                 color: Colors.white,
                 count: controller.formatCount(reel.shares),
                 onTap: () {
-                  controller.incrementShare(index);
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
-                    backgroundColor: const Color(0xFF2C2C2E),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+                    backgroundColor: Colors.transparent,
                     builder: (_) => ShareSheet(reel: reel),
                   );
                 },
@@ -212,18 +209,25 @@ class _ReelsViewState extends State<ReelsView> {
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
                   constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width,
-                  ),
+                    maxWidth: MediaQuery.of(context).size.width),
                   builder: (context) => ThreeDotSheet(
                     authorName: reel.userName ?? "Unknown",
+
                     onShare: () {
                       Get.back();
-                      controller.shareReel(reel.id);
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (_) => ShareSheet(reel: reel),
+                      );
                     },
+
                     onSave: () {
                       Get.back();
                       controller.saveReel(reel.id);
                     },
+
                     onReport: () {
                       controller.reportReel(reel.id, context);
                     },
@@ -273,7 +277,7 @@ class _ReelsViewState extends State<ReelsView> {
               context: context,
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
-              builder: (_) => const ReelsCommentsSheet(),
+              builder: (_) => const CommentsSheet(),
             ),
             child: Container(
               height: 36,

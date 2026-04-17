@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/reel_model.dart';
 import '../../modules/me/settings/about/legal_view.dart';
-import '../../modules/reels/report_sheet.dart';
+import '../../modules/reels/three_dot/report_sheet.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ReelsController extends GetxController {
 
@@ -27,6 +28,7 @@ class ReelsController extends GetxController {
       ReelModel(
           id: 1,
           imageUrl: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800',
+          userProfileImage: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
           userName: '@Good Times',
           description: 'what a Trail!',
           source: '3month',
@@ -35,7 +37,20 @@ class ReelsController extends GetxController {
           shares: 1200,
           isFollowing: false,
           isLiked: false,
-      )
+      ),
+        ReelModel(
+          id: 2,
+          imageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800',
+          userProfileImage: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=200',
+          userName: 'Aliana',
+          description: '',
+          source: '2month',
+          likes: 1500,
+          comments: 800,
+          shares: 450,
+          isFollowing: true,
+          isLiked: true,
+        ),
       ];
 
       reelsList.assignAll(dummyData);
@@ -80,17 +95,23 @@ class ReelsController extends GetxController {
     reelsList.refresh();
   }
 
-
-  void onShareOptionTap(int reelId, String platform) {
+  void onShareOptionTap(int reelId, String platform) async {
     int index = reelsList.indexWhere((element) => element.id == reelId);
     if (index != -1) {
       incrementShare(index);
     }
-    Get.back();
-  }
-
-  void shareReel(int id) {
-    incrementShare(reelsList.indexWhere((element) => element.id == id));
+    if (platform == 'More') {
+      Get.back();
+      await Share.share(
+        'Check out this story by ${reelsList[index].userName}: https://yourapp.com/reels/$reelId',
+        subject: 'Share Reel',
+      );
+    } else {
+      Get.back();
+      if (platform == 'Copy link') {
+        Get.snackbar("Success", "Link copied!");
+      }
+    }
   }
 
   void submitReport({required int reelId, required String reason}) async {}

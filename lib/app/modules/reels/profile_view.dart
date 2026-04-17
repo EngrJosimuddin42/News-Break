@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// ── User Profile View ────────────────────────
-class UserProfileView extends StatefulWidget {
-  const UserProfileView({super.key});
+class ProfileView extends StatefulWidget {
+  const ProfileView({super.key});
 
   @override
-  State<UserProfileView> createState() => _UserProfileViewState();
+  State<ProfileView> createState() => _ProfileViewState();
 }
 
-class _UserProfileViewState extends State<UserProfileView> {
+class _ProfileViewState extends State<ProfileView> {
   int _selectedTab = 0; // 0=Posts, 1=Reactions
   bool _isFollowing = false;
 

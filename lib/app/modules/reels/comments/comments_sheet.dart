@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-// ── Comments Sheet ───────────────────────────
-class ReelsCommentsSheet extends StatefulWidget {
-  const ReelsCommentsSheet({super.key});
+class CommentsSheet extends StatefulWidget {
+  const CommentsSheet({super.key});
 
   @override
-  State<ReelsCommentsSheet> createState() => _ReelsCommentsSheetState();
+  State<CommentsSheet> createState() => _CommentsSheetState();
 }
 
-class _ReelsCommentsSheetState extends State<ReelsCommentsSheet> {
+class _CommentsSheetState extends State<CommentsSheet> {
   final TextEditingController _commentController = TextEditingController();
 
   static const List<Map<String, String>> _comments = [

@@ -4,7 +4,7 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../controllers/reels/reels_controller.dart';
+import '../../../controllers/reels/reels_controller.dart';
 import 'report_video_sheet.dart';
 
 class ReportSheet extends StatefulWidget {

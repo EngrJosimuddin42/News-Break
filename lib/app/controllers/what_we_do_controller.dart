@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../models/what_we_do_models.dart';
+import '../models/what_we_do_model.dart';
 
 class WhatWeDoController extends GetxController {
 

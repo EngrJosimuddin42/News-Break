@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 // ── Comments Sheet ───────────────────────────
 class ReelsCommentsSheet extends StatefulWidget {

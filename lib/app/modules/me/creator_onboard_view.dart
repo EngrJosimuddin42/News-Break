@@ -66,13 +66,27 @@ class _CreatorOnboardViewState extends State<CreatorOnboardView> {
                 children: [
                   // Background image
                   Positioned.fill(
-                    child: Image.network(
+                    child: (slide['imageUrl'] != null && slide['imageUrl'].toString().isNotEmpty)
+                        ? Image.network(
                       slide['imageUrl']!,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) =>
-                          Container(color: Colors.grey[900]),
-                    ),
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        );
+                      },
+                      errorBuilder: (_, __, ___) => Container(
+                        color: Colors.grey[900],
+                        child: const Icon(Icons.broken_image, color: Colors.white24),
+                      ),
+                    )
+                        : Container(color: Colors.grey[900]),
                   ),
+
                   // Dark overlay
                   Positioned.fill(
                     child: Container(

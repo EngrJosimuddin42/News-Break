@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import '../controllers/community_controller.dart';
-import '../controllers/me_controller.dart';
+import '../controllers/community/community_controller.dart';
+import '../controllers/me/me_controller.dart';
 import '../controllers/notification_controller.dart';
 import '../controllers/home_controller.dart';
 

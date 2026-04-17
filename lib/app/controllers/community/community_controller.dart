@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import '../modules/me/edit_profile_view.dart';
-import '../modules/community/community_create_post_view.dart';
+import '../../modules/me/edit_profile_view.dart';
+import '../../modules/community/community_create_post_view.dart';
 
 class CommunityController extends GetxController {
   final userName = "Amalia".obs;

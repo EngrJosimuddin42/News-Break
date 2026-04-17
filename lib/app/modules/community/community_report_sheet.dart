@@ -143,8 +143,7 @@ class _CommunityReportSheetState extends State<CommunityReportSheet> {
             child: const Icon(Icons.check, color: Colors.green, size: 20),
           ),
           const SizedBox(height: 16),
-          Text(
-            'Thanx for reporting this',
+          Text('Thanx for reporting this',
             style: AppTextStyles.caption),
           const SizedBox(height: 24),
           SizedBox(

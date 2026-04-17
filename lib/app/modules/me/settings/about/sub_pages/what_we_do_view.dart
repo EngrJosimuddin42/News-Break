@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../../../../controllers/what_we_do_controller.dart';
+import '../../../../../controllers/me/what_we_do_controller.dart';
 import 'creator_page_view.dart';
 import 'help_widgets.dart';
 

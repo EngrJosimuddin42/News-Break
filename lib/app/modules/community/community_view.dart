@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../controllers/community_controller.dart';
+import '../../controllers/community/community_controller.dart';
 import 'community_insight_view.dart';
 import 'community_post_card.dart';
 

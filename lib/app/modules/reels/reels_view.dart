@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/modules/reels/comments_sheet.dart';
-import 'package:news_break/app/modules/reels/options_sheets.dart';
+import 'package:news_break/app/modules/reels/three_dot_sheet.dart';
 import 'package:news_break/app/modules/reels/share_sheet.dart';
 import 'package:news_break/app/modules/reels/user_profile_view.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../controllers/reels_controller.dart';
+import '../../controllers/reels/reels_controller.dart';
 import 'create_reel_view.dart';
 
 class ReelsView extends StatefulWidget {
@@ -209,8 +209,26 @@ class _ReelsViewState extends State<ReelsView> {
               GestureDetector(
                 onTap: () => showModalBottomSheet(
                   context: context,
+                  isScrollControlled: true,
                   backgroundColor: Colors.transparent,
-                  builder: (_) => const ReelsOptionsSheet()),
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width,
+                  ),
+                  builder: (context) => ThreeDotSheet(
+                    authorName: reel.userName ?? "Unknown",
+                    onShare: () {
+                      Get.back();
+                      controller.shareReel(reel.id);
+                    },
+                    onSave: () {
+                      Get.back();
+                      controller.saveReel(reel.id);
+                    },
+                    onReport: () {
+                      controller.reportReel(reel.id, context);
+                    },
+                  ),
+                ),
                 child: const Icon(Icons.more_vert, color: Colors.white, size: 32),
               ),
             ],

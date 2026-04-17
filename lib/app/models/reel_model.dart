@@ -1,8 +1,8 @@
 class ReelModel {
   int? id;
-  String? imageUrl;
-  String? userName;
-  String? description;
+  String imageUrl;
+  String userName;
+  String description;
   String? source;
   int likes;
   int comments;
@@ -12,9 +12,9 @@ class ReelModel {
 
   ReelModel({
     this.id,
-    this.imageUrl,
-    this.userName,
-    this.description,
+    this.imageUrl = '',
+    this.userName = '',
+    this.description = '',
     this.source,
     this.likes = 0,
     this.comments = 0,

@@ -1,8 +1,8 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../controllers/reels/create_reel_controller.dart';
 
 class CreateReelView extends StatefulWidget {
   const CreateReelView({super.key});
@@ -12,7 +12,7 @@ class CreateReelView extends StatefulWidget {
 }
 
 class _CreateReelViewState extends State<CreateReelView> {
-  int _selectedTab = 0; // 0=Upload, 1=Video
+  final CreateReelController controller = Get.put(CreateReelController());
 
   @override
   Widget build(BuildContext context) {
@@ -52,63 +52,24 @@ class _CreateReelViewState extends State<CreateReelView> {
             textAlign: TextAlign.center,
             style: AppTextStyles.overline.copyWith(color: Color(0xFFC4C4C4))),
 
-          const SizedBox(height: 32),
+              const SizedBox(height: 32),
 
-          // Access camera
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: GestureDetector(
-              onTap: () {},
-              child: Container(
-                width: 195,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: Color(0x99989797),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.camera_alt_outlined, color: Colors.white, size: 18),
-                    SizedBox(width: 8),
-                    Text('Access camera',
-                        style: AppTextStyles.buttonOutline),
-                  ],
-                ),
+              // Access camera Button
+              _accessButton(Icons.camera_alt_outlined, 'Access camera',
+                    () {}
               ),
-            ),
-          ),
-          const SizedBox(height: 12),
+              const SizedBox(height: 12),
 
-          // Access microphone
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: GestureDetector(
-              onTap: () {},
-              child: Container(
-                width: 195,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: Color(0x99989797),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.mic_outlined, color: Colors.white, size: 18),
-                    SizedBox(width: 8),
-                    Text('Access Microphone',
-                        style: AppTextStyles.buttonOutline),
-                  ],
-                ),
+           // Access microphone Button
+              _accessButton(Icons.mic_outlined, 'Access Microphone',
+                    () {}
               ),
-            ),
-          ),
+
               const Spacer(),
 
               // Record button
               GestureDetector(
-                onTap: () {},
+                onTap: () => controller.startRecording(),
                 child: ClipOval(
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
@@ -138,11 +99,11 @@ class _CreateReelViewState extends State<CreateReelView> {
           const SizedBox(height: 16),
 
           // Upload / Video tabs
-              Container(
+               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.only(top: 25, bottom: 40, left: 40, right: 140),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF222222), // স্ক্রিনশটের ডার্ক কালার
+                  color: Color(0xFF222222),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -152,53 +113,54 @@ class _CreateReelViewState extends State<CreateReelView> {
                   ],
                 ),
               ),
+
             ],
           ),
         ),
     );
   }
 
-  Widget _accessButton(IconData icon, String label) {
-    return Container(
-      width: 220,
-      height: 48,
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF).withOpacity(0.2), // গ্লাস ইফেক্ট
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: Colors.white, size: 20),
-          const SizedBox(width: 10),
-          Text(label, style: AppTextStyles.buttonOutline),
-        ],
+  Widget _accessButton(IconData icon, String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 195,
+        height: 44,
+        decoration: BoxDecoration(
+          color: const Color(0x99989797),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: Colors.white, size: 18),
+            const SizedBox(width: 8),
+            Text(label, style: AppTextStyles.buttonOutline),
+          ],
+        ),
       ),
     );
   }
 
   Widget _tab(IconData? icon, String label, int index) {
-    final isSelected = _selectedTab == index;
+    return Obx(() {
+      final isSelected = controller.selectedTab.value == index;
     return GestureDetector(
-      onTap: () => setState(() => _selectedTab = index),
+      onTap: () => controller.changeTab(index),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null)
             Icon(icon, color: Colors.white, size: 30)
           else
-            const SizedBox(height: 30),
-          const SizedBox(height: 8),
+            const SizedBox(height: 40),
           Text(
             label,
-            style: TextStyle(
-              color: isSelected ? Colors.white : Colors.white60,
-              fontSize: 14,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-            ),
+            style: AppTextStyles.bodyMedium.copyWith(color: isSelected ? Colors.white : Colors.white60)
           ),
         ],
       ),
     );
+    });
   }
 }

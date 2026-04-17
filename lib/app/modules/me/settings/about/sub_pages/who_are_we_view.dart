@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../../../../controllers/who_are_we_controller.dart';
+import '../../../../../controllers/me/who_are_we_controller.dart';
 import 'help_widgets.dart';
 
 class WhoAreWeView extends StatelessWidget {

@@ -1,11 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../models/reel_model.dart';
+import '../../models/reel_model.dart';
+import '../../modules/me/settings/about/legal_view.dart';
+import '../../modules/reels/report_sheet.dart';
 
 class ReelsController extends GetxController {
 
   var reelsList = <ReelModel>[].obs;
   var isLoading = true.obs;
+
+  final String mediaAccountLabel = 'Media account';
+  final String checkOutPrefix = 'Check out ';
+  final String sendStoryLabel = 'Send this story';
 
   @override
   void onInit() {
@@ -72,5 +78,45 @@ class ReelsController extends GetxController {
   void incrementShare(int index) {
     reelsList[index].shares++;
     reelsList.refresh();
+  }
+
+
+  void onShareOptionTap(int reelId, String platform) {
+    int index = reelsList.indexWhere((element) => element.id == reelId);
+    if (index != -1) {
+      incrementShare(index);
+    }
+    Get.back();
+  }
+
+  void shareReel(int id) {
+    incrementShare(reelsList.indexWhere((element) => element.id == id));
+  }
+
+  void submitReport({required int reelId, required String reason}) async {}
+
+  void saveReel(int id) async {}
+
+  void reportReel(int id, BuildContext context) {
+    Get.back();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width,
+      ),
+      builder: (context) => ReportSheet(reelId: id),
+    );
+  }
+
+  void openHelpCenter() {
+    Get.back();
+    Get.to(() => const LegalView(type: LegalType.terms));
+  }
+
+  void hideAuthorContent(String authorName) {
+    reelsList.removeWhere((reel) => reel.userName == authorName);
+    Get.back();
   }
 }

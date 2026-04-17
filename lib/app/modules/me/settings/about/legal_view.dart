@@ -73,6 +73,9 @@ class SharedView extends StatelessWidget {
             Text(importantNotice, style:AppTextStyles.button.copyWith(color:Colors.black)),
             const SizedBox(height: 16),
             Text(body, style:AppTextStyles.caption.copyWith(color: Colors.black)),
+
+            const SizedBox(height: 350),
+            HelpWidgets.helpFooter(),
           ],
         ),
       ),

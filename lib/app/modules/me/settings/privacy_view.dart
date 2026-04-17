@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 
-import '../../../controllers/settings_controller.dart';
+import '../../../controllers/me/settings_controller.dart';
 
 class PrivacyView extends StatelessWidget {
   const PrivacyView({super.key});

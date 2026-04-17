@@ -5,7 +5,7 @@ import 'package:news_break/app/modules/me/settings/send_feedback_sheet.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/auth_controller.dart';
-import '../../../controllers/settings_controller.dart';
+import '../../../controllers/me/settings_controller.dart';
 import '../../../controllers/notification_controller.dart';
 import '../../notification/notification_settings_view.dart';
 import 'about/about_view.dart';

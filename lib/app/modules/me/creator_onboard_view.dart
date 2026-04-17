@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 
-import '../../controllers/me_controller.dart';
+import '../../controllers/me/me_controller.dart';
 
 class CreatorOnboardView extends StatefulWidget {
   const CreatorOnboardView({super.key});

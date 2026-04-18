@@ -20,8 +20,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
-        fontFamily: 'Roboto',
-      ),
+        fontFamily: 'Roboto'),
       initialBinding: AppBinding(),
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,

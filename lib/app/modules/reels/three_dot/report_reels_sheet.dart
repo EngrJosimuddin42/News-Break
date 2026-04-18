@@ -5,6 +5,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/reels/reels_controller.dart';
+import '../report_success_widget.dart';
 import 'report_video_sheet.dart';
 
 class ReportReelsSheet extends StatefulWidget {
@@ -27,11 +28,10 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
       width: double.infinity,
       decoration: const BoxDecoration(
         color: Color(0xFF252525),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: _step == 0 ? _buildSelectReason() : _buildSuccess(),
+      child: _step == 0 ? _buildSelectReason() : ReportSuccessWidget( onDone: () => Get.back()),
     );
   }
 
@@ -48,19 +48,16 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
                 onTap: () {
                   Get.back();
                   },
-                child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
-              ),
+                child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20)),
               Expanded(
                 child: Text('Report',
                     textAlign: TextAlign.center,
-                    style: AppTextStyles.caption),
-              ),
+                    style: AppTextStyles.caption)),
               GestureDetector(
                 onTap: () {
                   Get.back();
                 },
-                child: const Icon(Icons.close,color: Colors.white, size: 20),
-              ),
+                child: const Icon(Icons.close,color: Colors.white, size: 20)),
             ],
           ),
         ),
@@ -73,8 +70,7 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
           onChanged: (val) => setState(() => _selectedReason = val),
           title: Text(reason, style:AppTextStyles.caption),
           activeColor: Colors.white,
-          dense: true,
-        )),
+          dense: true)),
 
         // Infringing my rights
         ListTile(
@@ -94,7 +90,6 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
           },
           dense: true,
         ),
-
 
         // Buttons
         Padding(
@@ -124,8 +119,7 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
                       Get.find<ReelsController>().submitReport(
                         id: widget.reelId,
                         reason: _selectedReason!,
-                        type: 'reel',
-                      );
+                        type: 'reel');
                       setState(() {
                         _step = 1;
                       });
@@ -135,56 +129,15 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
                     backgroundColor:AppColors.surface,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
+                    padding: const EdgeInsets.symmetric(vertical: 14)),
                   child: Text('Submit',
-                    style:AppTextStyles.bodySmall,
-                  ),
+                    style:AppTextStyles.bodySmall),
                 ),
               ),
             ],
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildSuccess() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 8),
-          Container(
-            width: 30, height: 30,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.green, width: 2),
-            ),
-            child: const Icon(Icons.check, color: Colors.green, size: 20),
-          ),
-          const SizedBox(height: 16),
-          Text('Thanx for reporting this',
-              style: AppTextStyles.caption),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: 311,
-            child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(vertical: 20),
-              ),
-              child:Text('Done', style: AppTextStyles.bodySmall.copyWith(color: Color(0xFF242424)),),
-            ),
-          ),
-          const SizedBox(height: 8),
-        ],
-      ),
     );
   }
 }

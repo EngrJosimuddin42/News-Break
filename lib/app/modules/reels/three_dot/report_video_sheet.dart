@@ -30,8 +30,7 @@ class ReportVideoSheet extends StatelessWidget {
                   onTap: () {
                     Get.back();
                   },
-                  child: const Icon(Icons.arrow_back_ios,color: Colors.white, size: 20),
-                ),
+                  child: const Icon(Icons.arrow_back_ios,color: Colors.white, size: 20)),
                 Expanded(
                   child: Text('Report video',
                       textAlign: TextAlign.center,
@@ -40,8 +39,7 @@ class ReportVideoSheet extends StatelessWidget {
                   onTap: (){
                     Get.back();
                   },
-                  child: const Icon(Icons.close,color: Colors.white, size: 20),
-                ),
+                  child: const Icon(Icons.close,color: Colors.white, size: 20)),
               ],
             ),
           ),
@@ -85,11 +83,9 @@ class ReportVideoSheet extends StatelessWidget {
                       backgroundColor:AppColors.linkColor,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                    ),
+                      padding: const EdgeInsets.symmetric(vertical: 14)),
                     child:Text('Open Help Center',
-                        style:AppTextStyles.bodySmall ),
-                  ),
+                        style:AppTextStyles.bodySmall)),
                 ),
                 ),
                 const SizedBox(height: 40),

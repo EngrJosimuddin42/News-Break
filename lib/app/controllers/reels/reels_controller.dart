@@ -113,7 +113,6 @@ class ReelsController extends GetxController {
     'https://images.unsplash.com/photo-1490750967868-88df5691cc13?w=200',
   ];
 
-
   final List<String> reportReasons = [
     'Abusive or hateful',
     'Misleading or spam',
@@ -135,6 +134,7 @@ class ReelsController extends GetxController {
     reelsList[index].isLiked ? reelsList[index].likes++ : reelsList[index].likes--;
     reelsList.refresh();
   }
+
   void toggleCommentLike(int commentId) {
     int index = commentsList.indexWhere((c) => c.id == commentId);
     if (index != -1) {
@@ -172,7 +172,6 @@ class ReelsController extends GetxController {
   void onShareOptionTap(int reelId, String platform) async {
     int index = reelsList.indexWhere((r) => r.id == reelId);
     if (index == -1) return;
-
     if (platform == 'Copy link') {
       Clipboard.setData(ClipboardData(text: 'https://newsbreak.com/reels/$reelId'));
       Get.back();

@@ -55,15 +55,11 @@ class _CreateReelViewState extends State<CreateReelView> {
               const SizedBox(height: 32),
 
               // Access camera Button
-              _accessButton(Icons.camera_alt_outlined, 'Access camera',
-                    () {}
-              ),
+              _accessButton(Icons.camera_alt_outlined, 'Access camera', () {}),
               const SizedBox(height: 12),
 
            // Access microphone Button
-              _accessButton(Icons.mic_outlined, 'Access Microphone',
-                    () {}
-              ),
+              _accessButton(Icons.mic_outlined, 'Access Microphone', () {}),
 
               const Spacer(),
 
@@ -78,8 +74,7 @@ class _CreateReelViewState extends State<CreateReelView> {
                     height: 64,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: const Color(0xFFC4C4C4).withValues(alpha: 0.5),
-                    ),
+                      color: const Color(0xFFC4C4C4).withValues(alpha: 0.5)),
                     child: Center(
                       child: Container(
                         width: 48,
@@ -103,8 +98,7 @@ class _CreateReelViewState extends State<CreateReelView> {
                 width: double.infinity,
                 padding: const EdgeInsets.only(top: 25, bottom: 40, left: 40, right: 140),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF222222),
-                ),
+                  color: Color(0xFF222222)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -113,7 +107,6 @@ class _CreateReelViewState extends State<CreateReelView> {
                   ],
                 ),
               ),
-
             ],
           ),
         ),
@@ -128,8 +121,7 @@ class _CreateReelViewState extends State<CreateReelView> {
         height: 44,
         decoration: BoxDecoration(
           color: const Color(0x99989797),
-          borderRadius: BorderRadius.circular(8),
-        ),
+          borderRadius: BorderRadius.circular(8)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

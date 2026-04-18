@@ -36,10 +36,10 @@ class ShareSheet extends GetView<ReelsController> {
           const SizedBox(height: 12),
           // Drag Handle
           Container(
-            width: 40, height: 4,
+            width: 40, height: 5,
             decoration: BoxDecoration(
               color: Colors.white24,
-              borderRadius: BorderRadius.circular(2),
+              borderRadius: BorderRadius.circular(20),
             ),
           ),
           const SizedBox(height: 20),
@@ -133,13 +133,11 @@ class ShareSheet extends GetView<ReelsController> {
                       option['icon'],
                       width: 20,
                       height: 20,
-                      color: Colors.white,
-                    )
+                      color: Colors.white)
                         : Icon(
                       option['icon'],
                       color: Colors.white,
-                      size: 20,
-                    ),
+                      size: 20),
                     onTap: () {
                       controller.onShareOptionTap(reel.id ?? 0, option['label']);
                     },

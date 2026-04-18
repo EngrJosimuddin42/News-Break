@@ -27,10 +27,7 @@ class ThreeDotSheet extends StatelessWidget {
       width: double.infinity,
       decoration: const BoxDecoration(
         color: Color(0xFF252525),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30), topRight: Radius.circular(30),
-        ),
-      ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       child: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -38,11 +35,9 @@ class ThreeDotSheet extends StatelessWidget {
             const SizedBox(height: 12),
             // Handle Bar
             Container(
-              width: 36, height: 4,
+              width: 40, height: 5,
               decoration: BoxDecoration(
-                color: Colors.grey[600], borderRadius: BorderRadius.circular(2),
-              ),
-            ),
+                color: Colors.grey[600], borderRadius: BorderRadius.circular(20))),
             const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -52,16 +47,15 @@ class ThreeDotSheet extends StatelessWidget {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: const Color(0xFF444444),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                      borderRadius: BorderRadius.circular(12)),
                     child: Column(
                       children: [
                         _optionTile(
                           icon: 'assets/icons/share.png',
                           iconColor: AppColors.surface,
                           label: 'Share',
-                          onTap: onShare,
-                        ),
+                          onTap: onShare),
+
                         const Divider(color: Colors.white12, height: 1),
 
                         Obx(() {
@@ -70,8 +64,7 @@ class ThreeDotSheet extends StatelessWidget {
                             icon: isSaved ? Icons.bookmark : Icons.bookmark_border,
                             iconColor: isSaved ? Colors.blueAccent : AppColors.surface,
                             label: isSaved ? 'Saved' : 'Save',
-                            onTap: () => controller.saveReel(reelId),
-                          );
+                            onTap: () => controller.saveReel(reelId));
                         }),
 
                         const Divider(color: Colors.white12, height: 1),
@@ -79,8 +72,8 @@ class ThreeDotSheet extends StatelessWidget {
                           icon: Icons.not_interested,
                           iconColor: AppColors.surface,
                           label: 'Show less from author: $authorName',
-                          onTap: () => controller.hideAuthorContent(authorName),
-                        ),
+                          onTap: () => controller.hideAuthorContent(authorName)),
+
                         const Divider(color: Colors.white12, height: 1),
                         _optionTile(
                           icon: Icons.report_gmailerrorred_outlined,
@@ -88,8 +81,7 @@ class ThreeDotSheet extends StatelessWidget {
                           label: 'Report',
                           labelColor: AppColors.linkColor,
                           trailing: Icon(Icons.chevron_right, color: AppColors.surface, size: 20),
-                          onTap: onReport,
-                        ),
+                          onTap: onReport),
                       ],
                     ),
                   ),
@@ -98,15 +90,12 @@ class ThreeDotSheet extends StatelessWidget {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.black,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                      borderRadius: BorderRadius.circular(8)),
                     child: _optionTile(
                       icon: 'assets/icons/add.png',
                       iconColor: Colors.blueAccent,
                       label: 'Ask/request/report anything',
-                      onTap: () => controller.openHelpCenter(),
-                    ),
-                  ),
+                      onTap: () => controller.openHelpCenter())),
                   const SizedBox(height: 20),
                 ],
               ),
@@ -123,8 +112,7 @@ class ThreeDotSheet extends StatelessWidget {
     required String label,
     Color labelColor = Colors.white,
     Widget? trailing,
-    required VoidCallback onTap,
-  }) {
+    required VoidCallback onTap}) {
     return ListTile(
       leading: icon is IconData
           ? Icon(icon, color: iconColor, size: 20)
@@ -133,7 +121,6 @@ class ThreeDotSheet extends StatelessWidget {
           style: AppTextStyles.caption.copyWith(color: labelColor)),
       trailing: trailing,
       onTap: onTap,
-      dense: true,
-    );
+      dense: true);
   }
 }

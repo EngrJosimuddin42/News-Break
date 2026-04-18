@@ -60,13 +60,10 @@ class _ReelsViewState extends State<ReelsView> {
             right: 16,
             child: GestureDetector(
               onTap: () => Get.to(() => const CreateReelView()),
-              child: Container(
-                width: 36,
-                height: 36,
+              child: Container(width: 36, height: 36,
                 decoration: BoxDecoration(
                   color: Color(0xFF282828),
-                  shape: BoxShape.circle,
-                ),
+                  shape: BoxShape.circle),
                 child:Icon(Icons.camera_alt_outlined,color:AppColors.surface, size: 20),
               ),
             ),
@@ -82,8 +79,7 @@ class _ReelsViewState extends State<ReelsView> {
         // Background image
         Positioned.fill(
           child: (reel.imageUrl != null && reel.imageUrl!.isNotEmpty)
-              ? Image.network(
-            reel.imageUrl!,
+              ? Image.network(reel.imageUrl!,
             fit: BoxFit.cover,
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) return child;
@@ -147,8 +143,7 @@ class _ReelsViewState extends State<ReelsView> {
                       height: 18,
                       decoration: BoxDecoration(
                         color:AppColors.textGreen,
-                        shape: BoxShape.circle,
-                      ),
+                        shape: BoxShape.circle),
                       child: const Icon(Icons.add, color: Colors.white, size: 14),
                     ),
                   ),

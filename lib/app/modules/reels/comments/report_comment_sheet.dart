@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/reels/reels_controller.dart';
+import '../report_success_widget.dart';
 
 class ReportCommentSheet extends StatefulWidget {
   const ReportCommentSheet({super.key});
@@ -13,6 +14,7 @@ class ReportCommentSheet extends StatefulWidget {
 
 class _ReportCommentSheetState extends State<ReportCommentSheet> {
   String? _selectedReason;
+  int _step = 0;
 
 
   @override
@@ -22,7 +24,12 @@ class _ReportCommentSheetState extends State<ReportCommentSheet> {
         color: Color(0xFF252525),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      child: Column(
+      child: _step == 0 ? _buildReportBody() : ReportSuccessWidget(onDone: () => Get.back()),
+    );
+  }
+
+  Widget _buildReportBody() {
+    return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Header
@@ -34,19 +41,16 @@ class _ReportCommentSheetState extends State<ReportCommentSheet> {
                   onTap: (){
                     Get.back();
                   },
-                  child:Icon(Icons.arrow_back_ios,color:AppColors.surface, size: 20),
-                ),
+                  child:Icon(Icons.arrow_back_ios,color:AppColors.surface, size: 20)),
                 Expanded(
                   child: Text('Report Comment',
                       textAlign: TextAlign.center,
-                      style:AppTextStyles.caption),
-                ),
+                      style:AppTextStyles.caption)),
                 GestureDetector(
                   onTap: () {
                     Get.back();
                   },
-                  child: Icon(Icons.close,color:AppColors.surface, size: 20),
-                ),
+                  child: Icon(Icons.close,color:AppColors.surface, size: 20)),
               ],
             ),
           ),
@@ -60,8 +64,7 @@ class _ReportCommentSheetState extends State<ReportCommentSheet> {
             title: Text(reason,
                 style: AppTextStyles.caption),
             activeColor: Colors.white,
-            dense: true,
-          )),
+            dense: true)),
 
           // Submit button
           Padding(
@@ -74,15 +77,14 @@ class _ReportCommentSheetState extends State<ReportCommentSheet> {
                   if (_selectedReason != null) {
                     Get.find<ReelsController>().submitReport(
                       reason: _selectedReason!,
-                      type: 'comment',
-                    );
+                      type: 'comment');
+                    setState(() => _step = 1);
                   }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
+                  padding: const EdgeInsets.symmetric(vertical: 14)),
                 child:Text('Submit',
                   style:AppTextStyles.buttonOutline.copyWith(color:AppColors.background),
                 ),
@@ -90,7 +92,6 @@ class _ReportCommentSheetState extends State<ReportCommentSheet> {
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 }

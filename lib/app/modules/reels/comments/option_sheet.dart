@@ -19,8 +19,7 @@ class OptionsSheet extends StatelessWidget {
       width: double.infinity,
       decoration: const BoxDecoration(
         color: Color(0xFF252525),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -29,43 +28,36 @@ class OptionsSheet extends StatelessWidget {
             width: 40, height: 5,
             decoration: BoxDecoration(
               color: Colors.white24,
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
+              borderRadius: BorderRadius.circular(20))),
           const SizedBox(height: 24),
 
           Container(
             margin: EdgeInsets.only(
               left: 16,
               right: 16,
-              bottom: MediaQuery.of(context).padding.bottom + 20,
-            ),
+              bottom: MediaQuery.of(context).padding.bottom + 20),
             decoration: BoxDecoration(
               color: const Color(0xFF444444),
-              borderRadius: BorderRadius.circular(20),
-            ),
+              borderRadius: BorderRadius.circular(20)),
             child: Column(
               children: [
                 _optionTile(
                   icon: Icons.copy_all_outlined,
                   label: 'Copy link',
-                  onTap: () => controller.onShareOptionTap(reelId, 'Copy link'),
-                ),
+                  onTap: () => controller.onShareOptionTap(reelId, 'Copy link')),
                 _divider(),
 
                 _optionTile(
                   icon: Icons.share_outlined,
                   label: 'Share this content',
-                  onTap: () => controller.onShareOptionTap(reelId, 'More'),
-                ),
+                  onTap: () => controller.onShareOptionTap(reelId, 'More')),
 
                 _divider(),
 
                 _optionTile(
                   icon: Icons.block_flipped,
                   label: 'Block : $authorName',
-                  onTap: () => controller.blockUser(authorName),
-                ),
+                  onTap: () => controller.blockUser(authorName)),
                 _divider(),
 
                 _optionTile(
@@ -74,8 +66,7 @@ class OptionsSheet extends StatelessWidget {
                   label: 'Report content',
                   labelColor: Colors.redAccent,
                   showChevron: true,
-                  onTap: () => controller.reportComment(reelId, context),
-                ),
+                  onTap: () => controller.reportComment(reelId, context)),
               ],
             ),
           ),

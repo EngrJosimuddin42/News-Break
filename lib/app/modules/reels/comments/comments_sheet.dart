@@ -33,8 +33,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
       height: MediaQuery.of(context).size.height * 0.7,
       decoration: const BoxDecoration(
         color: Color(0xFF252525),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       child: Column(
         children: [
           // Handle
@@ -43,9 +42,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
             width: 40, height: 5,
             decoration: BoxDecoration(
               color: Colors.grey[600],
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
+              borderRadius: BorderRadius.circular(2))),
           const SizedBox(height: 12),
           // Header
           Padding(
@@ -56,13 +53,10 @@ class _CommentsSheetState extends State<CommentsSheet> {
                   child: Obx(() => Text(
                     '${controller.formatCount(controller.commentsList.length)} Comments',
                     textAlign: TextAlign.center,
-                    style: AppTextStyles.bodyMedium,
-                  )),
-                ),
+                    style: AppTextStyles.bodyMedium))),
                 GestureDetector(
                   onTap: () => Get.back(),
-                  child: const Icon(Icons.close, color: Colors.white, size: 20),
-                ),
+                  child: const Icon(Icons.close, color: Colors.white, size: 20)),
               ],
             ),
           ),
@@ -92,8 +86,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
               left: 12,
               right: 12,
               top: 12,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 12,
-            ),
+              bottom: MediaQuery.of(context).viewInsets.bottom + 12),
             child: GestureDetector(
               onTap: () => _showWriteCommentSheet(widget.reelId),
               child: Container(
@@ -101,8 +94,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                   color: const Color(0xFF333333),
-                  borderRadius: BorderRadius.circular(60),
-                ),
+                  borderRadius: BorderRadius.circular(60)),
                 child: Row(
                   children: [
                     ClipRRect(
@@ -138,8 +130,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
           CircleAvatar(
             radius: 18,
             backgroundImage: NetworkImage(comment.userProfileImage),
-            backgroundColor: Colors.grey[800],
-          ),
+            backgroundColor: Colors.grey[800]),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -161,8 +152,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
                     GestureDetector(
                       onTap: () {},
                       child: Text('Follow',
-                          style: AppTextStyles.overline.copyWith(color: AppColors.textGreen)),
-                    ),
+                          style: AppTextStyles.overline.copyWith(color: AppColors.textGreen))),
                   ],
                 ),
                 const SizedBox(height: 6),
@@ -174,8 +164,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
                     height: 140,
                     width: 180,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => const Text("GIF could not load", style: TextStyle(color: Colors.red)),
-                  ),
+                    errorBuilder: (_, __, ___) => const Text("GIF could not load", style: TextStyle(color: Colors.red))),
                 )
                     : Text(comment.text, style: AppTextStyles.labelMedium),
                 const SizedBox(height: 10),
@@ -215,13 +204,11 @@ class _CommentsSheetState extends State<CommentsSheet> {
           Image.asset(
             assetIcon,
             width: 16,
-            height: 16,
-          ),
+            height: 16),
           if (label.isNotEmpty) ...[
             const SizedBox(width: 4),
             Text(label,
-              style: AppTextStyles.labelMedium,
-            ),
+              style: AppTextStyles.labelMedium),
           ],
         ],
       ),

@@ -33,12 +33,10 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
   Widget _buildWriteComment() {
     return Container(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
+        bottom: MediaQuery.of(context).viewInsets.bottom),
       decoration: const BoxDecoration(
         color: Color(0xFF252525),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -55,8 +53,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                     width: 40, height: 5,
                     decoration: BoxDecoration(
                       color: Colors.grey[600],
-                      borderRadius: BorderRadius.circular(2),
-                    ),
+                      borderRadius: BorderRadius.circular(20)),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -72,8 +69,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                           onTap: () {},
                           child: Text('community guidelines.',
                             style: AppTextStyles.overline.copyWith(color: AppColors.textGreen,decoration: TextDecoration.underline,
-                              decorationColor: AppColors.textGreen,),
-                          ),
+                              decorationColor: AppColors.textGreen)),
                         ),
                       ),
                     ],
@@ -94,9 +90,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                     child: Image.network(
                       _selectedGifUrl!,
                       height: 120,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                      fit: BoxFit.cover)),
                   Positioned(
                     right: 5,
                     top: 5,
@@ -105,8 +99,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                       child: const CircleAvatar(
                         radius: 12,
                         backgroundColor: Colors.black54,
-                        child: Icon(Icons.close, size: 16, color: Colors.white),
-                      ),
+                        child: Icon(Icons.close, size: 16, color: Colors.white)),
                     ),
                   ),
                 ],
@@ -123,8 +116,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
               decoration:InputDecoration(
                 hintText: 'Write a comment...',
                 hintStyle:AppTextStyles.overline,
-                border: InputBorder.none,
-              ),
+                border: InputBorder.none)
             ),
           ),
 
@@ -139,9 +131,8 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                 child: GestureDetector(
                   onTap: () {
                     _controller.text += r;
-                  },
-                  child: Text(r, style: const TextStyle(fontSize: 22)),
-                ),
+                    },
+                  child: Text(r, style: const TextStyle(fontSize: 22))),
               )).toList(),
             ),
              ),
@@ -157,8 +148,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                 // Image icon
                 GestureDetector(
                   onTap: () {},
-                  child:Icon(Icons.image_outlined, color:AppColors.surface, size: 22),
-                ),
+                  child:Icon(Icons.image_outlined, color:AppColors.surface, size: 22)),
                 const SizedBox(width: 12),
 
                 // GIF icon
@@ -168,11 +158,9 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                     padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
                     decoration: BoxDecoration(
                       border: Border.all(color:AppColors.surface),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                      borderRadius: BorderRadius.circular(8)),
                     child: Text('GIF',
-                      style:AppTextStyles.display),
-                  ),
+                      style:AppTextStyles.display)),
                 ),
 
                 const Spacer(),
@@ -186,8 +174,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                       Get.back();
                     }
                   },
-                  child: Image.asset('assets/icons/send2.png', height: 24, width: 24),
-                ),
+                  child: Image.asset('assets/icons/send2.png', height: 24, width: 24)),
               ],
             ),
           ),
@@ -205,14 +192,12 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
           onTap: () {
             Get.back();
           },
-          child:Icon(Icons.close, color:AppColors.textOnDark, size: 20),
-        ),
+          child:Icon(Icons.close, color:AppColors.textOnDark, size: 20)),
         title: Container(
           height: 40,
           decoration: BoxDecoration(
             color: const Color(0xFF121212),
-            borderRadius: BorderRadius.circular(8),
-          ),
+            borderRadius: BorderRadius.circular(8)),
           child: TextField(
             style:AppTextStyles.caption.copyWith(color: AppColors.textOnDark),
             decoration: InputDecoration(
@@ -220,16 +205,14 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
               hintStyle: AppTextStyles.caption.copyWith(color: AppColors.textOnDark),
               prefixIcon: Icon(Icons.search, color:AppColors.textOnDark, size: 20),
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(vertical: 10),
-            ),
+              contentPadding: EdgeInsets.symmetric(vertical: 10)),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => setState(() => _showGifPicker = false),
             child: Text('Cancel',
-                style:AppTextStyles.bodyMedium),
-          ),
+                style:AppTextStyles.bodyMedium)),
         ],
       ),
       body: GridView.builder(
@@ -237,8 +220,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 2,
-          mainAxisSpacing: 2,
-        ),
+          mainAxisSpacing: 2),
         itemCount: controller.gifImages.length,
         itemBuilder: (_, i) => GestureDetector(
           onTap: () {

@@ -7,6 +7,7 @@ class UserModel {
   final String? gender;
   final String? birthYear;
   final String? profileImageUrl;
+  final String? location;
 
   UserModel({
     required this.name,
@@ -16,6 +17,7 @@ class UserModel {
     this.website,
     this.gender,
     this.birthYear,
-    this.profileImageUrl
+    this.profileImageUrl,
+    this.location,
   });
 }

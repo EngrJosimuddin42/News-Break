@@ -21,6 +21,7 @@ class AuthController extends GetxController {
       website: 'https://www.amaliarose.dev',
       email: 'amalia@example.com',
       profileImageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
+      location: 'Dhaka, Bangladesh',
     );
   }
 

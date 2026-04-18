@@ -12,7 +12,7 @@ class ShareSheet extends GetView<ReelsController> {
   static const List<Map<String, dynamic>> _shareOptions = [
     {'label': 'Instagram', 'icon': Icons.camera_alt, 'isAsset': false},
     {'label': 'Share by Image', 'icon': Icons.image_outlined, 'isAsset': false},
-    {'label': 'Copy link', 'icon': Icons.link, 'isAsset': false},
+    {'label': 'Copy link', 'icon': Icons.copy_outlined, 'isAsset': false},
     {'label': 'Facebook', 'icon': Icons.facebook, 'isAsset': false},
     {'label': 'Email', 'icon': Icons.email_outlined, 'isAsset': false},
     {'label': 'Text message', 'icon': 'assets/icons/message.png', 'isAsset':true},

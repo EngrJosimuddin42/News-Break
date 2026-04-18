@@ -123,7 +123,7 @@ class _ReelsViewState extends State<ReelsView> {
           bottom: 120,
           child: Column(
             children: [
-              // Timer icon
+              // Profile
               GestureDetector(
                 onTap: () => Get.to(() => const ProfileView()),
                 child: Stack(
@@ -155,7 +155,7 @@ class _ReelsViewState extends State<ReelsView> {
                 ],
               ),
                 ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
 
               // Like
               _actionBtn(
@@ -177,12 +177,14 @@ class _ReelsViewState extends State<ReelsView> {
                 color: Colors.white,
                 count: controller.formatCount(reel.comments),
                 onTap: () {
+                  controller.fetchComments(reel.id);
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
-                    builder: (_) => const CommentsSheet(),
-                  );
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width),
+                    builder: (context) => CommentsSheet(reelId: reel.id));
                 },
               ),
               const SizedBox(height: 16),
@@ -197,10 +199,13 @@ class _ReelsViewState extends State<ReelsView> {
                     context: context,
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width),
                     builder: (_) => ShareSheet(reel: reel),
                   );
                 },
               ),
+              const SizedBox(height: 16),
 
               // 3 dot Button
               GestureDetector(
@@ -210,7 +215,7 @@ class _ReelsViewState extends State<ReelsView> {
                   backgroundColor: Colors.transparent,
                   constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width),
-                  builder: (context) => ThreeDotSheet(
+                  builder: (context) => ThreeDotSheet(reelId: reel.id,
                     authorName: reel.userName ?? "Unknown",
 
                     onShare: () {
@@ -219,6 +224,8 @@ class _ReelsViewState extends State<ReelsView> {
                         context: context,
                         isScrollControlled: true,
                         backgroundColor: Colors.transparent,
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width),
                         builder: (_) => ShareSheet(reel: reel),
                       );
                     },
@@ -273,12 +280,16 @@ class _ReelsViewState extends State<ReelsView> {
         Positioned(
           bottom: 1, left: 0, right: 0,
           child: GestureDetector(
-            onTap: () => showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              builder: (_) => const CommentsSheet(),
-            ),
+            onTap: () {
+              controller.fetchComments(reel.id);
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width),
+                builder: (context) => CommentsSheet(reelId: reel.id),);
+            },
             child: Container(
               height: 36,
               width: double.infinity,
@@ -318,7 +329,7 @@ class _ReelsViewState extends State<ReelsView> {
             color: color,
           )
               : Icon(icon, color: color, size: 28),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
           Text(count,
               style: AppTextStyles.buttonOutline),
         ],

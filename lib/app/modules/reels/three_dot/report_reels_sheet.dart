@@ -7,28 +7,19 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/reels/reels_controller.dart';
 import 'report_video_sheet.dart';
 
-class ReportSheet extends StatefulWidget {
+class ReportReelsSheet extends StatefulWidget {
   final int reelId;
-  const ReportSheet({super.key, required this.reelId});
+  const ReportReelsSheet({super.key, required this.reelId});
 
   @override
-  State<ReportSheet> createState() => _ReportSheetState();
+  State<ReportReelsSheet> createState() => _ReportReelsSheetState();
 }
 
-class _ReportSheetState extends State<ReportSheet> {
+class _ReportReelsSheetState extends State<ReportReelsSheet> {
   final ReelsController controller = Get.find<ReelsController>();
   // 0=select reason, 1=success
   int _step = 0;
   String? _selectedReason;
-
-  static const List<String> _reasons = [
-    'Abusive or hateful',
-    'Misleading or spam',
-    'Violence or gory',
-    'Sexual Content',
-    'Minor safety',
-    'Dangerous or criminal',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -77,12 +68,10 @@ class _ReportSheetState extends State<ReportSheet> {
         const Divider(color: Colors.white12, height: 1),
 
         // Reasons
-        ..._reasons.map((reason) => RadioListTile<String>(
-          value: reason,
+        ...Get.find<ReelsController>().reportReasons.map((reason) => RadioListTile<String>(          value: reason,
           groupValue: _selectedReason,
           onChanged: (val) => setState(() => _selectedReason = val),
-          title: Text(reason,
-              style:AppTextStyles.caption),
+          title: Text(reason, style:AppTextStyles.caption),
           activeColor: Colors.white,
           dense: true,
         )),
@@ -132,8 +121,14 @@ class _ReportSheetState extends State<ReportSheet> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (_selectedReason != null) {
-                       controller.submitReport(reelId: widget.reelId, reason: _selectedReason!);
-                      setState(() => _step = 1);
+                      Get.find<ReelsController>().submitReport(
+                        id: widget.reelId,
+                        reason: _selectedReason!,
+                        type: 'reel',
+                      );
+                      setState(() {
+                        _step = 1;
+                      });
                     }
                   },
                   style: ElevatedButton.styleFrom(

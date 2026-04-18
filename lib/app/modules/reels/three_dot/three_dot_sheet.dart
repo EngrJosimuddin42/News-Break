@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../../controllers/reels/reels_controller.dart';
 
 class ThreeDotSheet extends StatelessWidget {
+  final int reelId;
   final String authorName;
   final VoidCallback onShare;
   final VoidCallback onSave;
@@ -11,6 +13,7 @@ class ThreeDotSheet extends StatelessWidget {
 
   const ThreeDotSheet({
     super.key,
+    required this.reelId,
     required this.authorName,
     required this.onShare,
     required this.onSave,
@@ -19,6 +22,7 @@ class ThreeDotSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ReelsController>();
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -59,18 +63,23 @@ class ThreeDotSheet extends StatelessWidget {
                           onTap: onShare,
                         ),
                         const Divider(color: Colors.white12, height: 1),
-                        _optionTile(
-                          icon: Icons.bookmark_border,
-                          iconColor: AppColors.surface,
-                          label: 'Save',
-                          onTap: onSave,
-                        ),
+
+                        Obx(() {
+                          bool isSaved = controller.savedReels.contains(reelId);
+                          return _optionTile(
+                            icon: isSaved ? Icons.bookmark : Icons.bookmark_border,
+                            iconColor: isSaved ? Colors.blueAccent : AppColors.surface,
+                            label: isSaved ? 'Saved' : 'Save',
+                            onTap: () => controller.saveReel(reelId),
+                          );
+                        }),
+
                         const Divider(color: Colors.white12, height: 1),
                         _optionTile(
                           icon: Icons.not_interested,
                           iconColor: AppColors.surface,
                           label: 'Show less from author: $authorName',
-                          onTap: () => Get.back(),
+                          onTap: () => controller.hideAuthorContent(authorName),
                         ),
                         const Divider(color: Colors.white12, height: 1),
                         _optionTile(
@@ -95,7 +104,7 @@ class ThreeDotSheet extends StatelessWidget {
                       icon: 'assets/icons/add.png',
                       iconColor: Colors.blueAccent,
                       label: 'Ask/request/report anything',
-                      onTap: () => Get.back(),
+                      onTap: () => controller.openHelpCenter(),
                     ),
                   ),
                   const SizedBox(height: 20),

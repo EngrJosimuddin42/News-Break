@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/modules/reels/comments/comments_sheet.dart';
+import 'package:news_break/app/modules/reels/single_reel_player.dart';
 import 'package:news_break/app/modules/reels/three_dot/three_dot_sheet.dart';
 import 'package:news_break/app/modules/reels/share_sheet.dart';
-import 'package:news_break/app/modules/reels/profile_view.dart';
+import 'package:news_break/app/modules/reels/profile/profile_view.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/reels/reels_controller.dart';
@@ -17,14 +18,7 @@ class ReelsView extends StatefulWidget {
 }
 
 class _ReelsViewState extends State<ReelsView> {
-  final PageController _pageController = PageController();
   final ReelsController controller = Get.put(ReelsController());
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,9 +39,8 @@ class _ReelsViewState extends State<ReelsView> {
            child: Text("No Reels Found", style: TextStyle(color: Colors.white)),
           );
           }
-
            return PageView.builder(
-            controller: _pageController,
+             controller: controller.pageController,
             scrollDirection: Axis.vertical,
              itemCount: controller.reelsList.length,
              itemBuilder: (_, i) => _buildReel(controller.reelsList[i], i),
@@ -78,26 +71,11 @@ class _ReelsViewState extends State<ReelsView> {
       children: [
         // Background image
         Positioned.fill(
-          child: (reel.imageUrl != null && reel.imageUrl!.isNotEmpty)
-              ? Image.network(reel.imageUrl!,
-            fit: BoxFit.cover,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2,
-                ),
-              );
-            },
-            errorBuilder: (_, __, ___) => Container(
-              color: Colors.grey[900],
-              child: const Icon(Icons.broken_image, color: Colors.white24),
-            ),
-          )
-              : Container(color: Colors.grey[900]),
+          child: SingleReelPlayer(
+            videoUrl: reel.videoUrl ?? "",
+            thumbnail: reel.imageUrl,
+          ),
         ),
-
         // Dark gradient bottom
         Positioned(
           bottom: 0, left: 0, right: 0,
@@ -121,7 +99,7 @@ class _ReelsViewState extends State<ReelsView> {
             children: [
               // Profile
               GestureDetector(
-                onTap: () => Get.to(() => const ProfileView()),
+                onTap: () => Get.to(() => ProfileView(user: reel)),
                 child: Stack(
                 children: [
                   Container(
@@ -253,16 +231,26 @@ class _ReelsViewState extends State<ReelsView> {
                 children: [
                   Text(reel.userName ?? "", style: AppTextStyles.bodyMedium),
                   const SizedBox(width: 32),
-                  if (reel.isFollowing == true)
-                    Text('Following', style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFFC4C4C4)))
-                  else
-                    GestureDetector(
-                      onTap: () => controller.toggleFollow(index),
-                      child: Container(
+                  Obx(() {
+                    final currentReel = controller.reelsList[index];
+                    final bool isFollowing = currentReel.isFollowing ?? false;
+                    return GestureDetector(
+                      onTap: () => controller.toggleFollow(currentReel),
+                      child: isFollowing
+                          ? Text(
+                        'Following',
+                        style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFFC4C4C4)),
+                      )
+                          : Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                        decoration: BoxDecoration(color: const Color(0xFF3597FA), borderRadius: BorderRadius.circular(8)),
-                        child: Text('+ Follow', style: AppTextStyles.buttonOutline),                      ),
-                    ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF3597FA),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text('+ Follow', style: AppTextStyles.buttonOutline),
+                      ),
+                    );
+                  }),
                 ],
               ),
               const SizedBox(height: 4),

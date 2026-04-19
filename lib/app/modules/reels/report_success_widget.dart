@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 
 class ReportSuccessWidget extends StatelessWidget {
   final String message;
-  final VoidCallback onDone;
+  final VoidCallback? onDone;
 
   const ReportSuccessWidget({
     super.key,
     this.message = 'Thanks for reporting this',
-    required this.onDone,
+    this.onDone,
   });
 
   @override
@@ -34,7 +35,13 @@ class ReportSuccessWidget extends StatelessWidget {
           SizedBox(
             width: 311,
             child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                if (onDone != null) {
+                  onDone!();
+                } else {
+                  Get.back();
+                }
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.black,

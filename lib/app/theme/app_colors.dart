@@ -46,7 +46,7 @@ class AppColors {
 
   // AI Badge
   static const Color aiBadge = Color(0xFF4A90D9);
-  static const Color aiMatchBadge = Color(0xFF2C7BE5);
+  static const Color secondary = Color(0xFFEAEAEA);
 
   // Scanner
   static const Color scannerBackground = Color(0xFF3D5A73);

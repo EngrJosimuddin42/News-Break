@@ -49,8 +49,8 @@ class AppSnackbar {
     );
   }
 
-  static void error({required String title, required String message}) {
-    show(title: title,
+  static void error({required String message}) {
+    show(title: "Notice",
       message: message,
       backgroundColor: const Color(0xFFC62828),
       icon: const Icon(Icons.error_outline, color: Colors.white, size: 28),

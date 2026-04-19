@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/reels/reels_controller.dart';
 import '../../models/reel_model.dart';
 
 class ShareSheet extends GetView<ReelsController> {
   final ReelModel reel;
+  final bool isProfileShare;
 
-  const ShareSheet({super.key, required this.reel});
+  const ShareSheet({super.key, required this.reel,this.isProfileShare = false,});
 
   static const List<Map<String, dynamic>> _shareOptions = [
     {'label': 'Instagram', 'icon': Icons.camera_alt, 'isAsset': false},
@@ -68,10 +70,9 @@ class ShareSheet extends GetView<ReelsController> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
-                    reel.imageUrl,
+                    isProfileShare ? reel.userProfileImage : reel.imageUrl,
                     width: 100, height: 100,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(width: 100, height: 100, color: Colors.grey[800]),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -79,14 +80,14 @@ class ShareSheet extends GetView<ReelsController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (reel.description.isEmpty) ...[
+                      if (isProfileShare) ...[
                         Text(controller.mediaAccountLabel, style: AppTextStyles.overline),
                         const SizedBox(height: 4),
                         RichText(
                           text: TextSpan(
                             children: [
                               TextSpan(text: controller.checkOutPrefix, style: AppTextStyles.small),
-                              TextSpan(text: reel.userName, style: AppTextStyles.labelMedium),
+                              TextSpan(text: reel.userName, style: AppTextStyles.labelMedium.copyWith(color: AppColors.textOnDark)),
                             ],
                           ),
                         ),
@@ -102,7 +103,7 @@ class ShareSheet extends GetView<ReelsController> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        Text(reel.description, style: AppTextStyles.small, maxLines: 2, overflow: TextOverflow.ellipsis),
+                        Text(reel.description, style: AppTextStyles.small, maxLines: 3, overflow: TextOverflow.ellipsis),
                       ],
                     ],
                   ),

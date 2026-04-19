@@ -10,6 +10,7 @@ import '../modules/fullscreen/fullscreen_view.dart';
 import '../bindings/home_binding.dart';
 import '../modules/home/home_view.dart';
 import '../bindings/signin_binding.dart';
+import '../modules/news/news_detail_view.dart';
 import '../modules/signin/signin_view.dart';
 import '../bindings/splash_binding.dart';
 import '../modules/splash/splash_view.dart';
@@ -19,7 +20,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.SPLASH;
+  static const initial = Routes.SPLASH;
 
   static final routes = [
     GetPage(
@@ -56,6 +57,10 @@ class AppPages {
       name: _Paths.COMMUNITY_CREATE_POST,
       page: () => const CommunityCreatePostView(),
       binding: CommunityBinding(),
+    ),
+    GetPage(
+      name: _Paths.NEWS_DETAIL,
+      page: () => const NewsDetailView(),
     ),
   ];
 }

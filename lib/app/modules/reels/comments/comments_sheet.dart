@@ -82,10 +82,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
 
           // Write a comment input
           Container(
-            padding: EdgeInsets.only(
-              left: 12,
-              right: 12,
-              top: 12,
+            padding: EdgeInsets.only(left: 12, right: 12, top: 12,
               bottom: MediaQuery.of(context).viewInsets.bottom + 12),
             child: GestureDetector(
               onTap: () => _showWriteCommentSheet(widget.reelId),
@@ -104,7 +101,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
                         width: 24,
                         height: 24,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const Icon(Icons.account_circle, color: Colors.grey, size: 28),
+                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.account_circle, color: Colors.grey, size: 28),
                       )),
                     ),
                     const SizedBox(width: 10),
@@ -164,8 +161,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
                     height: 140,
                     width: 180,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => const Text("GIF could not load", style: TextStyle(color: Colors.red))),
-                )
+                      errorBuilder: (context, error, stackTrace) => const Text("GIF could not load", style: TextStyle(color: Colors.red))))
                     : Text(comment.text, style: AppTextStyles.labelMedium),
                 const SizedBox(height: 10),
 

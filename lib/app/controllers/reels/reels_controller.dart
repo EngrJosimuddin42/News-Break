@@ -177,7 +177,6 @@ class ReelsController extends GetxController {
     }
   }
 
-
   void toggleLike(int index) {
     reelsList[index].isLiked = !reelsList[index].isLiked;
     reelsList[index].isLiked ? reelsList[index].likes++ : reelsList[index].likes--;
@@ -220,7 +219,6 @@ class ReelsController extends GetxController {
       currentFollowers = currentFollowers > 0 ? currentFollowers - 1 : 0;
     }
     item.totalFollowers = formatCount(currentFollowers);
-
     reelsList.refresh();
   }
 
@@ -243,7 +241,6 @@ class ReelsController extends GetxController {
     Get.snackbar('Success', 'Copied to clipboard', snackPosition: SnackPosition.BOTTOM, duration: 1.seconds);
   }
 
-
   void onShareOptionTap(int reelId, String platform) async {
     int index = reelsList.indexWhere((r) => r.id == reelId);
     if (index == -1) return;
@@ -258,7 +255,6 @@ class ReelsController extends GetxController {
       incrementShare(index);
     }
   }
-
 
   void submitReport({
     int? id,
@@ -275,7 +271,6 @@ class ReelsController extends GetxController {
       Get.snackbar('Saved', 'Reel saved successfully!');
     }
   }
-
 
   void reportReel(int id, BuildContext context) {
     Get.back();
@@ -333,8 +328,7 @@ class ReelsController extends GetxController {
       text: gifUrl ?? text,
       userProfileImage: user?.profileImageUrl ?? '',
       likes: 0,
-      createdAt: 'Just now',
-    );
+      createdAt: 'Just now');
 
     commentsList.insert(0, newComment);
     commentsList.refresh();

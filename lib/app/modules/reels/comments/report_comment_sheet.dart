@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/reels/reels_controller.dart';
-import '../report_success_widget.dart';
+import '../report_success.dart';
 
 class ReportCommentSheet extends StatefulWidget {
   const ReportCommentSheet({super.key});
@@ -24,7 +24,7 @@ class _ReportCommentSheetState extends State<ReportCommentSheet> {
         color: Color(0xFF252525),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      child: _step == 0 ? _buildReportBody() : ReportSuccessWidget(onDone: () => Get.back()),
+      child: _step == 0 ? _buildReportBody() : ReportSuccess(onDone: () => Get.back()),
     );
   }
 
@@ -57,14 +57,24 @@ class _ReportCommentSheetState extends State<ReportCommentSheet> {
           const Divider(color: Colors.white12, height: 1),
 
           // Reasons
-          ...Get.find<ReelsController>().reportReasons.map((reason) => RadioListTile<String>(
-            value: reason,
+          RadioGroup<String>(
             groupValue: _selectedReason,
-            onChanged: (val) =>  setState(() => _selectedReason = val),
-            title: Text(reason,
-                style: AppTextStyles.caption),
-            activeColor: Colors.white,
-            dense: true)),
+            onChanged: (val) {
+              setState(() {
+                _selectedReason = val;
+              });
+            },
+            child: Column(
+              children: Get.find<ReelsController>().reportReasons.map((reason) {
+                return RadioListTile<String>(
+                  value: reason,
+                  title: Text(reason, style: AppTextStyles.caption),
+                  activeColor: Colors.white,
+                  dense: true,
+                );
+              }).toList(),
+            ),
+          ),
 
           // Submit button
           Padding(

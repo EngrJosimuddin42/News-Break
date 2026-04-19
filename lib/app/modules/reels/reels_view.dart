@@ -233,22 +233,18 @@ class _ReelsViewState extends State<ReelsView> {
                   const SizedBox(width: 32),
                   Obx(() {
                     final currentReel = controller.reelsList[index];
-                    final bool isFollowing = currentReel.isFollowing ?? false;
                     return GestureDetector(
                       onTap: () => controller.toggleFollow(currentReel),
-                      child: isFollowing
+                      child: currentReel.isFollowing
                           ? Text(
                         'Following',
-                        style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFFC4C4C4)),
-                      )
+                        style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFFC4C4C4)))
                           : Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
                           color: const Color(0xFF3597FA),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text('+ Follow', style: AppTextStyles.buttonOutline),
-                      ),
+                          borderRadius: BorderRadius.circular(8)),
+                        child: Text('+ Follow', style: AppTextStyles.buttonOutline)),
                     );
                   }),
                 ],
@@ -282,8 +278,7 @@ class _ReelsViewState extends State<ReelsView> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text('Write a comment...',
-                    style: AppTextStyles.display.copyWith(color: AppColors.textOnDark),
-                  ),
+                    style: AppTextStyles.display.copyWith(color: AppColors.textOnDark)),
                 ),
               ),
             ),

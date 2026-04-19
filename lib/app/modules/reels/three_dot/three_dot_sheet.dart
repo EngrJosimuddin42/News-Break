@@ -17,8 +17,7 @@ class ThreeDotSheet extends StatelessWidget {
     required this.authorName,
     required this.onShare,
     required this.onSave,
-    required this.onReport,
-  });
+    required this.onReport});
 
   @override
   Widget build(BuildContext context) {

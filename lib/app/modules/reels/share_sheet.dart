@@ -30,8 +30,7 @@ class ShareSheet extends GetView<ReelsController> {
     return Container(
       decoration: const BoxDecoration(
         color: Color(0xFF252525),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -41,9 +40,7 @@ class ShareSheet extends GetView<ReelsController> {
             width: 40, height: 5,
             decoration: BoxDecoration(
               color: Colors.white24,
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
+              borderRadius: BorderRadius.circular(20))),
           const SizedBox(height: 20),
 
           // Header
@@ -55,8 +52,7 @@ class ShareSheet extends GetView<ReelsController> {
                 Text(controller.sendStoryLabel, style: AppTextStyles.caption),
                 IconButton(
                   onPressed: () => Get.back(),
-                  icon: const Icon(Icons.close, color: Colors.white, size: 20),
-                ),
+                  icon: const Icon(Icons.close, color: Colors.white, size: 20)),
               ],
             ),
           ),
@@ -72,9 +68,7 @@ class ShareSheet extends GetView<ReelsController> {
                   child: Image.network(
                     isProfileShare ? reel.userProfileImage : reel.imageUrl,
                     width: 100, height: 100,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                    fit: BoxFit.cover)),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -118,13 +112,12 @@ class ShareSheet extends GetView<ReelsController> {
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                 color:Color(0xFF333333),
-                borderRadius: BorderRadius.circular(12),
-              ),
+                borderRadius: BorderRadius.circular(12)),
               child: ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: _shareOptions.length,
-                separatorBuilder: (_, __) => const Divider(color: Colors.white10, height: 1, indent: 16, endIndent: 16),
+                separatorBuilder: (context, index) => const Divider(color: Colors.white10, height: 1, indent: 16, endIndent: 16),
                 itemBuilder: (context, index) {
                   final option = _shareOptions[index];
                   return ListTile(
@@ -142,8 +135,7 @@ class ShareSheet extends GetView<ReelsController> {
                     onTap: () {
                       controller.onShareOptionTap(reel.id ?? 0, option['label']);
                     },
-                    dense: true,
-                  );
+                    dense: true);
                 },
               ),
             ),

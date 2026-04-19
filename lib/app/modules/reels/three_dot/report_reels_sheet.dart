@@ -5,7 +5,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/reels/reels_controller.dart';
-import '../report_success_widget.dart';
+import '../report_success.dart';
 import 'report_video_sheet.dart';
 
 class ReportReelsSheet extends StatefulWidget {
@@ -31,7 +31,7 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: _step == 0 ? _buildSelectReason() : ReportSuccessWidget( onDone: () => Get.back()),
+      child: _step == 0 ? _buildSelectReason() : ReportSuccess( onDone: () => Get.back()),
     );
   }
 
@@ -65,12 +65,25 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
         const Divider(color: Colors.white12, height: 1),
 
         // Reasons
-        ...Get.find<ReelsController>().reportReasons.map((reason) => RadioListTile<String>(          value: reason,
+        RadioGroup<String>(
           groupValue: _selectedReason,
-          onChanged: (val) => setState(() => _selectedReason = val),
-          title: Text(reason, style:AppTextStyles.caption),
-          activeColor: Colors.white,
-          dense: true)),
+          onChanged: (val) {
+            setState(() {
+              _selectedReason = val;
+            });
+          },
+          child: Column(
+            children: Get.find<ReelsController>().reportReasons.map((reason) {
+              return RadioListTile<String>(
+                value: reason,
+                title: Text(reason, style: AppTextStyles.caption),
+                activeColor: Colors.white,
+                dense: true,
+              );
+            }).toList(),
+          ),
+        ),
+
 
         // Infringing my rights
         ListTile(
@@ -88,8 +101,7 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
               builder: (_) => const ReportVideoSheet(),
             );
           },
-          dense: true,
-        ),
+          dense: true),
 
         // Buttons
         Padding(
@@ -108,9 +120,7 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
                         borderRadius: BorderRadius.circular(8)),
                     padding: const EdgeInsets.symmetric(vertical: 14)),
                   child: Text('Cancel',
-                      style: AppTextStyles.bodySmall.copyWith(color: Color(0xFFC4C4C4))),
-                ),
-              ),
+                      style: AppTextStyles.bodySmall.copyWith(color: Color(0xFFC4C4C4))))),
               const SizedBox(width: 12),
               Expanded(
                 child: ElevatedButton(
@@ -131,9 +141,7 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
                         borderRadius: BorderRadius.circular(8)),
                     padding: const EdgeInsets.symmetric(vertical: 14)),
                   child: Text('Submit',
-                    style:AppTextStyles.bodySmall),
-                ),
-              ),
+                    style:AppTextStyles.bodySmall))),
             ],
           ),
         ),

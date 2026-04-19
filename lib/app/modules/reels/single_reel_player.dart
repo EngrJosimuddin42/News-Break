@@ -27,8 +27,7 @@ class _SingleReelPlayerState extends State<SingleReelPlayer> {
       videoPlayerController: VideoPlayerController.networkUrl(
         Uri.parse(widget.videoUrl),
       ),
-      autoPlay: true,
-    );
+      autoPlay: true);
 
     flickManager.flickVideoManager?.videoPlayerController?.addListener(_onVideoError);
   }
@@ -77,8 +76,7 @@ class _SingleReelPlayerState extends State<SingleReelPlayer> {
         height: double.infinity,
         errorBuilder: (context, error, stackTrace) => Container(
           color: Colors.black,
-          child: const Icon(Icons.error_outline, color: Colors.white24, size: 40),
-        ),
+          child: const Icon(Icons.error_outline, color: Colors.white24, size: 40)),
       );
     }
     return Container(

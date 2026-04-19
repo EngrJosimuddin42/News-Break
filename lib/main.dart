@@ -19,10 +19,10 @@ class MyApp extends StatelessWidget {
       title: 'Newsbreak',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.black,
-        fontFamily: 'Roboto'),
+          scaffoldBackgroundColor: Colors.black,
+          fontFamily: 'Roboto'),
       initialBinding: AppBinding(),
-      initialRoute: AppPages.INITIAL,
+      initialRoute:AppPages.initial,
       getPages: AppPages.routes,
     );
   }

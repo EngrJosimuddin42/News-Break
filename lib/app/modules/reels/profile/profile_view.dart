@@ -3,12 +3,10 @@ import 'package:get/get.dart';
 import 'package:news_break/app/modules/reels/profile/profile_option_sheet.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-
 import '../../../controllers/reels/reels_controller.dart';
 import '../../../models/reel_model.dart';
 import '../../../widgets/app_snackbar.dart';
 import '../full_screen_video_player.dart';
-import '../reels_view.dart';
 import '../share_sheet.dart';
 
 class ProfileView extends StatefulWidget {
@@ -37,7 +35,6 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    final ReelsController controller = Get.find<ReelsController>();
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -45,18 +42,18 @@ class _ProfileViewState extends State<ProfileView> {
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios, color:AppColors.textOnDark,size: 20),
-        ),
+          child: Icon(Icons.arrow_back_ios, color:AppColors.textOnDark,size: 20)),
         actions: [
           GestureDetector(
             onTap: () {
-              ProfileOptionSheet.showOptions(context, widget.user);
+              ProfileOptionSheet.showOptions(context, user: widget.user,onBlockConfirm:
+                  () {},
+                onReportSubmit: (String reason) {},
+              );
             },
             child: const Padding(
               padding: EdgeInsets.only(right: 16),
-              child: Icon(Icons.more_vert, color:AppColors.textOnDark,size: 24),
-            ),
-          ),
+              child: Icon(Icons.more_vert, color:AppColors.textOnDark,size: 24))),
         ],
       ),
       body: ListView(
@@ -71,11 +68,9 @@ class _ProfileViewState extends State<ProfileView> {
                 CircleAvatar(
                   radius: 30,
                   backgroundImage: NetworkImage(widget.user?.userProfileImage ?? ""),
-                  backgroundColor: Colors.grey[800],
-                ),
+                  backgroundColor: Colors.grey[800]),
                 const SizedBox(width: 20),
 
-                // Stats
                 // Stats
                 Expanded(
                   child: Row(
@@ -148,8 +143,8 @@ class _ProfileViewState extends State<ProfileView> {
                         id: widget.user?.id ?? 0,
                         userName: widget.user?.userName ?? "Unknown",
                         userProfileImage: widget.user?.userProfileImage ?? "",
-                        imageUrl: widget.user?.userProfileImage ?? "",
-                      );
+                        imageUrl: widget.user?.userProfileImage ?? "");
+
                       showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
@@ -158,16 +153,14 @@ class _ProfileViewState extends State<ProfileView> {
                           maxWidth: MediaQuery.of(context).size.width),
                           builder: (_) => ShareSheet(
                             reel: reelDataForProfile,
-                            isProfileShare: true,
-                          ),
+                            isProfileShare: true),
                       );
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
                         color: const Color(0xFF1D1D1D),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                        borderRadius: BorderRadius.circular(8)),
                       child: Center(
                         child: Text('Share',
                             style: AppTextStyles.buttonOutline),
@@ -219,16 +212,12 @@ class _ProfileViewState extends State<ProfileView> {
               color:AppColors.surface,
               borderRadius: BorderRadius.circular(60)),
             child: Text('Videos',
-                style:AppTextStyles.overline.copyWith(color: AppColors.background)),
-          ),
-        ),
+                style:AppTextStyles.overline.copyWith(color: AppColors.background)))),
         if (widget.user?.userVideos == null || widget.user!.userVideos.isEmpty)
           const Center(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 40),
-              child: Text("No videos found", style: TextStyle(color: Colors.white)),
-            ),
-          )
+              child: Text("No videos found", style: TextStyle(color: Colors.white))))
         else
         // Grid
         GridView.builder(
@@ -239,8 +228,7 @@ class _ProfileViewState extends State<ProfileView> {
             crossAxisCount: 2,
             crossAxisSpacing: 6,
             mainAxisSpacing: 6,
-            childAspectRatio: 1,
-          ),
+            childAspectRatio: 1),
           itemCount: widget.user?.userVideos.length ?? 0,
           itemBuilder: (_, i) {
             final video = widget.user!.userVideos[i];
@@ -248,8 +236,7 @@ class _ProfileViewState extends State<ProfileView> {
                onTap: () {
                  final ReelsController reelsController = Get.find<ReelsController>();
                  int index = reelsController.reelsList.indexWhere(
-                         (r) => r.id.toString() == video['id'].toString()
-                 );
+                         (r) => r.id.toString() == video['id'].toString());
                  if (index != -1) {
                    reelsController.updatePage(index);
                    Get.back();
@@ -264,7 +251,7 @@ class _ProfileViewState extends State<ProfileView> {
                   child: Image.network(
                     video['imageUrl'] ?? "",
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
+                    errorBuilder: (context, _, _) => Container(
                       color: Colors.grey[900],
                       child: const Icon(Icons.play_circle_outline, color: Colors.white24),
                     ),
@@ -353,8 +340,7 @@ class _ProfileViewState extends State<ProfileView> {
                       onTap: () {
                         final ReelsController controller = Get.find<ReelsController>();
                         int indexInMainList = controller.reelsList.indexWhere(
-                                (reel) => reel.id.toString() == reaction['id'].toString()
-                        );
+                                (reel) => reel.id.toString() == reaction['id'].toString());
 
                         if (indexInMainList != -1) {
                           controller.updatePage(indexInMainList);
@@ -378,15 +364,12 @@ class _ProfileViewState extends State<ProfileView> {
                             alignment: Alignment.centerLeft,
                             decoration: BoxDecoration(
                               color: const Color(0xFF333333),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
+                              borderRadius: BorderRadius.circular(6)),
                             child: Text( reaction['title'] ?? "",
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.textSmall.copyWith(color: AppColors.surface),
-                            ),
-                          ),
-                        ),
+                              style: AppTextStyles.textSmall.copyWith(color: AppColors.surface)))),
+
                         const SizedBox(width: 8),
 
                         ClipRRect(
@@ -398,7 +381,7 @@ class _ProfileViewState extends State<ProfileView> {
                                 width: 64,
                                 height: 48,
                                 fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => Container(
+                                errorBuilder: (context, _, _) => Container(
                                   width: 64, height: 48,
                                   color: Colors.grey[800],
                                 ),
@@ -439,10 +422,8 @@ class _ProfileViewState extends State<ProfileView> {
   Widget _statItem(String count, String label) {
     return Column(
       children: [
-        Text(count,
-            style: AppTextStyles.bodyMedium),
-        Text(label,
-            style:AppTextStyles.overline),
+        Text(count, style: AppTextStyles.bodyMedium),
+        Text(label, style:AppTextStyles.overline),
       ],
     );
   }

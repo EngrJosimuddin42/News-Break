@@ -154,10 +154,12 @@ class ProfileOptionSheet {
   }
 
   static void _showSuccessSheet(BuildContext context) {
+    final navigator = Navigator.of(context);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
       builder: (sheetContext) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         decoration: const BoxDecoration(
@@ -187,9 +189,10 @@ class ProfileOptionSheet {
         ),
       ),
     );
-
     Future.delayed(const Duration(seconds: 2), () {
-      if (Get.isBottomSheetOpen ?? false) Get.back();
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
     });
   }
 

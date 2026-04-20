@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/widgets/app_snackbar.dart';
 import '../../models/comment_model.dart';
 import '../../models/reel_model.dart';
 import '../../modules/me/settings/about/legal_view.dart';
@@ -33,135 +34,6 @@ class ReelsController extends GetxController {
     pageController = PageController(initialPage: currentIndex.value);
     fetchReels();
   }
-
-  void fetchReels() async {
-    try {
-      isLoading(true);
-      await Future.delayed(const Duration(seconds: 2));
-      var dummyData = [
-      ReelModel(
-          id: 1,
-          imageUrl: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800',
-          videoUrl: 'https://www.w3schools.com/html/movie.mp4',
-          userProfileImage: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
-          userName: '@Good Times',
-          description: 'what a Trail!',
-          source: '3month',
-          location: 'Chicago, USA',
-          userSince: 'Mar 2026',
-          totalPosts: '45',
-          totalViews: '12k',
-          totalFollowers: '1.5k',
-          likes: 2500,
-          comments: 3500,
-          shares: 1200,
-          isFollowing: false,
-          isLiked: false,
-        userVideos: [
-          {'id': 'v1','imageUrl': 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400','videoUrl': 'https://www.w3schools.com/html/mov_bbb.mp4', 'title': 'Coding Life', 'views': '2.5k'},
-          {'id': 'v2','imageUrl': 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400','videoUrl': 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', 'title': 'Beautiful Nature', 'views': '1.1k'},
-          {'id': 'v3','imageUrl': 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400','videoUrl': 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4', 'title': 'Morning Walk', 'views': '850'},
-          {'id': 'v4','imageUrl': 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400','videoUrl': 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4', 'title': 'Forest Adventure', 'views': '3.2k'},
-        ],
-        userReactions: [
-          {'id': 'r1','imageUrl': 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=200','videoUrl': 'https://www.w3schools.com/html/movie.mp4', 'title': 'Laptop Review', 'time': 'Tuesday 11:30 AM'},
-          {'id': 'r2','imageUrl': 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200','videoUrl': 'https://www.example.com/video1.mp4', 'title': 'Music Studio', 'time': 'Wednesday 8:00 PM'},
-          {'id': 'r3','imageUrl': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200','videoUrl': 'https://www.example.com/video1.mp4', 'title': 'Profile Portrait', 'time': 'Thursday 4:15 PM'},
-          {'id': 'r4','imageUrl': 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=200','videoUrl': 'https://www.example.com/video1.mp4', 'title': 'Web Development', 'time': 'Monday 9:05 AM'},
-        ],
-      ),
-        ReelModel(
-          id: 2,
-          imageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800',
-          videoUrl:'https://samplelib.com/lib/preview/mp4/sample-5s.mp4',
-          userProfileImage: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=200',
-          userName: 'Aliana',
-          description: 'Discover exclusive content and updates from this creator!',
-          source: '2month',
-          location: 'New York, USA',
-          userSince: 'january 2026',
-          totalPosts: '25',
-          totalViews: '5k',
-          totalFollowers: '2.5k',
-          likes: 1500,
-          comments: 800,
-          shares: 450,
-          isFollowing: true,
-          isLiked: true,
-          userVideos: [
-            {'id': 'v1','imageUrl': 'https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=400','videoUrl': 'https://www.w3schools.com/html/mov_bbb.mp4', 'title': 'Love for animals', 'views': '904'},
-            {'id': 'v2','imageUrl': 'https://images.unsplash.com/photo-1484406566174-9da000fda645?w=400','videoUrl': 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', 'title': ' Dear', 'views': '1024'},
-            {'id': 'v3','imageUrl': 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=400','videoUrl': 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4','title': 'Love for animals', 'views': '570'},
-            {'id': 'v4','imageUrl': 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=400','videoUrl': 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4', 'title': 'Tiger','views': '420'},
-          ],
-          userReactions: [
-            {'id': 'r1','imageUrl': 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=200','videoUrl': 'https://www.w3schools.com/html/movie.mp4', 'title': 'Snake Venom', 'time': 'Friday 5:10 PM'},
-            {'id': 'r2','imageUrl': 'https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=200','videoUrl': 'https://www.example.com/video1.mp4', 'title': 'Animal', 'time': 'Saturday 2:10 PM'},
-            {'id': 'r3','imageUrl': 'https://images.unsplash.com/photo-1484406566174-9da000fda645?w=200','videoUrl': 'https://www.example.com/video1.mp4', 'title': 'Dear','time': 'Monday 10:10 PM'},
-            {'id': 'r4','imageUrl': 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=200','videoUrl': 'https://www.example.com/video1.mp4', 'title': 'Snake ','time': 'sunday 5:10 AM'},
-          ],
-        ),
-      ];
-
-      reelsList.assignAll(dummyData);
-    } finally {
-      isLoading(false);
-    }
-  }
-
-
-  void fetchComments(int reelId) async {
-    try {
-      isCommentsLoading(true);
-      await Future.delayed(const Duration(milliseconds: 500));
-      var dummyComments = [
-        CommentModel(
-          id: 101,
-          userName: 'Joser',
-          location: 'New York',
-          text: 'I wonder if they order that or not',
-          userProfileImage: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
-          likes: 1400,
-          createdAt: '2h',
-        ),
-        CommentModel(
-          id: 102,
-          userName: 'Zayan',
-          location: 'London',
-          text: 'This is a beautiful shot! 🔥',
-          userProfileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200',
-          likes: 850,
-          createdAt: '5h',
-        ),
-      ];
-      commentsList.assignAll(dummyComments);
-    } finally {
-      isCommentsLoading(false);
-    }
-  }
-
-  final List<String> reactions =  ['❤️', '😂', '😮', '😍', '😢', '🔥', '👏', '🙌', '👍', '💯', '✨', '🙏', '😊', '😡', '❤️‍🔥', 'ℹ️'];
-  final List<String> gifImages = [
-    'https://images.unsplash.com/photo-1482961674540-0b0e8363a005?w=200',
-    'https://images.unsplash.com/photo-1484406566174-9da000fda645?w=200',
-    'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200',
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200',
-    'https://images.unsplash.com/photo-1617854818583-09e7f077a156?w=200',
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200',
-    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200',
-    'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=200',
-    'https://images.unsplash.com/photo-1490750967868-88df5691cc13?w=200',
-  ];
-
-  final List<String> reportReasons = [
-    'Abusive or hateful',
-    'Misleading or spam',
-    'Violence or gory',
-    'Sexual Content',
-    'Minor safety',
-    'Dangerous or criminal',
-  ];
-
 
   String formatCount(int count) {
     if (count >= 1000) {
@@ -238,7 +110,7 @@ class ReelsController extends GetxController {
   void copyComment(String text) {
     Clipboard.setData(ClipboardData(text: text));
     Get.back();
-    Get.snackbar('Success', 'Copied to clipboard', snackPosition: SnackPosition.BOTTOM, duration: 1.seconds);
+    AppSnackbar.success(message:'Copied to clipboard');
   }
 
   void onShareOptionTap(int reelId, String platform) async {
@@ -265,10 +137,10 @@ class ReelsController extends GetxController {
   void saveReel(int id) {
     if (savedReels.contains(id)) {
       savedReels.remove(id);
-      Get.snackbar('Removed', 'Removed from saved reels');
+      AppSnackbar.success(message:'Removed from saved reels');
     } else {
       savedReels.add(id);
-      Get.snackbar('Saved', 'Reel saved successfully!');
+      AppSnackbar.success(message: 'Reel saved successfully!');
     }
   }
 
@@ -279,7 +151,7 @@ class ReelsController extends GetxController {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width),
+          maxWidth: MediaQuery.of(context).size.width),
       builder: (context) => ReportReelsSheet(reelId: id),
     );
   }
@@ -314,7 +186,7 @@ class ReelsController extends GetxController {
     reelsList.refresh();
     commentsList.refresh();
     Get.back();
-    Get.snackbar('Blocked', 'Content from $userName hidden');
+    AppSnackbar.success(message:'Content from $userName hidden');
   }
 
   void addComment(int reelId, String text, String? gifUrl) {
@@ -322,13 +194,13 @@ class ReelsController extends GetxController {
     final user = Get.find<AuthController>().user.value;
 
     var newComment = CommentModel(
-      id: DateTime.now().millisecondsSinceEpoch,
-      userName: user?.name ?? 'Guest',
-      location: user?.location ?? 'Online',
-      text: gifUrl ?? text,
-      userProfileImage: user?.profileImageUrl ?? '',
-      likes: 0,
-      createdAt: 'Just now');
+        id: DateTime.now().millisecondsSinceEpoch,
+        userName: user?.name ?? 'Guest',
+        location: user?.location ?? 'Online',
+        text: gifUrl ?? text,
+        userProfileImage: user?.profileImageUrl ?? '',
+        likes: 0,
+        createdAt: 'Just now');
 
     commentsList.insert(0, newComment);
     commentsList.refresh();
@@ -339,4 +211,134 @@ class ReelsController extends GetxController {
       reelsList.refresh();
     }
   }
+
+
+  void fetchReels() async {
+    try {
+      isLoading(true);
+      await Future.delayed(const Duration(seconds: 2));
+      var dummyData = [
+      ReelModel(
+          id: 1,
+          imageUrl: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800',
+          videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+          userProfileImage: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
+          userName: '@Good Times',
+          description: 'what a Trail!',
+          source: '3month',
+          location: 'Chicago, USA',
+          userSince: 'Mar 2026',
+          totalPosts: '45',
+          totalViews: '12k',
+          totalFollowers: '1.5k',
+          likes: 2500,
+          comments: 3500,
+          shares: 1200,
+          isFollowing: false,
+          isLiked: false,
+        userVideos: [
+          {'id': 'v1','imageUrl': 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400','videoUrl': 'https://www.w3schools.com/html/mov_bbb.mp4', 'title': 'Coding Life', 'views': '2.5k'},
+          {'id': 'v2','imageUrl': 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400','videoUrl': 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', 'title': 'Beautiful Nature', 'views': '1.1k'},
+          {'id': 'v3','imageUrl': 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400','videoUrl': 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4', 'title': 'Morning Walk', 'views': '850'},
+          {'id': 'v4','imageUrl': 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400','videoUrl': 'https://samplelib.com/lib/preview/mp4/sample-5s.mp4', 'title': 'Forest Adventure', 'views': '3.2k'},
+        ],
+        userReactions: [
+          {'id': 'r1','imageUrl': 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=200','videoUrl': 'https://www.w3schools.com/html/movie.mp4', 'title': 'Laptop Review', 'time': 'Tuesday 11:30 AM'},
+          {'id': 'r2','imageUrl': 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200','videoUrl': 'https://www.example.com/video1.mp4', 'title': 'Music Studio', 'time': 'Wednesday 8:00 PM'},
+          {'id': 'r3','imageUrl': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200','videoUrl': 'https://www.example.com/video1.mp4', 'title': 'Profile Portrait', 'time': 'Thursday 4:15 PM'},
+          {'id': 'r4','imageUrl': 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=200','videoUrl': 'https://www.example.com/video1.mp4', 'title': 'Web Development', 'time': 'Monday 9:05 AM'},
+        ],
+      ),
+        ReelModel(
+          id: 2,
+          imageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800',
+          videoUrl:'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4',
+          userProfileImage: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=200',
+          userName: 'Aliana',
+          description: 'Discover exclusive content and updates from this creator!',
+          source: '2month',
+          location: 'New York, USA',
+          userSince: 'january 2026',
+          totalPosts: '25',
+          totalViews: '5k',
+          totalFollowers: '2.5k',
+          likes: 1500,
+          comments: 800,
+          shares: 450,
+          isFollowing: true,
+          isLiked: true,
+          userVideos: [
+            {'id': 'v1','imageUrl': 'https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=400','videoUrl': 'https://www.w3schools.com/html/mov_bbb.mp4', 'title': 'Love for animals', 'views': '904'},
+            {'id': 'v2','imageUrl': 'https://images.unsplash.com/photo-1484406566174-9da000fda645?w=400','videoUrl': 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', 'title': ' Dear', 'views': '1024'},
+            {'id': 'v3','imageUrl': 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=400','videoUrl': 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4','title': 'Love for animals', 'views': '570'},
+            {'id': 'v4','imageUrl': 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=400','videoUrl': 'https://samplelib.com/lib/preview/mp4/sample-5s.mp4', 'title': 'Tiger','views': '420'},
+          ],
+          userReactions: [
+            {'id': 'r1','imageUrl': 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=200','videoUrl': 'https://www.w3schools.com/html/movie.mp4', 'title': 'Snake Venom', 'time': 'Friday 5:10 PM'},
+            {'id': 'r2','imageUrl': 'https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=200','videoUrl': 'https://www.example.com/video1.mp4', 'title': 'Animal', 'time': 'Saturday 2:10 PM'},
+            {'id': 'r3','imageUrl': 'https://images.unsplash.com/photo-1484406566174-9da000fda645?w=200','videoUrl': 'https://www.example.com/video1.mp4', 'title': 'Dear','time': 'Monday 10:10 PM'},
+            {'id': 'r4','imageUrl': 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=200','videoUrl': 'https://www.example.com/video1.mp4', 'title': 'Snake ','time': 'sunday 5:10 AM'},
+          ],
+        ),
+      ];
+
+      reelsList.assignAll(dummyData);
+    } finally {
+      isLoading(false);
+    }
+  }
+
+
+  void fetchComments(int reelId) async {
+    try {
+      isCommentsLoading(true);
+      await Future.delayed(const Duration(milliseconds: 500));
+      var dummyComments = [
+        CommentModel(
+          id: 101,
+          userName: 'Joser',
+          location: 'New York',
+          text: 'I wonder if they order that or not',
+          userProfileImage: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
+          likes: 1400,
+          createdAt: '2h',
+        ),
+        CommentModel(
+          id: 102,
+          userName: 'Zayan',
+          location: 'London',
+          text: 'This is a beautiful shot! 🔥',
+          userProfileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200',
+          likes: 850,
+          createdAt: '5h',
+        ),
+      ];
+      commentsList.assignAll(dummyComments);
+    } finally {
+      isCommentsLoading(false);
+    }
+  }
+
+  final List<String> reactions =  ['❤️', '😂', '😮', '😍', '😢', '🔥', '👏', '🙌', '👍', '💯', '✨', '🙏', '😊', '😡', '❤️‍🔥', 'ℹ️'];
+  final List<String> gifImages = [
+    'https://images.unsplash.com/photo-1482961674540-0b0e8363a005?w=200',
+    'https://images.unsplash.com/photo-1484406566174-9da000fda645?w=200',
+    'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200',
+    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200',
+    'https://images.unsplash.com/photo-1617854818583-09e7f077a156?w=200',
+    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200',
+    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200',
+    'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=200',
+    'https://images.unsplash.com/photo-1490750967868-88df5691cc13?w=200',
+  ];
+
+  final List<String> reportReasons = [
+    'Abusive or hateful',
+    'Misleading or spam',
+    'Violence or gory',
+    'Sexual Content',
+    'Minor safety',
+    'Dangerous or criminal',
+  ];
+
 }

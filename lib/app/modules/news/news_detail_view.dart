@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../controllers/home_controller.dart';
+import '../../models/news_model.dart';
+import 'news_bottom_sheets.dart';
 
-// ── News Detail View ─────────────────────────
-class NewsDetailView extends StatelessWidget {
+class NewsDetailView extends GetView<HomeController> {
   const NewsDetailView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final NewsModel news = Get.arguments;
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -14,38 +19,33 @@ class NewsDetailView extends StatelessWidget {
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Get.back(),
-          child: const Icon(Icons.arrow_back_ios,
-              color: Colors.white, size: 18),
+          child: Icon(Icons.arrow_back_ios, color:AppColors.textOnDark, size: 20),
         ),
         title: GestureDetector(
           onTap: () {},
           child: Container(
             height: 36,
             decoration: BoxDecoration(
-              color: const Color(0xFF2C2C2E),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Row(
+              color: const Color(0xFF333333),
+              borderRadius: BorderRadius.circular(8)),
+            child: Row(
               children: [
                 SizedBox(width: 12),
-                Icon(Icons.auto_awesome,
-                    color: Colors.blueAccent, size: 16),
-                SizedBox(width: 6),
-                Text('Ask anything',
-                    style: TextStyle(color: Colors.grey, fontSize: 13)),
+                Image.asset('assets/icons/add.png', width: 20, height: 20),
+                SizedBox(width: 8),
+                Text('Ask anything', style:AppTextStyles.overline),
               ],
             ),
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.bookmark_border, color: Colors.white),
+            icon: Icon(Icons.bookmark_border, color:AppColors.textOnDark,size: 20),
             onPressed: () {},
           ),
           IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
-            onPressed: () => _showMoreSheet(context),
-          ),
+            icon: Icon(Icons.more_vert, color:AppColors.textOnDark,size: 24,),
+    onPressed: () => NewsBottomSheets.showMoreSheet(context, news)),
         ],
       ),
       body: Column(
@@ -54,63 +54,62 @@ class NewsDetailView extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                // Category
-                const Text('Politics',
-                    style: TextStyle(color: Colors.grey, fontSize: 12)),
-                const SizedBox(height: 8),
 
+                // category
+                Text(news.category.toUpperCase(), style: AppTextStyles.small.copyWith(color:AppColors.accentLight)),
+                const SizedBox(height: 8),
                 // Title
-                const Text(
-                  'Lorem ipsum dolor sit amet consectetur. Fames quisque feugiat fermentum dictum nulla netus cras pellentesque.',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    height: 1.3,
-                  ),
-                ),
+                Text(news.title,
+                  style:AppTextStyles.heading),
                 const SizedBox(height: 12),
 
                 // Author + time
-                const Text('By OPINION · 19h',
-                    style: TextStyle(color: Colors.grey, fontSize: 12)),
+                Text('By ${news.author.toUpperCase()} · ${news.timeAgo}',
+                    style: AppTextStyles.overline.copyWith(color: Color(0xFF9C9C9C))),
                 const SizedBox(height: 12),
 
                 // Publisher row
                 Row(
                   children: [
                     CircleAvatar(
-                      radius: 18,
+                      radius: 20,
                       backgroundColor: Colors.grey[800],
-                      child: const Icon(Icons.person,
-                          color: Colors.white, size: 18),
+                      backgroundImage: news.publisherImageUrl.isNotEmpty
+                          ? AssetImage(news.publisherImageUrl)
+                          : null,
+                      child: news.publisherImageUrl.isEmpty
+                          ? Image.asset('assets/icons/person.png',height: 14,width: 14)
+                          : null,
                     ),
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          children: const [
-                            Text('shefinds',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600)),
-                            SizedBox(width: 4),
-                            Icon(Icons.verified,
-                                color: Colors.blue, size: 14),
+                          children: [
+                            Text(news.publisherName,
+                                style:AppTextStyles.bodyMedium),
+                            if (news.isVerified) ...[
+                              const SizedBox(width: 6),
+                              Image.asset('assets/icons/verified.png', width: 20, height: 20),
+                            ],
                           ],
                         ),
                       ],
                     ),
                     const Spacer(),
-                    GestureDetector(
-                      onTap: () {},
-                      child: const Text('Follow',
-                          style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600)),
+                    GetBuilder<HomeController>(
+                      builder: (controller) {
+                        return GestureDetector(
+                          onTap: () => controller.toggleFollow(news),
+                          child: Text(
+                            news.isFollowing ? 'Following' : 'Follow',
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: news.isFollowing ? Colors.grey : AppColors.textGreen,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -120,343 +119,86 @@ class NewsDetailView extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800',
+                    news.imageUrl,
                     width: double.infinity,
                     height: 200,
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) => Container(
                       height: 200,
                       color: Colors.grey[800],
+                      child: const Icon(Icons.image, color: Colors.grey),
                     ),
                   ),
                 ),
-                const SizedBox(height: 6),
-                const Text('Joe sussman / Shutterstock.com',
-                    style: TextStyle(color: Colors.grey, fontSize: 10)),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
 
-                // Second image
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-                    width: double.infinity,
-                    height: 160,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      height: 160,
-                      color: Colors.grey[800],
+                if (news.imageCaption != null && news.imageCaption.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(news.imageCaption, style: AppTextStyles.overline.copyWith(color: const Color(0xFF9C9C9C)))),
+                const SizedBox(height: 16),
+
+                // Body text
+                if (news.secondaryImageUrl != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(news.secondaryImageUrl!),
                     ),
                   ),
-                ),
-                const SizedBox(height: 80),
+                Text( news.body,style: AppTextStyles.caption),
               ],
             ),
           ),
 
           // Bottom bar
           Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: const BoxDecoration(
               color: Colors.black,
-              border: Border(
-                  top: BorderSide(color: Colors.white12)),
             ),
             child: Row(
               children: [
-                // Comment input
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => _showCreateAccountSheet(context),
+                      onTap: () => NewsBottomSheets.showCreateAccountSheet(context),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2C2C2E),
-                        borderRadius: BorderRadius.circular(20),
+                        color: const Color(0xFF333333),
+                        borderRadius: BorderRadius.circular(48),
                       ),
-                      child: const Text('Write a comment',
-                          style: TextStyle(
-                              color: Colors.grey, fontSize: 13)),
-                    ),
-                  ),
-                ),
+                      child:Text('Write a comment', style:AppTextStyles.overline)))),
                 const SizedBox(width: 16),
 
-                // Like
-                Row(
-                  children: const [
-                    Icon(Icons.thumb_up_outlined,
-                        color: Colors.grey, size: 18),
-                    SizedBox(width: 4),
-                    Text('1.4K',
-                        style:
-                        TextStyle(color: Colors.grey, fontSize: 12)),
-                  ],
-                ),
-                const SizedBox(width: 16),
-
-                // Comment
-                Row(
-                  children: const [
-                    Icon(Icons.chat_bubble_outline,
-                        color: Colors.grey, size: 18),
-                    SizedBox(width: 4),
-                    Text('4k',
-                        style:
-                        TextStyle(color: Colors.grey, fontSize: 12)),
-                  ],
-                ),
-                const SizedBox(width: 16),
-
-                // Share
-                Row(
-                  children: const [
-                    Icon(Icons.share_outlined,
-                        color: Colors.grey, size: 18),
-                    SizedBox(width: 4),
-                    Text('Share',
-                        style:
-                        TextStyle(color: Colors.grey, fontSize: 12)),
-                  ],
-                ),
-              ],
+                  // Like, Comment, Share Action Buttons
+                   _actionItem(Icons.thumb_up_outlined, news.likes, () => controller.onLikePressed(news)),
+                   const SizedBox(width: 16),
+                  _actionItem(null, news.comments, () => controller.onCommentPressed(news), asset: 'assets/icons/comment.png'),
+                  const SizedBox(width: 16),
+                   _actionItem(null, 'Share', () => controller.onSharePressed(news), asset: 'assets/icons/share.png'),
+               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
+          SizedBox(height: 32)
+         ]
+         ),
+        );
+       }
 
-  // ── Create Account Sheet ───────────────────
-  void _showCreateAccountSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: const Color(0xFF2C2C2E),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Close
-            Align(
-              alignment: Alignment.topRight,
-              child: GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: const Icon(Icons.close,
-                    color: Colors.white, size: 20),
-              ),
-            ),
-            const SizedBox(height: 8),
-
-            // Logo
-            Container(
-              width: 48, height: 48,
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(Icons.newspaper,
-                  color: Colors.white, size: 28),
-            ),
-            const SizedBox(height: 12),
-
-            const Text('Create an account',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700)),
-            const SizedBox(height: 4),
-            const Text('Log in or sign up to comment',
-                style: TextStyle(color: Colors.grey, fontSize: 13)),
-            const SizedBox(height: 24),
-
-            // Facebook
-            _socialBtn(
-              icon: Icons.facebook,
-              iconColor: const Color(0xFF1877F2),
-              label: 'Continue with Facebook',
-              onTap: () => Navigator.pop(context),
-            ),
-            const SizedBox(height: 12),
-
-            // Google
-            _socialBtn(
-              icon: Icons.g_mobiledata,
-              iconColor: Colors.red,
-              label: 'Continue with Google',
-              onTap: () => Navigator.pop(context),
-            ),
-
-            const SizedBox(height: 16),
-            const Icon(Icons.keyboard_arrow_down,
-                color: Colors.grey, size: 24),
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _socialBtn({
-    required IconData icon,
-    required Color iconColor,
-    required String label,
-    required VoidCallback onTap,
-  }) {
+  Widget _actionItem(IconData? icon, String label, VoidCallback onTap, {String? asset}) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white24),
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: iconColor, size: 22),
-            const SizedBox(width: 10),
-            Text(label,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ── More Options Sheet ─────────────────────
-  void _showMoreSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (_) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Card 1 — Save, Share, Short Post
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFF2C2C2E),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _iconAction(Icons.bookmark_border, 'Save', () {}),
-                    _iconAction(Icons.share_outlined, 'Share', () {}),
-                    _iconAction(
-                        Icons.edit_outlined, 'Short Post', () {}),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              // Card 2 — options
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFF2C2C2E),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Column(
-                  children: [
-                    _optionTile(
-                      icon: Icons.block,
-                      iconColor: Colors.white,
-                      label: 'Block cource: better america',
-                      onTap: () => Navigator.pop(context),
-                    ),
-                    const Divider(color: Colors.white12, height: 1),
-                    _optionTile(
-                      icon: Icons.flag_outlined,
-                      iconColor: Colors.red,
-                      label: 'Report',
-                      labelColor: Colors.red,
-                      onTap: () => Navigator.pop(context),
-                    ),
-                    const Divider(color: Colors.white12, height: 1),
-                    _optionTile(
-                      icon: Icons.flag_circle_outlined,
-                      iconColor: Colors.red,
-                      label: 'Report Ad',
-                      labelColor: Colors.red,
-                      onTap: () => Navigator.pop(context),
-                    ),
-                    const Divider(color: Colors.white12, height: 1),
-                    _optionTile(
-                      icon: Icons.block_outlined,
-                      iconColor: Colors.red,
-                      label: 'Try Ad-free',
-                      labelColor: Colors.red,
-                      onTap: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              // Card 3 — Ask/request
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFF2C2C2E),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: _optionTile(
-                  icon: Icons.auto_fix_high,
-                  iconColor: Colors.blueAccent,
-                  label: 'Ask/request/report anything',
-                  onTap: () => Navigator.pop(context),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _iconAction(
-      IconData icon, String label, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
+      child: Row(
         children: [
-          Icon(icon, color: Colors.white, size: 24),
-          const SizedBox(height: 4),
-          Text(label,
-              style:
-              const TextStyle(color: Colors.white, fontSize: 11)),
+          asset != null
+              ? Image.asset(asset, width: 20, height: 20, color: Colors.white)
+              : Icon(icon, color: Colors.white, size: 20),
+          const SizedBox(width: 4),
+          Text(label, style: AppTextStyles.labelMedium),
         ],
       ),
-    );
-  }
-
-  Widget _optionTile({
-    required IconData icon,
-    Color iconColor = Colors.white,
-    required String label,
-    Color labelColor = Colors.white,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      leading: Icon(icon, color: iconColor, size: 20),
-      title: Text(label,
-          style: TextStyle(color: labelColor, fontSize: 14)),
-      onTap: onTap,
-      dense: true,
     );
   }
 }

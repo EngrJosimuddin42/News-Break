@@ -4,8 +4,7 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../../controllers/auth_controller.dart';
 import '../../../../controllers/home_controller.dart';
 import '../../../../theme/app_colors.dart';
-import 'category_news_card.dart';
-
+import '../category_news_card.dart';
 
 class LocalTab extends GetView<HomeController> {
   final String message;
@@ -15,44 +14,18 @@ class LocalTab extends GetView<HomeController> {
     this.message = 'No relevant articles',
   });
 
-  static const List<CategoryNewsItem> _items = [
-    CategoryNewsItem(
-      publisherName: 'Daily news',
-      publisherType: 'Partner publisher',
-      followerCount: '833.3K',
-      imageUrl: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800',
-      videoUrl: 'https://www.youtube.com/watch?v=haqbBspQFS0',
-      label: 'New York',
-      timeAgo: '19h',
-      title: "'The View' Fans Think Whoopi Goldberg Has 'Lost Her Mind' After She Suggests Donald Trump's Iran War Is A Distraction From Nancy Guthrie...",
-      reactions: '1.4K',
-      likes: '1.4K',
-      comments: '4K',
-    ),
-    CategoryNewsItem(
-      publisherName: 'Daily news',
-      publisherType: 'Partner publisher',
-      followerCount: '833.3K',
-      imageUrl: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800',
-      videoUrl: 'https://www.youtube.com/watch?v=9bZkp7q19f0',
-      label: 'New York',
-      timeAgo: '2h',
-      title: 'Local TV Coverage: Major Event Unfolds Across the City as Thousands Gather for Historic Moment',
-      reactions: '2.1K',
-      likes: '3.4K',
-      comments: '1.8K',
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       final loggedIn = AuthController.to.user.value != null;
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
       return loggedIn ? _buildLoggedIn() : _buildLoggedOut();
     });
   }
 
-  // ── Logged out — existing UI ─────────────────
+  // Logged out
   Widget _buildLoggedOut() {
     return Center(
       child: Column(
@@ -84,7 +57,7 @@ class LocalTab extends GetView<HomeController> {
     );
   }
 
-  // ── Logged in — video news cards ─────────────
+  // Logged in video news cards
   Widget _buildLoggedIn() {
     return ListView(
       padding: const EdgeInsets.only(top: 4, bottom: 16),
@@ -93,7 +66,7 @@ class LocalTab extends GetView<HomeController> {
         _buildWeatherSection(),
 
         // News cards
-        ..._items.map((item) => CategoryNewsCard(item: item)),
+        ...controller.localNews.map((news) => CategoryNewsCard(news: news)),
       ],
     );
   }
@@ -107,7 +80,7 @@ class LocalTab extends GetView<HomeController> {
           // Temperature row
           Row(
             children: [
-              Text('44°F', style: AppTextStyles.displaySmall),
+             Obx(() => Text(controller.currentTemp.value, style: AppTextStyles.displaySmall)),
               const SizedBox(width: 8),
               Image.asset('assets/icons/weather_cloudy.png'),
               SizedBox(width: 24),
@@ -116,16 +89,16 @@ class LocalTab extends GetView<HomeController> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: _weatherDays.map((day) => Padding(
+                    children: controller.weatherDays.map((data) => Padding(
                       padding: const EdgeInsets.only(left: 12),
                       child: Column(
                         children: [
-                          Text(day['day']!,
+                          Text(data['day']!,
                               style: AppTextStyles.display.copyWith(color: AppColors.textOnDark)),
                           const SizedBox(height: 4),
-                          Image.asset(day['icon']!, width: 20, height: 20),
+                          Image.asset(data['icon']!, width: 20, height: 20),
                           const SizedBox(height: 4),
-                          Text(day['temp']!,
+                          Text(data['temp']!,
                               style: AppTextStyles.display.copyWith(color: AppColors.textOnDark)),
                         ],
                       ),
@@ -153,8 +126,9 @@ class LocalTab extends GetView<HomeController> {
                 children: [
                   Image.asset('assets/icons/weather_storm.png',color: AppColors.textOnDark,height: 20,width: 20),
                   const SizedBox(width: 6),
-                  Text('Rain expected',
-                      style: AppTextStyles.overline),
+                  Obx(() => Text(
+                    '${controller.weatherCondition.value} expected',
+                    style: AppTextStyles.overline)),
                   const SizedBox(width: 6),
                   Icon(Icons.chevron_right, color:AppColors.textOnDark, size: 20),
                 ],
@@ -165,16 +139,6 @@ class LocalTab extends GetView<HomeController> {
       ),
     );
   }
-
-  static const List<Map<String, String>> _weatherDays = [
-    {'day': 'Today', 'icon': 'assets/icons/weather_cloudy.png', 'temp': '30°/40°'},
-    {'day': '04/11', 'icon': 'assets/icons/weather_sunny.png', 'temp': '30°/40°'},
-    {'day': '04/10', 'icon': 'assets/icons/weather_sunny.png', 'temp': '30°/40°'},
-    {'day': '04/09', 'icon': 'assets/icons/weather_storm.png', 'temp': '30°/40°'},
-    {'day': '04/08', 'icon': 'assets/icons/weather_sunny.png', 'temp': '30°/40°'},
-    {'day': '04/07', 'icon': 'assets/icons/weather_sunny.png', 'temp': '30°/40°'},
-    {'day': '04/06', 'icon': 'assets/icons/weather_storm.png', 'temp': '30°/40°'},
-  ];
 
   void _showRainForecast() {
     showDialog(
@@ -203,8 +167,8 @@ class LocalTab extends GetView<HomeController> {
                   Text('Rain Forecast',
                       style: AppTextStyles.button),
                   const SizedBox(height: 6),
-                  Text('The probability of precipitation is 71%',
-                      style: AppTextStyles.labelMedium),
+                  Obx(() => Text('The probability of precipitation is ${controller.rainProbability.value}',
+                    style: AppTextStyles.labelMedium)),
                   const SizedBox(height: 16),
 
                   // Chart
@@ -212,13 +176,13 @@ class LocalTab extends GetView<HomeController> {
                     height: 250,
                     padding: const EdgeInsets.fromLTRB(20, 70, 20, 50),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFFEBEBEB)),
+                      border: Border.all(color: const Color(0xFFEBEBEB)),
                       borderRadius: BorderRadius.circular(14),
                     ),
-                    child: CustomPaint(
+                    child: Obx(() => CustomPaint(
                       size: Size.infinite,
-                      painter: _RainChartPainter(),
-                    ),
+                      painter: _RainChartPainter(data: controller.rainBarData),
+                    )),
                   ),
                 ],
               ),
@@ -229,10 +193,16 @@ class LocalTab extends GetView<HomeController> {
 }
 
 class _RainChartPainter extends CustomPainter {
+  final List<double> data;
+
+  _RainChartPainter({required this.data});
+
   @override
   void paint(Canvas canvas, Size size) {
-    final barPaint = Paint() ..color = AppColors.chart;
-    final gridPaint = Paint() ..color = AppColors.stroke
+    final barPaint = Paint()
+      ..color = AppColors.chart;
+    final gridPaint = Paint()
+      ..color = AppColors.stroke
       ..strokeWidth = 1;
 
 // Grid lines
@@ -249,14 +219,14 @@ class _RainChartPainter extends CustomPainter {
     }
 
     // Bars
-    final barData = [0.06, 0.02, 0.04, 0.03, 0.08, 0.02, 0.05];
-    final double spacing = size.width / (barData.length);
+    final double spacing = size.width / (data.length);
     const barWidth = 18.0;
 
-    for (int i = 0; i < barData.length; i++) {
+    for (int i = 0; i < data.length; i++) {
       final x = (i * spacing) + (spacing / 2) - (barWidth / 2);
-      final barHeight = size.height * (barData[i] / 0.08);
-      final rect = Rect.fromLTWH(x, size.height - barHeight, barWidth, barHeight);
+      final barHeight = size.height * (data[i] / 0.08);
+      final rect = Rect.fromLTWH(
+          x, size.height - barHeight, barWidth, barHeight);
       canvas.drawRRect(
         RRect.fromRectAndRadius(rect, const Radius.circular(4)),
         barPaint,
@@ -269,8 +239,9 @@ class _RainChartPainter extends CustomPainter {
     for (int i = 0; i < labels.length; i++) {
       final xPos = i * (size.width / (labels.length - 1));
       final tp = TextPainter(
-        text: TextSpan(text: labels[i], style: labelStyle),
-        textDirection: TextDirection.ltr)..layout();
+          text: TextSpan(text: labels[i], style: labelStyle),
+          textDirection: TextDirection.ltr)
+        ..layout();
       double xOffset = xPos - (tp.width / 2);
       if (i == 0) xOffset = 0;
       if (i == labels.length - 1) xOffset = size.width - tp.width;
@@ -279,13 +250,15 @@ class _RainChartPainter extends CustomPainter {
 
 
     // Y labels
-    final yStyle = AppTextStyles.labelSmall.copyWith(color: const Color(0xFF9291A5));
+    final yStyle = AppTextStyles.labelSmall.copyWith(
+        color: const Color(0xFF9291A5));
     final yLabels = {'in': 0.0, '0.07': size.height * (0.08 / 0.08)};
     yLabels.forEach((text, yPos) {
       final tp = TextPainter(
         text: TextSpan(text: text, style: yStyle),
         textDirection: TextDirection.ltr,
-      )..layout();
+      )
+        ..layout();
 
       if (text == 'in') {
         tp.paint(canvas, const Offset(0, -55));
@@ -297,15 +270,16 @@ class _RainChartPainter extends CustomPainter {
     // Date label on tallest bar
     final dateLabel = '04/02';
     final dateTp = TextPainter(
-      text: TextSpan(
-        text: dateLabel,
-        style: const TextStyle(color: Colors.white, fontSize: 9)),
-      textDirection: TextDirection.ltr)..layout();
+        text: TextSpan(
+            text: dateLabel,
+            style: const TextStyle(color: Colors.white, fontSize: 9)),
+        textDirection: TextDirection.ltr)
+      ..layout();
     final tallestIndex = 4; // 0.08 value
-    final tallestX = tallestIndex * (size.width / barData.length) + barWidth / 2;
-    final tallestHeight = size.height * barData[tallestIndex] / 0.08;
-    dateTp.paint(canvas, Offset( tallestX + (barWidth / 2) - (dateTp.width / 2),
-      size.height - tallestHeight - 14));
+    final tallestX = tallestIndex * (size.width / data.length) + barWidth / 2;
+    final tallestHeight = size.height * data[tallestIndex] / 0.08;
+    dateTp.paint(canvas, Offset(tallestX + (barWidth / 2) - (dateTp.width / 2),
+        size.height - tallestHeight - 14));
   }
 
   void _drawDashedLine(Canvas canvas, Offset start, Offset end, Paint paint) {
@@ -327,5 +301,7 @@ class _RainChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _RainChartPainter oldDelegate) {
+    return oldDelegate.data != data;
+  }
 }

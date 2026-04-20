@@ -178,4 +178,10 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     color: AppColors.background,
   );
+
+  static TextStyle get heading => GoogleFonts.inter(
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    color: AppColors.surface,
+  );
 }

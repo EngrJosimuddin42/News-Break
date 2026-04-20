@@ -1,33 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../models/news_model.dart';
+import '../../routes/app_pages.dart';
 import '../../widgets/options_bottom_sheet.dart';
 import 'notification_report_sheet.dart';
 
 class NotificationNewsItem extends StatelessWidget {
-  final String category;
-  final String title;
-  final String source;
-  final String timeAgo;
-  final String imageUrl;
-  final String reactions;
-  final String comments;
-  final String shares;
+  final NewsModel news;
+
 
   const NotificationNewsItem({
     super.key,
-    required this.category,
-    required this.title,
-    required this.source,
-    required this.timeAgo,
-    required this.imageUrl,
-    required this.reactions,
-    required this.comments,
-    required this.shares,
+    required this.news,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(Routes.NEWS_DETAIL, arguments: news);
+      },
+
+      child: Container(
       color: const Color(0xFF2C3C53),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Row(
@@ -38,17 +33,17 @@ class NotificationNewsItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(category,
+                Text(news.category,
                   style: AppTextStyles.labelMedium),
                 const SizedBox(height: 4),
-                Text(title,
+                Text(news.title,
                  style: AppTextStyles.buttonOutline,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  '$source · $timeAgo',
+                  '${news.publisherName} · ${news.timeAgo}',
                   style: AppTextStyles.labelMedium,
                 ),
                 const SizedBox(height: 8),
@@ -64,19 +59,19 @@ class NotificationNewsItem extends StatelessWidget {
                       height: 50,
                     ),
                     const SizedBox(width: 4),
-                    Text(reactions,
+                    Text(news.reactions,
                     style: AppTextStyles.labelSmall.copyWith(color: Color(0xFFAAB6C6))),
                     const SizedBox(width: 8),
                      Text('•',
                         style: AppTextStyles.labelSmall.copyWith(color: Color(0xFFAAB6C6))),
                     const SizedBox(width: 8),
-                    Text('$comments comments',
+                    Text('${news.comments} comments',
                         style: AppTextStyles.labelSmall.copyWith(color: Color(0xFFAAB6C6))),
                     const SizedBox(width: 8),
                     Text('•',
                         style: AppTextStyles.labelSmall.copyWith(color: Color(0xFFAAB6C6))),
                     const SizedBox(width: 8),
-                    Text('$shares shares',
+                    Text('${news.shares} shares',
                         style: AppTextStyles.labelSmall.copyWith(color: Color(0xFFAAB6C6))),
                   ],
                 ),
@@ -92,7 +87,7 @@ class NotificationNewsItem extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  imageUrl,
+                  news.imageUrl,
                   width: 100,
                   height: 70,
                   fit: BoxFit.cover,
@@ -100,6 +95,7 @@ class NotificationNewsItem extends StatelessWidget {
                     width: 100,
                     height: 70,
                     color: Colors.grey[800],
+                    child: const Icon(Icons.image, color: Colors.grey, size: 20),
                   ),
                 ),
               ),
@@ -113,6 +109,7 @@ class NotificationNewsItem extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
   }

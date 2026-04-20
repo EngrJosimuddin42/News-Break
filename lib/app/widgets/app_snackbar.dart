@@ -41,8 +41,8 @@ class AppSnackbar {
 
   //  Preset types
 
-  static void success({required String title, required String message}) {
-    show(title: title,
+  static void success({ required String message}) {
+    show(title: "Success",
       message: message,
       backgroundColor: const Color(0xFF2E7D32),
       icon: const Icon(Icons.check_circle_outline, color: Colors.white, size: 28),

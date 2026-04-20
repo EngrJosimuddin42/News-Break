@@ -1,28 +1,18 @@
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
+import '../../../models/news_model.dart';
+import '../../../routes/app_pages.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 
 class NewsCard extends StatefulWidget {
-  final String publisherName;
-  final String publisherMeta;
-  final String timeAgo;
-  final String title;
-  final String imageUrl;
-  final String likeCount;
-  final String commentCount;
+  final NewsModel news;
   final VoidCallback? onFollow;
   final VoidCallback? onDismiss;
 
   const NewsCard({
     super.key,
-    required this.publisherName,
-    required this.publisherMeta,
-    required this.timeAgo,
-    required this.title,
-    required this.imageUrl,
-    this.likeCount = '1.4K',
-    this.commentCount = '4K',
+    required this.news,
     this.onFollow,
     this.onDismiss,
   });
@@ -36,7 +26,12 @@ class _NewsCardState extends State<NewsCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final news = widget.news;
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(Routes.NEWS_DETAIL, arguments: news);
+      },
+      child: Container(
       color: AppColors.background,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +46,9 @@ class _NewsCardState extends State<NewsCard> {
                 // Avatar
                 ClipOval(
                   child: Image.asset(
-                    'assets/images/publisher.png',
+                    news.publisherImageUrl.isNotEmpty
+                        ? news.publisherImageUrl
+                        : 'assets/images/publisher.png',
                     width: 42,
                     height: 42,
                     fit: BoxFit.cover,
@@ -59,7 +56,7 @@ class _NewsCardState extends State<NewsCard> {
                       radius: 21,
                       backgroundColor: Colors.grey[800],
                       child: Text(
-                        widget.publisherName[0].toUpperCase(),
+                        news.publisherName[0].toUpperCase(),
                         style: const TextStyle(color: Colors.white),
                       ),
                     ),
@@ -75,14 +72,14 @@ class _NewsCardState extends State<NewsCard> {
                       Row(
                         children: [
                           Text(
-                            widget.publisherName,
+                            news.publisherName,
                             style: AppTextStyles.bodyMedium.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            '· ${widget.timeAgo}',
+                            '· ${news.timeAgo}',
                             style: AppTextStyles.bodySmall.copyWith(
                               color: AppColors.textSecondary,
                             ),
@@ -95,7 +92,7 @@ class _NewsCardState extends State<NewsCard> {
                          Image.asset('assets/icons/person.png',height: 14,width: 14),
                           const SizedBox(width: 3),
                           Text(
-                            widget.publisherMeta,
+                            news.publisherMeta,
                             style: AppTextStyles.bodySmall.copyWith(
                               color: AppColors.textSecondary,
                             ),
@@ -136,7 +133,7 @@ class _NewsCardState extends State<NewsCard> {
 
                 // title overflow check
                 final textPainter = TextPainter(
-                  text: TextSpan(text: widget.title, style: textStyle),
+                  text: TextSpan(text: news.title, style: textStyle),
                   maxLines: 1,
                   textDirection: TextDirection.ltr,
                 )..layout(maxWidth: constraints.maxWidth);
@@ -144,18 +141,18 @@ class _NewsCardState extends State<NewsCard> {
                 final isOverflowing = textPainter.didExceedMaxLines;
 
                 if (!isOverflowing) {
-                  return Text(widget.title, style: textStyle);
+                  return Text(news.title, style: textStyle);
                 }
 
                 return GestureDetector(
                   onTap: () => setState(() => _isExpanded = !_isExpanded),
                   child: _isExpanded
-                      ? Text(widget.title, style: textStyle)
+                      ? Text(news.title, style: textStyle)
                       : RichText(
                     text: TextSpan(
                       style: textStyle,
                       children: [
-                        TextSpan(text: widget.title),
+                        TextSpan(text: news.title),
                         TextSpan(
                           text: ' See more',
                           style: textStyle.copyWith(
@@ -177,15 +174,33 @@ class _NewsCardState extends State<NewsCard> {
             padding: const EdgeInsets.symmetric(horizontal: 68),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                widget.imageUrl, // ← change
-                width: double.infinity,
-                height: 220,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  height: 220,
-                  color: Colors.grey[900],
-                ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Image.network(
+                    news.imageUrl,
+                    width: double.infinity,
+                    height: 220,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      height: 220,
+                      color: Colors.grey[900],
+                    ),
+                  ),
+                  if (news.videoUrl != null && news.videoUrl!.isNotEmpty)
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        color: Colors.black45,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.play_arrow_rounded,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -203,7 +218,7 @@ class _NewsCardState extends State<NewsCard> {
                   ),
                 const SizedBox(width: 6),
                 Text(
-                  widget.likeCount,
+                  news.likes,
                   style: AppTextStyles.bodySmall.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -219,7 +234,7 @@ class _NewsCardState extends State<NewsCard> {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  widget.commentCount,
+                  news.comments,
                   style: AppTextStyles.bodySmall.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -232,6 +247,7 @@ class _NewsCardState extends State<NewsCard> {
           const Divider(color: Colors.white12, height: 1, thickness: 1),
         ],
       ),
+    ),
     );
   }
 }

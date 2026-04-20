@@ -8,6 +8,8 @@ class UserModel {
   final String? birthYear;
   final String? profileImageUrl;
   final String? location;
+  final String? timeAgo;
+  final bool isHighlighted;
 
   UserModel({
     required this.name,
@@ -19,5 +21,7 @@ class UserModel {
     this.birthYear,
     this.profileImageUrl,
     this.location,
+    this.timeAgo, // optional
+    this.isHighlighted = false,
   });
 }

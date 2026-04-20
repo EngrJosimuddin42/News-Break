@@ -1,46 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../models/news_model.dart';
+import '../../../routes/app_pages.dart';
 
-class CategoryNewsItem {
-  final String publisherName;
-  final String publisherType;
-  final String followerCount;
-  final String imageUrl;
-  final String? videoUrl;
-  final String label;
-  final String timeAgo;
-  final String title;
-  final String reactions;
-  final String likes;
-  final String comments;
-  final bool isVerified;
-
-  const CategoryNewsItem({
-    required this.publisherName,
-    required this.publisherType,
-    required this.followerCount,
-    required this.imageUrl,
-    this.videoUrl,
-    required this.label,
-    required this.timeAgo,
-    required this.title,
-    required this.reactions,
-    required this.likes,
-    required this.comments,
-    this.isVerified = true,
-  });
-}
 
 class CategoryNewsCard extends StatelessWidget {
-  final CategoryNewsItem item;
+  final NewsModel news;
 
-  const CategoryNewsCard({super.key, required this.item});
+  const CategoryNewsCard({super.key, required this.news});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(Routes.NEWS_DETAIL, arguments: news);
+      },
+      child:  Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: AppColors.background,
@@ -55,18 +33,19 @@ class CategoryNewsCard extends StatelessWidget {
             child: Row(
               children: [
                 ClipOval(
-                  child: Image.asset('assets/images/publisher.png',
+                  child: Image.asset(
+                    news.publisherImageUrl,
                     width: 42,
                     height: 42,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) =>
-                        CircleAvatar(
-                          radius: 21,
-                          backgroundColor: Colors.grey[800],
-                          child: Text(item.publisherName[0].toUpperCase(),
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
+                    errorBuilder: (_, __, ___) => CircleAvatar(
+                      radius: 21,
+                      backgroundColor: Colors.grey[800],
+                      child: Text(
+                        news.publisherName[0].toUpperCase(),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -75,21 +54,19 @@ class CategoryNewsCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        children: [Text(item.publisherName,
-                          style: AppTextStyles.bodyMedium,
-                        ),
-                          if (item.isVerified) ...[
-                            const SizedBox(width: 4),
-                            Image.asset('assets/icons/verified.png',
-                              width: 20,
-                              height: 20,
-                            ),
+                        children: [
+                          Text(
+                            news.publisherName,
+                            style: AppTextStyles.bodyMedium,
+                          ),
+                          if (news.isVerified) ...[
+                            const SizedBox(width: 6),
+                            Image.asset('assets/icons/verified.png', width: 20, height: 20),
                           ],
                         ],
                       ),
                       Text(
-                        '${item.publisherType} · ${item
-                            .followerCount} followers',
+                        '${news.publisherType ?? ""} · ${news.totalFollowers ?? "0"} followers',
                         style: AppTextStyles.overline.copyWith(
                             color: AppColors.textTertiary),
                       ),
@@ -120,10 +97,10 @@ class CategoryNewsCard extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
             child: Row(
               children: [
-                Text(item.label,
+                Text(news.category,
                   style: AppTextStyles.overline,
                 ),
-                Text(' · ${item.timeAgo}',
+                Text(' · ${news.timeAgo}',
                   style: AppTextStyles.labelSmall,
                 ),
               ],
@@ -133,7 +110,7 @@ class CategoryNewsCard extends StatelessWidget {
           // Title
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
-            child: Text(item.title,
+            child: Text(news.title,
               style: AppTextStyles.buttonOutline,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
@@ -148,14 +125,14 @@ class CategoryNewsCard extends StatelessWidget {
                 Image.asset('assets/icons/reactions.png',
                     width: 50, height: 20),
                 const SizedBox(width: 4),
-                Text(item.reactions,
+                Text(news.reactions,
                     style: AppTextStyles.labelMedium),
                 const SizedBox(width: 60),
                 Row(children: [
                   Image.asset('assets/icons/like.png',
                       width: 20, height: 20),
                   const SizedBox(width: 4),
-                  Text(item.likes,
+                  Text(news.likes,
                       style: AppTextStyles.labelMedium),
                 ]),
                 const SizedBox(width: 16),
@@ -163,7 +140,7 @@ class CategoryNewsCard extends StatelessWidget {
                   Image.asset('assets/icons/comment.png',
                       width: 20, height: 20),
                   const SizedBox(width: 4),
-                  Text(item.comments,
+                  Text(news.comments,
                       style: AppTextStyles.labelMedium),
                 ]),
                 const SizedBox(width: 16),
@@ -179,19 +156,20 @@ class CategoryNewsCard extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 
   // ── Media widget ─────────────────────────────
   Widget _buildMedia() {
-    if (item.videoUrl != null) {
+    if (news.videoUrl != null) {
       return AspectRatio(
         aspectRatio: 16 / 9,
         child: Stack(
           children: [
             // Thumbnail image
             Image.network(
-              item.imageUrl,
+              news.imageUrl,
               width: double.infinity,
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) =>
@@ -204,12 +182,12 @@ class CategoryNewsCard extends StatelessWidget {
             ),
 
             // Play/Pause overlay
-            if (item.videoUrl != null)
+            if (news.videoUrl != null)
               Positioned.fill(
                 child: Center(
                   child: GestureDetector(
                     onTap: () async {
-                      final Uri url = Uri.parse(item.videoUrl!);
+                      final Uri url = Uri.parse(news.videoUrl!);
                       if (!await launchUrl(url)) {
 
                       }
@@ -238,9 +216,9 @@ class CategoryNewsCard extends StatelessWidget {
     return ClipRRect(
       child: AspectRatio(
         aspectRatio: 16 / 9,
-        child: item.imageUrl.startsWith('http')
+        child: news.imageUrl.startsWith('http')
             ? Image.network(
-          item.imageUrl,
+          news.imageUrl,
           fit: BoxFit.cover,
           errorBuilder: (_, __, ___) =>
               Container(

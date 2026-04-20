@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../controllers/reels/reels_controller.dart';
 import '../../models/news_model.dart';
+import '../../models/reel_model.dart';
+import '../reels/share_sheet.dart';
 
 class NewsBottomSheets {
   static void showCreateAccountSheet(BuildContext context) {
@@ -52,6 +56,7 @@ class NewsBottomSheets {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (_) => SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
@@ -68,7 +73,24 @@ class NewsBottomSheets {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _iconAction(Icons.bookmark_border, 'Save', () {}),
-                    _iconAction(Icons.share_outlined, 'Share', () {}),
+                    _iconAction(Icons.share_outlined, 'Share', () {
+                      Get.back();
+                      if (!Get.isRegistered<ReelsController>()) {
+                        Get.put(ReelsController());
+                      }
+                      Get.bottomSheet(
+                        ShareSheet(
+                          reel: ReelModel(
+                            id: news.id,
+                            imageUrl: news.imageUrl,
+                            userProfileImage: news.publisherImageUrl,
+                            userName: news.publisherName,
+                            description: news.title,
+                          ),
+                        ),
+                        isScrollControlled: true,
+                      );
+                    }),
                     _iconAction(Icons.edit_outlined, 'Short Post', () {}),
                   ],
                 ),

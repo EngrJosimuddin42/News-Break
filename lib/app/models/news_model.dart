@@ -1,4 +1,5 @@
 class NewsModel {
+  final int id;
   final String category;
   final String title;
   final String author;
@@ -21,6 +22,7 @@ class NewsModel {
   bool isFollowing;
 
    NewsModel({
+     required this.id,
     required this.category,
     required this.title,
     required this.author,

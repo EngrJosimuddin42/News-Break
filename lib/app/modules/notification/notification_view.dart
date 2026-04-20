@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../models/news_model.dart';
 import '../../models/user_model.dart';
 import '../premium/widgets/premium_banner.dart';
 import '../../controllers/notification_controller.dart';
 import 'notification_news_item.dart';
 import 'notification_settings_view.dart';
 
-// ── AppBar ──────────────────────────────────────
+// AppBar
 class NotificationAppBar extends GetView<NotificationController>
     implements PreferredSizeWidget {
   const NotificationAppBar({super.key});
@@ -22,14 +21,12 @@ class NotificationAppBar extends GetView<NotificationController>
     return AppBar(
       backgroundColor: Colors.black,
       title:Text('Notifications',
-       style: AppTextStyles.displaySmall,
-      ),
+       style: AppTextStyles.displaySmall),
       centerTitle: true,
       actions: [
         IconButton(
           icon: const Icon(Icons.settings_outlined, color: Colors.white),
-          onPressed: () => Get.to(() => const NotificationSettingsView()),
-        ),
+          onPressed: () => Get.to(() => const NotificationSettingsView())),
       ],
       bottom: TabBar(
         controller: controller.tabController,
@@ -42,31 +39,20 @@ class NotificationAppBar extends GetView<NotificationController>
         unselectedLabelColor: Colors.grey,
         labelStyle: AppTextStyles.caption,
         unselectedLabelStyle: const TextStyle(fontSize: 14),
-        tabs: NotificationController.tabs.map((t) => Tab(text: t)).toList(),
-      ),
+        tabs: NotificationController.tabs.map((t) => Tab(text: t)).toList()),
     );
   }
 }
 
-// ── Follow Notification Item ─────────────────────
+// Follow Notification Item
 class FollowNotificationItem extends StatelessWidget {
-  final String name;
-  final String avatarUrl;
-  final String timeAgo;
-  final bool isHighlighted;
-
-  const FollowNotificationItem({
-    super.key,
-    required this.name,
-    required this.avatarUrl,
-    required this.timeAgo,
-    this.isHighlighted = false,
-  });
+  final UserModel user;
+  const FollowNotificationItem({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: isHighlighted
+      color: user.isHighlighted
             ? const Color(0xFF2C3C53)
             : Colors.transparent,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -74,22 +60,21 @@ class FollowNotificationItem extends StatelessWidget {
           children: [
           CircleAvatar(
           radius: 24,
-          backgroundImage: NetworkImage(avatarUrl),
-        ),
-        const SizedBox(width: 12),
+            backgroundImage: user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty
+                ? NetworkImage(user.profileImageUrl!)
+                : const AssetImage('assets/images/publisher.png'),
+          ),
+            const SizedBox(width: 12),
         // Text info
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(name,
-                style: AppTextStyles.caption),
+              Text(user.name, style: AppTextStyles.caption),
               const SizedBox(height: 2),
-              Text('Started Following you',
-                style: AppTextStyles.labelSmall.copyWith(color:AppColors.light)),
+              Text('Started Following you', style: AppTextStyles.labelSmall.copyWith(color:AppColors.light)),
               const SizedBox(height: 2),
-              Text(timeAgo,
-                style: AppTextStyles.labelSmall.copyWith(color:AppColors.accentLight)),
+              Text(user.timeAgo ?? 'Just now', style: AppTextStyles.labelSmall.copyWith(color:AppColors.accentLight)),
             ],
           ),
         ),
@@ -99,88 +84,9 @@ class FollowNotificationItem extends StatelessWidget {
   }
 }
 
-// ── Body ────────────────────────────────────────
+//Body
 class NotificationBody extends GetView<NotificationController> {
   const NotificationBody({super.key});
-
-  static  List<NewsModel> _newsItems = [
-  NewsModel(
-      category: 'Breaking News',
-      title: 'FCC chair threatens over Iran war coverage',
-      publisherName: 'USA TODAY',
-      author: 'Hary',
-      publisherMeta: 'Partner publisher',
-      timeAgo: '9h',
-      imageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=200',
-      body: 'Full news content goes here...',
-      likes: '1.4K',
-      reactions: '1.4K',
-      comments: '4.3k',
-      shares: '2.8k',
-    ),
-
-  NewsModel(
-      category: 'Breaking News',
-      title: 'FCC chair threatens over Iran war coverage',
-      publisherName: 'USA TODAY',
-      author: 'Hary',
-      publisherMeta: 'Partner publisher',
-      timeAgo: '9h',
-      imageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=200',
-      body: 'Full news content goes here...',
-      likes: '1.4K',
-      reactions: '1.4K',
-      comments: '4.3k',
-      shares: '2.8k',
-  ),
-  NewsModel(
-      category: 'Breaking News',
-      title: 'FCC chair threatens over Iran war coverage',
-      author: 'John Doe',
-      publisherName: 'BBC News',
-      publisherMeta: 'Global News Network',
-      timeAgo: '9h',
-      imageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=200',
-      body: 'Detailed report on trade policies...',
-      reactions: '900',
-      likes: '1K',
-      comments: '1.2k',
-      shares: '2.8k',
-  ),
-  ];
-
-  // Sample followers data
-  static final List<UserModel> _followItems = [
-   UserModel(
-      name: 'Banny',
-      email: 'banny@example.com',
-      profileImageUrl: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=100',
-      timeAgo: '1h',
-      isHighlighted: true,
-  ),
-    UserModel(
-      name: 'James K.',
-      email: 'james@example.com',
-      profileImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
-      timeAgo: '3h',
-      isHighlighted: false,
-  ),
-   UserModel(
-      name: 'Sophia Lee',
-      email: 'banny@example.com',
-      profileImageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
-      timeAgo: '5h',
-      isHighlighted: false,
-  ),
-   UserModel(
-      name: 'Marcus T.',
-      email: 'james@example.com',
-      profileImageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100',
-      timeAgo: '1d',
-      isHighlighted: false,
-    ),
-  ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -196,25 +102,22 @@ class NotificationBody extends GetView<NotificationController> {
     );
   }
 
-// ── Follows Tab ──────────────────────────────
+// Follows Tab
   Widget _buildFollowsTab() {
-    if (_followItems.isEmpty) return _buildEmptyTab();
+    return Obx(() {
+      if (controller.followItems.isEmpty) return _buildEmptyTab();
 
     return ListView.separated(
-      itemCount: _followItems.length,
+      itemCount: controller.followItems.length,
       separatorBuilder: (_, __) =>
       const Divider(color: Colors.white12, height: 1),
       itemBuilder: (context, index) {
-
-        final user = _followItems[index];
-        return FollowNotificationItem(
-          name: user.name,
-          avatarUrl: user.profileImageUrl ?? '',
-          timeAgo: user.timeAgo ?? '',
-          isHighlighted: user.isHighlighted,
-        );
+        final user = controller.followItems[index];
+        return FollowNotificationItem(user: user);
       },
     );
+  }
+  );
   }
 
 
@@ -225,7 +128,7 @@ class NotificationBody extends GetView<NotificationController> {
 
         // Today Section
         _sectionLabel('Today'),
-        ..._newsItems.take(2).map((model) => Column(
+        ...controller.newsItems.take(2).map((model) => Column(
           children: [
             NotificationNewsItem(news: model),
             const Divider(color: Colors.white12, height: 1),
@@ -234,7 +137,7 @@ class NotificationBody extends GetView<NotificationController> {
 
         // Earlier Section
         _sectionLabel('Earlier'),
-        ..._newsItems.skip(2).map((model) => Column(
+        ...controller.newsItems.skip(2).map((model) => Column(
           children: [
             NotificationNewsItem(news: model),
             const Divider(color: Colors.white12, height: 1),

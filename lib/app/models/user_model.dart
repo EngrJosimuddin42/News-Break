@@ -21,7 +21,7 @@ class UserModel {
     this.birthYear,
     this.profileImageUrl,
     this.location,
-    this.timeAgo, // optional
+    this.timeAgo,
     this.isHighlighted = false,
   });
 }

@@ -149,7 +149,9 @@ class HomeController extends GetxController {
   // Reactions Tab
   final RxList<NewsModel> reactionsNews = <NewsModel>[
      NewsModel(
+       id: 101,
       publisherName: 'shefinds',
+       publisherImageUrl:'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800',
       publisherMeta: 'user · Beverly Hills, CA',
       timeAgo: '6d',
       title: "For seven long years, he served without ever asking for anything in return. His name is Sergeant Diesel...",
@@ -164,6 +166,7 @@ class HomeController extends GetxController {
       isVerified: true,
     ),
      NewsModel(
+       id: 102,
       publisherName: 'ESPN',
       publisherMeta: 'Partner publisher · New York, NY',
       timeAgo: '3h',
@@ -180,6 +183,7 @@ class HomeController extends GetxController {
       isVerified: true,
     ),
     NewsModel(
+      id: 103,
       publisherName: 'BBC News',
       publisherMeta: 'Partner publisher · London, UK',
       timeAgo: '1d',
@@ -195,6 +199,7 @@ class HomeController extends GetxController {
       isVerified: true,
     ),
      NewsModel(
+       id: 104,
       publisherName: 'TechCrunch',
       publisherMeta: 'Partner publisher · San Francisco, CA',
       timeAgo: '5h',
@@ -214,6 +219,7 @@ class HomeController extends GetxController {
   // Local Tab
   final RxList<NewsModel> localNews = <NewsModel>[
     NewsModel(
+      id: 101,
       publisherName: 'Daily news',
       publisherType: 'Partner publisher',
       publisherMeta: 'New York, NY',
@@ -231,6 +237,7 @@ class HomeController extends GetxController {
       isVerified: true,
     ),
      NewsModel(
+       id: 102,
       publisherName: 'Daily news',
       publisherType: 'Partner publisher',
       publisherMeta: 'New York, NY',
@@ -263,6 +270,7 @@ class HomeController extends GetxController {
   // Local Tv Tab
   final RxList<NewsModel> localTvNews = <NewsModel>[
      NewsModel(
+       id: 101,
       publisherName: 'Daily news',
       publisherType: 'Partner publisher',
       publisherMeta: 'New York, NY',
@@ -280,6 +288,7 @@ class HomeController extends GetxController {
       isVerified: true,
     ),
     NewsModel(
+      id: 102,
       publisherName: 'Daily news',
       publisherType: 'Partner publisher',
       publisherMeta: 'New York, NY',
@@ -301,6 +310,7 @@ class HomeController extends GetxController {
 // Beauty Tab
   final RxList<NewsModel> beautyNews = <NewsModel>[
      NewsModel(
+       id: 101,
       publisherName: 'shefinds',
       publisherMeta: 'Partner publisher',
       publisherType: 'Partner publisher',
@@ -316,6 +326,7 @@ class HomeController extends GetxController {
       comments: '4K',
     ),
     NewsModel(
+      id: 102,
       publisherName: 'shefinds',
       publisherMeta: 'Partner publisher',
       publisherType: 'Partner publisher',
@@ -331,6 +342,7 @@ class HomeController extends GetxController {
       comments: '4.6K',
     ),
      NewsModel(
+       id: 103,
       publisherName: 'Allure',
       publisherMeta: 'Partner publisher',
       publisherType: 'Partner publisher',
@@ -346,6 +358,7 @@ class HomeController extends GetxController {
       comments: '6.3K',
     ),
     NewsModel(
+      id: 104,
       publisherName: 'Vogue Beauty',
       publisherMeta: 'Partner publisher',
       publisherType: 'Partner publisher',
@@ -365,6 +378,7 @@ class HomeController extends GetxController {
   // Entertainment Tab
   final RxList<NewsModel> entertainmentNews = <NewsModel>[
      NewsModel(
+       id: 101,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher.',
       publisherMeta: 'Partner publisher.',
@@ -380,6 +394,7 @@ class HomeController extends GetxController {
       comments: '4K',
     ),
     NewsModel(
+      id: 102,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher.',
       publisherMeta: 'Partner publisher.',
@@ -395,6 +410,7 @@ class HomeController extends GetxController {
       comments: '1.8K',
     ),
      NewsModel(
+       id: 103,
       publisherName: 'Variety',
       publisherType: 'Partner publisher.',
       publisherMeta: 'Entertainment Network',
@@ -410,6 +426,7 @@ class HomeController extends GetxController {
       comments: '2.2K',
     ),
     NewsModel(
+      id: 104,
       publisherName: 'Entertainment Weekly',
       publisherType: 'Partner publisher.',
       publisherMeta: 'Media Partner',
@@ -429,6 +446,7 @@ class HomeController extends GetxController {
   // Sports Tab
   final RxList<NewsModel> sportsNews = <NewsModel>[
     NewsModel(
+      id: 101,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher',
       publisherMeta: 'Partner publisher',
@@ -444,6 +462,7 @@ class HomeController extends GetxController {
       comments: '4K',
     ),
      NewsModel(
+       id: 102,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher',
       publisherMeta: 'Partner publisher',
@@ -459,6 +478,7 @@ class HomeController extends GetxController {
       comments: '876',
     ),
      NewsModel(
+       id: 103,
       publisherName: 'ESPN',
       publisherType: 'Partner publisher',
       publisherMeta: 'Global Sports Network',
@@ -474,6 +494,7 @@ class HomeController extends GetxController {
       comments: '7.8K',
     ),
     NewsModel(
+      id: 104,
       publisherName: 'Sports Illustrated',
       publisherType: 'Partner publisher',
       publisherMeta: 'Media Partner',
@@ -493,6 +514,7 @@ class HomeController extends GetxController {
   // Food Tab
   final RxList<NewsModel> foodNews = <NewsModel>[
      NewsModel(
+       id: 101,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher',
       publisherMeta: 'Global Food Network',
@@ -508,6 +530,7 @@ class HomeController extends GetxController {
       comments: '4K',
     ),
      NewsModel(
+       id: 102,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher',
       publisherMeta: 'Partner publisher',
@@ -523,6 +546,7 @@ class HomeController extends GetxController {
       comments: '1.5K',
     ),
     NewsModel(
+      id: 103,
       publisherName: 'Bon Appétit',
       publisherType: 'Partner publisher',
       publisherMeta: 'Partner publisher',
@@ -538,6 +562,7 @@ class HomeController extends GetxController {
       comments: '2.1K',
     ),
     NewsModel(
+      id: 104,
       publisherName: 'Food Network',
       publisherType: 'Partner publisher',
       publisherMeta: 'Top Publisher',
@@ -557,6 +582,7 @@ class HomeController extends GetxController {
   // For You News List
   final RxList<NewsModel> forYouNews = <NewsModel>[
      NewsModel(
+       id: 101,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher.',
       publisherMeta: 'Beverly Hills, CA',
@@ -572,6 +598,7 @@ class HomeController extends GetxController {
       comments: '4K',
     ),
     NewsModel(
+      id: 102,
       publisherName: 'Variety',
       publisherType: 'Partner publisher.',
       publisherMeta: 'Beverly Hills, CA',
@@ -587,6 +614,7 @@ class HomeController extends GetxController {
       comments: '2.2K',
     ),
     NewsModel(
+      id: 103,
       publisherName: 'ESPN',
       publisherType: 'Partner publisher.',
       publisherMeta: 'Los Angeles, CA',
@@ -602,6 +630,7 @@ class HomeController extends GetxController {
       comments: '7.8K',
     ),
     NewsModel(
+      id: 104,
       publisherName: 'Healthline',
       publisherType: 'Partner publisher.',
       publisherMeta: 'New York, NY',
@@ -640,6 +669,7 @@ class HomeController extends GetxController {
   // Health Tab
   final RxList<NewsModel> healthNews = <NewsModel>[
     NewsModel(
+      id: 101,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher',
       publisherMeta: 'Partner publisher',
@@ -655,6 +685,7 @@ class HomeController extends GetxController {
       comments: '4K',
     ),
     NewsModel(
+      id: 102,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher',
       publisherMeta: 'Partner publisher',
@@ -670,6 +701,7 @@ class HomeController extends GetxController {
       comments: '1.9K',
     ),
      NewsModel(
+       id: 103,
       publisherName: 'Healthline',
       publisherType: 'Partner publisher',
       publisherMeta: 'Health Partner',
@@ -685,6 +717,7 @@ class HomeController extends GetxController {
       comments: '3.1K',
     ),
      NewsModel(
+       id: 104,
       publisherName: 'WebMD',
       publisherType: 'Partner publisher',
       publisherMeta: 'Verified Medical News',
@@ -704,6 +737,7 @@ class HomeController extends GetxController {
   // Weather Tab
   final RxList<NewsModel> weatherNews = <NewsModel>[
      NewsModel(
+       id: 101,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher',
       publisherMeta: 'Partner publisher',
@@ -719,6 +753,7 @@ class HomeController extends GetxController {
       comments: '4K',
     ),
      NewsModel(
+       id: 102,
       publisherName: 'Weather Channel',
       publisherType: 'Partner publisher',
       publisherMeta: 'Global Weather Network',
@@ -734,6 +769,7 @@ class HomeController extends GetxController {
       comments: '1.4K',
     ),
     NewsModel(
+      id: 103,
       publisherName: 'AccuWeather',
       publisherType: 'Partner publisher',
       publisherMeta: 'Climate Expert Partner',

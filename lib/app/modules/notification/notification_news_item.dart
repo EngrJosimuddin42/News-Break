@@ -68,15 +68,9 @@ class NotificationNewsItem extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                news.imageUrl,
-                width: 100,
-                height: 70,
+              child: Image.network(news.imageUrl, width: 100, height: 70,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  width: 100,
-                  height: 70,
-                  color: Colors.grey[800],
+                  errorBuilder: (context, error, stackTrace) => Container(width: 100, height: 70, color: Colors.grey[800],
                   child: const Icon(Icons.image, color: Colors.grey, size: 20)))),
 
             if (hasVideo)

@@ -18,10 +18,10 @@ class LocalTab extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final loggedIn = AuthController.to.user.value != null;
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
       }
+      final loggedIn = AuthController.to.user.value != null;
       return loggedIn ? _buildLoggedIn() : _buildLoggedOut();
     });
   }
@@ -67,12 +67,14 @@ class LocalTab extends GetView<HomeController> {
         _buildWeatherSection(),
 
         // News cards
-        ...controller.localNews.map((news) {
-          if (news.publisherType == 'Ad') {
-            return AdVideoCard(news: news);
-          }
-          return CategoryNewsCard(news: news);
-        }),
+        Obx(() => Column(
+          children: controller.localNews.map((news) {
+            if (news.publisherType == 'Ad') {
+              return AdVideoCard(news: news);
+            }
+            return CategoryNewsCard(news: news);
+          }).toList(),
+        )),
       ],
     );
   }
@@ -132,9 +134,9 @@ class LocalTab extends GetView<HomeController> {
                 children: [
                   Image.asset('assets/icons/weather_storm.png',color: AppColors.textOnDark,height: 20,width: 20),
                   const SizedBox(width: 6),
-                  Obx(() => Text(
-                    '${controller.weatherCondition.value} expected',
-                    style: AppTextStyles.overline)),
+                  Obx((){
+                   return Text(
+                    '${controller.weatherCondition.value} expected',style: AppTextStyles.overline);}),
                   const SizedBox(width: 6),
                   Icon(Icons.chevron_right, color:AppColors.textOnDark, size: 20),
                 ],

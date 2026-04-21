@@ -7,7 +7,7 @@ class NewsModel {
   final String publisherName;
   final String publisherMeta;
   final String? publisherType;
-  String totalFollowers;
+  final String? totalFollowers;
   final String publisherImageUrl;
   final String imageUrl;
   final String? secondaryImageUrl;

@@ -11,22 +11,14 @@ import '../../reels/full_screen_video_player.dart';
 
 class CategoryNewsCard extends StatelessWidget {
   final NewsModel news;
-
   const CategoryNewsCard({super.key, required this.news});
 
   @override
   Widget build(BuildContext context) {
     final bool hasVideo = news.videoUrl != null && news.videoUrl!.isNotEmpty;
+    final controller = Get.find<HomeController>();
 
-    return GestureDetector(
-      onTap: () {
-        if (hasVideo) {
-          Get.to(() => FullScreenVideoPlayer(url: news.videoUrl!));
-        } else {
-          Get.toNamed(Routes.NEWS_DETAIL, arguments: news);
-        }
-      },
-      child: Container(
+    return Container(
         margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: AppColors.background,
@@ -35,8 +27,18 @@ class CategoryNewsCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Publisher Header
-            _buildHeader(),
-
+            _buildHeader(controller),
+      GestureDetector(
+        onTap: () {
+          if (hasVideo) {
+            Get.to(() => FullScreenVideoPlayer(url: news.videoUrl!));
+          } else {
+            Get.toNamed(Routes.NEWS_DETAIL, arguments: news);
+          }
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             // Media Section (Image/Video Thumbnail)
             _buildMedia(hasVideo),
 
@@ -55,17 +57,18 @@ class CategoryNewsCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
               child: Text(news.title, style: AppTextStyles.buttonOutline, maxLines: 3, overflow: TextOverflow.ellipsis)),
-
-            // Engagement Row
-            _buildEngagementRow(),
           ],
         ),
       ),
-    );
-  }
+            // Engagement Row
+            _buildEngagementRow(controller),
+          ],
+        ),
+      );
+    }
 
   // Header Widget
-  Widget _buildHeader() {
+  Widget _buildHeader(HomeController controller) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
       child: Row(
@@ -85,16 +88,14 @@ class CategoryNewsCard extends StatelessWidget {
                     ],
                   ],
                 ),
-                Text(
-                  '${news.publisherType ?? ""} · ${news.totalFollowers ?? "0"} followers',
-                  style: AppTextStyles.overline.copyWith(color: AppColors.textTertiary)),
+                Text('${news.publisherType ?? ""} · ${news.totalFollowers ?? "0"} followers', style: AppTextStyles.overline.copyWith(color: AppColors.textTertiary)),
               ],
             ),
           ),
           FollowButton(news: news),
           const SizedBox(width: 16),
           GestureDetector(
-            onTap: () => Get.find<HomeController>().hideNews(news),
+            onTap: () => controller.hideNews(news),
             child: const Icon(Icons.close, color: Color(0xFF6C6C6C), size: 20),
           ),
         ],
@@ -114,7 +115,7 @@ class CategoryNewsCard extends StatelessWidget {
             Image.network(
               news.imageUrl,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
+              errorBuilder: (context, error, stackTrace) => Container(
                 color: Colors.grey.shade900,
                 child: const Icon(Icons.image, color: Colors.white24, size: 48),
               ),
@@ -144,25 +145,36 @@ class CategoryNewsCard extends StatelessWidget {
   }
 
   // Engagement Row Widget
-  Widget _buildEngagementRow() {
+  Widget _buildEngagementRow(HomeController controller) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            children: [ Image.asset('assets/icons/reactions.png', width: 50, height: 20),
+            children: [
+              Image.asset('assets/icons/reactions.png', width: 50, height: 20),
               const SizedBox(width: 4),
               Text(news.reactions, style: AppTextStyles.labelMedium),
             ],
           ),
           Row(
             children: [
-              _engagementItem('assets/icons/like.png', news.likes),
+              Obx(() {
+                final isLiked = controller.isLiked(news.id);
+                return _engagementItem(
+                  isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
+                  news.likes,
+                  onTap: () => controller.onLikePressed(news),
+                  color: isLiked ? Colors.blue : Colors.white,
+                );
+              }),
               const SizedBox(width: 16),
-              _engagementItem('assets/icons/comment.png', news.comments),
+              _engagementItem('assets/icons/comment.png', news.comments,
+                onTap: () => controller.onCommentPressed(news)),
               const SizedBox(width: 16),
-              _engagementItem('assets/icons/share.png', 'Share'),
+              _engagementItem('assets/icons/share.png', 'Share',
+                onTap: () => controller.onSharePressed(news)),
             ],
           ),
         ],
@@ -170,12 +182,17 @@ class CategoryNewsCard extends StatelessWidget {
     );
   }
 
-  Widget _engagementItem(String asset, String label) {
-    return Row(
-      children: [ Image.asset(asset, width: 20, height: 20),
-        const SizedBox(width: 4),
-        Text(label, style: AppTextStyles.labelMedium),
-      ],
+  Widget _engagementItem(String asset, String label, {required VoidCallback onTap, Color color = Colors.white}) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Row(
+        children: [
+          Image.asset(asset, width: 20, height: 20, color: color),
+          const SizedBox(width: 4),
+          Text(label, style: AppTextStyles.labelMedium.copyWith(color: color)),
+        ],
+      ),
     );
   }
 }

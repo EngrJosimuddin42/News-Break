@@ -165,11 +165,17 @@ class NewsDetailView extends GetView<HomeController> {
                         borderRadius: BorderRadius.circular(48),
                       ),
                       child:Text('Write a comment', style:AppTextStyles.overline)))),
-                const SizedBox(width: 16),
+                       const SizedBox(width: 16),
 
                   // Like, Comment, Share Action Buttons
-                   _actionItem(Icons.thumb_up_outlined, news.likes, () => controller.onLikePressed(news)),
-                   const SizedBox(width: 16),
+                Obx(() {
+                  final isLiked = controller.isLiked(news.id);
+                  return _actionItem(
+                    isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+                    news.likes, () => controller.onLikePressed(news),
+                    color: isLiked ? Colors.blue : Colors.white);
+                }),
+                const SizedBox(width: 16),
                   _actionItem(null, news.comments, () => controller.onCommentPressed(news), asset: 'assets/icons/comment.png'),
                   const SizedBox(width: 16),
                    _actionItem(null, 'Share', () => controller.onSharePressed(news), asset: 'assets/icons/share.png'),
@@ -182,18 +188,17 @@ class NewsDetailView extends GetView<HomeController> {
         );
        }
 
-  Widget _actionItem(IconData? icon, String label, VoidCallback onTap, {String? asset}) {
+  Widget _actionItem(IconData? icon, String label, VoidCallback onTap, {String? asset, Color color = Colors.white}) {
     return GestureDetector(
       onTap: onTap,
       child: Row(
         children: [
           asset != null
-              ? Image.asset(asset, width: 20, height: 20, color: Colors.white)
-              : Icon(icon, color: Colors.white, size: 20),
+              ? Image.asset(asset, width: 20, height: 20, color: color)
+              : Icon(icon, color: color, size: 20),
           const SizedBox(width: 4),
-          Text(label, style: AppTextStyles.labelMedium),
+          Text(label, style: AppTextStyles.labelMedium.copyWith(color: color)),
         ],
       ),
     );
-  }
-}
+  }}

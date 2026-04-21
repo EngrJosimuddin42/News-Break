@@ -20,6 +20,9 @@ class HomeController extends GetxController {
 
   final RxInt selectedTabIndex = 0.obs;
   final RxInt selectedNavIndex = 0.obs;
+  final selectedLocation = Rxn<Map<String, String>>();
+  bool isLiked(int id) => likedNewsIds.contains(id);
+  var likedNewsIds = <int>{}.obs;
   var isLoading = false.obs;
   var isHourly = true.obs;
   var currentTemp = "44°F".obs;
@@ -28,23 +31,20 @@ class HomeController extends GetxController {
   var showAd = true.obs;
   final RxList<double> rainBarData = [0.06, 0.02, 0.04, 0.03, 0.08, 0.02, 0.05].obs;
   var chartData = <double>[0.06, 0.02, 0.04, 0.03, 0.08, 0.02, 0.05].obs;
+  String get locationTitle => selectedLocation.value?['city'] ?? 'Choose Your Location';
 
   // Auth check
   bool get isLoggedIn => AuthController.to.user.value != null;
   String get userName => AuthController.to.user.value?.name ?? '';
 
-
-  // Bottom nav
   void onNavTap(int index) {
     selectedNavIndex.value = index;
   }
 
-  // Tab tap
   void onTabTap(int index) {
     selectedTabIndex.value = index;
   }
 
-  // App bar actions
   void onEditTabs() => Get.toNamed(Routes.EDIT_TABS, arguments: tabs);
 
   void onAI() {
@@ -52,8 +52,7 @@ class HomeController extends GetxController {
       context: Get.context!,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => const NBotSheet(),
-    );
+      builder: (_) => const NBotSheet());
   }
 
   void toggleFollow(dynamic item) {
@@ -68,7 +67,6 @@ class HomeController extends GetxController {
     item.totalFollowers = formatCount(currentFollowers);
     update();
   }
-
 
   int _parseStatCount(String count) {
     count = count.toLowerCase().replaceAll(',', '');
@@ -87,32 +85,24 @@ class HomeController extends GetxController {
     return count.toString();
   }
 
-
   void onSearch() => Get.to(() => const SearchView());
 
   void onManageLocation() {
     Get.to(() => const ManageLocationView());
   }
 
-
   void onChooseLocation() {
     showModalBottomSheet(
       context: Get.context!,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => const ChooseLocationSheet(),
-    );
+      builder: (_) => const ChooseLocationSheet());
   }
 
-
-  final selectedLocation = Rxn<Map<String, String>>();
   void setLocation(Map<String, String> location) {
     selectedLocation.value = location;
   }
-  String get locationTitle => selectedLocation.value?['city'] ?? 'Choose Your Location';
 
-
-  // FAB — create post
   void onCreatePost() {
     if (isLoggedIn) {
       Get.toNamed(Routes.CREATE_POST);
@@ -121,13 +111,11 @@ class HomeController extends GetxController {
     }
   }
 
-
   void onFollow(String publisher) {
     if (!isLoggedIn) Get.toNamed(Routes.SIGNIN);
   }
 
   void onDismiss(String publisher) {}
-
 
   void hideNews(NewsModel news) {
     reactionsNews.remove(news);
@@ -147,18 +135,22 @@ class HomeController extends GetxController {
   void onTryAgain() {}
 
 
-
   void onLikePressed(NewsModel news) {
-    AppSnackbar.success(message: 'You liked ${news.title}');
+    if (likedNewsIds.contains(news.id)) {
+      likedNewsIds.remove(news.id);
+    } else {
+      likedNewsIds.add(news.id);
+    }
   }
 
   void onCommentPressed(NewsModel news) {
     AppSnackbar.success(
-      message: 'Opening comments for ${news.publisherName}');
+        message: 'Opening comments for ${news.publisherName}');
   }
 
   void onSharePressed(NewsModel news) async {
-    await Share.share('Check out this news: ${news.title}\nRead more at: ${news.imageUrl}',
+    await Share.share(
+      'Check out this news: ${news.title}\nRead more at: ${news.imageUrl}',
       subject: news.title,
     );
   }
@@ -166,10 +158,10 @@ class HomeController extends GetxController {
 
   // Reactions Tab
   final RxList<NewsModel> reactionsNews = <NewsModel>[
-     NewsModel(
-       id: 101,
+    NewsModel(
+      id: 101,
       publisherName: 'shefinds',
-       publisherImageUrl:'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800',
+      publisherImageUrl: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800',
       publisherMeta: 'user · Beverly Hills, CA',
       timeAgo: '6d',
       title: "For seven long years, he served without ever asking for anything in return. His name is Sergeant Diesel...",
@@ -203,8 +195,8 @@ class HomeController extends GetxController {
       isVerified: true,
       videoUrl: 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
     ),
-     NewsModel(
-       id: 102,
+    NewsModel(
+      id: 102,
       publisherName: 'ESPN',
       publisherMeta: 'Partner publisher · New York, NY',
       timeAgo: '3h',
@@ -236,8 +228,8 @@ class HomeController extends GetxController {
       author: 'Global Team',
       isVerified: true,
     ),
-     NewsModel(
-       id: 104,
+    NewsModel(
+      id: 104,
       publisherName: 'TechCrunch',
       publisherMeta: 'Partner publisher · San Francisco, CA',
       timeAgo: '5h',
@@ -259,7 +251,7 @@ class HomeController extends GetxController {
     NewsModel(
       id: 101,
       publisherName: 'Daily news',
-      publisherImageUrl:'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800',
+      publisherImageUrl: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800',
       publisherType: 'Partner publisher',
       publisherMeta: 'New York, NY',
       totalFollowers: '833.3K',
@@ -275,12 +267,12 @@ class HomeController extends GetxController {
       comments: '4K',
       isVerified: true,
     ),
-     NewsModel(
-       id: 102,
+    NewsModel(
+      id: 102,
       publisherName: 'Daily news',
       publisherType: 'Partner publisher',
       publisherMeta: 'New York, NY',
-       totalFollowers: '833.3K',
+      totalFollowers: '833.3K',
       imageUrl: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800',
       category: 'New York',
       author: 'News Team',
@@ -296,25 +288,52 @@ class HomeController extends GetxController {
 
   // Extended Daily Weather
   final RxList<Map<String, String>> weatherDays = <Map<String, String>>[
-    {'day': 'Today', 'icon': 'assets/icons/weather_cloudy.png', 'temp': '30°/40°'},
-    {'day': '04/11', 'icon': 'assets/icons/weather_sunny.png', 'temp': '30°/40°'},
-    {'day': '04/10', 'icon': 'assets/icons/weather_sunny.png', 'temp': '30°/40°'},
-    {'day': '04/09', 'icon': 'assets/icons/weather_storm.png', 'temp': '30°/40°'},
-    {'day': '04/08', 'icon': 'assets/icons/weather_sunny.png', 'temp': '30°/40°'},
-    {'day': '04/07', 'icon': 'assets/icons/weather_sunny.png', 'temp': '30°/40°'},
-    {'day': '04/06', 'icon': 'assets/icons/weather_storm.png', 'temp': '30°/40°'},
+    {
+      'day': 'Today',
+      'icon': 'assets/icons/weather_cloudy.png',
+      'temp': '30°/40°'
+    },
+    {
+      'day': '04/11',
+      'icon': 'assets/icons/weather_sunny.png',
+      'temp': '30°/40°'
+    },
+    {
+      'day': '04/10',
+      'icon': 'assets/icons/weather_sunny.png',
+      'temp': '30°/40°'
+    },
+    {
+      'day': '04/09',
+      'icon': 'assets/icons/weather_storm.png',
+      'temp': '30°/40°'
+    },
+    {
+      'day': '04/08',
+      'icon': 'assets/icons/weather_sunny.png',
+      'temp': '30°/40°'
+    },
+    {
+      'day': '04/07',
+      'icon': 'assets/icons/weather_sunny.png',
+      'temp': '30°/40°'
+    },
+    {
+      'day': '04/06',
+      'icon': 'assets/icons/weather_storm.png',
+      'temp': '30°/40°'
+    },
   ].obs;
 
   // Local Tv Tab
   final RxList<NewsModel> localTvNews = <NewsModel>[
-     NewsModel(
-       id: 101,
+    NewsModel(
+      id: 101,
       publisherName: 'Daily news',
       publisherType: 'Partner publisher',
       publisherMeta: 'New York, NY',
       totalFollowers: '833.3K',
       imageUrl: 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800',
-      videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       category: 'New York',
       author: 'Local Desk',
       timeAgo: '19h',
@@ -332,7 +351,6 @@ class HomeController extends GetxController {
       publisherMeta: 'New York, NY',
       totalFollowers: '833.3K',
       imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
-      videoUrl: 'https://www.youtube.com/watch?v=Kjf7hlxfPn4',
       category: 'New York',
       author: 'News Team',
       timeAgo: '2h',
@@ -347,12 +365,12 @@ class HomeController extends GetxController {
 
 // Beauty Tab
   final RxList<NewsModel> beautyNews = <NewsModel>[
-     NewsModel(
-       id: 101,
+    NewsModel(
+      id: 101,
       publisherName: 'shefinds',
       publisherMeta: 'Partner publisher',
       publisherType: 'Partner publisher',
-       totalFollowers: '833.3K',
+      totalFollowers: '833.3K',
       imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800',
       category: 'OPINION',
       author: 'Shefinds Staff',
@@ -379,12 +397,12 @@ class HomeController extends GetxController {
       likes: '8.2K',
       comments: '4.6K',
     ),
-     NewsModel(
-       id: 103,
+    NewsModel(
+      id: 103,
       publisherName: 'Allure',
       publisherMeta: 'Partner publisher',
       publisherType: 'Partner publisher',
-       totalFollowers: '2.1M',
+      totalFollowers: '2.1M',
       imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800',
       category: 'SKINCARE',
       author: 'Beauty Desk',
@@ -415,12 +433,12 @@ class HomeController extends GetxController {
 
   // Entertainment Tab
   final RxList<NewsModel> entertainmentNews = <NewsModel>[
-     NewsModel(
-       id: 101,
+    NewsModel(
+      id: 101,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher.',
       publisherMeta: 'Partner publisher.',
-       totalFollowers: '833.3K',
+      totalFollowers: '833.3K',
       imageUrl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800',
       category: 'OPINION',
       author: 'Hollywood Desk',
@@ -467,12 +485,12 @@ class HomeController extends GetxController {
       likes: '2.1K',
       comments: '1.8K',
     ),
-     NewsModel(
-       id: 103,
+    NewsModel(
+      id: 103,
       publisherName: 'Variety',
       publisherType: 'Partner publisher.',
       publisherMeta: 'Entertainment Network',
-       totalFollowers: '1.2M',
+      totalFollowers: '1.2M',
       imageUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800',
       category: 'MUSIC',
       author: 'Staff',
@@ -519,12 +537,12 @@ class HomeController extends GetxController {
       likes: '1.4K',
       comments: '4K',
     ),
-     NewsModel(
-       id: 102,
+    NewsModel(
+      id: 102,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher',
       publisherMeta: 'Partner publisher',
-       totalFollowers: '833.3K',
+      totalFollowers: '833.3K',
       imageUrl: 'https://images.unsplash.com/photo-1534787238916-9ba6764efd4f?w=800',
       category: 'CYCLING',
       author: 'Staff',
@@ -535,12 +553,12 @@ class HomeController extends GetxController {
       likes: '1.2K',
       comments: '876',
     ),
-     NewsModel(
-       id: 103,
+    NewsModel(
+      id: 103,
       publisherName: 'ESPN',
       publisherType: 'Partner publisher',
       publisherMeta: 'Global Sports Network',
-       totalFollowers: '5.1M',
+      totalFollowers: '5.1M',
       imageUrl: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800',
       category: 'BASKETBALL',
       author: 'ESPN Staff',
@@ -571,12 +589,12 @@ class HomeController extends GetxController {
 
   // Food Tab
   final RxList<NewsModel> foodNews = <NewsModel>[
-     NewsModel(
-       id: 101,
+    NewsModel(
+      id: 101,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher',
       publisherMeta: 'Global Food Network',
-       totalFollowers: '833.3K',
+      totalFollowers: '833.3K',
       imageUrl: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800',
       category: 'OPINION',
       author: 'Nutrition Desk',
@@ -587,12 +605,12 @@ class HomeController extends GetxController {
       likes: '1.4K',
       comments: '4K',
     ),
-     NewsModel(
-       id: 102,
+    NewsModel(
+      id: 102,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher',
       publisherMeta: 'Partner publisher',
-       totalFollowers: '833.3K',
+      totalFollowers: '833.3K',
       imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800',
       category: 'NUTRITION',
       author: 'Staff',
@@ -639,12 +657,12 @@ class HomeController extends GetxController {
 
   // For You News List
   final RxList<NewsModel> forYouNews = <NewsModel>[
-     NewsModel(
-       id: 101,
+    NewsModel(
+      id: 101,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher.',
       publisherMeta: 'Beverly Hills, CA',
-       totalFollowers: '833.3K',
+      totalFollowers: '833.3K',
       imageUrl: 'https://images.unsplash.com/photo-1495020689067-958852a7765e?w=800',
       category: 'OPINION',
       author: 'Staff',
@@ -778,12 +796,12 @@ class HomeController extends GetxController {
       likes: '3.8K',
       comments: '1.9K',
     ),
-     NewsModel(
-       id: 103,
+    NewsModel(
+      id: 103,
       publisherName: 'Healthline',
       publisherType: 'Partner publisher',
       publisherMeta: 'Health Partner',
-       totalFollowers: '2.7M',
+      totalFollowers: '2.7M',
       imageUrl: 'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=800',
       category: 'WELLNESS',
       author: 'WebMD Staff',
@@ -794,12 +812,12 @@ class HomeController extends GetxController {
       likes: '7.2K',
       comments: '3.1K',
     ),
-     NewsModel(
-       id: 104,
+    NewsModel(
+      id: 104,
       publisherName: 'WebMD',
       publisherType: 'Partner publisher',
       publisherMeta: 'Verified Medical News',
-       totalFollowers: '1.9M',
+      totalFollowers: '1.9M',
       imageUrl: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800',
       category: 'NUTRITION',
       author: 'Dr. Smith',
@@ -814,12 +832,12 @@ class HomeController extends GetxController {
 
   // Weather Tab
   final RxList<NewsModel> weatherNews = <NewsModel>[
-     NewsModel(
-       id: 101,
+    NewsModel(
+      id: 101,
       publisherName: 'shefinds',
       publisherType: 'Partner publisher',
       publisherMeta: 'Partner publisher',
-       totalFollowers: '833.3K',
+      totalFollowers: '833.3K',
       imageUrl: 'https://images.unsplash.com/photo-1601297183305-6df142704ea2?w=800',
       category: 'OPINION',
       author: 'Staff',
@@ -830,12 +848,12 @@ class HomeController extends GetxController {
       likes: '1.4K',
       comments: '4K',
     ),
-     NewsModel(
-       id: 102,
+    NewsModel(
+      id: 102,
       publisherName: 'Weather Channel',
       publisherType: 'Partner publisher',
       publisherMeta: 'Global Weather Network',
-       totalFollowers: '3.2M',
+      totalFollowers: '3.2M',
       imageUrl: 'https://images.unsplash.com/photo-1561484930-998b6a7b22e8?w=800',
       category: 'FORECAST',
       author: 'Meteorologist Desk',
@@ -874,11 +892,26 @@ class HomeController extends GetxController {
   ].obs;
 
   final RxList<Map<String, String>> dailyForecast = <Map<String, String>>[
-    {'time': 'Today', 'icon': 'assets/icons/weather_cloudy.png', 'temp': '30°/40°'},
-    {'time': 'Mon', 'icon': 'assets/icons/weather_sunny.png', 'temp': '28°/38°'},
+    {
+      'time': 'Today',
+      'icon': 'assets/icons/weather_cloudy.png',
+      'temp': '30°/40°'
+    },
+    {
+      'time': 'Mon',
+      'icon': 'assets/icons/weather_sunny.png',
+      'temp': '28°/38°'
+    },
     {'time': 'Tue', 'icon': 'assets/icons/sunrise.png', 'temp': '25°/35°'},
-    {'time': 'Wed', 'icon': 'assets/icons/weather_storm.png', 'temp': '22°/32°'},
-    {'time': 'Thu', 'icon': 'assets/icons/weather_sunny.png', 'temp': '27°/37°'},
+    {
+      'time': 'Wed',
+      'icon': 'assets/icons/weather_storm.png',
+      'temp': '22°/32°'
+    },
+    {
+      'time': 'Thu',
+      'icon': 'assets/icons/weather_sunny.png',
+      'temp': '27°/37°'
+    },
   ].obs;
-
 }

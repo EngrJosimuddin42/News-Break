@@ -127,7 +127,7 @@ class ReelsController extends GetxController {
     if (platform == 'Copy link') {
       Clipboard.setData(ClipboardData(text: 'https://newsbreak.com/reels/$reelId'));
       Get.back();
-      Get.snackbar("Success", "Link copied!");
+      AppSnackbar.success(message: "Link copied!");
       incrementShare(index);
     } else if (platform == 'More') {
       Get.back();

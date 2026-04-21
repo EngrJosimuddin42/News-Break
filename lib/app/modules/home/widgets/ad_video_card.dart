@@ -1,177 +1,120 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
+import 'package:news_break/app/widgets/publisher_avatar.dart';
 import 'package:video_player/video_player.dart';
+import '../../../controllers/ad_video_controller.dart';
+import '../../../controllers/home_controller.dart';
+import '../../../models/news_model.dart';
 
-class AdVideoCard extends StatefulWidget {
-  const AdVideoCard({super.key});
-
-  @override
-  State<AdVideoCard> createState() => _AdVideoCardState();
-}
-
-class _AdVideoCardState extends State<AdVideoCard> {
-  late VideoPlayerController _controller;
-  bool _initialized = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.networkUrl(
-      Uri.parse('https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'),
-    )..initialize().then((_) {
-      setState(() => _initialized = true);
-      _controller.setLooping(true);
-      _controller.play();
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  String _formatDuration(Duration d) {
-    final minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final seconds = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return '$minutes:$seconds';
-  }
+class AdVideoCard extends StatelessWidget {
+  final NewsModel news;
+  const AdVideoCard({super.key, required this.news});
 
   @override
   Widget build(BuildContext context) {
+    final adController = Get.put(AdVideoController(), tag: news.id.toString());
+
+    if (!adController.isInitialized.value) {
+      adController.initializeVideo(news.videoUrl ?? 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4');
+    }
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFF1C1C1E),
-        borderRadius: BorderRadius.circular(12),
-      ),
+        color:Color(0xFF252525),
+        borderRadius: BorderRadius.circular(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    width: 42,
-                    height: 42,
-                    color: Colors.deepPurple,
-                    child: const Icon(Icons.music_note, color: Colors.white),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                const Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Bingo Fun',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600)),
-                      Text('Ad',
-                          style: TextStyle(color: Colors.grey, fontSize: 12)),
-                    ],
-                  ),
-                ),
-                const Icon(Icons.close, color: Colors.grey, size: 18),
-              ],
-            ),
-          ),
-
-          // Video Player
-          Stack(
-            children: [
-              ClipRRect(
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: _initialized
-                      ? VideoPlayer(_controller)
-                      : Container(color: Colors.grey.shade900,
-                      child: const Center(
-                        child: CircularProgressIndicator(color: Colors.white),
-                      )),
-                ),
-              ),
-
-              // Duration
-              if (_initialized)
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: ValueListenableBuilder(
-                      valueListenable: _controller,
-                      builder: (_, value, __) => Text(
-                        _formatDuration(value.duration - value.position),
-                        style: const TextStyle(color: Colors.white, fontSize: 11),
-                      ),
-                    ),
-                  ),
-                ),
-
-              // Play/Pause + Mute
-              if (_initialized)
-                Positioned(
-                  bottom: 8,
-                  left: 8,
-                  child: ValueListenableBuilder(
-                    valueListenable: _controller,
-                    builder: (_, value, __) => Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () => setState(() {
-                            value.isPlaying
-                                ? _controller.pause()
-                                : _controller.play();
-                          }),
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: Colors.black54,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Icon(
-                              value.isPlaying ? Icons.pause : Icons.play_arrow,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        GestureDetector(
-                          onTap: () => setState(() {
-                            _controller.setVolume(value.volume > 0 ? 0 : 1);
-                          }),
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: Colors.black54,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Icon(
-                              value.volume > 0
-                                  ? Icons.volume_up
-                                  : Icons.volume_off,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-            ],
-          ),
+          _buildHeader(context),
+          _buildVideoPlayer(adController),
           const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+
+  // Header Section
+  Widget _buildHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+      child: Row(
+        children: [
+          PublisherAvatar(news: news),
+          const SizedBox(width: 10),
+          _buildPublisherInfo(),
+          _buildCloseButton(),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildPublisherInfo() {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(news.publisherName, style: AppTextStyles.bodyMedium),
+          Text('Ad', style:AppTextStyles.overline),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCloseButton() {
+    return GestureDetector(
+      onTap: () => Get.find<HomeController>().hideNews(news),
+      child: const Icon(Icons.close, color: Color(0xFF6C6C6C), size: 20),
+    );
+  }
+
+  // Video Section
+  Widget _buildVideoPlayer(AdVideoController adController) {
+    return Obx(() => Stack(
+      children: [
+        ClipRRect(
+          child: AspectRatio(
+            aspectRatio: 16 / 9,
+            child: adController.isInitialized.value
+                ? VideoPlayer(adController.videoController)
+                : const Center(child: CircularProgressIndicator(color: Colors.white)))),
+        if (adController.isInitialized.value) ...[
+          _buildDurationTag(adController),
+          _buildControls(adController),
+        ]
+      ],
+    ));
+  }
+
+  Widget _buildDurationTag(AdVideoController adController) {
+    return Positioned(
+      top: 8,
+      right: 8,
+        child: ValueListenableBuilder(
+          valueListenable: adController.videoController,
+          builder: (_, value, __) => Text(
+            adController.formatDuration(value.duration - value.position),
+            style:AppTextStyles.labelMedium)),
+    );
+  }
+
+  Widget _buildControls(AdVideoController adController) {
+    return Positioned(
+      bottom: 8,
+      left: 8,
+      child: Row(
+        children: [
+          // Play/Pause Button
+          GestureDetector(
+            onTap: adController.togglePlay,
+            child: Icon(
+              adController.isPlaying.value ? Icons.pause : Icons.play_arrow, color: Colors.white, size: 20)),
+          const SizedBox(width: 12),
+          // Mute/Unmute Button
+          GestureDetector(
+            onTap: adController.toggleMute,
+            child: Icon(
+              adController.isMuted.value ? Icons.volume_off : Icons.volume_up, color: Colors.white, size: 20)),
         ],
       ),
     );

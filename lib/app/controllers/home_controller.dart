@@ -25,6 +25,7 @@ class HomeController extends GetxController {
   var currentTemp = "44°F".obs;
   var weatherCondition = "Rain".obs;
   var rainProbability = "71%".obs;
+  var showAd = true.obs;
   final RxList<double> rainBarData = [0.06, 0.02, 0.04, 0.03, 0.08, 0.02, 0.05].obs;
   var chartData = <double>[0.06, 0.02, 0.04, 0.03, 0.08, 0.02, 0.05].obs;
 
@@ -120,12 +121,29 @@ class HomeController extends GetxController {
     }
   }
 
-  // News card actions
+
   void onFollow(String publisher) {
     if (!isLoggedIn) Get.toNamed(Routes.SIGNIN);
   }
 
   void onDismiss(String publisher) {}
+
+
+  void hideNews(NewsModel news) {
+    reactionsNews.remove(news);
+    forYouNews.remove(news);
+    localNews.remove(news);
+    localTvNews.remove(news);
+    entertainmentNews.remove(news);
+    sportsNews.remove(news);
+    foodNews.remove(news);
+    healthNews.remove(news);
+    beautyNews.remove(news);
+    weatherNews.remove(news);
+    update();
+    AppSnackbar.success(message: 'News hidden from your feed');
+  }
+
   void onTryAgain() {}
 
 
@@ -164,6 +182,26 @@ class HomeController extends GetxController {
       shares: '1.5K',
       reactions: '1.4K',
       isVerified: true,
+    ),
+    NewsModel(
+      id: 999999,
+      publisherName: 'Bingo Fun',
+      publisherImageUrl: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800',
+      publisherMeta: 'Sponsored',
+      publisherType: 'Ad',
+      totalFollowers: '1.2M',
+      timeAgo: 'Now',
+      title: "Bingo Fun Ad - Play and Win exciting prizes today!",
+      imageUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800',
+      category: 'Promotion',
+      author: 'Bingo Team',
+      body: 'This is an advertisement content...',
+      likes: '10K',
+      comments: '500',
+      shares: '2K',
+      reactions: '5.4K',
+      isVerified: true,
+      videoUrl: 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
     ),
      NewsModel(
        id: 102,
@@ -221,16 +259,17 @@ class HomeController extends GetxController {
     NewsModel(
       id: 101,
       publisherName: 'Daily news',
+      publisherImageUrl:'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800',
       publisherType: 'Partner publisher',
       publisherMeta: 'New York, NY',
       totalFollowers: '833.3K',
       imageUrl: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800',
-      videoUrl: 'https://www.youtube.com/watch?v=haqbBspQFS0',
       category: 'New York',
       author: 'Local Desk',
       timeAgo: '19h',
       title: "'The View' Fans Think Whoopi Goldberg Has 'Lost Her Mind' After She Suggests Donald Trump's Iran War Is A Distraction From Nancy Guthrie...",
       body: 'Full news content here...',
+      videoUrl: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4',
       reactions: '1.4K',
       likes: '1.4K',
       comments: '4K',
@@ -243,7 +282,6 @@ class HomeController extends GetxController {
       publisherMeta: 'New York, NY',
        totalFollowers: '833.3K',
       imageUrl: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800',
-      videoUrl: 'https://www.youtube.com/watch?v=9bZkp7q19f0',
       category: 'New York',
       author: 'News Team',
       timeAgo: '2h',
@@ -392,6 +430,26 @@ class HomeController extends GetxController {
       reactions: '1.4K',
       likes: '1.4K',
       comments: '4K',
+    ),
+    NewsModel(
+      id: 999999,
+      publisherName: 'Bingo Fun',
+      publisherImageUrl: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800',
+      publisherMeta: 'Sponsored',
+      publisherType: 'Ad',
+      totalFollowers: '1.2M',
+      timeAgo: 'Now',
+      title: "Bingo Fun Ad - Play and Win exciting prizes today!",
+      imageUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800',
+      category: 'Promotion',
+      author: 'Bingo Team',
+      body: 'This is an advertisement content...',
+      likes: '10K',
+      comments: '500',
+      shares: '2K',
+      reactions: '5.4K',
+      isVerified: true,
+      videoUrl: 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
     ),
     NewsModel(
       id: 102,
@@ -596,6 +654,26 @@ class HomeController extends GetxController {
       reactions: '1.4K',
       likes: '1.4K',
       comments: '4K',
+    ),
+    NewsModel(
+      id: 999999,
+      publisherName: 'Bingo Fun',
+      publisherImageUrl: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800',
+      publisherMeta: 'Sponsored',
+      publisherType: 'Ad',
+      totalFollowers: '1.2M',
+      timeAgo: 'Now',
+      title: "Bingo Fun Ad - Play and Win exciting prizes today!",
+      imageUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800',
+      category: 'Promotion',
+      author: 'Bingo Team',
+      body: 'This is an advertisement content...',
+      likes: '10K',
+      comments: '500',
+      shares: '2K',
+      reactions: '5.4K',
+      isVerified: true,
+      videoUrl: 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
     ),
     NewsModel(
       id: 102,

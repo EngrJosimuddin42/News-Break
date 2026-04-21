@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 
+import '../../widgets/bottom_sheet_handle.dart';
+
 class OptionsBottomSheet {
   static void show(BuildContext context, {required Widget reportSheet}) {
     showModalBottomSheet(
@@ -13,14 +15,7 @@ class OptionsBottomSheet {
       builder: (_) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 8),
-          Container(
-            width: 36, height: 4,
-            decoration: BoxDecoration(
-              color: const Color(0xFF444444),
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
+          const BottomSheetHandle(),
           const SizedBox(height: 16),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),

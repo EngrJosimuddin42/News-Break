@@ -5,6 +5,7 @@ import '../routes/app_pages.dart';
 
 class SignInController extends GetxController {
   final RxBool isExpanded = false.obs;
+  var isLoading = false.obs;
 
   void toggleExpand() => isExpanded.value = true;
 
@@ -29,7 +30,6 @@ class SignInController extends GetxController {
   }
 
   void onSkip() {
-    // User null — logged out home
     AuthController.to.user.value = null;
     Get.offNamed(Routes.HOME);
   }

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../models/reel_model.dart';
+import '../../../widgets/bottom_sheet_handle.dart';
 import '../share_sheet.dart';
 
 class ProfileOptionSheet {
@@ -26,7 +27,7 @@ class ProfileOptionSheet {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 12),
-              _buildHandle(),
+              const BottomSheetHandle(),
               const SizedBox(height: 16),
               Container(
                 decoration: BoxDecoration(
@@ -119,7 +120,7 @@ class ProfileOptionSheet {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 12),
-              _buildHandle(),
+            const BottomSheetHandle(),
               const SizedBox(height: 24),
               Text('Report User', style: AppTextStyles.caption),
               const SizedBox(height: 16),
@@ -170,7 +171,8 @@ class ProfileOptionSheet {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: _buildHandle()),
+              Center(
+                child:const BottomSheetHandle()),
               const SizedBox(height: 24),
               Row(
                 children: [
@@ -194,11 +196,5 @@ class ProfileOptionSheet {
         navigator.pop();
       }
     });
-  }
-
-  static Widget _buildHandle() {
-    return Container(width: 40, height: 5,
-      decoration: BoxDecoration(color: Colors.grey[600], borderRadius: BorderRadius.circular(20)),
-    );
   }
 }

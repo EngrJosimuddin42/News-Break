@@ -147,9 +147,23 @@ class _CommentsSheetState extends State<CommentsSheet> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {},
-                      child: Text('Follow',
-                          style: AppTextStyles.overline.copyWith(color: AppColors.textGreen))),
+                      onTap: () {
+                        controller.toggleFollow(comment);
+                        controller.commentsList.refresh();
+                      },
+                      child: GetBuilder<ReelsController>(
+                        builder: (ctrl) {
+                          final bool isFollowing = comment.isFollowing ?? false;
+                          return Text(
+                            isFollowing ? 'Following' : 'Follow',
+                            style: AppTextStyles.overline.copyWith(
+                              color: isFollowing ? Colors.grey : AppColors.textGreen,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 6),

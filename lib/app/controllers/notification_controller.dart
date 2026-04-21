@@ -60,6 +60,7 @@ class NotificationController extends GetxController with GetSingleTickerProvider
       publisherMeta: 'Partner publisher',
       timeAgo: '9h',
       imageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=200',
+      videoUrl: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4',
       body: 'Full news content goes here...',
       likes: '1.4K',
       reactions: '1.4K',

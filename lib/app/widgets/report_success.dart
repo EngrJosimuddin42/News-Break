@@ -31,6 +31,7 @@ class ReportSuccess extends StatelessWidget {
           const SizedBox(height: 24),
           SizedBox(
             width: 311,
+            height: 48,
             child: ElevatedButton(
               onPressed: () {
                 if (onDone != null) {

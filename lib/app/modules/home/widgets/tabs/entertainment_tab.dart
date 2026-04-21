@@ -13,16 +13,20 @@ class EntertainmentTab extends GetView<HomeController> {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
       }
-    return ListView.builder(
-      padding: const EdgeInsets.only(top: 4, bottom: 16),
-      itemCount: controller.entertainmentNews.length + 1,// +1 for ad
-      itemBuilder: (context, index) {
-        if (index == 1) return const AdVideoCard(); // 2nd position এ ad
-        final itemIndex = index > 1 ? index - 1 : index;
-        final news = controller.entertainmentNews[itemIndex];
-        return CategoryNewsCard(news: news);
-      },
-    );
+
+      return ListView.builder(
+        padding: const EdgeInsets.only(top: 4, bottom: 16),
+        itemCount: controller.entertainmentNews.length,
+        itemBuilder: (context, index) {
+          final news = controller.entertainmentNews[index];
+          if (news.publisherType == 'Ad') {
+            return controller.isLoggedIn
+                ? AdVideoCard(news: news)
+                : const SizedBox.shrink();
+          }
+          return CategoryNewsCard(news: news);
+        },
+      );
     });
   }
 }

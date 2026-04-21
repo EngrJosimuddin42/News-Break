@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import 'package:news_break/app/widgets/report_success.dart';
 
 class CommunityReportSheet extends StatefulWidget {
   const CommunityReportSheet({super.key});
@@ -29,7 +30,7 @@ class _CommunityReportSheetState extends State<CommunityReportSheet> {
         color: Color(0xFF2C2C2E),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      child: _step == 0 ? _buildSelectReason() : _buildSuccess(),
+      child: _step == 0 ? _buildSelectReason() :ReportSuccess(),
     );
   }
 
@@ -123,45 +124,6 @@ class _CommunityReportSheetState extends State<CommunityReportSheet> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildSuccess() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 8),
-          Container(
-            width: 30, height: 30,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.green, width: 2),
-            ),
-            child: const Icon(Icons.check, color: Colors.green, size: 20),
-          ),
-          const SizedBox(height: 16),
-          Text('Thanx for reporting this',
-            style: AppTextStyles.caption),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: 311,
-            child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(vertical: 20),
-              ),
-              child:Text('Done', style: AppTextStyles.bodySmall.copyWith(color: Color(0xFF242424)),),
-            ),
-          ),
-          const SizedBox(height: 8),
-        ],
-      ),
     );
   }
 }

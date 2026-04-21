@@ -4,6 +4,7 @@ import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../../controllers/auth_controller.dart';
 import '../../../../controllers/home_controller.dart';
+import '../ad_video_card.dart';
 import '../category_news_card.dart';
 
 class WeatherTab extends GetView<HomeController> {
@@ -26,8 +27,13 @@ class WeatherTab extends GetView<HomeController> {
     return ListView.builder(
       padding: const EdgeInsets.only(top: 4, bottom: 16),
       itemCount: controller.weatherNews.length,
-      itemBuilder: (context, index) =>
-          CategoryNewsCard(news: controller.weatherNews[index]),
+      itemBuilder: (context, index) {
+        final news = controller.weatherNews[index];
+        if (news.publisherType == 'Ad') {
+          return const SizedBox.shrink();
+        }
+        return CategoryNewsCard(news: news);
+      },
     );
   }
 
@@ -40,7 +46,12 @@ class WeatherTab extends GetView<HomeController> {
         const Divider(color: Colors.white12, height: 6),
         const SizedBox(height: 16),
 
-        ...controller.weatherNews.map((news) => CategoryNewsCard(news: news)),
+        ...controller.weatherNews.map((news) {
+          if (news.publisherType == 'Ad') {
+            return AdVideoCard(news: news);
+          }
+          return CategoryNewsCard(news: news);
+        }),
       ],
     );
   }

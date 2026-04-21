@@ -5,7 +5,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/reels/reels_controller.dart';
-import '../report_success.dart';
+import '../../../widgets/report_success.dart';
 import 'report_video_sheet.dart';
 
 class ReportReelsSheet extends StatefulWidget {

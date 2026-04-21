@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/reels/reels_controller.dart';
-import '../report_success.dart';
+import '../../../widgets/report_success.dart';
 
 class ReportCommentSheet extends StatefulWidget {
   const ReportCommentSheet({super.key});

@@ -61,20 +61,14 @@ class ForYouTab extends GetView<HomeController> {
         const SizedBox(height: 16),
 
         // News Section
-        ...List.generate(
-          controller.isLoggedIn
-              ? controller.forYouNews.length + 1
-              : controller.forYouNews.length,
-              (index) {
-            if (controller.isLoggedIn && index == 1) {
-              return const AdVideoCard();
-            }
-            final itemIndex = (controller.isLoggedIn && index > 1)
-                ? index - 1
-                : index;
-            return CategoryNewsCard(news: controller.forYouNews[itemIndex]);
-          },
-        ),
+        ...controller.forYouNews.map((news) {
+          if (news.publisherType == 'Ad') {
+            return controller.isLoggedIn
+                ? AdVideoCard(news: news)
+                : const SizedBox.shrink();
+          }
+          return CategoryNewsCard(news: news);
+        }).toList(),
 
         const SizedBox(height: 16),
       ],

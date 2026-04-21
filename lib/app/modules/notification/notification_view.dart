@@ -52,34 +52,35 @@ class FollowNotificationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: user.isHighlighted
-            ? const Color(0xFF2C3C53)
-            : Colors.transparent,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: Row(
-          children: [
+      color: user.isHighlighted ? const Color(0xFF2C3C53) : Colors.transparent,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Row(
+        children: [
           CircleAvatar(
-          radius: 24,
-            backgroundImage: user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty
+            radius: 24,
+            backgroundColor: Colors.grey[800],
+            backgroundImage: (user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty)
                 ? NetworkImage(user.profileImageUrl!)
-                : const AssetImage('assets/images/publisher.png'),
+                : null,
+            child: (user.profileImageUrl == null || user.profileImageUrl!.isEmpty)
+                ? Image.asset('assets/images/publisher.png')
+                : null),
+          const SizedBox(width: 12),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(user.name, style: AppTextStyles.caption),
+                const SizedBox(height: 2),
+                Text('Started following you', style: AppTextStyles.labelSmall.copyWith(color: AppColors.light)),
+                const SizedBox(height: 2),
+                Text(user.timeAgo ?? 'Just now', style: AppTextStyles.labelSmall.copyWith(color: AppColors.accentLight)),
+              ],
+            ),
           ),
-            const SizedBox(width: 12),
-        // Text info
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(user.name, style: AppTextStyles.caption),
-              const SizedBox(height: 2),
-              Text('Started Following you', style: AppTextStyles.labelSmall.copyWith(color:AppColors.light)),
-              const SizedBox(height: 2),
-              Text(user.timeAgo ?? 'Just now', style: AppTextStyles.labelSmall.copyWith(color:AppColors.accentLight)),
-            ],
-          ),
-        ),
-          ],
-        ),
+        ],
+      ),
     );
   }
 }
@@ -122,29 +123,35 @@ class NotificationBody extends GetView<NotificationController> {
 
 
   Widget _buildNewsTab() {
-    return ListView(
-      children: [
-        const PremiumBanner(),
+    return Obx(() {
+      if (controller.newsItems.isEmpty) return _buildEmptyTab();
 
-        // Today Section
-        _sectionLabel('Today'),
-        ...controller.newsItems.take(2).map((model) => Column(
-          children: [
-            NotificationNewsItem(news: model),
-            const Divider(color: Colors.white12, height: 1),
-          ],
-        )),
+      return ListView(
+        children: [
+          const PremiumBanner(),
 
-        // Earlier Section
-        _sectionLabel('Earlier'),
-        ...controller.newsItems.skip(2).map((model) => Column(
-          children: [
-            NotificationNewsItem(news: model),
-            const Divider(color: Colors.white12, height: 1),
+          if (controller.newsItems.length >= 2) ...[
+            _sectionLabel('Today'),
+            ...controller.newsItems.take(2).map((model) => Column(
+              children: [
+                NotificationNewsItem(news: model),
+                const Divider(color: Colors.white12, height: 1),
+              ],
+            )),
           ],
-        )),
-      ],
-    );
+
+          if (controller.newsItems.length > 2) ...[
+            _sectionLabel('Earlier'),
+            ...controller.newsItems.skip(2).map((model) => Column(
+              children: [
+                NotificationNewsItem(news: model),
+                const Divider(color: Colors.white12, height: 1),
+              ],
+            )),
+          ],
+        ],
+      );
+    });
   }
 
   Widget _buildEmptyTab() {

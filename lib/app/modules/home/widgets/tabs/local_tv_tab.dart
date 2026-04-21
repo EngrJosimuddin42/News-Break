@@ -4,6 +4,7 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../../controllers/auth_controller.dart';
 import '../../../../controllers/home_controller.dart';
 import '../../../../theme/app_colors.dart';
+import '../ad_video_card.dart';
 import '../category_news_card.dart';
 
 
@@ -64,11 +65,14 @@ class LocalTvTab extends GetView<HomeController> {
   Widget _buildLoggedIn() {
       return ListView.builder(
         padding: const EdgeInsets.only(top: 4, bottom: 16),
-        itemCount: controller.localNews.length,
+        itemCount: controller.localTvNews.length,
         itemBuilder: (context, index) {
-          final news = controller.localNews[index];
+          final news = controller.localTvNews[index];
+          if (news.publisherType == 'Ad') {
+            return AdVideoCard(news: news);
+          }
           return CategoryNewsCard(news: news);
         },
       );
-    }
   }
+}

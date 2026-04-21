@@ -84,15 +84,23 @@ class ReelsController extends GetxController {
   void toggleFollow(dynamic item) {
     if (item == null) return;
     item.isFollowing = !(item.isFollowing ?? false);
-    int currentFollowers = _parseStatCount(item.totalFollowers.toString());
-    if (item.isFollowing) {
-      currentFollowers++;
-    } else {
-      currentFollowers = currentFollowers > 0 ? currentFollowers - 1 : 0;
+    try {
+      if (item.totalFollowers != null) {
+        int currentFollowers = _parseStatCount(item.totalFollowers.toString());
+        if (item.isFollowing) {
+          currentFollowers++;
+        } else {
+          currentFollowers = currentFollowers > 0 ? currentFollowers - 1 : 0;
+        }
+        item.totalFollowers = formatCount(currentFollowers);
+      }
+    } catch (e) {
+      debugPrint("ToggleFollow Error: $e");
     }
-    item.totalFollowers = formatCount(currentFollowers);
     reelsList.refresh();
+    update();
   }
+
 
   void incrementComment(int reelId) {
     int index = reelsList.indexWhere((r) => r.id == reelId);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import 'package:news_break/app/widgets/report_success.dart';
 
 class NotificationReportSheet extends StatefulWidget {
   const NotificationReportSheet({super.key});
@@ -64,7 +65,7 @@ class _ReportBottomSheetState extends State<NotificationReportSheet> {
       case 2:
         return _buildConfirm();
       case 3:
-        return _buildSuccess();
+        return ReportSuccess();
       default:
         return _buildSelectReason();
     }
@@ -180,50 +181,6 @@ class _ReportBottomSheetState extends State<NotificationReportSheet> {
         ),
         const SizedBox(height: 8),
       ],
-    );
-  }
-
-  // Step 3 — Success
-  Widget _buildSuccess() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 8),
-          Container(
-            width: 30, height: 30,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.green, width: 2),
-            ),
-            child: const Icon(Icons.check, color: Colors.green, size: 20),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Thanx for reporting this',
-            style: AppTextStyles.caption,
-          ),
-          const SizedBox(height: 24),
-          SizedBox(
-            width:311,
-            height: 48,
-            child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(vertical: 20),
-              ),
-              child:Text('Done',
-                  style:AppTextStyles.bodySmall),
-            ),
-          ),
-          const SizedBox(height: 8),
-        ],
-      ),
     );
   }
 

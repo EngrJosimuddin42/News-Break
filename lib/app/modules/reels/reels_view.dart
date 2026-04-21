@@ -8,6 +8,7 @@ import 'package:news_break/app/modules/reels/profile/profile_view.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/reels/reels_controller.dart';
+import '../../widgets/reels_follow_button.dart';
 import 'create_reel_view.dart';
 
 class ReelsView extends StatefulWidget {
@@ -231,22 +232,8 @@ class _ReelsViewState extends State<ReelsView> {
                 children: [
                   Text(reel.userName ?? "", style: AppTextStyles.bodyMedium),
                   const SizedBox(width: 32),
-                  Obx(() {
-                    final currentReel = controller.reelsList[index];
-                    return GestureDetector(
-                      onTap: () => controller.toggleFollow(currentReel),
-                      child: currentReel.isFollowing
-                          ? Text(
-                        'Following',
-                        style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFFC4C4C4)))
-                          : Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF3597FA),
-                          borderRadius: BorderRadius.circular(8)),
-                        child: Text('+ Follow', style: AppTextStyles.buttonOutline)),
-                    );
-                  }),
+                  //Follow Button
+                  ReelsFollowButton(reel: reel),
                 ],
               ),
               const SizedBox(height: 4),

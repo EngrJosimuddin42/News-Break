@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../controllers/home_controller.dart';
+import '../ad_video_card.dart';
 import '../category_news_card.dart';
 
 class HealthTab extends GetView<HomeController> {
@@ -20,6 +21,11 @@ class HealthTab extends GetView<HomeController> {
       itemCount: controller.healthNews.length,
       itemBuilder: (context, index) {
         final news = controller.healthNews[index];
+        if (news.publisherType == 'Ad') {
+          return controller.isLoggedIn
+              ? AdVideoCard(news: news)
+              : const SizedBox.shrink();
+        }
         return CategoryNewsCard(news: news);
       },
     );

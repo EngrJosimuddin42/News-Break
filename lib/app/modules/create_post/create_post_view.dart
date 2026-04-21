@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/widgets/bottom_sheet_handle.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../controllers/create_post_controller.dart';
@@ -16,8 +17,7 @@ class CreatePostView extends GetView<CreatePostController> {
         elevation: 0,
         leading: IconButton(
           onPressed: controller.onBack,
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.white, size: 18),
-        ),
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.white, size: 18)),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
@@ -26,11 +26,8 @@ class CreatePostView extends GetView<CreatePostController> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF333333),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-              ),
-              child: Text('Post', style: AppTextStyles.bodyMedium),
-            ),
-          ),
+                    borderRadius: BorderRadius.circular(8))),
+              child: Text('Post', style: AppTextStyles.bodyMedium))),
         ],
       ),
       body: Padding(
@@ -38,24 +35,25 @@ class CreatePostView extends GetView<CreatePostController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Share your thoughts',
-                style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary)),
+            TextField(
+              controller: controller.textController,
+              maxLines: 5,
+              style: AppTextStyles.bodyMedium,
+              decoration: InputDecoration(
+                hintText: "Share your thoughts",
+                hintStyle: TextStyle(color: AppColors.textSecondary),
+                border: InputBorder.none,
+              ),
+            ),
             const SizedBox(height: 16),
-
             // Media picker
             GestureDetector(
               onTap: controller.onAddMedia,
-              child: Container(
-                width: 75,
-                height: 67,
+              child: Container(width: 75, height: 67,
                 decoration: BoxDecoration(
                   color: const Color(0xFF444444),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(Icons.add, color: AppColors.white, size: 28),
-              ),
-            ),
+                  borderRadius: BorderRadius.circular(8)),
+                child: const Icon(Icons.add, color: AppColors.white, size: 28))),
             SizedBox(height: 32),
             // Tag location
             InkWell(
@@ -65,20 +63,20 @@ class CreatePostView extends GetView<CreatePostController> {
                 decoration: const BoxDecoration(
                   border: Border(
                     top: BorderSide(color: Colors.white12),
-                    bottom: BorderSide(color: Colors.white12),
-                  ),
-                ),
+                    bottom: BorderSide(color: Colors.white12))),
                 child: Row(
                   children: [
-                    Image.asset('assets/icons/tag_location.png',
-                        width: 20, height: 20),
+                    Image.asset('assets/icons/tag_location.png', width: 20, height: 20),
                     const SizedBox(width: 10),
-                    Text('Tag Location',
-                        style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.textSecondary)),
+                    Obx(() =>Text(controller.selectedLocation.isEmpty
+                            ? 'Tag Location'
+                            : controller.selectedLocation.value,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                          color: controller.selectedLocation.isEmpty
+                              ? AppColors.textSecondary
+                              : AppColors.surface))),
                     const Spacer(),
-                    const Icon(Icons.arrow_forward_ios,
-                        color: AppColors.textSecondary, size: 14),
+                    const Icon(Icons.arrow_forward_ios, color: AppColors.textSecondary, size: 14),
                   ],
                 ),
               ),
@@ -117,16 +115,7 @@ class TagLocationSheet extends StatelessWidget {
       child: Column(
         children: [
           // Handle bar
-          Container(
-            margin: const EdgeInsets.only(top: 10),
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Colors.white24,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-
+         const BottomSheetHandle(),
           // Search bar
           Padding(
             padding: const EdgeInsets.all(12),
@@ -137,32 +126,21 @@ class TagLocationSheet extends StatelessWidget {
                     height: 40,
                     decoration: BoxDecoration(
                       color: const Color(0xFF2A2A2A),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                      borderRadius: BorderRadius.circular(10)),
                     child: TextField(
                       controller: searchController,
                       style: const TextStyle(color: Colors.white, fontSize: 14),
                       decoration: const InputDecoration(
                         hintText: 'Find Location',
-                        hintStyle: TextStyle(
-                            color: Colors.white54, fontSize: 14),
-                        prefixIcon: Icon(Icons.search,
-                            color: Colors.white54, size: 18),
+                        hintStyle: TextStyle(color: Colors.white54, fontSize: 14),
+                        prefixIcon: Icon(Icons.search, color: Colors.white54, size: 18),
                         border: InputBorder.none,
                         contentPadding:
-                        EdgeInsets.symmetric(vertical: 10),
-                      ),
-                    ),
-                  ),
-                ),
+                        EdgeInsets.symmetric(vertical: 10))))),
                 const SizedBox(width: 12),
                 GestureDetector(
                   onTap: () => Get.back(),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.blue, fontSize: 14),
-                  ),
-                ),
+                  child: const Text('Cancel', style: TextStyle(color: Colors.blue, fontSize: 14))),
               ],
             ),
           ),
@@ -178,16 +156,10 @@ class TagLocationSheet extends StatelessWidget {
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                   title: Text(
                     loc['city']!,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500),
-                  ),
+                    style: AppTextStyles.caption),
                   subtitle: Text(
                     loc['zip']!,
-                    style: const TextStyle(
-                        color: Colors.white54, fontSize: 12),
-                  ),
+                    style:AppTextStyles.overline),
                 );
               },
             ),

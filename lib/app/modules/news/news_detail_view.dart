@@ -3,8 +3,12 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/home_controller.dart';
+import '../../controllers/signin_controller.dart';
 import '../../models/news_model.dart';
-import 'news_bottom_sheets.dart';
+import '../../widgets/follow_button.dart';
+import '../../widgets/publisher_avatar.dart';
+import '../signin/signin_view.dart';
+import 'show_more_sheets.dart';
 
 class NewsDetailView extends GetView<HomeController> {
   const NewsDetailView({super.key});
@@ -71,16 +75,7 @@ class NewsDetailView extends GetView<HomeController> {
                 // Publisher row
                 Row(
                   children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.grey[800],
-                      backgroundImage: news.publisherImageUrl.isNotEmpty
-                          ? AssetImage(news.publisherImageUrl)
-                          : null,
-                      child: news.publisherImageUrl.isEmpty
-                          ? Image.asset('assets/icons/person.png',height: 14,width: 14)
-                          : null,
-                    ),
+                    PublisherAvatar(news: news),
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,19 +93,9 @@ class NewsDetailView extends GetView<HomeController> {
                       ],
                     ),
                     const Spacer(),
-                    GetBuilder<HomeController>(
-                      builder: (controller) {
-                        return GestureDetector(
-                          onTap: () => controller.toggleFollow(news),
-                          child: Text(
-                            news.isFollowing ? 'Following' : 'Follow',
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              color: news.isFollowing ? Colors.grey : AppColors.textGreen,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+
+                    // Follow
+                    FollowButton(news: news),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -162,7 +147,17 @@ class NewsDetailView extends GetView<HomeController> {
               children: [
                 Expanded(
                   child: GestureDetector(
-                      onTap: () => NewsBottomSheets.showCreateAccountSheet(context),
+                      onTap: () {
+                        Get.lazyPut(() => SignInController());
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width),
+                          builder: (context) => const SignInView(isSheet: true),
+                        );
+                      },
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(

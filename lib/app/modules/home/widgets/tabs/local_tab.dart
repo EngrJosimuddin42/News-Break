@@ -4,6 +4,7 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../../controllers/auth_controller.dart';
 import '../../../../controllers/home_controller.dart';
 import '../../../../theme/app_colors.dart';
+import '../ad_video_card.dart';
 import '../category_news_card.dart';
 
 class LocalTab extends GetView<HomeController> {
@@ -66,7 +67,12 @@ class LocalTab extends GetView<HomeController> {
         _buildWeatherSection(),
 
         // News cards
-        ...controller.localNews.map((news) => CategoryNewsCard(news: news)),
+        ...controller.localNews.map((news) {
+          if (news.publisherType == 'Ad') {
+            return AdVideoCard(news: news);
+          }
+          return CategoryNewsCard(news: news);
+        }),
       ],
     );
   }

@@ -7,6 +7,7 @@ class CommentModel {
   final String createdAt;
   int likes;
   bool isLiked;
+  bool? isFollowing;
 
   CommentModel({
     required this.id,
@@ -17,5 +18,6 @@ class CommentModel {
     required this.createdAt,
     this.likes = 0,
     this.isLiked = false,
+    this.isFollowing = false,
   });
 }

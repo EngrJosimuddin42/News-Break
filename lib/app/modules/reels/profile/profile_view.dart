@@ -114,25 +114,28 @@ class _ProfileViewState extends State<ProfileView> {
             child: Row(
               children: [
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isFollowing = !_isFollowing;
-                        final ReelsController controller = Get.find<ReelsController>();
-                        controller.toggleFollow(widget.user);
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1D1D1D),
-                        borderRadius: BorderRadius.circular(8)),
-                      child: Center(
-                        child: Text( _isFollowing ? 'Following' : 'Follow',
-                          style: AppTextStyles.buttonOutline,
+                  child: GetBuilder<ReelsController>(
+                    builder: (controller) {
+                      final isFollowing = widget.user?.isFollowing ?? false;
+                      return GestureDetector(
+                        onTap: () => controller.toggleFollow(widget.user),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1D1D1D),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Text(
+                              isFollowing ? 'Following' : 'Follow',
+                              style: AppTextStyles.buttonOutline.copyWith(
+                                color: isFollowing ? Colors.grey : Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(width: 12),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import 'package:news_break/app/widgets/bottom_sheet_handle.dart';
 import '../../controllers/reels/reels_controller.dart';
 import '../../models/reel_model.dart';
 
@@ -28,19 +29,16 @@ class ShareSheet extends GetView<ReelsController> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       decoration: const BoxDecoration(
         color: Color(0xFF252525),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      child: SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 12),
           // Drag Handle
-          Container(
-            width: 40, height: 5,
-            decoration: BoxDecoration(
-              color: Colors.white24,
-              borderRadius: BorderRadius.circular(20))),
+         const BottomSheetHandle(),
           const SizedBox(height: 20),
 
           // Header
@@ -143,6 +141,7 @@ class ShareSheet extends GetView<ReelsController> {
           const SizedBox(height: 30),
         ],
       ),
+    ),
     );
   }
 }

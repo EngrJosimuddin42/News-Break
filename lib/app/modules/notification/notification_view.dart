@@ -4,7 +4,7 @@ import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../models/user_model.dart';
 import '../premium/widgets/premium_banner.dart';
-import '../../controllers/notification_controller.dart';
+import '../../controllers/notification/notification_controller.dart';
 import 'notification_news_item.dart';
 import 'notification_settings_view.dart';
 

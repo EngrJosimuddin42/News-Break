@@ -4,7 +4,7 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../theme/app_colors.dart';
-import '../../controllers/notification_controller.dart';
+import '../../controllers/notification/notification_controller.dart';
 
 class NotificationSettingsView extends StatelessWidget {
   const NotificationSettingsView({super.key});

@@ -43,7 +43,7 @@ class WeatherTab extends GetView<HomeController> {
       children: [
         _buildWeatherWidget(),
         const SizedBox(height: 16),
-        const Divider(color: Colors.white12, height: 6),
+        const Divider(color: Colors.white12, height: 2, thickness: 3),
         const SizedBox(height: 16),
 
         ...controller.weatherNews.map((news) {
@@ -74,24 +74,17 @@ class WeatherTab extends GetView<HomeController> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('44°',
-                          style: AppTextStyles.tagline),
+                      Text('44°', style: AppTextStyles.tagline),
                       const SizedBox(width: 6),
-                      Image.asset(
-                        'assets/icons/weather_cloudy.png',
-                        width: 48,
-                        height: 48,
-                      ),
+                      Image.asset('assets/icons/weather_cloudy.png', width: 48, height: 48),
                     ],
                   ),
                   const SizedBox(height: 12),
                   Text.rich(
                     TextSpan(
                       children: [
-                        TextSpan(text: '30°/40°',
-                          style: AppTextStyles.overline),
-                        TextSpan(text: '  Cloudy',
-                          style: AppTextStyles.small.copyWith(color: Color(0xFFC4C4C4)))
+                        TextSpan(text: '30°/40°', style: AppTextStyles.overline),
+                        TextSpan(text: '  Cloudy', style: AppTextStyles.small.copyWith(color: Color(0xFFC4C4C4)))
                       ],
                     ),
                     textAlign: TextAlign.center,
@@ -107,39 +100,28 @@ class WeatherTab extends GetView<HomeController> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _activityItem(
-                'assets/icons/emoji.png',
-                'assets/icons/mountain.png',
-                'Hiking',
-              ),
+              _activityItem('assets/icons/emoji.png', 'assets/icons/mountain.png', 'Hiking'),
               const SizedBox(width: 16),
-              _activityItem(
-                'assets/icons/emoji.png',      // topIconPath
-                'assets/icons/leaves.png',   // bottomIconPath
-                'Gardening',                    // label
-              ),
+              _activityItem('assets/icons/emoji.png', 'assets/icons/leaves.png', 'Gardening'),
             ],
           ),
 
           const SizedBox(height: 16),
-          const Divider(color: Colors.white12, height: 6),
+          const Divider(color: Colors.white12, height: 2, thickness: 3),
           const SizedBox(height: 16),
 
           // Forecasts header
           Row(
             children: [
-              Text('Forecasts',
-                  style: AppTextStyles.bodyMedium),
+              Text('Forecasts', style: AppTextStyles.bodyMedium),
               const Spacer(),
               Image.asset('assets/icons/sunrise.png'),
               const SizedBox(width: 6),
-              Text('4:48 PM',
-                  style:AppTextStyles.display.copyWith(color: Color(0xFFC4C4C4))),
+              Text('4:48 PM', style:AppTextStyles.display.copyWith(color: Color(0xFFC4C4C4))),
               const SizedBox(width: 24),
               Image.asset('assets/icons/sunset.png'),
               const SizedBox(width: 6),
-              Text('5:48 AM',
-                  style:AppTextStyles.display.copyWith(color: Color(0xFFC4C4C4)))
+              Text('5:48 AM', style:AppTextStyles.display.copyWith(color: Color(0xFFC4C4C4)))
             ],
           ),
 
@@ -177,35 +159,22 @@ class WeatherTab extends GetView<HomeController> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          width: 70,
-          height: 100,
+        Container(width: 70, height: 100,
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
             border: Border.all(color: Color(0xFF4C4C4C), width: 1),
-            borderRadius: BorderRadius.circular(10),
-          ),
+            borderRadius: BorderRadius.circular(10)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Image.asset(
-                topIcon,
-                width: 24,
-                height: 24,
-              ),
-              Image.asset(
-                bottomIcon,
-                width: 24,
-                height: 24,
-              ),
+              Image.asset(topIcon, width: 24, height: 24),
+              Image.asset(bottomIcon, width: 24, height: 24),
             ],
           ),
         ),
 
         const SizedBox(height: 10),
-        Text(label,
-          style:AppTextStyles.overline
-        ),
+        Text(label, style:AppTextStyles.overline),
       ],
     );
   }
@@ -217,15 +186,9 @@ class WeatherTab extends GetView<HomeController> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected ?AppColors.surface: const Color(0xFF2C2C2E),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(label,
-            style: TextStyle(
-              color: isSelected ?AppColors.background: AppColors.surface,
-              fontSize: 13,
-              fontWeight: FontWeight.w400,
-            )),
-      ),
+          borderRadius: BorderRadius.circular(20)),
+        child: Text(label, style: AppTextStyles.caption.copyWith(
+              color: isSelected ?AppColors.background: AppColors.surface))),
     );
   }
 
@@ -236,17 +199,14 @@ class WeatherTab extends GetView<HomeController> {
       decoration: BoxDecoration(
         color: const Color(0xFF2C2C2E),
         border: Border.all(color: Color(0xFF333333)),
-        borderRadius: BorderRadius.circular(10),
-      ),
+        borderRadius: BorderRadius.circular(10)),
       child: Column(
         children: [
-          Text(item['time']!,
-              style: AppTextStyles.display.copyWith(color: AppColors.textOnDark)),
+          Text(item['time']!, style: AppTextStyles.display.copyWith(color: AppColors.textOnDark)),
           const SizedBox(height: 6),
           Image.asset(item['icon']!, width: 24, height: 24),
           const SizedBox(height: 6),
-          Text(item['temp']!,
-              style:AppTextStyles.display),
+          Text(item['temp']!, style:AppTextStyles.display),
         ],
       ),
     );

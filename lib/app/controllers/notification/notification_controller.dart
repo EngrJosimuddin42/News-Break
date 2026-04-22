@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../models/news_model.dart';
-import '../models/user_model.dart';
+import '../../models/news_model.dart';
+import '../../models/user_model.dart';
 
 class NotificationController extends GetxController with GetSingleTickerProviderStateMixin {
 

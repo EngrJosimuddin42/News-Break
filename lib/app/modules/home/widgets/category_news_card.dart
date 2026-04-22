@@ -19,10 +19,7 @@ class CategoryNewsCard extends StatelessWidget {
     final controller = Get.find<HomeController>();
 
     return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: AppColors.background,
-          borderRadius: BorderRadius.circular(12)),
+      color: AppColors.background,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -44,7 +41,7 @@ class CategoryNewsCard extends StatelessWidget {
 
             // Category & Time
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
+              padding: const EdgeInsets.fromLTRB(24, 10, 12, 4),
               child: Row(
                 children: [
                   Text(news.category, style: AppTextStyles.overline),
@@ -55,13 +52,17 @@ class CategoryNewsCard extends StatelessWidget {
 
             //  Title
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+              padding: const EdgeInsets.fromLTRB(24, 0, 12, 10),
               child: Text(news.title, style: AppTextStyles.buttonOutline, maxLines: 3, overflow: TextOverflow.ellipsis)),
           ],
         ),
       ),
             // Engagement Row
             _buildEngagementRow(controller),
+
+            SizedBox(height:4),
+            const Divider(color: Colors.white12, height: 2, thickness: 3),
+            SizedBox(height:4),
           ],
         ),
       );
@@ -70,7 +71,7 @@ class CategoryNewsCard extends StatelessWidget {
   // Header Widget
   Widget _buildHeader(HomeController controller) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+      padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
       child: Row(
         children: [
           PublisherAvatar(news: news),
@@ -147,7 +148,7 @@ class CategoryNewsCard extends StatelessWidget {
   // Engagement Row Widget
   Widget _buildEngagementRow(HomeController controller) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      padding: const EdgeInsets.fromLTRB(24, 0, 12, 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

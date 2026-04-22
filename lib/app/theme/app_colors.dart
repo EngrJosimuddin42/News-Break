@@ -5,7 +5,6 @@ class AppColors {
 
   // Primary Brand Colors
   static const Color light = Color(0xFFD9D9D9);
-  static const Color accent = Color(0xFFA89888);
   static const Color accentLight = Color(0xFFC4C4C4);
 
 
@@ -24,18 +23,11 @@ class AppColors {
 
   // Status
   static const Color success = Color(0xFFF0F0F0);
-  static const Color error = Color(0xFFE53935);
-  static const Color warning = Color(0xFFFFC107);
   static const Color info = Color(0xFFA0A0A0);
 
-  // Divider & Border & chart
-  static const Color divider = Color(0xFFE8E0D8);
-  static const Color border = Color(0xFFCACACA);
+  // Border & chart
   static const Color chart = Color(0xFF68B1FD);
   static const Color stroke = Color(0xFFE5E5EF);
-
-  // Overlay
-  static const Color overlay = Color(0xFFA6A6A6);
 
   //other
   static const Color background = Color(0xFF242424);
@@ -43,10 +35,7 @@ class AppColors {
   static const Color white = Colors.white;
   static const Color textSecondary = Color(0xFF9E9E9E);
   static const Color linkColor = Color(0xFFFE5C5A);
-  static const Color facebook = Color(0xFF1877F2);
-  static const Color googleBlue = Color(0xFF4285F4);
-  static const Color googleGreen = Color(0xFF34A853);
-  static const Color googleYellow = Color(0xFFFBBC05);
   static const Color red = Color(0xFFFE5C5A);
+  static const Color overlay = Color(0xFFA6A6A6);
 
 }

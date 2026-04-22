@@ -62,7 +62,9 @@ class _NewsCardState extends State<NewsCard> {
 
           // Action Row (Like/Comment)
           _buildActionRow(news),
-          const Divider(color: Colors.white12, height: 1, thickness: 1),
+          SizedBox(height:16),
+          const Divider(color: Colors.white12, height: 2, thickness: 3),
+          SizedBox(height:4),
         ],
       ),
     );

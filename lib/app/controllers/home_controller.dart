@@ -12,11 +12,9 @@ import '../modules/location/manage_location_view.dart';
 import '../modules/search/search_view.dart';
 
 class HomeController extends GetxController {
+
   // Tab list
-  final RxList<String> tabs = <String>[
-    'Reactions', 'For you', 'Local', 'Local Tv',
-    'Entertainment', 'Sports', 'Food', 'Health', 'Beauty', 'Weather',
-  ].obs;
+  final RxList<String> tabs = <String>['Reactions', 'For you', 'Local', 'Local Tv', 'Entertainment', 'Sports', 'Food', 'Health', 'Beauty', 'Weather'].obs;
 
   final RxInt selectedTabIndex = 0.obs;
   final RxInt selectedNavIndex = 0.obs;
@@ -155,6 +153,18 @@ class HomeController extends GetxController {
     );
   }
 
+  void onFollowPeople(int index) {
+    if (!isLoggedIn) {
+      Get.toNamed(Routes.SIGNIN);
+      return;
+    }
+    suggestedPeople[index]['isFollowing'] = !suggestedPeople[index]['isFollowing'];
+    suggestedPeople.refresh();
+  }
+
+  void onDismissPeople(int index) {
+    suggestedPeople.removeAt(index);
+  }
 
   // Reactions Tab
   final RxList<NewsModel> reactionsNews = <NewsModel>[
@@ -914,4 +924,26 @@ class HomeController extends GetxController {
       'temp': '27°/37°'
     },
   ].obs;
+
+  final RxList<Map<String, dynamic>> suggestedPeople = [
+    {
+      'name': 'Catherine',
+      'subtitle': 'Daily rising star',
+      'isFollowing': false,
+      'image': 'assets/images/user1.png'
+    },
+    {
+      'name': 'John Doe',
+      'subtitle': 'Tech Enthusiast',
+      'isFollowing': false,
+      'image': 'assets/images/user2.png'
+    },
+    {
+      'name': 'Amalia Rose',
+      'subtitle': 'Flutter Developer',
+      'isFollowing': false,
+      'image': 'assets/images/user3.png'
+    },
+  ].obs;
+
 }

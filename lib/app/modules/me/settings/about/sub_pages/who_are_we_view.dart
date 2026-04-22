@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../../../controllers/me/who_are_we_controller.dart';
+import '../../../../../widgets/custom_network_image.dart';
 import 'help_widgets.dart';
 
 class WhoAreWeView extends StatelessWidget {
@@ -24,6 +25,9 @@ class WhoAreWeView extends StatelessWidget {
                   child: CircularProgressIndicator(color: Colors.red),
                 );
               }
+              if (!controller.isLoading.value && controller.aboutSections.isEmpty) {
+                return const Center(child: Text("No information available."));
+              }
 
               return ListView(
               children: [
@@ -35,25 +39,13 @@ class WhoAreWeView extends StatelessWidget {
                     children: [
                       HelpWidgets.redChip(section.chip),
                       const SizedBox(height: 8),
-                      Text(section.title,
-                          style: AppTextStyles.chart.copyWith(color: Colors.black)),
+                      Text(section.title, style: AppTextStyles.chart.copyWith(color: Colors.black)),
                       const SizedBox(height: 12),
-                      Text(section.desc,
-                        style:AppTextStyles.overline.copyWith(color: Color(0xFF6C6C6C))),
+                      Text(section.desc, style:AppTextStyles.overline.copyWith(color: Color(0xFF6C6C6C))),
                       const SizedBox(height: 12),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          section.image,
-                          width: double.infinity,
-                          fit: BoxFit.fitWidth,
-                          errorBuilder: (_, __, ___) => Container(
-                            height: 160,
-                            color: Colors.grey[200],
-                            child: const Icon(Icons.broken_image, color: Colors.grey),
-                          ),
-                        ),
-                      ),
+
+                       CustomNetworkImage(imageUrl: section.image),
+
                       const SizedBox(height: 16),
                     ],
                   ),
@@ -62,29 +54,21 @@ class WhoAreWeView extends StatelessWidget {
                 // Team
                 Padding(
                   padding: EdgeInsets.all(16),
-                  child: Text('Some people we\'d like\nyou to meet',
-                      textAlign: TextAlign.center,
-                      style:AppTextStyles.head )),
+                  child: Text('Some people we\'d like\nyou to meet', textAlign: TextAlign.center, style:AppTextStyles.head )),
 
                 ...controller.teamList.map((member) => Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 36,
+                      CircleAvatar( radius: 36,
                         backgroundImage: NetworkImage(member.imageUrl)),
                       const SizedBox(height: 8),
-                      Text(member.name,
-                          style: AppTextStyles.button.copyWith(color: Color(0xFF333333))),
-                      Text(member.role,
-                          style: AppTextStyles.textSmall.copyWith(color: Color(0xFF6C6C6C))),
+                      Text(member.name, style: AppTextStyles.button.copyWith(color: Color(0xFF333333))),
+                      Text(member.role, style: AppTextStyles.textSmall.copyWith(color: Color(0xFF6C6C6C))),
                       const SizedBox(height: 12),
                        Padding(
                         padding: EdgeInsets.symmetric(horizontal: 24),
-                        child: Text(member.bio,
-                          textAlign: TextAlign.center,
-                          style: AppTextStyles.overline),
-                      ),
+                        child: Text(member.bio, textAlign: TextAlign.center, style: AppTextStyles.overline)),
                     ],
                   ),
                 )),

@@ -4,6 +4,7 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 class PeopleCard extends StatelessWidget {
   final String name;
   final String subtitle;
+  final bool isFollowing;
   final VoidCallback onDismiss;
   final VoidCallback onFollow;
 
@@ -11,6 +12,7 @@ class PeopleCard extends StatelessWidget {
     super.key,
     required this.name,
     required this.subtitle,
+    required this.isFollowing,
     required this.onDismiss,
     required this.onFollow,
   });
@@ -51,16 +53,22 @@ class PeopleCard extends StatelessWidget {
             width: 125,
             height: 36,
             child: OutlinedButton(
-              onPressed: onFollow,
-              style: OutlinedButton.styleFrom(
-                backgroundColor: Color(0xFF3498FA),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                onPressed: onFollow,
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: isFollowing ? Colors.grey[800] : const Color(0xFF3498FA),
+                  side: BorderSide(color: isFollowing ? Colors.white24 : const Color(0xFF3498FA)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                child: Text(isFollowing ? 'Following' : '+ Follow',
+                  style: AppTextStyles.buttonOutline),
               ),
-              child: Text('+ Follow', style: AppTextStyles.buttonOutline),
             ),
+            ],
           ),
-        ],
-      ),
     );
   }
 }
+
+
+
+
+

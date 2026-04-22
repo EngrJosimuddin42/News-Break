@@ -61,6 +61,9 @@ class LocalTab extends GetView<HomeController> {
       padding: const EdgeInsets.only(top: 4, bottom: 16),
       children: [
         _buildWeatherSection(),
+        const SizedBox(height: 8),
+        const Divider(color: Colors.white12, height: 2, thickness: 3),
+        const SizedBox(height: 8),
         _buildNewsCards(),
       ],
     );

@@ -11,7 +11,7 @@ import '../../modules/me/edit_profile_view.dart';
 class MeController extends GetxController {
 
 
-  // AuthController থেকে check
+  // Check From AuthController
   bool get isLoggedIn => AuthController.to.user.value != null;
   String get userName => AuthController.to.user.value?.name ?? '';
   String get userEmail => AuthController.to.user.value?.email ?? '';

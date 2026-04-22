@@ -16,24 +16,17 @@ class AppSnackbar {
     SnackStyle snackStyle = SnackStyle.FLOATING,
     Widget? icon,
   }) {
-    Get.snackbar(
-      title,
-      message,
+    Get.snackbar(title, message,
       backgroundColor: backgroundColor ?? AppColors.surface,
       colorText: textColor ?? AppColors.white,
       snackPosition: SnackPosition.BOTTOM,
       duration: duration,
       snackStyle: snackStyle,
-      margin: const EdgeInsets.symmetric(
-        horizontal: 40,
-        vertical: 24),
+      margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
       maxWidth: 311,
       borderRadius: 12,
-      titleText: Text(title,
-        style: AppTextStyles.bodyMedium.copyWith(
-          color: textColor ?? AppColors.white)),
-      messageText: Text(message,
-        style: AppTextStyles.bodySmall.copyWith(color: textColor ?? AppColors.white)),
+      titleText: Text(title, style: AppTextStyles.bodyMedium),
+      messageText: Text(message, style: AppTextStyles.bodySmall.copyWith(color: textColor ?? AppColors.white)),
       icon: icon,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     );
@@ -42,48 +35,42 @@ class AppSnackbar {
   //  Preset types
 
   static void success({ required String message}) {
-    show(title: "Success",
-      message: message,
+    show(title: "Success", message: message,
       backgroundColor: const Color(0xFF2E7D32),
       icon: const Icon(Icons.check_circle_outline, color: Colors.white, size: 28),
     );
   }
 
   static void error({required String message}) {
-    show(title: "Notice",
-      message: message,
+    show(title: "Notice", message: message,
       backgroundColor: const Color(0xFFC62828),
       icon: const Icon(Icons.error_outline, color: Colors.white, size: 28),
     );
   }
 
   static void warning({required String title, required String message}) {
-    show(title: title,
-      message: message,
+    show(title: title, message: message,
       backgroundColor: const Color(0xFFE65100),
       icon: const Icon(Icons.warning_amber_rounded, color: Colors.white, size: 28),
     );
   }
 
   static void facebook({required String message}) {
-    show(title: 'Facebook',
-      message: message,
+    show(title: 'Facebook', message: message,
       backgroundColor: const Color(0xFF1877F2),
       icon: const Icon(Icons.facebook_rounded, color: Colors.white, size: 28),
     );
   }
 
   static void google({required String message}) {
-    show(title: 'Google',
-      message: message,
+    show(title: 'Google', message: message,
       backgroundColor: const Color(0xFF4285F4),
       icon: const Icon(Icons.g_mobiledata_rounded, color: Colors.white, size: 28),
     );
   }
 
   static void email({required String message}) {
-    show(title: 'Email',
-      message: message,
+    show(title: 'Email', message: message,
       backgroundColor: const Color(0xFF4285F4),
       icon: const Icon(Icons.email_outlined, color: Colors.white, size: 28),
     );

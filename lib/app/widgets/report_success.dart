@@ -20,8 +20,7 @@ class ReportSuccess extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 8),
-          Container(
-            width: 30, height: 30,
+          Container(width: 30, height: 30,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: Colors.green, width: 2)),
@@ -29,9 +28,7 @@ class ReportSuccess extends StatelessWidget {
           const SizedBox(height: 16),
           Text(message, style: AppTextStyles.caption),
           const SizedBox(height: 24),
-          SizedBox(
-            width: 311,
-            height: 48,
+          SizedBox(width: 311, height: 48,
             child: ElevatedButton(
               onPressed: () {
                 if (onDone != null) {
@@ -45,9 +42,7 @@ class ReportSuccess extends StatelessWidget {
                 foregroundColor: Colors.black,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.symmetric(vertical: 20)),
-              child:Text('Done', style: AppTextStyles.bodySmall.copyWith(color: Color(0xFF242424))),
-            ),
-          ),
+              child:Text('Done', style: AppTextStyles.bodySmall.copyWith(color: Color(0xFF242424))))),
           const SizedBox(height: 8),
         ],
       ),

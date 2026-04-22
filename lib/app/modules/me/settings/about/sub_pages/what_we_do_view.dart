@@ -20,56 +20,55 @@ class WhatWeDoView extends StatelessWidget {
         children: [
           const HelpTabBar(),
           Expanded(
-            child: ListView(
-              children: [
-                // Hero section
-                Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      Text(controller.userStats,
-                          style: AppTextStyles.caption.copyWith(color: AppColors.linkColor)),
-                      const SizedBox(height: 8),
-                      Text(controller.welcomeHeadline,
-                          textAlign: TextAlign.center,
-                          style: AppTextStyles.chart.copyWith(color: Colors.black)),
-                      const SizedBox(height: 16),
-                      Image.asset(controller.heroImagePath)
-                    ],
-                  ),
-                ),
+            child:Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(
+                    child: CircularProgressIndicator(color: Colors.red));
+              }
 
-                // Stay alert section
-                Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      Text(controller.safetyTitle,
-                          textAlign: TextAlign.center,
-                          style:AppTextStyles.headlineLarge.copyWith(fontWeight: FontWeight.w400)),
-                      const SizedBox(height: 12),
-                       Text(controller.safetyDesc,
-                        textAlign: TextAlign.center,
-                        style:AppTextStyles.caption.copyWith(color: Color(0xFF525C5E)),
-                      ),
-                      const SizedBox(height: 16),
-                      Image.asset(controller.safetyImagePath)                    ],
+              return ListView(
+                children: [
+                  // Hero section
+                  Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        Text(controller.userStats, style: AppTextStyles.caption.copyWith(color: AppColors.linkColor)),
+                        const SizedBox(height: 8),
+                        Text(controller.welcomeHeadline, textAlign: TextAlign.center, style: AppTextStyles.chart.copyWith( color: Colors.black)),
+                        const SizedBox(height: 16),
+                        Image.asset(controller.heroImagePath)
+                      ],
+                    ),
                   ),
-                ),
 
-                // CTA Sections (Contributors, Publishers, Advertisers)
-                ...controller.ctaSections.map((section) => _ctaSection(
-                  tag: section.tag,
-                  title: section.title,
-                  subtitle: section.subtitle,
-                  buttonLabel: section.buttonLabel,
-                  onTap: () => Get.to(() => CreatorPageView(pageKey: section.pageKey)),
-                )),
-                HelpWidgets.helpFooter(),
-              ],
-            ),
+                  // Stay alert section
+                  Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        Text(controller.safetyTitle, textAlign: TextAlign.center, style: AppTextStyles.headlineLarge.copyWith( fontWeight: FontWeight.w400)),
+                        const SizedBox(height: 12),
+                        Text(controller.safetyDesc, textAlign: TextAlign.center, style: AppTextStyles.caption.copyWith(color: Color(0xFF525C5E))),
+                        const SizedBox(height: 16),
+                        Image.asset(controller.safetyImagePath)])),
+
+                  // CTA Sections (Contributors, Publishers, Advertisers)
+                  ...controller.ctaSections.map((section) =>
+                      _ctaSection(
+                        tag: section.tag,
+                        title: section.title,
+                        subtitle: section.subtitle,
+                        buttonLabel: section.buttonLabel,
+                        onTap: () => Get.to(() => CreatorPageView(pageKey: section.pageKey)),
+                      )),
+                  HelpWidgets.helpFooter(),
+                ],
+              );
+            }
+              )
           ),
         ],
       ),
@@ -90,30 +89,21 @@ class WhatWeDoView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(tag,
-            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.linkColor)),
+          Text(tag, style: AppTextStyles.bodyMedium.copyWith(color: AppColors.linkColor)),
           const SizedBox(height: 8),
-          Text(title,
-              style: AppTextStyles.title),
+          Text(title, style: AppTextStyles.title),
           const SizedBox(height: 8),
-          Text(subtitle,
-              style:AppTextStyles.overline.copyWith(color: Color(0xFF525C5E))),
+          Text(subtitle, style:AppTextStyles.overline.copyWith(color: Color(0xFF525C5E))),
           const SizedBox(height: 24),
-          SizedBox(
-            width: 190,
-            height: 48,
+          SizedBox(width: 190, height: 48,
             child: ElevatedButton(
               onPressed: onTap,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.linkColor,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(68)),
-                padding: const EdgeInsets.symmetric(vertical: 14),
-              ),
-              child: Text(buttonLabel,
-                  style:AppTextStyles.buttonOutline),
-            ),
-          ),
+                padding: const EdgeInsets.symmetric(vertical: 14)),
+              child: Text(buttonLabel, style:AppTextStyles.buttonOutline))),
         ],
       ),
     );

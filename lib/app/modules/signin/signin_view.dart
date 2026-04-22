@@ -14,7 +14,7 @@ class SignInView extends GetView<SignInController> {
     return isSheet ? _buildSheet(context) : _buildFullScreen(context);
   }
 
-  // Full screen ( From FullScreen)
+  // Full screen
   Widget _buildFullScreen(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -24,8 +24,7 @@ class SignInView extends GetView<SignInController> {
           child: Column(
             children: [
               // Skip
-              Align(
-                alignment: Alignment.centerRight,
+              Align( alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: controller.onSkip,
                   child: Text('Skip', style: AppTextStyles.bodyMedium))),
@@ -52,20 +51,16 @@ class SignInView extends GetView<SignInController> {
     return Container(
       decoration: const BoxDecoration(
         color: Color(0xFF252525),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       padding: const EdgeInsets.all(24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Close
-          Align(
-            alignment: Alignment.topRight,
+          Align(alignment: Alignment.topRight,
             child: GestureDetector(
               onTap: () => Get.back(),
-              child: const Icon(Icons.close, color: Colors.white, size: 20),
-            ),
-          ),
+              child: const Icon(Icons.close, color: Colors.white, size: 20))),
           const SizedBox(height: 8),
 
           // Logo

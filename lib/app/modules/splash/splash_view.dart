@@ -16,15 +16,12 @@ class SplashView extends GetView<SplashController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/images/newsbreak_logo.png',
-              width: 80,
-              height: 80,
-            ),
+            Image.asset('assets/images/newsbreak_logo.png', width: 80, height: 80),
             const SizedBox(height: 16),
-             Text('Newsbreak',
-            style: AppTextStyles.displayMedium,
-            ),
+             Text('Newsbreak', style: AppTextStyles.displayMedium),
+
+            const SizedBox(height: 40),
+            const CircularProgressIndicator(color: Colors.red, strokeWidth: 2),
           ],
         ),
       ),

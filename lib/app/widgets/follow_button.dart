@@ -20,12 +20,10 @@ class FollowButton extends StatelessWidget {
         return TextButton(
           onPressed: () => controller.toggleFollow(news),
           style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
+              padding: EdgeInsets.zero,
             minimumSize: Size.zero,
             tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-          child: Text(
-            news.isFollowing ? 'Following' : 'Follow',
-            style: AppTextStyles.bodyMedium.copyWith(
+          child: Text(news.isFollowing ? 'Following' : 'Follow', style: AppTextStyles.bodyMedium.copyWith(
               color: news.isFollowing ? Colors.grey : AppColors.textGreen)),
         );
       },

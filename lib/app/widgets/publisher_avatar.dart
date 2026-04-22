@@ -18,17 +18,12 @@ class PublisherAvatar extends StatelessWidget {
     final String imageUrl = news.publisherImageUrl;
 
     return ClipOval(
-      child: SizedBox(
-        width: size,
-        height: size,
+      child: SizedBox(width: size, height: size,
         child: (imageUrl.isNotEmpty && imageUrl.startsWith('http'))
-            ? Image.network(
-          imageUrl,
+            ? Image.network(imageUrl,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => _buildFallbackAvatar(),
-        )
-            : Image.asset(
-          imageUrl.isNotEmpty ? imageUrl : 'assets/images/publisher.png',
+          errorBuilder: (context, error, stackTrace) => _buildFallbackAvatar())
+            : Image.asset(imageUrl.isNotEmpty ? imageUrl : 'assets/images/publisher.png',
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) => _buildFallbackAvatar(),
         ),
@@ -37,17 +32,11 @@ class PublisherAvatar extends StatelessWidget {
   }
 
   Widget _buildFallbackAvatar() {
-    return Container(
-      width: size,
-      height: size,
+    return Container(width: size, height: size,
       color: Colors.grey[800],
       alignment: Alignment.center,
-      child: Text(
-        news.publisherName.isNotEmpty ? news.publisherName[0].toUpperCase() : '?',
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
+      child: Text( news.publisherName.isNotEmpty ? news.publisherName[0].toUpperCase() : '?',
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
     );
   }

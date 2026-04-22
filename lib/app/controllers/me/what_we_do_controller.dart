@@ -3,6 +3,10 @@ import '../../models/what_we_do_model.dart';
 
 class WhatWeDoController extends GetxController {
 
+  var isLoading = true.obs;
+
+
+
 
   final String heroImagePath = 'assets/images/phone_image.png';
   final String safetyImagePath = 'assets/images/phone.png';

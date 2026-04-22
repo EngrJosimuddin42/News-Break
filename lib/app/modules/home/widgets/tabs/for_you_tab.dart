@@ -20,24 +20,40 @@ class ForYouTab extends GetView<HomeController> {
       children: [
         // People section
         _buildSectionHeader('People You May Like'),
-        SizedBox(
-          height: 175,
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            scrollDirection: Axis.horizontal,
-            itemCount: 3,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (_, i) =>
-                PeopleCard(
-                  name: 'Catherine',
-                  subtitle: 'Daily rising star',
-                  onDismiss: () {},
-                  onFollow: () {},
-                ),
-          ),
-        ),
 
-        const SizedBox(height: 24),
+      Obx(() {
+      if (controller.suggestedPeople.isEmpty) {
+      return const SizedBox.shrink();
+      }
+      return Column(
+        children: [
+        SizedBox(
+        height: 175,
+        child: ListView.separated(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          scrollDirection: Axis.horizontal,
+          itemCount: controller.suggestedPeople.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 12),
+          itemBuilder: (_, i) {
+            final person = controller.suggestedPeople[i];
+
+            return PeopleCard(
+              name: person['name'],
+              subtitle: person['subtitle'],
+              isFollowing: person['isFollowing'],
+              onDismiss: () => controller.onDismissPeople(i),
+              onFollow: () => controller.onFollowPeople(i),
+            );
+          },
+        ),
+      ),
+          const SizedBox(height: 24),
+          const Divider(color: Colors.white12, height: 2, thickness: 3),
+
+        ],
+        );
+      }),
+        const SizedBox(height: 6),
 
         // Local clips section
         _buildSectionHeader('Local clips'),
@@ -58,7 +74,9 @@ class ForYouTab extends GetView<HomeController> {
             },
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 30),
+        const Divider(color: Colors.white12, height: 2, thickness: 3),
+        const SizedBox(height: 12),
 
         // News Section
         ...controller.forYouNews.map((news) {

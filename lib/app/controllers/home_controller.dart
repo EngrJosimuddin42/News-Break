@@ -9,7 +9,7 @@ import '../routes/app_pages.dart';
 import '../modules/ai/nbot_sheet.dart';
 import '../modules/location/choose_location_sheet.dart';
 import '../modules/location/manage_location_view.dart';
-import '../modules/search/search_view.dart';
+import '../modules/search/search_page_view.dart';
 
 class HomeController extends GetxController {
 
@@ -83,7 +83,7 @@ class HomeController extends GetxController {
     return count.toString();
   }
 
-  void onSearch() => Get.to(() => const SearchView());
+  void onSearch() => Get.to(() => const SearchPageView());
 
   void onManageLocation() {
     Get.to(() => const ManageLocationView());

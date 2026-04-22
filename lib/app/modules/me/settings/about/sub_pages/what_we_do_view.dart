@@ -34,9 +34,9 @@ class WhatWeDoView extends StatelessWidget {
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       children: [
-                        Text(controller.userStats, style: AppTextStyles.caption.copyWith(color: AppColors.linkColor)),
+                        Text(controller.userStats.value, style: AppTextStyles.caption.copyWith(color: AppColors.linkColor)),
                         const SizedBox(height: 8),
-                        Text(controller.welcomeHeadline, textAlign: TextAlign.center, style: AppTextStyles.chart.copyWith( color: Colors.black)),
+                        Text(controller.welcomeHeadline.value, textAlign: TextAlign.center, style: AppTextStyles.chart.copyWith( color: Colors.black)),
                         const SizedBox(height: 16),
                         Image.asset(controller.heroImagePath)
                       ],
@@ -49,9 +49,9 @@ class WhatWeDoView extends StatelessWidget {
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       children: [
-                        Text(controller.safetyTitle, textAlign: TextAlign.center, style: AppTextStyles.headlineLarge.copyWith( fontWeight: FontWeight.w400)),
+                        Text(controller.safetyTitle.value, textAlign: TextAlign.center, style: AppTextStyles.headlineLarge.copyWith( fontWeight: FontWeight.w400)),
                         const SizedBox(height: 12),
-                        Text(controller.safetyDesc, textAlign: TextAlign.center, style: AppTextStyles.caption.copyWith(color: Color(0xFF525C5E))),
+                        Text(controller.safetyDesc.value, textAlign: TextAlign.center, style: AppTextStyles.caption.copyWith(color: Color(0xFF525C5E))),
                         const SizedBox(height: 16),
                         Image.asset(controller.safetyImagePath)])),
 

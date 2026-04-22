@@ -21,25 +21,20 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: GestureDetector(
         onTap: c.onChooseLocation,
         child: Obx(() => Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(c.locationTitle,
-              style: AppTextStyles.headlineMedium),
+            Flexible(
+              child: Text(c.locationTitle,
+              style: AppTextStyles.headlineMedium,
+              overflow: TextOverflow.ellipsis,
+             maxLines: 1)),
             const SizedBox(width: 6),
-            Container(
-              width: 18,
-              height: 18,
+            Container(width: 18, height: 18,
               decoration: BoxDecoration(
                 color: AppColors.surface,
-                shape: BoxShape.circle,
-              ),
+                shape: BoxShape.circle),
               child: const Center(
-                child: Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: AppColors.background,
-                  size: 15,
-                ),
-              ),
-            ),
+                child: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.background, size: 15))),
           ],
         )),
       ),
@@ -47,16 +42,13 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: c.onAI,
-          icon: Image.asset('assets/icons/add.png', width: 22, height: 22),
-        ),
+          icon: Image.asset('assets/icons/add.png', width: 22, height: 22)),
         IconButton(
           onPressed: c.onSearch,
-          icon: Image.asset('assets/icons/search.png', width: 22, height: 22),
-        ),
+          icon: Image.asset('assets/icons/search.png', width: 22, height: 22)),
         IconButton(
           onPressed: c.onManageLocation,
-          icon: Image.asset('assets/icons/location.png', width: 22, height: 22),
-        ),
+          icon: Image.asset('assets/icons/location.png', width: 22, height: 22)),
       ],
     );
   }

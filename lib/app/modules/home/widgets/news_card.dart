@@ -85,7 +85,10 @@ class _NewsCardState extends State<NewsCard> {
               children: [
                 Row(
                   children: [
-                    Text(news.publisherName, style: AppTextStyles.bodyMedium),
+                    Flexible(
+                      child: Text(news.publisherName, style: AppTextStyles.bodyMedium,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1)),
                     const SizedBox(width: 6),
                     Text('· ${news.timeAgo}', style: AppTextStyles.bodySmall),
                   ],
@@ -95,12 +98,16 @@ class _NewsCardState extends State<NewsCard> {
                   children: [
                     Image.asset('assets/icons/person.png', height: 14, width: 14),
                     const SizedBox(width: 3),
-                    Text(news.publisherMeta, style: AppTextStyles.bodySmall),
+                    Flexible(
+                      child: Text(news.publisherMeta, style: AppTextStyles.bodySmall,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1)),
                   ],
                 ),
               ],
             ),
           ),
+          const SizedBox(width: 8),
           FollowButton(news: news),
         ],
       ),

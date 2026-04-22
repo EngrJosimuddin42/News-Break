@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
 import '../../models/comment_model.dart';
 import '../../models/reel_model.dart';
@@ -12,11 +14,17 @@ import 'package:flutter/services.dart';
 
 class ReelsController extends GetxController {
 
+  final TextEditingController commentTextController = TextEditingController();
+
 //  Reels Data
   var reelsList = <ReelModel>[].obs;
   var isLoading = true.obs;
   var savedReels = <int>[].obs;
   var currentIndex = 0.obs;
+  var selectedImage = Rx<File?>(null);
+  var isGifPickerMode = false.obs;
+  var selectedGifUrl = RxnString();
+  var isSendingComment = false.obs;
 
   late PageController pageController;
 
@@ -35,12 +43,69 @@ class ReelsController extends GetxController {
     fetchReels();
   }
 
+  @override
+  void onClose() {
+    commentTextController.dispose();
+    pageController.dispose();
+    super.onClose();
+  }
+
   String formatCount(int count) {
     if (count >= 1000) {
       return '${(count / 1000).toStringAsFixed(1)}k';
     }
     return count.toString();
   }
+
+  void onAddMedia() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      selectedImage.value = File(image.path);
+      selectedGifUrl.value = null;
+    }
+  }
+
+  void selectGif(String url) {
+    selectedGifUrl.value = url;
+    selectedImage.value = null;
+    isGifPickerMode.value = false;
+  }
+
+  Future<void> submitComment(int reelId, String? gifUrl) async {
+    String text = commentTextController.text.trim();
+    if (text.isEmpty && gifUrl == null && selectedImage.value == null) return;
+    isSendingComment.value = true;
+    final user = Get.find<AuthController>().user.value;
+    var newComment = CommentModel(
+        id: DateTime.now().millisecondsSinceEpoch,
+        userName: user?.name ?? 'Guest',
+        location: user?.location ?? 'Online',
+        text: text,
+        gifUrl: gifUrl,
+        imagePath: selectedImage.value?.path,
+        userProfileImage: user?.profileImageUrl ?? '',
+        likes: 0,
+        createdAt: 'Just now');
+    commentsList.insert(0, newComment);
+    incrementComment(reelId);
+    commentTextController.clear();
+    selectedGifUrl.value = null;
+    selectedImage.value = null;
+    isSendingComment.value = false;
+    FocusManager.instance.primaryFocus?.unfocus();
+    Get.back();
+  }
+
+
+  void incrementComment(int reelId) {
+    int index = reelsList.indexWhere((r) => r.id == reelId);
+    if (index != -1) {
+      reelsList[index].comments++;
+      reelsList.refresh();
+    }
+  }
+
 
   void updatePage(int index) {
     currentIndex.value = index;
@@ -58,7 +123,8 @@ class ReelsController extends GetxController {
   void toggleCommentLike(int commentId) {
     int index = commentsList.indexWhere((c) => c.id == commentId);
     if (index != -1) {
-      commentsList[index].likes++;
+      commentsList[index].isLiked = !commentsList[index].isLiked;
+      commentsList[index].isLiked ? commentsList[index].likes++ : commentsList[index].likes--;
       commentsList.refresh();
     }
   }
@@ -101,14 +167,6 @@ class ReelsController extends GetxController {
     update();
   }
 
-
-  void incrementComment(int reelId) {
-    int index = reelsList.indexWhere((r) => r.id == reelId);
-    if (index != -1) {
-      reelsList[index].comments++;
-      reelsList.refresh();
-    }
-  }
 
   void incrementShare(int index) {
     reelsList[index].shares++;
@@ -197,28 +255,7 @@ class ReelsController extends GetxController {
     AppSnackbar.success(message:'Content from $userName hidden');
   }
 
-  void addComment(int reelId, String text, String? gifUrl) {
-    if (text.isEmpty && gifUrl == null) return;
-    final user = Get.find<AuthController>().user.value;
 
-    var newComment = CommentModel(
-        id: DateTime.now().millisecondsSinceEpoch,
-        userName: user?.name ?? 'Guest',
-        location: user?.location ?? 'Online',
-        text: gifUrl ?? text,
-        userProfileImage: user?.profileImageUrl ?? '',
-        likes: 0,
-        createdAt: 'Just now');
-
-    commentsList.insert(0, newComment);
-    commentsList.refresh();
-
-    int index = reelsList.indexWhere((r) => r.id == reelId);
-    if (index != -1) {
-      reelsList[index].comments++;
-      reelsList.refresh();
-    }
-  }
 
 
   void fetchReels() async {

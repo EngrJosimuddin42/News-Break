@@ -6,16 +6,25 @@ class WhatWeDoController extends GetxController {
   var isLoading = true.obs;
 
 
+  @override
+  void onInit() {
+    super.onInit();
+    loadInitialData();
+  }
 
+  void loadInitialData() async {
+    await Future.delayed(const Duration(seconds: 1));
+    isLoading.value = false;
+  }
 
   final String heroImagePath = 'assets/images/phone_image.png';
   final String safetyImagePath = 'assets/images/phone.png';
 
   // Hero & Alert Static Data
-  final String userStats = 'Over 50 Million Users';
-  final String welcomeHeadline = "Welcome to the nation's\nleading news app";
-  final String safetyTitle = 'Stay alert,\nStay safe';
-  final String safetyDesc = 'Stay safe and informed with immediate access to local crime and police alerts and incident reports in your neighborhood';
+  final userStats = 'Over 50 Million Users'.obs;
+  final welcomeHeadline = "Welcome to the nation's\nleading news app".obs;
+  final safetyTitle = 'Stay alert,\nStay safe'.obs;
+  final safetyDesc = 'Stay safe and informed with immediate access to local crime and police alerts and incident reports in your neighborhood'.obs;
 
   // CTA Sections List
   final List<WhatWeDoSection> ctaSections = [

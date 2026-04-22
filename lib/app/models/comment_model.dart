@@ -3,6 +3,8 @@ class CommentModel {
   final String userName;
   final String userProfileImage;
   final String text;
+  final String? gifUrl;
+  final String? imagePath;
   final String location;
   final String createdAt;
   int likes;
@@ -13,7 +15,9 @@ class CommentModel {
     required this.id,
     required this.userName,
     required this.userProfileImage,
-    required this.text,
+    this.text = '',
+    this.gifUrl,
+    this.imagePath,
     this.location = '',
     required this.createdAt,
     this.likes = 0,

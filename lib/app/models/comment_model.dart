@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 class CommentModel {
   final int id;
   final String userName;
@@ -7,6 +8,7 @@ class CommentModel {
   final String? imagePath;
   final String location;
   final String createdAt;
+  final Uint8List? imageBytes;
   int likes;
   bool isLiked;
   bool? isFollowing;
@@ -20,6 +22,7 @@ class CommentModel {
     this.imagePath,
     this.location = '',
     required this.createdAt,
+    this.imageBytes,
     this.likes = 0,
     this.isLiked = false,
     this.isFollowing = false,

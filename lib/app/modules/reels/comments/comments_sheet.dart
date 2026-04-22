@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/modules/reels/comments/write_comment_sheet.dart';
@@ -76,7 +77,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
             }),
           ),
 
-          // Write a comment input
+          // Write a comment input field
           Container(
             padding: EdgeInsets.only(left: 12, right: 12, top: 12,
                 bottom: MediaQuery.of(context).viewInsets.bottom + 12),
@@ -102,18 +103,17 @@ class _CommentsSheetState extends State<CommentsSheet> {
                     ),
                     const SizedBox(width: 10),
                     Text('Write a comment...',
-                        style:AppTextStyles.overline.copyWith(fontSize: 10)),
+                        style: AppTextStyles.overline.copyWith(fontSize: 10)),
                   ],
                 ),
               ),
             ),
           ),
-          SizedBox(height: 20)
+          const SizedBox(height: 20)
         ],
       ),
     );
   }
-
 
   Widget _buildComment(CommentModel comment, ReelsController controller) {
     return Padding(
@@ -148,40 +148,33 @@ class _CommentsSheetState extends State<CommentsSheet> {
                         controller.toggleFollow(comment);
                         controller.commentsList.refresh();
                       },
-                      child: GetBuilder<ReelsController>(
-                        builder: (ctrl) {
-                          final bool isFollowing = comment.isFollowing ?? false;
-                          return Text(
+                      child:Builder(builder: (_) {
+                        final bool isFollowing = comment.isFollowing ?? false;
+                        return Text(
                             isFollowing ? 'Following' : 'Follow',
                             style: AppTextStyles.overline.copyWith(
                               color: isFollowing ? Colors.grey : AppColors.textGreen,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                        },
-                      ),
+                              fontWeight: FontWeight.bold,)
+                        );
+                      }),
                     ),
                   ],
                 ),
                 const SizedBox(height: 6),
-                comment.text.startsWith('http')
-                    ? ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                        comment.text,
-                        height: 140,
-                        width: 180,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => const Text("GIF could not load", style: TextStyle(color: Colors.red))))
-                    : Text(comment.text, style: AppTextStyles.labelMedium),
+
+                // --- Media & Text Display Logic ---
+                _buildCommentBody(comment),
+
                 const SizedBox(height: 10),
 
-                // Actions
+                // Actions (Like, Reply, etc.)
                 Row(
                   children: [
                     _commentAction('assets/icons/comment.png', 'Reply'),
                     const SizedBox(width: 16),
-                    _commentAction('assets/icons/like_up.png', controller.formatCount(comment.likes)),
+                    GestureDetector(
+                        onTap: () => controller.toggleCommentLike(comment.id),
+                        child: _commentAction('assets/icons/like_up.png', controller.formatCount(comment.likes))),
                     const SizedBox(width: 16),
                     _commentAction('assets/icons/like_down.png', ''),
                     const SizedBox(width: 16),
@@ -190,8 +183,8 @@ class _CommentsSheetState extends State<CommentsSheet> {
                     Text(comment.createdAt, style: const TextStyle(color: Colors.grey, fontSize: 10)),
                     const SizedBox(width: 8),
                     GestureDetector(
-                      onTap: () => _showCommentOptionsSheet(widget.reelId,comment.userName),
-                      child: Icon(Icons.more_vert, color:AppColors.surface, size: 20),
+                      onTap: () => _showCommentOptionsSheet(widget.reelId, comment.userName),
+                      child: Icon(Icons.more_vert, color: AppColors.surface, size: 20),
                     ),
                   ],
                 ),
@@ -203,19 +196,57 @@ class _CommentsSheetState extends State<CommentsSheet> {
     );
   }
 
+  // কমেন্টের বডি (Text/GIF/Image) হ্যান্ডেল করার মেথড
+  Widget _buildCommentBody(CommentModel comment) {
+    // ১. যদি জিআইএফ হয় (URL check)
+    if (comment.text.startsWith('http')) {
+      return _buildMediaFrame(
+        Image.network(
+          comment.text,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => const Text("GIF could not load", style: TextStyle(color: Colors.red)),
+        ),
+      );
+    }
+    // ২. যদি লোকাল ফাইল পাথ হয় (Image check)
+    else if (comment.text.startsWith('/') || comment.text.contains('content://')) {
+      return _buildMediaFrame(
+        Image.file(
+          File(comment.text),
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => const Text("Image error", style: TextStyle(color: Colors.red)),
+        ),
+      );
+    }
+    // ৩. সাধারণ টেক্সট কমেন্ট
+    else {
+      return Text(comment.text, style: AppTextStyles.labelMedium);
+    }
+  }
+
+  // মিডিয়া ফ্রেমের সাইজ ও বর্ডার রেডিয়াস
+  Widget _buildMediaFrame(Widget child) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        height: 140,
+        width: 180,
+        color: Colors.black12,
+        child: child,
+      ),
+    );
+  }
+
   Widget _commentAction(String assetIcon, String label, {VoidCallback? onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Row(
+        mainAxisSize: MainAxisSize.min, // ← ADD THIS
         children: [
-          Image.asset(
-              assetIcon,
-              width: 16,
-              height: 16),
+          Image.asset(assetIcon, width: 16, height: 16),
           if (label.isNotEmpty) ...[
             const SizedBox(width: 4),
-            Text(label,
-                style: AppTextStyles.labelMedium),
+            Text(label, style: AppTextStyles.labelMedium),
           ],
         ],
       ),
@@ -232,7 +263,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
         builder: (context) => WriteCommentSheet(reelId: id));
   }
 
-  void _showCommentOptionsSheet(int id,String name) {
+  void _showCommentOptionsSheet(int id, String name) {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,

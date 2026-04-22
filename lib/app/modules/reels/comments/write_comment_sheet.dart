@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/widgets/bottom_sheet_handle.dart';
@@ -20,6 +21,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
   @override
   void dispose() {
     controller.selectedImage.value = null;
+    controller.selectedImageBytes.value = null; // ✅ Fix: bytes ও clear করা
     controller.selectedGifUrl.value = null;
     controller.isGifPickerMode.value = false;
     super.dispose();
@@ -42,74 +44,86 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
       decoration: const BoxDecoration(
           color: Color(0xFF252525),
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 12),
+      // ✅ Fix: Column overflow ঠিক করতে SingleChildScrollView
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 12),
 
-          // Handle bar & Guidelines
-          _buildTopBar(),
+            // Handle bar & Guidelines
+            _buildTopBar(),
 
-          const SizedBox(height: 12),
+            const SizedBox(height: 12),
 
-          // Media Preview Section (Image/GIF)
-          _buildMediaPreview(),
+            // Media Preview Section (Image/GIF)
+            _buildMediaPreview(),
 
-          // Text field
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-                controller: controller.commentTextController,
-                autofocus: true,
-                maxLines: null,
-                style: AppTextStyles.labelMedium,
-                decoration: InputDecoration(
-                    hintText: 'Write a comment...',
-                    hintStyle: AppTextStyles.overline,
-                    border: InputBorder.none))),
+            // Text field
+            Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
+                    controller: controller.commentTextController,
+                    autofocus: true,
+                    maxLines: null,
+                    style: AppTextStyles.labelMedium,
+                    decoration: InputDecoration(
+                        hintText: 'Write a comment...',
+                        hintStyle: AppTextStyles.overline,
+                        border: InputBorder.none))),
 
-          // Reactions (Emoji row)
-          _buildReactionRow(),
+            // Reactions (Emoji row)
+            _buildReactionRow(),
 
-          const Divider(color: Colors.grey, height: 1),
+            const Divider(color: Colors.grey, height: 1),
 
-          // Bottom Action Bar
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            child: Row(
-              children: [
-                // Image Picker Icon
-                IconButton(
-                    onPressed: controller.onAddMedia,
-                    icon: const Icon(Icons.image_outlined,
-                        color: AppColors.surface, size: 22)),
+            // Bottom Action Bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              child: Row(
+                children: [
+                  // Image Picker Icon
+                  IconButton(
+                      onPressed: controller.onAddMedia,
+                      icon: const Icon(Icons.image_outlined,
+                          color: AppColors.surface, size: 22)),
 
-                const SizedBox(width: 4),
+                  const SizedBox(width: 4),
 
-                // GIF Picker Button
-                GestureDetector(
-                    onTap: () => controller.isGifPickerMode.value = true,
-                    child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.surface),
-                            borderRadius: BorderRadius.circular(6)),
-                        child: Text('GIF', style: AppTextStyles.display.copyWith(fontSize: 10)))),
+                  // GIF Picker Button
+                  GestureDetector(
+                      onTap: () => controller.isGifPickerMode.value = true,
+                      child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: AppColors.surface),
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Text('GIF',
+                              style: AppTextStyles.display
+                                  .copyWith(fontSize: 10)))),
 
-                const Spacer(),
+                  const Spacer(),
 
-                // Send Button with Loading Indicator
-                Obx(() => controller.isSendingComment.value
-                    ? const SizedBox(width: 24, height: 24,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary))
-                    : GestureDetector(
-                    onTap: () => controller.submitComment(widget.reelId, controller.selectedGifUrl.value),
-                    child: Image.asset('assets/icons/send2.png', height: 24, width: 24))),
-              ],
+                  // Send Button with Loading Indicator
+                  Obx(() => controller.isSendingComment.value
+                      ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                          strokeWidth: 2, color: AppColors.primary))
+                      : GestureDetector(
+                      onTap: () => controller.submitComment(
+                          widget.reelId,
+                          controller.selectedGifUrl.value),
+                      child: Image.asset('assets/icons/send2.png',
+                          height: 24, width: 24))),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 40)
-        ],
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }
@@ -120,16 +134,21 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          //Handler
-         const BottomSheetHandle(),
-
+          const BottomSheetHandle(),
           const SizedBox(height: 16),
-          RichText( textAlign: TextAlign.start,
-            text: TextSpan(style: AppTextStyles.overline,
+          RichText(
+            textAlign: TextAlign.start,
+            text: TextSpan(
+              style: AppTextStyles.overline,
               children: [
-                const TextSpan(text: 'Please be respectful. Make sure your comment meets our '),
-                TextSpan(text: 'community guidelines.', style: AppTextStyles.overline.copyWith( color: AppColors.textGreen,
-                    decoration: TextDecoration.underline)),
+                const TextSpan(
+                    text:
+                    'Please be respectful. Make sure your comment meets our '),
+                TextSpan(
+                    text: 'community guidelines.',
+                    style: AppTextStyles.overline.copyWith(
+                        color: AppColors.textGreen,
+                        decoration: TextDecoration.underline)),
               ],
             ),
           ),
@@ -143,29 +162,42 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
     return Obx(() {
       final gif = controller.selectedGifUrl.value;
       final image = controller.selectedImage.value;
+      final bytes = controller.selectedImageBytes.value;
 
-      if (gif == null && image == null) return const SizedBox.shrink();
+      if (gif == null && image == null && bytes == null) {
+        return const SizedBox.shrink();
+      }
 
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Stack(
           children: [
             ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: image != null
-                    ? Image.file(image, height: 120, width: 160, fit: BoxFit.cover)
-                    : Image.network(gif!, height: 120, width: 160, fit: BoxFit.cover)),
+              borderRadius: BorderRadius.circular(12),
+              child: gif != null
+                  ? Image.network(gif,
+                  height: 120, width: 160, fit: BoxFit.cover)
+              // ✅ Fix: Web-এ Image.file এর বদলে Image.memory
+                  : kIsWeb
+                  ? Image.memory(bytes!,
+                  height: 120, width: 160, fit: BoxFit.cover)
+                  : Image.file(image!,
+                  height: 120, width: 160, fit: BoxFit.cover),
+            ),
             Positioned(
-                right: 5, top: 5,
+                right: 5,
+                top: 5,
                 child: GestureDetector(
                     onTap: () {
                       controller.selectedGifUrl.value = null;
                       controller.selectedImage.value = null;
+                      controller.selectedImageBytes.value = null;
                     },
                     child: const CircleAvatar(
                         radius: 12,
                         backgroundColor: Colors.black54,
-                        child: Icon(Icons.close, size: 16, color: Colors.white)))),
+                        child: Icon(Icons.close,
+                            size: 16, color: Colors.white)))),
           ],
         ),
       );
@@ -179,14 +211,17 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: controller.reactions.map((r) => Padding(
+          children: controller.reactions
+              .map((r) => Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6),
             child: GestureDetector(
                 onTap: () {
                   controller.commentTextController.text += r;
                 },
-                child: Text(r, style: const TextStyle(fontSize: 22))),
-          )).toList(),
+                child:
+                Text(r, style: const TextStyle(fontSize: 22))),
+          ))
+              .toList(),
         ),
       ),
     );
@@ -200,19 +235,25 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
         backgroundColor: Colors.black,
         leading: IconButton(
             onPressed: () => controller.isGifPickerMode.value = false,
-            icon: const Icon(Icons.close, color: AppColors.textOnDark, size: 20)),
-        title: Container(height: 40,
+            icon: const Icon(Icons.close,
+                color: AppColors.textOnDark, size: 20)),
+        title: Container(
+            height: 40,
             decoration: BoxDecoration(
                 color: const Color(0xFF121212),
                 borderRadius: BorderRadius.circular(8)),
             child: TextField(
-                style: AppTextStyles.caption.copyWith(color: AppColors.textOnDark),
+                style:
+                AppTextStyles.caption.copyWith(color: AppColors.textOnDark),
                 decoration: InputDecoration(
                     hintText: 'Search for GIFs',
-                    hintStyle: AppTextStyles.caption.copyWith(color: AppColors.textOnDark),
-                    prefixIcon: const Icon(Icons.search, color: AppColors.textOnDark, size: 20),
+                    hintStyle: AppTextStyles.caption
+                        .copyWith(color: AppColors.textOnDark),
+                    prefixIcon: const Icon(Icons.search,
+                        color: AppColors.textOnDark, size: 20),
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10)))),
+                    contentPadding:
+                    const EdgeInsets.symmetric(vertical: 10)))),
         actions: [
           TextButton(
               onPressed: () => controller.isGifPickerMode.value = false,

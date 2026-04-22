@@ -11,6 +11,8 @@ import '../../modules/reels/three_dot/report_reels_sheet.dart';
 import 'package:share_plus/share_plus.dart';
 import '../auth_controller.dart';
 import 'package:flutter/services.dart';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 
 class ReelsController extends GetxController {
 
@@ -25,6 +27,8 @@ class ReelsController extends GetxController {
   var isGifPickerMode = false.obs;
   var selectedGifUrl = RxnString();
   var isSendingComment = false.obs;
+  var selectedImageBytes = Rx<Uint8List?>(null);
+
 
   late PageController pageController;
 
@@ -61,7 +65,9 @@ class ReelsController extends GetxController {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      selectedImage.value = File(image.path);
+      final bytes = await image.readAsBytes();
+      selectedImageBytes.value = bytes;
+      selectedImage.value = kIsWeb ? null : File(image.path);
       selectedGifUrl.value = null;
     }
   }
@@ -77,6 +83,8 @@ class ReelsController extends GetxController {
     if (text.isEmpty && gifUrl == null && selectedImage.value == null) return;
     isSendingComment.value = true;
     final user = Get.find<AuthController>().user.value;
+    debugPrint('USER DATA: name=${user?.name}, location=${user?.location}, image=${user?.profileImageUrl}');
+
     var newComment = CommentModel(
         id: DateTime.now().millisecondsSinceEpoch,
         userName: user?.name ?? 'Guest',

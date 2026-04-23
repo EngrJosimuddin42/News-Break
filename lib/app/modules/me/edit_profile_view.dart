@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 
@@ -18,8 +19,8 @@ class _EditProfileViewState extends State<EditProfileView> {
   late TextEditingController _bioController;
   late TextEditingController _websiteController;
   late TextEditingController _emailController;
-  late String _selectedBirthYear;
   late String _selectedGender;
+  late DateTime _selectedBirthDate;
 
   @override
   void initState() {
@@ -31,8 +32,17 @@ class _EditProfileViewState extends State<EditProfileView> {
     _bioController = TextEditingController(text: user?.bio ?? '');
     _websiteController = TextEditingController(text: user?.website ?? '');
     _emailController = TextEditingController(text: user?.email ?? '');
-    _selectedBirthYear = user?.birthYear ?? '2005';
     _selectedGender = user?.gender ?? 'Female';
+
+    if (user?.birthYear != null && user!.birthYear!.isNotEmpty) {
+      try {
+        _selectedBirthDate = DateFormat('dd/MM/yyyy').parse(user.birthYear!);
+      } catch (e) {
+        _selectedBirthDate = DateTime(2005, 12, 12);
+      }
+    } else {
+      _selectedBirthDate = DateTime(2005, 12, 12);
+    }
   }
 
   @override
@@ -52,9 +62,6 @@ class _EditProfileViewState extends State<EditProfileView> {
     'Prefer not to say',
   ];
 
-  static final List<String> _years = List.generate(
-    80,(i) => (1944 + i).toString(),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -152,8 +159,8 @@ class _EditProfileViewState extends State<EditProfileView> {
                   // Birth year
                   _dropdownField(
                     label: 'Birth year',
-                    value: _selectedBirthYear,
-                    onTap: _showBirthYearPicker,
+                    value: DateFormat('dd/MM/yyyy').format(_selectedBirthDate),
+                    onTap: _showBirthDatePicker,
                   ),
                   const SizedBox(height: 12),
 
@@ -185,8 +192,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                     bio: _bioController.text,
                     website: _websiteController.text,
                     gender: _selectedGender,
-                    birthYear: _selectedBirthYear,
-                  );
+                    birthYear: DateFormat('dd/MM/yyyy').format(_selectedBirthDate),                  );
                   Get.back();},
                 style: ElevatedButton.styleFrom(
                   backgroundColor:AppColors.linkColor,
@@ -267,68 +273,37 @@ class _EditProfileViewState extends State<EditProfileView> {
     );
   }
 
-  // ── Birth year picker ────────────────────────
-  void _showBirthYearPicker() {
-    String tempYear = _selectedBirthYear;
-    final controller = FixedExtentScrollController(
-      initialItem: _years.indexOf(tempYear).clamp(0, _years.length - 1),
-    );
 
-    showDialog(
+// ── Birth year picker ────────────────────────
+  void _showBirthDatePicker() async {
+    final DateTime? picked = await showDatePicker(
       context: context,
-      builder: (_) => AlertDialog(
-        backgroundColor: const Color(0xFF242424),
-        title: Text('Birth Year',
-            style: AppTextStyles.displaySmall,
-            textAlign: TextAlign.center),
-        content: SizedBox(
-          height: 250,
-          child: ListWheelScrollView.useDelegate(
-            controller: controller,
-            itemExtent: 60,
-            perspective: 0.005,
-            onSelectedItemChanged: (i) {
-              tempYear = _years[i];
-            },
-            childDelegate: ListWheelChildBuilderDelegate(
-              builder: (context, i) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      _years[i],
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: Divider(color: Colors.white12, height: 10),
-                    ),
-                  ],
-                );
-              },
-              childCount: _years.length,
+      initialDate: _selectedBirthDate,
+      firstDate: DateTime(1950),
+      lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: AppColors.linkColor,
+              onPrimary: Colors.white,
+              surface: const Color(0xFF242424),
+              onSurface: Colors.white,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(foregroundColor: AppColors.linkColor),
             ),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text('Cancel', style: AppTextStyles.caption),
-          ),
-          const Spacer(),
-          TextButton(
-            onPressed: () {
-              setState(() => _selectedBirthYear = tempYear);
-              Get.back();
-            },
-            child: Text('Ok', style: AppTextStyles.caption),
-          ),
-        ],
-      ),
+          child: child!,
+        );
+      },
     );
+
+    if (picked != null && picked != _selectedBirthDate) {
+      setState(() {
+        _selectedBirthDate = picked;
+      });
+    }
   }
 
   // ── Gender picker ────────────────────────────

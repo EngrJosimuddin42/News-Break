@@ -140,17 +140,27 @@ class NotificationSettingsView extends StatelessWidget {
                  Text('Enable to display latest news stories on lock screen',
                   style: AppTextStyles.overline),
                 const SizedBox(height: 24),
-                OutlinedButton(
-                  onPressed: () {},
+                Obx(() => OutlinedButton(
+                  onPressed: () {
+                    controller.toggleLockScreen();
+                  },
                   style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(100, 50),
-                    side: BorderSide(color:AppColors.textGreen),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8)),
-                  child: Text('Enable',
-                      style: AppTextStyles.large.copyWith(color: AppColors.textGreen)),
-                ),
+                      minimumSize: const Size(100, 50),
+                      side: BorderSide(
+                          color: controller.isLockScreenEnabled.value
+                              ? Colors.red
+                              : AppColors.textGreen),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8)),
+                  child: Text(
+                    controller.isLockScreenEnabled.value ? 'Disable' : 'Enable',
+                    style: AppTextStyles.large.copyWith(color: controller.isLockScreenEnabled.value
+                            ? Colors.red
+                            : AppColors.textGreen
+                    ),
+                  ),
+                )),
               ],
             ),
           ),

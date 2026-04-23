@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/widgets/app_snackbar.dart';
 import '../../models/news_model.dart';
 import '../../models/user_model.dart';
+import '../../modules/ai/nbot_sheet.dart';
 
 class NotificationController extends GetxController with GetSingleTickerProviderStateMixin {
 
@@ -17,6 +19,8 @@ class NotificationController extends GetxController with GetSingleTickerProvider
   var commentReplies = true.obs;
   var doNotDisturb = true.obs;
   var frequency = 0.5.obs;
+  var isLockScreenEnabled = false.obs;
+
 
   static const List<String> tabs = ['News', 'Likes', 'Replies', 'Follows', 'Others'];
 
@@ -26,14 +30,40 @@ class NotificationController extends GetxController with GetSingleTickerProvider
     tabController = TabController(length: tabs.length, vsync: this);
   }
 
-  void updateSwitch(String key, bool value) {
-  }
+  void updateSwitch(String key, bool value) {}
 
   @override
   void onClose() {
     tabController.dispose();
     super.onClose();
   }
+
+  void updateFrequency(double value) {
+    frequency.value = value;
+  }
+
+  void toggleLockScreen() {
+    isLockScreenEnabled.value = !isLockScreenEnabled.value;
+  }
+
+  void showLessAbout(String topic) {
+    AppSnackbar.success(message:
+      "We'll show you fewer stories about $topic.");
+  }
+
+  void blockSource(String sourceName) {
+    AppSnackbar.error(message:
+      "You won't see stories from $sourceName anymore.");
+  }
+
+  void openSupportChat() {
+    Get.bottomSheet(
+      const NBotSheet(),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    );
+  }
+
 
   final RxList<NewsModel> newsItems = <NewsModel>[
     NewsModel(

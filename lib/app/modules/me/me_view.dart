@@ -116,13 +116,10 @@ class MeBody extends GetView<MeController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Avatar
-                Container(
-                  width: 60,
-                  height: 60,
+                Container(width: 60, height: 60,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Color(0xFF8DC0F9),
-                  ),
+                    color: Color(0xFF8DC0F9)),
                   alignment: Alignment.center,
                   child: Image.asset('assets/icons/person.png',height: 32,width: 32,fit: BoxFit.contain,color:AppColors.surface),
                 ),
@@ -154,9 +151,7 @@ class MeBody extends GetView<MeController> {
             ),
           child: Text(
             AuthController.to.user.value?.name ?? 'User',
-            style:AppTextStyles.bodyMedium.copyWith(color: Color(0xFFC4C4C4))),
-         ),
-        ),
+            style:AppTextStyles.bodyMedium.copyWith(color: Color(0xFFC4C4C4))))),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
           child: Row(
@@ -172,8 +167,7 @@ class MeBody extends GetView<MeController> {
                   child: Text( Get.find<HomeController>().locationTitle,
                 style:AppTextStyles.overline,
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  )),
+                    maxLines: 1)),
             ],
           ),
         ),
@@ -213,10 +207,7 @@ class MeBody extends GetView<MeController> {
                         borderRadius: BorderRadius.circular(8)),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child:Text('Complete profile',
-                      style:AppTextStyles.buttonOutline),
-                ),
-              ),
+                  child:Text('Complete profile', style:AppTextStyles.buttonOutline))),
             ],
           )),
         ),
@@ -303,11 +294,13 @@ class MeBody extends GetView<MeController> {
 
   Widget _buildTabBar(BuildContext context, List<String> tabs) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: List.generate(tabs.length, (i) {
               final selected = controller.selectedTab.value == i;
               return GestureDetector(
@@ -315,16 +308,12 @@ class MeBody extends GetView<MeController> {
                 child: Padding(
                   padding: const EdgeInsets.only(right: 24),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(tabs[i],
-                        style: AppTextStyles.caption),
+                      Text(tabs[i], style: AppTextStyles.caption),
                       const SizedBox(height: 4),
                       if (selected)
-                        Container(
-                          height: 2,
-                          width: 50,
-                          color: AppColors.surface,
-                        ),
+                        Container(height: 2, width: 50, color: AppColors.surface),
                     ],
                   ),
                 ),
@@ -381,23 +370,29 @@ class MeBody extends GetView<MeController> {
   Widget _buildSharedSavedView() {
     return Column(
       children: [
-        Obx(() =>
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-              child: Row(
-                children: [
-                  _chip('All',
-                    controller.selectedChipIndex.value == 0, () =>
-                        controller.updateChip(0),
-                  ),
-                  const SizedBox(width: 8),
-                  _chip('Mini Drama',
-                    controller.selectedChipIndex.value == 1, () =>
-                        controller.updateChip(1),
-                  ),
-                ],
-              ),
-            )),
+        Obx(() {
+    final isLoggedIn = AuthController.to.user.value != null;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      child: Row(
+        children: [
+          _chip(
+            'All',
+            controller.selectedChipIndex.value == 0,
+                () => controller.updateChip(0),
+          ),
+          if (!isLoggedIn) ...[
+            const SizedBox(width: 8),
+            _chip(
+              'Mini Drama',
+              controller.selectedChipIndex.value == 1,
+                  () => controller.updateChip(1),
+            ),
+          ],
+        ],
+      ),
+    );
+        }),
         const SizedBox(height: 40),
         Text('No  Saved articles',
             style: AppTextStyles.bodyMedium),
@@ -420,13 +415,11 @@ class MeBody extends GetView<MeController> {
               const Icon(Icons.visibility_off_outlined,
                   color: Colors.grey, size: 16),
               const SizedBox(width: 6),
-              Text('Visible only to you',
-                  style:AppTextStyles.labelMedium.copyWith(color: AppColors.info)),
+              Text('Visible only to you', style:AppTextStyles.labelMedium.copyWith(color: AppColors.info)),
               const Spacer(),
               GestureDetector(
                 onTap: () => controller.onClearAll(context),
-                child:Text('Clear All',
-                    style:AppTextStyles.small.copyWith(color:Color(0xFF3498FA))),
+                child:Text('Clear All', style:AppTextStyles.small.copyWith(color:Color(0xFF3498FA))),
               ),
             ],
           ),

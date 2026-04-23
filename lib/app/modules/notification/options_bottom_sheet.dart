@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-
+import '../../controllers/notification/notification_controller.dart';
+import '../../models/news_model.dart';
 import '../../widgets/bottom_sheet_handle.dart';
 
 class OptionsBottomSheet {
-  static void show(BuildContext context, {required Widget reportSheet}) {
+  static void show(BuildContext context, {
+    required NewsModel news,
+    required Widget reportSheet,
+  }) {
+    final controller = Get.find<NotificationController>();
+
     showModalBottomSheet(
       context: context,
       backgroundColor: const Color(0xFF252525),
-      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -26,45 +32,56 @@ class OptionsBottomSheet {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+
                 _optionTile(
                   icon: Icons.thumb_down_outlined,
                   iconColor: Colors.white,
-                  title: 'Show less about: Donald Trump',
-                  onTap: () => Navigator.pop(context),
+                  title: 'Show less about: ${news.author}',
+                  onTap: () {
+                    // আগে শিট ক্লোজ করুন যাতে Snackbar সামনে দেখা যায়
+                    Get.back();
+                    // তারপর লজিক কল করুন
+                    controller.showLessAbout(news.author);
+                  },
                 ),
+
                 _optionTile(
                   icon: Icons.thumb_down_outlined,
                   iconColor: Colors.white,
-                  title: 'Show less about: Iran',
-                  onTap: () => Navigator.pop(context),
+                  title: 'Show less about: ${news.category}',
+                  onTap: () {
+                    Get.back();
+                    controller.showLessAbout(news.category);
+                  },
                 ),
+
                 _optionTile(
                   icon: Icons.block,
                   iconColor: Colors.white,
-                  title: 'Block source: The guardian',
-                  onTap: () => Navigator.pop(context),
+                  title: 'Block source: ${news.publisherName}',
+                  onTap: () {
+                    Get.back();
+                    controller.blockSource(news.publisherName);
+                  },
                 ),
+
                 _optionTile(
                   icon: Icons.error_outline,
                   iconColor: Colors.red,
                   title: 'Report',
                   titleColor: Colors.red,
                   onTap: () {
-                    Navigator.pop(context);
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width),
-                      builder: (_) => reportSheet,
-                    );
+                    Get.back();
+                    _showReportSheet(context, reportSheet);
                   },
                 ),
               ],
             ),
           ),
+
           const SizedBox(height: 16),
+
+          // Support/AI Request Container
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
@@ -75,13 +92,25 @@ class OptionsBottomSheet {
               icon: 'assets/icons/add.png',
               iconColor: Colors.blueAccent,
               title: 'Ask/request/report anything',
-              onTap: () => Navigator.pop(context),
+              onTap: () {
+                Get.back();
+                controller.openSupportChat();
+              },
             ),
           ),
           const SizedBox(height: 24),
         ],
       ),
     );
+  }
+
+  static void _showReportSheet(BuildContext context, Widget reportSheet) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+        builder: (_) => reportSheet);
   }
 
   static Widget _optionTile({
@@ -98,11 +127,16 @@ class OptionsBottomSheet {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
-            icon is String
-                ? Image.asset(icon, width: 20, height: 20, color: iconColor)
-                : Icon(icon as IconData, color: iconColor, size: 20),
+            if (icon is String)
+              Image.asset(icon, width: 20, height: 20, color: iconColor)
+            else
+              Icon(icon as IconData, color: iconColor, size: 20),
             const SizedBox(width: 12),
-            Text(title, style: AppTextStyles.caption.copyWith(color: titleColor)),
+            Expanded(
+              child: Text(title, style: AppTextStyles.caption.copyWith(color: titleColor),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
       ),

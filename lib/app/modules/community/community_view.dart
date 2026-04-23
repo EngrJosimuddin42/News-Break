@@ -41,30 +41,6 @@ class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
 class CommunityBody extends GetView<CommunityController> {
   const CommunityBody({super.key});
 
-  static const List<Map<String, dynamic>> _posts = [
-    {
-      'userName': 'Haris',
-      'userImageUrl': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
-      'text': 'Lorem ipsum dolor sit amet consectetur. Ut sed elementum pellentesque erat. In nisl facilisis ornare felis cras purus amet cursus.',
-      'imageUrls': [
-        'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600',
-        'https://images.unsplash.com/photo-1495020689067-958852a7765e?w=600',
-      ],
-      'likes': '1.4K',
-      'comments': '4K',
-      'shares': '67',
-    },
-    {
-      'userName': 'Jordan',
-      'userImageUrl': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
-      'text': 'Lorem ipsum dolor sit amet consectetur. Ut sed elementum pellentesque erat. In nisl facilisis ornare felis cras purus amet cursus.',
-      'imageUrls': ['https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=600'],
-      'likes': '980',
-      'comments': '2.1K',
-      'shares': '34',
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -177,15 +153,17 @@ class CommunityBody extends GetView<CommunityController> {
         const SizedBox(height: 4),
 
         // Posts
-        ..._posts.map((post) => CommunityPostCard(
-          userName: post['userName'],
-          userImageUrl: post['userImageUrl'],
-          text: post['text'],
-          imageUrls: List<String>.from(post['imageUrls']),
-          likes: post['likes'],
-          comments: post['comments'],
-          shares: post['shares'],
-        )),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: controller.posts.length,
+          itemBuilder: (context, index) {
+            final post = controller.posts[index];
+            return CommunityPostCard(
+              post: post,
+            );
+          },
+        ),
       ],
     );
   }

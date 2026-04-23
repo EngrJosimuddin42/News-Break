@@ -84,11 +84,13 @@ class NotificationNewsItem extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         GestureDetector(
-          onTap: () => OptionsBottomSheet.show(context,
+            onTap: () => OptionsBottomSheet.show(context, news: news,
               reportSheet: const NotificationReportSheet()),
-          child: const Padding(
-            padding: EdgeInsets.all(4.0),
-            child: Icon(Icons.more_vert, color: Colors.grey, size: 20))),
+            child: const Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Icon(Icons.more_vert, color: Colors.grey, size: 20)
+            )
+        ),
       ],
     );
   }

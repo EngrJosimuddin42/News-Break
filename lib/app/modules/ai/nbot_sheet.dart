@@ -28,6 +28,7 @@ class _NBotSheetState extends State<NBotSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.80,
       decoration: const BoxDecoration(
         color: Color(0xFF252525),

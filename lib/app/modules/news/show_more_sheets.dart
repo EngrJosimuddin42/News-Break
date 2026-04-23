@@ -49,7 +49,7 @@ class NewsBottomSheets {
                             id: news.id,
                             userName: news.publisherName,
                             description: news.title,
-                            userProfileImage: news.imageUrl ?? "",
+                            userProfileImage: news.publisherImageUrl ?? "",
                               )),
                           isScrollControlled: true);
                     }),

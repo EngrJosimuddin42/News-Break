@@ -5,6 +5,7 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/signin_controller.dart';
 import '../../models/news_model.dart';
+import '../../widgets/about_profile_sheet.dart';
 import '../../widgets/follow_button.dart';
 import '../../widgets/publisher_avatar.dart';
 import '../signin/signin_view.dart';
@@ -73,28 +74,36 @@ class NewsDetailView extends GetView<HomeController> {
                 const SizedBox(height: 12),
 
                 // Publisher row
+                // Publisher row
                 Row(
                   children: [
                     PublisherAvatar(news: news),
                     const SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(news.publisherName,
-                                style:AppTextStyles.bodyMedium),
-                            if (news.isVerified) ...[
-                              const SizedBox(width: 6),
-                              Image.asset('assets/icons/verified.png', width: 20, height: 20),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: GestureDetector(
+                                  onTap: () => AboutProfileSheet.showFromNews(context, news),
+                                  child: Text(news.publisherName,
+                                      style: AppTextStyles.bodyMedium,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1),
+                                ),
+                              ),
+                              if (news.isVerified) ...[
+                                const SizedBox(width: 6),
+                                Image.asset('assets/icons/verified.png', width: 20, height: 20),
+                              ],
                             ],
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
                     const Spacer(),
-
-                    // Follow
                     FollowButton(news: news),
                   ],
                 ),
@@ -108,7 +117,7 @@ class NewsDetailView extends GetView<HomeController> {
                     width: double.infinity,
                     height: 200,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
+                    errorBuilder: (context, error, stackTrace) => Container(
                       height: 200,
                       color: Colors.grey[800],
                       child: const Icon(Icons.image, color: Colors.grey),

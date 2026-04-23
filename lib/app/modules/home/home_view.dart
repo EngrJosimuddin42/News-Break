@@ -28,7 +28,6 @@ class HomeView extends GetView<HomeController> {
     return Obx(() {
       final navIndex = controller.selectedNavIndex.value;
 
-      //Reels
       if (navIndex == 1) {
         return Scaffold(
           backgroundColor: Colors.black,
@@ -36,8 +35,6 @@ class HomeView extends GetView<HomeController> {
           bottomNavigationBar: SafeArea(child: const HomeBottomNavBar()),
         );
       }
-
-      // Notification
       if (navIndex == 2) {
         return Scaffold(
           backgroundColor: Colors.black,
@@ -46,8 +43,6 @@ class HomeView extends GetView<HomeController> {
           bottomNavigationBar: SafeArea(child: const HomeBottomNavBar()),
         );
       }
-
-      // Community
       if (navIndex == 3) {
         return Scaffold(
           backgroundColor: Colors.black,
@@ -56,7 +51,6 @@ class HomeView extends GetView<HomeController> {
           bottomNavigationBar: SafeArea(child: const HomeBottomNavBar()),
         );
       }
-
       if (navIndex == 4) {
         return Scaffold(
           backgroundColor: Colors.black,
@@ -75,20 +69,25 @@ class HomeView extends GetView<HomeController> {
             const HomeTabBar(),
             const SizedBox(height: 8),
             Expanded(
-              child: Obx(() =>
-                  _buildTabContent(controller.selectedTabIndex.value)),
+              child: Obx(() {
+                final index = controller.selectedTabIndex.value;
+                if (index >= controller.tabs.length) return const SizedBox();
+                final tabName = controller.tabs[index];
+                return _buildTabContentByName(tabName);
+              }),
             ),
           ],
         ),
         bottomNavigationBar: SafeArea(child: const HomeBottomNavBar()),
         floatingActionButton: Obx(() {
-          if (controller.selectedTabIndex.value == 0) {
+          if (controller.selectedTabIndex.value == 0 &&
+              controller.tabs.isNotEmpty &&
+              controller.tabs[0] == 'Reactions') {
             return FloatingActionButton(
               onPressed: controller.onCreatePost,
               backgroundColor: AppColors.backgroundAss,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
+                  borderRadius: BorderRadius.circular(30)),
               child: Image.asset('assets/icons/plump_feather_pen.png',
                   width: 24, height: 24),
             );
@@ -99,30 +98,19 @@ class HomeView extends GetView<HomeController> {
     });
   }
 
-  Widget _buildTabContent(int index) {
-    switch (index) {
-      case 0:
-        return const ReactionsTab();
-      case 1:
-        return const ForYouTab();
-      case 2:
-        return const LocalTab();
-      case 3:
-        return const LocalTvTab();
-      case 4:
-        return const EntertainmentTab();
-      case 5:
-        return const SportsTab();
-      case 6:
-        return const FoodTab();
-      case 7:
-        return const HealthTab();
-      case 8:
-        return const BeautyTab();
-      case 9:
-        return const WeatherTab();
-      default:
-        return const ReactionsTab();
+  Widget _buildTabContentByName(String tabName) {
+    switch (tabName) {
+      case 'Reactions':     return const ReactionsTab();
+      case 'For you':       return const ForYouTab();
+      case 'Local':         return const LocalTab();
+      case 'Local Tv':      return const LocalTvTab();
+      case 'Entertainment': return const EntertainmentTab();
+      case 'Sports':        return const SportsTab();
+      case 'Food':          return const FoodTab();
+      case 'Health':        return const HealthTab();
+      case 'Beauty':        return const BeautyTab();
+      case 'Weather':       return const WeatherTab();
+      default:              return const ReactionsTab();
     }
   }
 }

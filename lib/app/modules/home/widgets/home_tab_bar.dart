@@ -12,9 +12,8 @@ class HomeTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = Get.find<HomeController>();
 
-    return SizedBox(
-      height: 40,
-      child: ListView.separated(
+    return SizedBox( height: 40,
+      child:Obx(() => ListView.separated(
         scrollDirection: Axis.horizontal,
         physics: const ClampingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -25,17 +24,9 @@ class HomeTabBar extends StatelessWidget {
           if (i == 0) {
             return GestureDetector(
               onTap: c.onEditTabs,
-              child: Container(
-                width: 32,
-                height: 32,
+              child: Container(width: 32, height: 32,
                 alignment: Alignment.center,
-                child: Image.asset(
-                  'assets/icons/round-plus.png',
-                  width: 20,
-                  height: 20,
-                  color: AppColors.white,
-                ),
-              ),
+                child: Image.asset('assets/icons/round-plus.png', width: 20, height: 20, color: AppColors.white)),
             );
           }
 
@@ -46,34 +37,24 @@ class HomeTabBar extends StatelessWidget {
             return GestureDetector(
               onTap: () => c.onTabTap(tabIndex),
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 14, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
                   color: isSelected ? AppColors.white : Colors.transparent,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: isSelected ? AppColors.white : Colors.white24,
-                    width: 1,
-                  ),
-                ),
+                  border: Border.all(color: isSelected ? AppColors.white : Colors.white24, width: 1)),
                 child: Center(
-                child: Text(
-                  c.tabs[tabIndex],
-                  style: AppTextStyles.bodySmall.copyWith(
+                child: Text( c.tabs[tabIndex],  style: AppTextStyles.bodySmall.copyWith(
                     color: isSelected
                         ? AppColors.background
                         : AppColors.white,
                     fontWeight: isSelected
                         ? FontWeight.w600
-                        : FontWeight.w400,
-                  ),
-                ),
-              ),
-              ),
+                        : FontWeight.w400)))),
             );
           });
         },
       ),
+    ),
     );
   }
 }

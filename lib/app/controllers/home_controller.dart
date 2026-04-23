@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/controllers/reels/reels_controller.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
 import 'package:share_plus/share_plus.dart';
 import '../models/clip_model.dart';
 import '../models/news_model.dart';
+import '../modules/reels/comments/comments_sheet.dart';
 import 'auth_controller.dart';
 import '../routes/app_pages.dart';
 import '../modules/ai/nbot_sheet.dart';
@@ -14,9 +16,9 @@ import '../modules/search/search_page_view.dart';
 class HomeController extends GetxController {
 
   // Tab list
-  final RxList<String> tabs = <String>['Reactions', 'For you', 'Local', 'Local Tv', 'Entertainment', 'Sports', 'Food', 'Health', 'Beauty', 'Weather'].obs;
+  final RxList<String> tabs = <String>['Reactions', 'For you', 'Local', 'Local Tv', 'Entertainment', 'Sports', 'Food', 'Health'].obs;
 
-  final RxInt selectedTabIndex = 0.obs;
+  final RxInt selectedTabIndex = 1.obs;
   final RxInt selectedNavIndex = 0.obs;
   final selectedLocation = Rxn<Map<String, String>>();
   bool isLiked(int id) => likedNewsIds.contains(id);
@@ -38,6 +40,7 @@ class HomeController extends GetxController {
   void onNavTap(int index) {
     selectedNavIndex.value = index;
   }
+
 
   void onTabTap(int index) {
     selectedTabIndex.value = index;
@@ -142,8 +145,17 @@ class HomeController extends GetxController {
   }
 
   void onCommentPressed(NewsModel news) {
-    AppSnackbar.success(
-        message: 'Opening comments for ${news.publisherName}');
+    if (!Get.isRegistered<ReelsController>()) {
+      Get.lazyPut(() => ReelsController());
+    }
+    showModalBottomSheet(
+      context: Get.context!,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(Get.context!).size.width),
+      builder: (_) => CommentsSheet(reelId: news.id),
+    );
   }
 
   void onSharePressed(NewsModel news) async {
@@ -261,9 +273,9 @@ class HomeController extends GetxController {
     NewsModel(
       id: 101,
       publisherName: 'Daily news',
-      publisherImageUrl: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800',
-      publisherType: 'Partner publisher',
-      publisherMeta: 'New York, NY',
+      publisherImageUrl: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800',
+      publisherType: 'BBC publisher',
+      publisherMeta: 'UnitedKingdom, ARMY',
       totalFollowers: '833.3K',
       imageUrl: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800',
       category: 'New York',
@@ -280,6 +292,7 @@ class HomeController extends GetxController {
     NewsModel(
       id: 102,
       publisherName: 'Daily news',
+      publisherImageUrl: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800',
       publisherType: 'Partner publisher',
       publisherMeta: 'New York, NY',
       totalFollowers: '833.3K',

@@ -5,6 +5,7 @@ import '../../../models/news_model.dart';
 import '../../../routes/app_pages.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
+import '../../../widgets/about_profile_sheet.dart';
 import '../../../widgets/follow_button.dart';
 import '../../../widgets/publisher_avatar.dart';
 import '../../reels/full_screen_video_player.dart';
@@ -86,11 +87,13 @@ class _NewsCardState extends State<NewsCard> {
                 Row(
                   children: [
                     Flexible(
+                        child: GestureDetector(
+                            onTap: () => AboutProfileSheet.showFromNews(context, news),
                       child: Text(news.publisherName, style: AppTextStyles.bodyMedium,
                         overflow: TextOverflow.ellipsis,
-                        maxLines: 1)),
+                        maxLines: 1))),
                     const SizedBox(width: 6),
-                    Text('· ${news.timeAgo}', style: AppTextStyles.bodySmall),
+                    Text('· ${news.timeAgo}', style: AppTextStyles.overline.copyWith(color: AppColors.info)),
                   ],
                 ),
                 const SizedBox(height: 2),
@@ -99,7 +102,7 @@ class _NewsCardState extends State<NewsCard> {
                     Image.asset('assets/icons/person.png', height: 14, width: 14),
                     const SizedBox(width: 3),
                     Flexible(
-                      child: Text(news.publisherMeta, style: AppTextStyles.bodySmall,
+                      child: Text(news.publisherMeta, style: AppTextStyles.overline.copyWith(color: AppColors.info),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1)),
                   ],

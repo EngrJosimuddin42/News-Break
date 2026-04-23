@@ -11,7 +11,7 @@ import '../../../models/comment_model.dart';
 import 'option_sheet.dart';
 
 class CommentsSheet extends StatefulWidget {
-  final int reelId;
+  final dynamic reelId;
   const CommentsSheet({super.key, required this.reelId});
 
   @override

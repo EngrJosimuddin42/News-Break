@@ -16,17 +16,14 @@ class EditTabsView extends GetView<EditTabsController> {
         elevation: 0,
         leading: TextButton(
           onPressed: controller.onCancel,
-          child: Text('Cancel', style: AppTextStyles.bodyMedium),
-        ),
+          child: Text('Cancel', style: AppTextStyles.bodyMedium)),
         leadingWidth: 80,
         title: Text('Edit Top Tabs', style: AppTextStyles.headlineSmall),
         centerTitle: true,
         actions: [
           TextButton(
             onPressed: controller.onSave,
-            child: Text('Save',
-                style: AppTextStyles.bodyMedium),
-          ),
+            child: Text('Save', style: AppTextStyles.bodyMedium)),
         ],
       ),
       body: SingleChildScrollView(
@@ -34,15 +31,11 @@ class EditTabsView extends GetView<EditTabsController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'You can add or remove your top tabs here. These changes will not affect your main feed.',
-              style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.textSecondary),
-            ),
+            Text('You can add or remove your top tabs here. These changes will not affect your main feed.',
+              style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
             const SizedBox(height: 24),
 
-            Text('Select Topics', style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary)),
+            Text('Select Topics', style: AppTextStyles.bodyMedium.copyWith( color: AppColors.textSecondary)),
             const SizedBox(height: 12),
 
             Obx(() => Column(
@@ -51,17 +44,14 @@ class EditTabsView extends GetView<EditTabsController> {
                   contentPadding: EdgeInsets.zero,
                   leading: GestureDetector(
                     onTap: () => controller.removeFromSelected(topic),
-                    child: Image.asset('assets/icons/remove.png',
-                        width: 24, height: 24),
-                  ),
+                    child: Image.asset('assets/icons/remove.png', width: 24, height: 24)),
                   title: Text(topic, style: AppTextStyles.bodyMedium),
                 );
               }).toList(),
             )),
 
             const SizedBox(height: 16),
-            Text('All Topics', style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary)),
+            Text('All Topics', style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary)),
             const SizedBox(height: 12),
 
             Obx(() => Column(
@@ -70,9 +60,7 @@ class EditTabsView extends GetView<EditTabsController> {
                   contentPadding: EdgeInsets.zero,
                   leading: GestureDetector(
                     onTap: () => controller.addToSelected(topic),
-                    child: Image.asset('assets/icons/add_circle.png',
-                        width: 24, height: 24),
-                  ),
+                    child: Image.asset('assets/icons/add_circle.png', width: 24, height: 24)),
                   title: Text(topic, style: AppTextStyles.bodyMedium),
                 );
               }).toList(),

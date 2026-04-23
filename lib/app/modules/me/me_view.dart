@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/auth_controller.dart';
+import '../../widgets/about_profile_sheet.dart';
 import '../premium/widgets/premium_banner.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/me/me_controller.dart';
@@ -145,7 +146,12 @@ class MeBody extends GetView<MeController> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: GestureDetector(
-            onTap: () => _showAboutProfile(context),
+            onTap: () => AboutProfileSheet.show(
+              context,
+              publisherName: AuthController.to.user.value?.name ?? 'User',
+              publisherType: '',
+              publisherMeta: 'user since Mar 2026',
+            ),
           child: Text(
             AuthController.to.user.value?.name ?? 'User',
             style:AppTextStyles.bodyMedium.copyWith(color: Color(0xFFC4C4C4))),
@@ -162,9 +168,12 @@ class MeBody extends GetView<MeController> {
               const SizedBox(width: 12),
             Image.asset('assets/icons/location1.png',height: 14,width: 14),
               const SizedBox(width: 4),
-              Text(
-                Get.find<HomeController>().locationTitle,
-                style:AppTextStyles.overline),
+              Expanded(
+                  child: Text( Get.find<HomeController>().locationTitle,
+                style:AppTextStyles.overline,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  )),
             ],
           ),
         ),
@@ -442,63 +451,6 @@ class MeBody extends GetView<MeController> {
       ],
     )
         : _buildNoHistoryView());
-  }
-
-  // ── About profile bottom sheet ─────────────────────
-  void _showAboutProfile(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      constraints: const BoxConstraints(
-          maxWidth: double.infinity),
-      isScrollControlled: true,
-      builder: (_) => Container(
-        padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: Color(0xFF333333),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Text('About this profile',
-                  style: AppTextStyles.headlineMedium,
-                  textAlign: TextAlign.center),
-            ),
-            const SizedBox(height: 24),
-            Text(AuthController.to.user.value?.name ?? 'User',
-                style: AppTextStyles.bodyMedium),
-            const SizedBox(height: 16),
-            const Divider(color: Colors.white12, height: 1),
-            const SizedBox(height: 16),
-            Text('Joined',
-                style: AppTextStyles.bodyMedium),
-            const SizedBox(height: 4),
-            Text('Since April 2024',
-                style: AppTextStyles.caption.copyWith(color: const Color(0xFFC4C4C4))),
-            const SizedBox(height: 16),
-            const Divider(color: Colors.white12, height: 1),
-            const SizedBox(height: 12),
-            RichText(
-              text: TextSpan(
-                style: AppTextStyles.overline,
-                children: [
-                  const TextSpan(text: 'All content is required to comply with our '),
-                  TextSpan(
-                    text: 'Community Standards',
-                    style: AppTextStyles.overline.copyWith(color: const Color(0xFF56CCF2)),
-                  ),
-                  const TextSpan(
-                      text: '. Please help us keep our community safe by reporting any violations.'),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
 }

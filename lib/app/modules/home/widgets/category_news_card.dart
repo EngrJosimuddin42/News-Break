@@ -5,6 +5,7 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../models/news_model.dart';
 import '../../../routes/app_pages.dart';
+import '../../../widgets/about_profile_sheet.dart';
 import '../../../widgets/follow_button.dart';
 import '../../../widgets/publisher_avatar.dart';
 import '../../reels/full_screen_video_player.dart';
@@ -24,7 +25,7 @@ class CategoryNewsCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Publisher Header
-            _buildHeader(controller),
+            _buildHeader(controller, context),
       GestureDetector(
         onTap: () {
           if (hasVideo) {
@@ -69,7 +70,7 @@ class CategoryNewsCard extends StatelessWidget {
     }
 
   // Header Widget
-  Widget _buildHeader(HomeController controller) {
+  Widget _buildHeader(HomeController controller, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
       child: Row(
@@ -82,7 +83,10 @@ class CategoryNewsCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(news.publisherName, style: AppTextStyles.bodyMedium),
+                    Flexible(
+                        child: GestureDetector(
+                            onTap: () => AboutProfileSheet.showFromNews(context, news),
+                            child: Text(news.publisherName, style: AppTextStyles.bodyMedium))),
                     if (news.isVerified) ...[
                       const SizedBox(width: 6),
                       Image.asset('assets/icons/verified.png', width: 20, height: 20),

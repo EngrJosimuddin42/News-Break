@@ -48,7 +48,7 @@ class AppSnackbar {
     );
   }
 
-  static void warning({required String title, required String message}) {
+  static void warning({required String title,Widget? mainButton, required String message}) {
     show(title: title, message: message,
       backgroundColor: const Color(0xFFE65100),
       icon: const Icon(Icons.warning_amber_rounded, color: Colors.white, size: 28),

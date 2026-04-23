@@ -45,30 +45,58 @@ class CreatePostView extends GetView<CreatePostController> {
                 hintStyle: TextStyle(color: AppColors.textSecondary),
                 border: InputBorder.none,contentPadding: EdgeInsets.only(bottom: 2),)),
 
-            // Media picker section
-            Obx(() => GestureDetector(
-              onTap: controller.onAddMedia,
-              child: controller.selectedImage.value != null
-                  ? Container(
+            Obx(() {
+              final mediaFile = controller.selectedMedia.value;
+              final thumbFile = controller.videoThumbnail.value;
+              final bool isReel = controller.isReel.value;
+
+              if (mediaFile == null) {
+                return GestureDetector(
+                  onTap: controller.onAddMedia,
+                  child: Container(
+                    width: 75, height: 67,
+                    decoration: BoxDecoration(
+                        color: const Color(0xFF444444),
+                        borderRadius: BorderRadius.circular(8)),
+                    child: const Icon(Icons.add, color: Colors.white, size: 28),
+                  ),
+                );
+              }
+
+              return Container(
                 width: 75, height: 67,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  image: DecorationImage(
-                    image: FileImage(controller.selectedImage.value!),
-                    fit: BoxFit.cover)),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () => controller.selectedImage.value = null,
-                    child: const Icon(Icons.cancel, color: Colors.white, size: 20))))
-                  : Container(
-                width: 75, height: 67,
-                decoration: BoxDecoration(
-                    color: const Color(0xFF444444),
-                    borderRadius: BorderRadius.circular(8)),
-                child: const Icon(Icons.add, color: AppColors.white, size: 28),
-              ),
-            )),
+                  color: Colors.black,
+                  image: isReel
+                      ? (thumbFile != null
+                      ? DecorationImage(image: FileImage(thumbFile), fit: BoxFit.cover)
+                      : null)
+                      : DecorationImage(image: FileImage(mediaFile), fit: BoxFit.cover),
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    if (isReel && thumbFile == null)
+                      const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+
+                    if (isReel && thumbFile != null)
+                      const Icon(Icons.play_circle_fill, color: Colors.white, size: 30),
+                    Positioned(
+                      right: 0, top: 0,
+                      child: GestureDetector(
+                        onTap: () {
+                          controller.selectedMedia.value = null;
+                          controller.videoThumbnail.value = null;
+                          controller.isReel.value = false;
+                        },
+                        child: const Icon(Icons.cancel, color: Colors.red, size: 20),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
 
             SizedBox(height: 32),
 

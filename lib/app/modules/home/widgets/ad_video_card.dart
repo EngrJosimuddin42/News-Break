@@ -6,6 +6,7 @@ import 'package:video_player/video_player.dart';
 import '../../../controllers/ad_video_controller.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../models/news_model.dart';
+import '../../../widgets/about_profile_sheet.dart';
 
 class AdVideoCard extends StatelessWidget {
   final NewsModel news;
@@ -48,14 +49,20 @@ class AdVideoCard extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildPublisherInfo() {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(news.publisherName, style: AppTextStyles.bodyMedium),
-          Text('Ad', style:AppTextStyles.overline),
+          GestureDetector(
+            onTap: () => AboutProfileSheet.showFromNews(Get.context!, news),
+            child: Text(
+              news.publisherName,
+              style: AppTextStyles.bodyMedium,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1)),
+          Text('Ad', style: AppTextStyles.overline),
         ],
       ),
     );
@@ -92,7 +99,7 @@ class AdVideoCard extends StatelessWidget {
       right: 8,
         child: ValueListenableBuilder(
           valueListenable: adController.videoController,
-          builder: (_, value, __) => Text(
+          builder: (context, value, stackTrace) => Text(
             adController.formatDuration(value.duration - value.position),
             style:AppTextStyles.labelMedium)),
     );

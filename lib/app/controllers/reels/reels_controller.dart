@@ -1,40 +1,22 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
-import '../../models/comment_model.dart';
 import '../../models/reel_model.dart';
 import '../../modules/me/settings/about/legal_view.dart';
 import '../../modules/reels/comments/report_comment_sheet.dart';
 import '../../modules/reels/three_dot/report_reels_sheet.dart';
 import 'package:share_plus/share_plus.dart';
-import '../auth_controller.dart';
 import 'package:flutter/services.dart';
-import 'dart:typed_data';
-import 'package:flutter/foundation.dart';
 
 class ReelsController extends GetxController {
-
-  final TextEditingController commentTextController = TextEditingController();
 
 //  Reels Data
   var reelsList = <ReelModel>[].obs;
   var isLoading = true.obs;
   var savedReels = <int>[].obs;
   var currentIndex = 0.obs;
-  var selectedImage = Rx<File?>(null);
-  var isGifPickerMode = false.obs;
-  var selectedGifUrl = RxnString();
-  var isSendingComment = false.obs;
-  var selectedImageBytes = Rx<Uint8List?>(null);
-
 
   late PageController pageController;
-
-  // Comments Data
-  var commentsList = <CommentModel>[].obs;
-  var isCommentsLoading = false.obs;
 
   final String mediaAccountLabel = 'Media account';
   final String checkOutPrefix = 'Check out ';
@@ -49,7 +31,6 @@ class ReelsController extends GetxController {
 
   @override
   void onClose() {
-    commentTextController.dispose();
     pageController.dispose();
     super.onClose();
   }
@@ -60,51 +41,6 @@ class ReelsController extends GetxController {
     }
     return count.toString();
   }
-
-  void onAddMedia() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      final bytes = await image.readAsBytes();
-      selectedImageBytes.value = bytes;
-      selectedImage.value = kIsWeb ? null : File(image.path);
-      selectedGifUrl.value = null;
-    }
-  }
-
-  void selectGif(String url) {
-    selectedGifUrl.value = url;
-    selectedImage.value = null;
-    isGifPickerMode.value = false;
-  }
-
-  Future<void> submitComment(int reelId, String? gifUrl) async {
-    String text = commentTextController.text.trim();
-    if (text.isEmpty && gifUrl == null && selectedImage.value == null) return;
-    isSendingComment.value = true;
-    final user = Get.find<AuthController>().user.value;
-    debugPrint('USER DATA: name=${user?.name}, location=${user?.location}, image=${user?.profileImageUrl}');
-
-    var newComment = CommentModel(
-        id: DateTime.now().millisecondsSinceEpoch,
-        userName: user?.name ?? 'Guest',
-        location: user?.location ?? 'Online',
-        text: text,
-        gifUrl: gifUrl,
-        imagePath: selectedImage.value?.path,
-        userProfileImage: user?.profileImageUrl ?? '',
-        likes: 0,
-        createdAt: 'Just now');
-    commentsList.insert(0, newComment);
-    incrementComment(reelId);
-    commentTextController.clear();
-    selectedGifUrl.value = null;
-    selectedImage.value = null;
-    isSendingComment.value = false;
-    FocusManager.instance.primaryFocus?.unfocus();
-    Get.back();
-  }
-
 
   void incrementComment(int reelId) {
     int index = reelsList.indexWhere((r) => r.id == reelId);
@@ -128,14 +64,6 @@ class ReelsController extends GetxController {
     reelsList.refresh();
   }
 
-  void toggleCommentLike(int commentId) {
-    int index = commentsList.indexWhere((c) => c.id == commentId);
-    if (index != -1) {
-      commentsList[index].isLiked = !commentsList[index].isLiked;
-      commentsList[index].isLiked ? commentsList[index].likes++ : commentsList[index].likes--;
-      commentsList.refresh();
-    }
-  }
 
   void incrementProfileView(dynamic user) {
     int currentViews = _parseStatCount(user.totalViews.toString());
@@ -190,23 +118,20 @@ class ReelsController extends GetxController {
   void onShareOptionTap(int reelId, String platform) async {
     int index = reelsList.indexWhere((r) => r.id == reelId);
     if (index == -1) return;
+
     if (platform == 'Copy link') {
-      Clipboard.setData(ClipboardData(text: 'https://newsbreak.com/reels/$reelId'));
-      Get.back();
-      AppSnackbar.success(message: "Link copied!");
+      await Clipboard.setData(
+          ClipboardData(text: 'https://newsbreak.com/reels/$reelId'));
       incrementShare(index);
+      Get.back();
+
     } else if (platform == 'More') {
       Get.back();
-      await Share.share('Check out this story by ${reelsList[index].userName}: https://newsbreak.com/reels/$reelId');
+      await Share.share(
+          'Check out this story by ${reelsList[index].userName}: https://newsbreak.com/reels/$reelId');
       incrementShare(index);
     }
   }
-
-  void submitReport({
-    int? id,
-    required String reason,
-    required String type, // 'reel' OR 'comment'
-  }) {}
 
   void saveReel(int id) {
     if (savedReels.contains(id)) {
@@ -253,18 +178,6 @@ class ReelsController extends GetxController {
     reelsList.refresh();
     Get.back();
   }
-
-  void blockUser(String userName) {
-    reelsList.removeWhere((r) => r.userName == userName);
-    commentsList.removeWhere((c) => c.userName == userName);
-    reelsList.refresh();
-    commentsList.refresh();
-    Get.back();
-    AppSnackbar.success(message:'Content from $userName hidden');
-  }
-
-
-
 
   void fetchReels() async {
     try {
@@ -340,58 +253,5 @@ class ReelsController extends GetxController {
       isLoading(false);
     }
   }
-
-
-  void fetchComments(int reelId) async {
-    try {
-      isCommentsLoading(true);
-      await Future.delayed(const Duration(milliseconds: 500));
-      var dummyComments = [
-        CommentModel(
-          id: 101,
-          userName: 'Joser',
-          location: 'New York',
-          text: 'I wonder if they order that or not',
-          userProfileImage: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
-          likes: 1400,
-          createdAt: '2h',
-        ),
-        CommentModel(
-          id: 102,
-          userName: 'Zayan',
-          location: 'London',
-          text: 'This is a beautiful shot! 🔥',
-          userProfileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200',
-          likes: 850,
-          createdAt: '5h',
-        ),
-      ];
-      commentsList.assignAll(dummyComments);
-    } finally {
-      isCommentsLoading(false);
-    }
-  }
-
-  final List<String> reactions =  ['❤️', '😂', '😮', '😍', '😢', '🔥', '👏', '🙌', '👍', '💯', '✨', '🙏', '😊', '😡', '❤️‍🔥', 'ℹ️'];
-  final List<String> gifImages = [
-    'https://images.unsplash.com/photo-1482961674540-0b0e8363a005?w=200',
-    'https://images.unsplash.com/photo-1484406566174-9da000fda645?w=200',
-    'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200',
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200',
-    'https://images.unsplash.com/photo-1617854818583-09e7f077a156?w=200',
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200',
-    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200',
-    'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=200',
-    'https://images.unsplash.com/photo-1490750967868-88df5691cc13?w=200',
-  ];
-
-  final List<String> reportReasons = [
-    'Abusive or hateful',
-    'Misleading or spam',
-    'Violence or gory',
-    'Sexual Content',
-    'Minor safety',
-    'Dangerous or criminal',
-  ];
 
 }

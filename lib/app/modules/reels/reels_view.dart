@@ -7,7 +7,9 @@ import 'package:news_break/app/modules/reels/share_sheet.dart';
 import 'package:news_break/app/modules/reels/profile/profile_view.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../controllers/comment_controller.dart';
 import '../../controllers/reels/reels_controller.dart';
+import '../../models/comment_source.dart';
 import '../../widgets/reels_follow_button.dart';
 import 'create_reel_view.dart';
 
@@ -151,14 +153,17 @@ class _ReelsViewState extends State<ReelsView> {
                 color: Colors.white,
                 count: controller.formatCount(reel.comments),
                 onTap: () {
-                  controller.fetchComments(reel.id);
+                  Get.find<CommentController>().loadComments(reel.id, CommentSource.reel);
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
                     constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width),
-                    builder: (context) => CommentsSheet(reelId: reel.id));
+                        maxWidth: MediaQuery.of(context).size.width),
+                    builder: (context) => CommentsSheet(
+                        id: reel.id,
+                        source: CommentSource.reel),
+                  );
                 },
               ),
               const SizedBox(height: 16),
@@ -247,14 +252,17 @@ class _ReelsViewState extends State<ReelsView> {
           bottom: 1, left: 0, right: 0,
           child: GestureDetector(
             onTap: () {
-              controller.fetchComments(reel.id);
+              Get.find<CommentController>().loadComments(reel.id, CommentSource.reel);
               showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,
                 backgroundColor: Colors.transparent,
                 constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width),
-                builder: (context) => CommentsSheet(reelId: reel.id),);
+                    maxWidth: MediaQuery.of(context).size.width),
+                builder: (context) => CommentsSheet(
+                    id: reel.id,
+                    source: CommentSource.reel),
+              );
             },
             child: Container(
               height: 36,
@@ -265,7 +273,7 @@ class _ReelsViewState extends State<ReelsView> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text('Write a comment...',
-                    style: AppTextStyles.display.copyWith(color: AppColors.textOnDark)),
+                      style: AppTextStyles.display.copyWith(color: AppColors.textOnDark)),
                 ),
               ),
             ),

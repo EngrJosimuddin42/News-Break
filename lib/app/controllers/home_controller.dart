@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:news_break/app/controllers/reels/reels_controller.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
 import 'package:share_plus/share_plus.dart';
 import '../models/clip_model.dart';
+import '../models/comment_model.dart';
+import '../models/comment_source.dart';
 import '../models/news_model.dart';
 import '../modules/reels/comments/comments_sheet.dart';
 import 'auth_controller.dart';
@@ -12,6 +13,7 @@ import '../modules/ai/nbot_sheet.dart';
 import '../modules/location/choose_location_sheet.dart';
 import '../modules/location/manage_location_view.dart';
 import '../modules/search/search_page_view.dart';
+import 'comment_controller.dart';
 
 class HomeController extends GetxController {
 
@@ -21,6 +23,8 @@ class HomeController extends GetxController {
   final RxInt selectedTabIndex = 1.obs;
   final RxInt selectedNavIndex = 0.obs;
   final selectedLocation = Rxn<Map<String, String>>();
+  final RxList<CommentModel> commentsList = <CommentModel>[].obs;
+  final RxBool isCommentsLoading = false.obs;
   bool isLiked(int id) => likedNewsIds.contains(id);
   var likedNewsIds = <int>{}.obs;
   var isLoading = false.obs;
@@ -145,16 +149,16 @@ class HomeController extends GetxController {
   }
 
   void onCommentPressed(NewsModel news) {
-    if (!Get.isRegistered<ReelsController>()) {
-      Get.lazyPut(() => ReelsController());
-    }
+    Get.find<CommentController>().loadComments(news.id, CommentSource.news);
     showModalBottomSheet(
       context: Get.context!,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       constraints: BoxConstraints(
           maxWidth: MediaQuery.of(Get.context!).size.width),
-      builder: (_) => CommentsSheet(reelId: news.id),
+      builder: (_) => CommentsSheet(
+          id: news.id,
+          source: CommentSource.news),
     );
   }
 

@@ -33,7 +33,7 @@ class ForYouTab extends GetView<HomeController> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           scrollDirection: Axis.horizontal,
           itemCount: controller.suggestedPeople.length,
-          separatorBuilder: (_, __) => const SizedBox(width: 12),
+          separatorBuilder: (context, index) => const SizedBox(width: 12),
           itemBuilder: (_, i) {
             final person = controller.suggestedPeople[i];
 
@@ -63,17 +63,19 @@ class ForYouTab extends GetView<HomeController> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
             itemCount: controller.forYouClips.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            separatorBuilder: (context, index) => const SizedBox(width: 12),
             itemBuilder: (_, i) {
-              final clip = controller.forYouClips[i];
+              final reel = controller.forYouClips[i];
               return GestureDetector(
                   onTap: () {
+                    controller.customReelsForNavigation.assignAll(controller.forYouClips);
+                    controller.customReelsInitialIndex.value = i;
                     controller.selectedNavIndex.value = 1;
                   },
                   child: ClipCard(
-                title: clip.title,
-                subtitle: clip.subtitle,
-                imageUrl: clip.imageUrl,
+                    title: reel.userName,
+                    subtitle: reel.description,
+                    imageUrl: reel.imageUrl,
               )
               );
             },
@@ -91,7 +93,7 @@ class ForYouTab extends GetView<HomeController> {
                 : const SizedBox.shrink();
           }
           return CategoryNewsCard(news: news);
-        }).toList(),
+        }),
 
         const SizedBox(height: 16),
       ],

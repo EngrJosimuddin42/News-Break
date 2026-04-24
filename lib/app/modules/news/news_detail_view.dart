@@ -125,8 +125,7 @@ class NewsDetailView extends GetView<HomeController> {
                   ),
                 ),
                 const SizedBox(height: 8),
-
-                if (news.imageCaption != null && news.imageCaption.isNotEmpty)
+                if (news.imageCaption.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(news.imageCaption, style: AppTextStyles.overline.copyWith(color: const Color(0xFF9C9C9C)))),

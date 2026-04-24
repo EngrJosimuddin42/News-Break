@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
 import 'package:share_plus/share_plus.dart';
-import '../models/clip_model.dart';
 import '../models/comment_model.dart';
 import '../models/comment_source.dart';
 import '../models/news_model.dart';
+import '../models/reel_model.dart';
 import '../modules/reels/comments/comments_sheet.dart';
 import 'auth/auth_controller.dart';
 import '../routes/app_pages.dart';
@@ -41,6 +41,8 @@ class HomeController extends GetxController {
   final RxList<double> rainBarData = [0.06, 0.02, 0.04, 0.03, 0.08, 0.02, 0.05].obs;
   var chartData = <double>[0.06, 0.02, 0.04, 0.03, 0.08, 0.02, 0.05].obs;
   String get locationTitle => selectedLocation.value?['city'] ?? 'Choose Your Location';
+  RxList<ReelModel> customReelsForNavigation = <ReelModel>[].obs;
+  RxInt customReelsInitialIndex = 0.obs;
 
   // Auth check
   bool get isLoggedIn => AuthController.to.user.value != null;
@@ -55,7 +57,6 @@ class HomeController extends GetxController {
   void onNavTap(int index) {
     selectedNavIndex.value = index;
   }
-
 
   void onTabTap(int index) {
     selectedTabIndex.value = index;
@@ -840,21 +841,99 @@ class HomeController extends GetxController {
   ].obs;
 
   // Local Clips List
-  final RxList<ClipModel> forYouClips = <ClipModel>[
-    const ClipModel(
-      title: 'Play Time',
-      subtitle: 'Love for animals',
+  final RxList<ReelModel> forYouClips = <ReelModel>[
+    ReelModel(
+      id: 3,
       imageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400',
+      videoUrl: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+      userProfileImage: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
+      userName: 'Play Time',
+      description: 'Love for animals',
+      source: '3month',
+      location: 'Chicago, USA',
+      userSince: 'Mar 2026',
+      totalPosts: '45',
+      totalViews: '12k',
+      totalFollowers: '1.5k',
+      likes: 2500,
+      comments: 3500,
+      shares: 1200,
+      isFollowing: false,
+      isLiked: false,
+      userVideos: [
+        {'id': 'v1','imageUrl': 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400','videoUrl': 'https://www.w3schools.com/html/mov_bbb.mp4', 'title': 'Coding Life', 'views': '2.5k'},
+        {'id': 'v2','imageUrl': 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400','videoUrl': 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', 'title': 'Beautiful Nature', 'views': '1.1k'},
+        {'id': 'v3','imageUrl': 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400','videoUrl': 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4', 'title': 'Morning Walk', 'views': '850'},
+        {'id': 'v4','imageUrl': 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400','videoUrl': 'https://media.w3.org/2010/05/sintel/trailer.mp4', 'title': 'Forest Adventure', 'views': '3.2k'},
+      ],
+      userReactions: [
+        {'id': 'r1','imageUrl': 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=200','videoUrl': 'https://www.w3schools.com/html/movie.mp4', 'title': 'Laptop Review', 'time': 'Tuesday 11:30 AM'},
+        {'id': 'r2','imageUrl': 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200','videoUrl': 'https://media.w3.org/2010/05/sintel/trailer.mp4', 'title': 'Music Studio', 'time': 'Wednesday 8:00 PM'},
+        {'id': 'r3','imageUrl': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200','videoUrl': 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', 'title': 'Profile Portrait', 'time': 'Thursday 4:15 PM'},
+        {'id': 'r4','imageUrl': 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=200','videoUrl': 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4', 'title': 'Web Development', 'time': 'Monday 9:05 AM'},
+      ],
     ),
-    const ClipModel(
-      title: 'City Life',
-      subtitle: 'Urban stories',
+    ReelModel(
+      id: 4,
       imageUrl: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400',
+      videoUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+      userProfileImage: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
+      userName: 'City Life',
+      description: 'Urban stories',
+      source: '3month',
+      location: 'Chicago, USA',
+      userSince: 'Mar 2026',
+      totalPosts: '45',
+      totalViews: '12k',
+      totalFollowers: '1.5k',
+      likes: 2500,
+      comments: 3500,
+      shares: 1200,
+      isFollowing: false,
+      isLiked: false,
+      userVideos: [
+        {'id': 'v1','imageUrl': 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400','videoUrl': 'https://www.w3schools.com/html/mov_bbb.mp4', 'title': 'Coding Life', 'views': '2.5k'},
+        {'id': 'v2','imageUrl': 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400','videoUrl': 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', 'title': 'Beautiful Nature', 'views': '1.1k'},
+        {'id': 'v3','imageUrl': 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400','videoUrl': 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4', 'title': 'Morning Walk', 'views': '850'},
+        {'id': 'v4','imageUrl': 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400','videoUrl': 'https://media.w3.org/2010/05/sintel/trailer.mp4', 'title': 'Forest Adventure', 'views': '3.2k'},
+      ],
+      userReactions: [
+        {'id': 'r1','imageUrl': 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=200','videoUrl': 'https://www.w3schools.com/html/movie.mp4', 'title': 'Laptop Review', 'time': 'Tuesday 11:30 AM'},
+        {'id': 'r2','imageUrl': 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200','videoUrl': 'https://media.w3.org/2010/05/sintel/trailer.mp4', 'title': 'Music Studio', 'time': 'Wednesday 8:00 PM'},
+        {'id': 'r3','imageUrl': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200','videoUrl': 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', 'title': 'Profile Portrait', 'time': 'Thursday 4:15 PM'},
+        {'id': 'r4','imageUrl': 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=200','videoUrl': 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4', 'title': 'Web Development', 'time': 'Monday 9:05 AM'},
+      ],
     ),
-    const ClipModel(
-      title: 'Nature Walk',
-      subtitle: 'Explore outdoors',
+    ReelModel(
+      id: 5,
       imageUrl: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=400',
+      videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+      userProfileImage: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
+      userName: 'Nature Walk',
+      description: 'Explore outdoors',
+      source: '3month',
+      location: 'Chicago, USA',
+      userSince: 'Mar 2026',
+      totalPosts: '45',
+      totalViews: '12k',
+      totalFollowers: '1.5k',
+      likes: 2500,
+      comments: 3500,
+      shares: 1200,
+      isFollowing: false,
+      isLiked: false,
+      userVideos: [
+        {'id': 'v1','imageUrl': 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400','videoUrl': 'https://www.w3schools.com/html/mov_bbb.mp4', 'title': 'Coding Life', 'views': '2.5k'},
+        {'id': 'v2','imageUrl': 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400','videoUrl': 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', 'title': 'Beautiful Nature', 'views': '1.1k'},
+        {'id': 'v3','imageUrl': 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400','videoUrl': 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4', 'title': 'Morning Walk', 'views': '850'},
+        {'id': 'v4','imageUrl': 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400','videoUrl': 'https://media.w3.org/2010/05/sintel/trailer.mp4', 'title': 'Forest Adventure', 'views': '3.2k'},
+      ],
+      userReactions: [
+        {'id': 'r1','imageUrl': 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=200','videoUrl': 'https://www.w3schools.com/html/movie.mp4', 'title': 'Laptop Review', 'time': 'Tuesday 11:30 AM'},
+        {'id': 'r2','imageUrl': 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200','videoUrl': 'https://media.w3.org/2010/05/sintel/trailer.mp4', 'title': 'Music Studio', 'time': 'Wednesday 8:00 PM'},
+        {'id': 'r3','imageUrl': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200','videoUrl': 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', 'title': 'Profile Portrait', 'time': 'Thursday 4:15 PM'},
+        {'id': 'r4','imageUrl': 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=200','videoUrl': 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4', 'title': 'Web Development', 'time': 'Monday 9:05 AM'},
+      ],
     ),
   ].obs;
 

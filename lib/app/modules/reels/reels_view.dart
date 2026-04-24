@@ -9,6 +9,7 @@ import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/auth/auth_helper.dart';
 import '../../controllers/comment_controller.dart';
+import '../../controllers/home_controller.dart';
 import '../../controllers/reels/reels_controller.dart';
 import '../../models/comment_source.dart';
 import '../../widgets/reels_follow_button.dart';
@@ -22,7 +23,37 @@ class ReelsView extends StatefulWidget {
 }
 
 class _ReelsViewState extends State<ReelsView> {
-  final ReelsController controller = Get.put(ReelsController());
+  late final ReelsController controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final homeController = Get.find<HomeController>();
+    final hasCustomList = homeController.customReelsForNavigation.isNotEmpty;
+    final initialIndex = homeController.customReelsInitialIndex.value;
+
+    if (Get.isRegistered<ReelsController>()) {
+      controller = Get.find<ReelsController>();
+    } else {
+      controller = Get.put(ReelsController());
+    }
+    if (hasCustomList) {
+      controller.reelsList.clear();
+      controller.reelsList.assignAll(homeController.customReelsForNavigation);
+      homeController.customReelsForNavigation.clear();
+      homeController.customReelsInitialIndex.value = 0;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (controller.pageController.hasClients && initialIndex > 0) {
+          controller.pageController.jumpToPage(initialIndex);
+        }
+      });
+
+    } else {
+      controller.reelsList.clear();
+      controller.fetchReels();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

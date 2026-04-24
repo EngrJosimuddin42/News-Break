@@ -14,7 +14,26 @@ class HelpSupportView extends StatefulWidget {
 
 class _HelpSupportViewState extends State<HelpSupportView> {
   final TextEditingController _searchController = TextEditingController();
+  List<String> _displayArticles = [];
 
+  @override
+  void initState() {
+    super.initState();
+    // শুরুতে সব আর্টিকেল দেখাবে
+    _displayArticles = List.from(_promotedArticles);
+  }
+  void _runSearch(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        _displayArticles = List.from(_promotedArticles);
+      } else {
+        _displayArticles = _promotedArticles
+            .where((article) =>
+            article.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      }
+    });
+  }
   static const List<String> _categories = [
     'Advertising',
     'Publishers',
@@ -111,6 +130,7 @@ class _HelpSupportViewState extends State<HelpSupportView> {
                       borderRadius: BorderRadius.circular(8)),
                     child: TextField(
                       controller: _searchController,
+                      onChanged: _runSearch,
                       style: AppTextStyles.caption.copyWith(color: Colors.black),
                       decoration: InputDecoration(
                         hintText: 'search issue keywords',
@@ -171,14 +191,15 @@ class _HelpSupportViewState extends State<HelpSupportView> {
           child: Text('Promoted Articles',
               style:AppTextStyles.displaySmall.copyWith(color: Colors.black))),
 
-        ..._promotedArticles.map((article) => Column(
+        // Promoted Articles mapping
+        ..._displayArticles.map((article) => Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric( horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(article,
-                    style:AppTextStyles.overline.copyWith(fontSize: 14)),
+                    style: AppTextStyles.overline.copyWith(fontSize: 14)),
               ),
             ),
             const Divider(height: 1, color: Color(0xFFEEEEEE)),

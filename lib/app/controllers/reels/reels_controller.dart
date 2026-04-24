@@ -15,19 +15,16 @@ class ReelsController extends GetxController {
   var isLoading = true.obs;
   var savedReels = <int>[].obs;
   var currentIndex = 0.obs;
+  bool useCustomList = false;
+  int initialIndex = 0;
 
-  late PageController pageController;
+
+  PageController pageController = PageController();
 
   final String mediaAccountLabel = 'Media account';
   final String checkOutPrefix = 'Check out ';
   final String sendStoryLabel = 'Send this story';
 
-  @override
-  void onInit() {
-    super.onInit();
-    pageController = PageController(initialPage: currentIndex.value);
-    fetchReels();
-  }
 
   @override
   void onClose() {
@@ -48,6 +45,12 @@ class ReelsController extends GetxController {
       reelsList[index].comments++;
       reelsList.refresh();
     }
+  }
+
+  void resetToDefaultReels() {
+    useCustomList = false;
+    initialIndex = 0;
+    fetchReels();
   }
 
 

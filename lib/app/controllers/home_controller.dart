@@ -19,16 +19,21 @@ class HomeController extends GetxController {
 
   // Tab list
   final RxList<String> tabs = <String>['Reactions', 'For you', 'Local', 'Local Tv', 'Entertainment', 'Sports', 'Food', 'Health'].obs;
-
+  final TextEditingController searchController = TextEditingController();
   final RxInt selectedTabIndex = 1.obs;
   final RxInt selectedNavIndex = 0.obs;
   final selectedLocation = Rxn<Map<String, String>>();
   final RxList<CommentModel> commentsList = <CommentModel>[].obs;
   final RxBool isCommentsLoading = false.obs;
+  final tempLocation = Rxn<Map<String, String>>();
   bool isLiked(int id) => likedNewsIds.contains(id);
+  var isSearching = false.obs;
+  var searchQuery = "".obs;
   var likedNewsIds = <int>{}.obs;
   var isLoading = false.obs;
   var isHourly = true.obs;
+  var isLocationLoading = false.obs;
+  var currentAddress = "".obs;
   var currentTemp = "44°F".obs;
   var weatherCondition = "Rain".obs;
   var rainProbability = "71%".obs;
@@ -40,6 +45,12 @@ class HomeController extends GetxController {
   // Auth check
   bool get isLoggedIn => AuthController.to.user.value != null;
   String get userName => AuthController.to.user.value?.name ?? '';
+
+  @override
+  void onClose() {
+    searchController.dispose();
+    super.onClose();
+  }
 
   void onNavTap(int index) {
     selectedNavIndex.value = index;
@@ -96,6 +107,24 @@ class HomeController extends GetxController {
     Get.to(() => const ManageLocationView());
   }
 
+  void onSearchTap() => isSearching.value = true;
+
+  void cancelSearch() {
+    searchController.clear();
+    searchQuery.value = '';
+    isSearching.value = false;
+  }
+
+  void selectLocationFromSearch(Map<String, String> loc) {
+    tempLocation.value = loc;
+    selectedLocation.value = loc;
+    cancelSearch();
+  }
+
+  void setLocation(Map<String, String> location) {
+    selectedLocation.value = location;
+  }
+
   void onChooseLocation() {
     showModalBottomSheet(
       context: Get.context!,
@@ -104,8 +133,30 @@ class HomeController extends GetxController {
       builder: (_) => const ChooseLocationSheet());
   }
 
-  void setLocation(Map<String, String> location) {
-    selectedLocation.value = location;
+  List<Map<String, String>> get filteredLocations {
+    if (searchQuery.value.isEmpty) return [];
+    return allLocations.where((loc) {
+      final city = loc['city']!.toLowerCase();
+      final zip = loc['zip']!.toLowerCase();
+      final query = searchQuery.value.toLowerCase();
+      return city.contains(query) || zip.contains(query);
+    }).toList();
+  }
+
+  void confirmLocationSelection() {
+    if (tempLocation.value != null) {
+      selectedLocation.value = tempLocation.value;
+    }
+  }
+
+  void onSearchChanged(String val) {
+    searchQuery.value = val;
+  }
+
+  void clearSearch() {
+    searchController.clear();
+    searchQuery.value = "";
+    isSearching.value = false;
   }
 
   void onCreatePost() {
@@ -181,6 +232,24 @@ class HomeController extends GetxController {
   void onDismissPeople(int index) {
     suggestedPeople.removeAt(index);
   }
+
+  Future<void> detectGPSLocation() async {
+    try {
+      isLocationLoading.value = true;
+      await Future.delayed(const Duration(seconds: 2));
+      Map<String, String> detectedLoc = {
+        'city': 'Dhaka, Bangladesh',
+        'zip': '1212'
+      };
+      setLocation(detectedLoc);
+
+      AppSnackbar.success(message: "Location updated via GPS");
+    } catch (e) {
+      AppSnackbar.error(message: "Could not fetch location");
+    } finally {
+      isLocationLoading.value = false;
+    }
+}
 
   // Reactions Tab
   final RxList<NewsModel> reactionsNews = <NewsModel>[
@@ -962,5 +1031,13 @@ class HomeController extends GetxController {
       'image': 'assets/images/user3.png'
     },
   ].obs;
+
+  final List<Map<String, String>> allLocations = [
+    {'city': 'New York City', 'zip': 'NY, 100002'},
+    {'city': 'Los Angeles', 'zip': 'CA, 90001'},
+    {'city': 'Chicago', 'zip': 'IL, 60601'},
+    {'city': 'Houston', 'zip': 'TX, 77001'},
+    {'city': 'San Francisco', 'zip': 'CA, 94105'},
+  ];
 
 }

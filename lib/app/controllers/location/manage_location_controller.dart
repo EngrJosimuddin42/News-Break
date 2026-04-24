@@ -4,6 +4,9 @@ import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../models/ad_banner_model.dart';
 
 class ManageLocationController extends GetxController {
   final TextEditingController searchController = TextEditingController();
@@ -16,6 +19,33 @@ class ManageLocationController extends GetxController {
   var currentMapUrl = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png'.obs;
 
   final LatLng center = const LatLng(24.0, 90.0);
+
+
+  @override
+  void onInit() {
+    super.onInit();
+    _checkIncomingArguments();
+  }
+
+  @override
+  void onClose() {
+    searchController.dispose();
+    super.onClose();
+  }
+
+
+  void _checkIncomingArguments() {
+    var data = Get.arguments;
+    if (data != null && data is Map<String, String>) {
+      String? city = data['city'];
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (city != null) {
+          searchController.text = city;
+          searchLocation();
+        }
+      });
+    }
+  }
 
   // map switch
   void toggleMapStyle() {
@@ -56,9 +86,29 @@ class ManageLocationController extends GetxController {
     }
   }
 
-  @override
-  void onClose() {
-    searchController.dispose();
-    super.onClose();
+  void openExternalLink() async {
+    final String urlString = adBanner.value.externalLink;
+    final Uri url = Uri.parse(urlString);
+
+    try {
+      bool launched = await launchUrl(
+        url,
+        mode: LaunchMode.externalApplication,
+      );
+      if (!launched) {
+        AppSnackbar.error(message: "Could not launch the link.");
+      }
+    } catch (e) {
+      AppSnackbar.error(message: "Error: $e");
+    }
   }
+
+  final adBanner = AdBannerModel(
+    id: 1,
+    title: 'FoodRadar',
+    body: 'Find Free Food Near You Instantly. 100% Free, No Ads.',
+    imageUrl: 'assets/images/publisher.png',
+    externalLink: 'https://www.google.com/maps/search/food+near+me',
+  ).obs;
+
 }

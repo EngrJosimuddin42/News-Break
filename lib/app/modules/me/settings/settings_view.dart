@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/modules/location/choose_location_sheet.dart';
 import 'package:news_break/app/modules/me/settings/privacy_view.dart';
 import 'package:news_break/app/modules/me/settings/send_feedback_sheet.dart';
 import 'package:news_break/app/theme/app_colors.dart';
@@ -11,7 +12,6 @@ import '../../notification/notification_settings_view.dart';
 import 'about/about_view.dart';
 import 'discover_app_view.dart';
 import 'help_center/help_support_view.dart';
-import 'location_view.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -51,7 +51,7 @@ class _SettingsViewState extends State<SettingsView> {
                   iconPath: 'assets/icons/location1.png',
                   title: 'Manage Location',
                   subtitle: 'Manage your primary and followed location',
-                  onTap: () => Get.to(() => const LocationView()),
+                  onTap: () => Get.to(() => const ChooseLocationSheet()),
                 ),
 
                 // Notification

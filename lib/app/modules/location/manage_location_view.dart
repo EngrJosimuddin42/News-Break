@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/location/manage_location_controller.dart';
+import '../../models/news_model.dart';
+import '../../widgets/publisher_avatar.dart';
 
 class ManageLocationView extends StatelessWidget {
   const ManageLocationView({super.key});
@@ -117,9 +119,20 @@ class ManageLocationView extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipOval(
-                    child: Image.asset('assets/images/publisher.png', width: 48, height: 48,
-                      fit: BoxFit.cover)),
+                  PublisherAvatar(
+                    news: NewsModel(
+                      id: 1,
+                      author: '',
+                      category: '',
+                      imageUrl: '',
+                      publisherMeta: '',
+                      timeAgo: '',
+                      publisherName:'',
+                      title: controller.adBanner.value.title,
+                      body: controller.adBanner.value.body,
+                      publisherImageUrl: controller.adBanner.value.imageUrl,
+                    ),
+                    size: 48),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -129,8 +142,7 @@ class ManageLocationView extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('FoodRadar',
-                           style: AppTextStyles.bodyMedium),
+                            Text(controller.adBanner.value.title, style: AppTextStyles.bodyMedium),
                             GestureDetector(
                               onTap: () {
                                 controller.isBannerVisible.value = false;
@@ -146,11 +158,14 @@ class ManageLocationView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Expanded(
-                              child: Text('Find Free Food Near You Instantly. 100% Free, No Ads.',
-                          style:AppTextStyles.overline, maxLines: 2, overflow: TextOverflow.ellipsis)),
+                              child: Text(controller.adBanner.value.body, style:AppTextStyles.overline,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis)),
                             const SizedBox(width: 8),
                             ElevatedButton(
-                              onPressed: () {},
+                                onPressed: () {
+                                  controller.openExternalLink();
+                                },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 foregroundColor: const Color(0xFF242424),

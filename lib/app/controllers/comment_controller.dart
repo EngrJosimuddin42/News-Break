@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import '../models/comment_model.dart';
 import '../models/comment_source.dart';
 import '../widgets/app_snackbar.dart';
-import 'auth_controller.dart';
+import 'auth/auth_controller.dart';
 
 class CommentController extends GetxController {
   final RxList<CommentModel> commentsList = <CommentModel>[].obs;

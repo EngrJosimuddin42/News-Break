@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
 import '../modules/me/settings/about/legal_view.dart';
-import 'auth_controller.dart';
+import 'auth/auth_controller.dart';
 import '../routes/app_pages.dart';
 
 class SignInController extends GetxController {

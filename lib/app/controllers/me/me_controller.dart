@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../modules/me/settings/settings_view.dart';
-import '../auth_controller.dart';
+import '../auth/auth_controller.dart';
 import '../../modules/ai/nbot_sheet.dart';
 import '../../modules/me/creator_dashboard_view.dart';
 import '../../modules/me/creator_onboard_view.dart';

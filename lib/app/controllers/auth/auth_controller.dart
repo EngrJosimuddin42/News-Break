@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import '../models/user_model.dart';
-import '../bindings/signin_binding.dart';
-import '../modules/signin/signin_view.dart';
+import '../../models/user_model.dart';
+import '../../bindings/signin_binding.dart';
+import '../../modules/signin/signin_view.dart';
 
 class AuthController extends GetxController {
 

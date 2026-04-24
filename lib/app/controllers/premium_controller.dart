@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:news_break/app/controllers/auth_controller.dart';
+import 'package:news_break/app/controllers/auth/auth_controller.dart';
 
 import '../modules/premium/congrats_screen.dart';
 

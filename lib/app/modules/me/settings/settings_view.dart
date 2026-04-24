@@ -4,7 +4,7 @@ import 'package:news_break/app/modules/me/settings/privacy_view.dart';
 import 'package:news_break/app/modules/me/settings/send_feedback_sheet.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../../controllers/auth_controller.dart';
+import '../../../controllers/auth/auth_controller.dart';
 import '../../../controllers/me/settings_controller.dart';
 import '../../../controllers/notification/notification_controller.dart';
 import '../../notification/notification_settings_view.dart';

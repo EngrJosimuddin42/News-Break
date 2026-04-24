@@ -7,7 +7,7 @@ import '../models/comment_model.dart';
 import '../models/comment_source.dart';
 import '../models/news_model.dart';
 import '../modules/reels/comments/comments_sheet.dart';
-import 'auth_controller.dart';
+import 'auth/auth_controller.dart';
 import '../routes/app_pages.dart';
 import '../modules/ai/nbot_sheet.dart';
 import '../modules/location/choose_location_sheet.dart';

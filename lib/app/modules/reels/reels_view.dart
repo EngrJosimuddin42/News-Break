@@ -7,6 +7,7 @@ import 'package:news_break/app/modules/reels/share_sheet.dart';
 import 'package:news_break/app/modules/reels/profile/profile_view.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../controllers/auth/auth_helper.dart';
 import '../../controllers/comment_controller.dart';
 import '../../controllers/reels/reels_controller.dart';
 import '../../models/comment_source.dart';
@@ -55,7 +56,11 @@ class _ReelsViewState extends State<ReelsView> {
             top: MediaQuery.of(context).padding.top + 8,
             right: 16,
             child: GestureDetector(
-              onTap: () => Get.to(() => const CreateReelView()),
+              onTap: () {
+                if (AuthHelper.checkLogin()) {
+                  Get.to(() => const CreateReelView());
+                }
+              },
               child: Container(width: 36, height: 36,
                 decoration: BoxDecoration(
                   color: Color(0xFF282828),
@@ -102,7 +107,11 @@ class _ReelsViewState extends State<ReelsView> {
             children: [
               // Profile
               GestureDetector(
-                onTap: () => Get.to(() => ProfileView(user: reel)),
+                onTap: () {
+                  if (AuthHelper.checkLogin()) {
+                    Get.to(() => ProfileView(user: reel));
+                  }
+                },
                 child: Stack(
                 children: [
                   Container(
@@ -142,7 +151,11 @@ class _ReelsViewState extends State<ReelsView> {
                     ? AppColors.linkColor
                     : AppColors.surface,
                 count: controller.formatCount(reel.likes),
-                onTap: () => controller.toggleLike(index),
+                onTap: () {
+                  if (AuthHelper.checkLogin()) {
+                    controller.toggleLike(index);
+                  }
+                },
               ),
 
               const SizedBox(height: 16),
@@ -153,17 +166,23 @@ class _ReelsViewState extends State<ReelsView> {
                 color: Colors.white,
                 count: controller.formatCount(reel.comments),
                 onTap: () {
-                  Get.find<CommentController>().loadComments(reel.id, CommentSource.reel);
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width),
-                    builder: (context) => CommentsSheet(
-                        id: reel.id,
-                        source: CommentSource.reel),
-                  );
+                 if (AuthHelper.checkLogin()) {
+                   Get.find<CommentController>().loadComments(reel.id, CommentSource.reel);
+                   showModalBottomSheet(
+                     context: context,
+                     isScrollControlled: true,
+                     backgroundColor: Colors.transparent,
+                     constraints: BoxConstraints(
+                         maxWidth: MediaQuery
+                             .of(context)
+                             .size
+                             .width),
+                     builder: (context) =>
+                         CommentsSheet(
+                             id: reel.id,
+                             source: CommentSource.reel),
+                   );
+                 }
                 },
               ),
               const SizedBox(height: 16),
@@ -188,7 +207,9 @@ class _ReelsViewState extends State<ReelsView> {
 
               // 3 dot Button
               GestureDetector(
-                onTap: () => showModalBottomSheet(
+                onTap: () {
+                  if (AuthHelper.checkLogin()) {
+                    showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
@@ -218,8 +239,11 @@ class _ReelsViewState extends State<ReelsView> {
                       controller.reportReel(reel.id, context);
                     },
                   ),
-                ),
+                );
+                 }
+                  },
                 child: const Icon(Icons.more_vert, color: Colors.white, size: 32),
+
               ),
             ],
           ),
@@ -237,6 +261,7 @@ class _ReelsViewState extends State<ReelsView> {
                 children: [
                   Text(reel.userName ?? "", style: AppTextStyles.bodyMedium),
                   const SizedBox(width: 32),
+
                   //Follow Button
                   ReelsFollowButton(reel: reel),
                 ],
@@ -252,17 +277,24 @@ class _ReelsViewState extends State<ReelsView> {
           bottom: 1, left: 0, right: 0,
           child: GestureDetector(
             onTap: () {
-              Get.find<CommentController>().loadComments(reel.id, CommentSource.reel);
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width),
-                builder: (context) => CommentsSheet(
-                    id: reel.id,
-                    source: CommentSource.reel),
-              );
+             if (AuthHelper.checkLogin()) {
+               Get.find<CommentController>().loadComments(
+                   reel.id, CommentSource.reel);
+               showModalBottomSheet(
+                 context: context,
+                 isScrollControlled: true,
+                 backgroundColor: Colors.transparent,
+                 constraints: BoxConstraints(
+                     maxWidth: MediaQuery
+                         .of(context)
+                         .size
+                         .width),
+                 builder: (context) =>
+                     CommentsSheet(
+                         id: reel.id,
+                         source: CommentSource.reel),
+               );
+             }
             },
             child: Container(
               height: 36,

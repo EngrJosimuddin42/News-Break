@@ -66,10 +66,15 @@ class ForYouTab extends GetView<HomeController> {
             separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (_, i) {
               final clip = controller.forYouClips[i];
-              return ClipCard(
+              return GestureDetector(
+                  onTap: () {
+                    controller.selectedNavIndex.value = 1;
+                  },
+                  child: ClipCard(
                 title: clip.title,
                 subtitle: clip.subtitle,
                 imageUrl: clip.imageUrl,
+              )
               );
             },
           ),

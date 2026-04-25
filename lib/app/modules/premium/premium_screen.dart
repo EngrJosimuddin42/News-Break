@@ -215,3 +215,233 @@ class PremiumScreen extends GetView<PremiumController> {
     );
   }
 }
+
+/*
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../controllers/premium_controller.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_text_styles.dart';
+
+class PremiumView extends GetView<PremiumController> {
+  const PremiumView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ── AppBar ──────────────────────────────
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: GestureDetector(
+                  onTap: () => Get.back(),
+                  child: const Icon(Icons.arrow_back_ios,
+                      color: Colors.white, size: 20),
+                ),
+              ),
+            ),
+
+            // ── Body ────────────────────────────────
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    // Title
+                    Text('Choose Your Plan',
+                        style: AppTextStyles.displaySmall.copyWith(
+                            fontSize: 22, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 6),
+                    Text('Become a Premium Member',
+                        style: AppTextStyles.overline
+                            .copyWith(color: Colors.grey)),
+                    const SizedBox(height: 24),
+
+                    // ✅ Yearly Plan
+                    Obx(() => _buildPlanCard(
+                      isSelected: controller.selectedPlan.value == 'yearly',
+                      onTap: () => controller.selectPlan('yearly'),
+                      badge: 'Best Value',
+                      title: 'Yearly',
+                      price: '\$59.99',
+                      period: '/year',
+                      features: controller.features,
+                    )),
+
+                    const SizedBox(height: 16),
+
+                    // ✅ Monthly Plan
+                    Obx(() => _buildPlanCard(
+                      isSelected: controller.selectedPlan.value == 'monthly',
+                      onTap: () => controller.selectPlan('monthly'),
+                      title: 'Monthly',
+                      price: '\$19.99',
+                      period: '/Month',
+                      features: controller.features,
+                    )),
+
+                    const SizedBox(height: 24),
+
+                    // ✅ CTA Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 54,
+                      child: ElevatedButton(
+                        onPressed: controller.onStartTrial,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFF4C6A),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          elevation: 0,
+                        ),
+                        child: Text('Start 7day Free Trial',
+                            style: AppTextStyles.bodyMedium
+                                .copyWith(fontSize: 16)),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // ✅ Footer text
+                    Text(
+                      'Lorem ipsum dolor sit amet consectetur. Sapien netus sed turpis euismod tortor. Consequat arcu commodo non habitant sit cras aliquam elementum commodo. Proin viverra pharetra etiam nibh nunc.',
+                      style: AppTextStyles.overline
+                          .copyWith(color: Colors.grey, fontSize: 11),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlanCard({
+    required bool isSelected,
+    required VoidCallback onTap,
+    String? badge,
+    required String title,
+    required String price,
+    required String period,
+    required List<Map<String, String>> features,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1C1C1E),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected
+                ? const Color(0xFFFF4C6A)
+                : Colors.transparent,
+            width: 1.5,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Badge
+            if (badge != null) ...[
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF4C6A),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(badge,
+                    style: AppTextStyles.overline.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 10),
+            ],
+
+            // Title + Price
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(title, style: AppTextStyles.bodyMedium),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: price,
+                        style: AppTextStyles.displaySmall.copyWith(
+                          color: const Color(0xFFFF4C6A),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextSpan(
+                        text: period,
+                        style: AppTextStyles.overline.copyWith(
+                            color: const Color(0xFFFF4C6A)),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // Features
+            ...features.map((f) => _buildFeatureItem(
+                  title: f['title']!,
+                  subtitle: f['subtitle']!,
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeatureItem({
+    required String title,
+    required String subtitle,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey, width: 1.5),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: const Icon(Icons.check, color: Colors.white, size: 14),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: AppTextStyles.caption),
+                Text(subtitle,
+                    style: AppTextStyles.overline
+                        .copyWith(color: Colors.grey)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+ */

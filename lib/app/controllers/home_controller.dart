@@ -50,6 +50,19 @@ class HomeController extends GetxController {
   bool get isLoggedIn => AuthController.to.user.value != null;
   String get userName => AuthController.to.user.value?.name ?? '';
 
+  final selectedDayIndex = (DateTime.now().weekday % 7).obs;
+  final currentDate = DateTime.now().obs;
+
+  String get monthAndDay {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return '${months[currentDate.value.month - 1]} ${currentDate.value.day}';
+  }
+
+  void selectDay(int index) {
+    selectedDayIndex.value = index;
+  }
+
+
   @override
   void onClose() {
     searchController.dispose();

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../controllers/notification/notification_controller.dart';
-import '../../models/news_model.dart';
-import '../../widgets/bottom_sheet_handle.dart';
+import '../controllers/notification/notification_controller.dart';
+import '../models/news_model.dart';
+import 'bottom_sheet_handle.dart';
 
 class OptionsBottomSheet {
   static void show(BuildContext context, {
@@ -18,7 +18,8 @@ class OptionsBottomSheet {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (_) => Column(
+        builder: (_) => SingleChildScrollView(
+          child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const BottomSheetHandle(),
@@ -98,6 +99,7 @@ class OptionsBottomSheet {
           ),
           const SizedBox(height: 30),
         ],
+          ),
       ),
     );
   }

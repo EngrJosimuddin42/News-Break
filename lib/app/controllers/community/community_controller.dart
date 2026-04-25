@@ -2,11 +2,15 @@ import 'package:get/get.dart';
 import '../../models/community_post_model.dart';
 import '../../modules/me/edit_profile_view.dart';
 import '../../modules/community/community_create_post_view.dart';
+import '../../widgets/app_snackbar.dart';
 
 class CommunityController extends GetxController {
   final userName = "Amalia".obs;
   final userProfilePic = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100".obs;
   var posts = <CommunityPostModel>[].obs;
+  bool isJoined(int index) => joinedCommunityIds.contains(index);
+  final joinedCommunityIds = <int>{}.obs;
+
 
   void onInit() {
     super.onInit();
@@ -17,6 +21,16 @@ class CommunityController extends GetxController {
   void onEditProfile() => Get.to(() => const EditProfileView());
 
   void submitPost(String content) {}
+
+  void toggleJoin(int index) {
+    if (joinedCommunityIds.contains(index)) {
+      joinedCommunityIds.remove(index);
+      AppSnackbar.success(message: 'Left community');
+    } else {
+      joinedCommunityIds.add(index);
+      AppSnackbar.success(message: 'Joined community!');
+    }
+  }
 
 
   void fetchPosts() {

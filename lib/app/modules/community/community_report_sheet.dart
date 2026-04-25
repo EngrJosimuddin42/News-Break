@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import 'package:news_break/app/widgets/report_success.dart';
 
+import '../../widgets/bottom_sheet_handle.dart';
+
 class CommunityReportSheet extends StatefulWidget {
   const CommunityReportSheet({super.key});
 
@@ -35,17 +37,12 @@ class _CommunityReportSheetState extends State<CommunityReportSheet> {
   }
 
   Widget _buildSelectReason() {
-    return Column(
+    return SingleChildScrollView(
+      child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const SizedBox(height: 12),
-        Container(
-          width: 36, height: 4,
-          decoration: BoxDecoration(
-            color: Colors.grey[600],
-            borderRadius: BorderRadius.circular(2),
-          ),
-        ),
+       //Handler
+        const BottomSheetHandle(),
         // Header
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -124,6 +121,7 @@ class _CommunityReportSheetState extends State<CommunityReportSheet> {
           ),
         ),
       ],
+    ),
     );
   }
 }

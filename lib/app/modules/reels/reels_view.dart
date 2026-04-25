@@ -304,44 +304,49 @@ class _ReelsViewState extends State<ReelsView> {
         ),
 
         // Comment input
+        // Comment input
         Positioned(
-          bottom: 1, left: 0, right: 0,
-          child: GestureDetector(
-            onTap: () {
-             if (AuthHelper.checkLogin()) {
-               Get.find<CommentController>().loadComments(
-                   reel.id, CommentSource.reel);
-               showModalBottomSheet(
-                 context: context,
-                 isScrollControlled: true,
-                 backgroundColor: Colors.transparent,
-                 constraints: BoxConstraints(
-                     maxWidth: MediaQuery
-                         .of(context)
-                         .size
-                         .width),
-                 builder: (context) =>
-                     CommentsSheet(
-                         id: reel.id,
-                         source: CommentSource.reel),
-               );
-             }
-            },
-            child: Container(
-              height: 36,
-              width: double.infinity,
-              decoration: const BoxDecoration(color: Color(0xFF333333)),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Write a comment...',
-                      style: AppTextStyles.display.copyWith(color: AppColors.textOnDark)),
+          bottom: 20,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: GestureDetector(
+              onTap: () {
+                if (AuthHelper.checkLogin()) {
+                  // CommentController লোড করা হচ্ছে
+                  Get.find<CommentController>().loadComments(
+                    reel.id,
+                    CommentSource.reel,
+                  );
+
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width,
+                    ),
+                    builder: (context) => CommentsSheet(
+                      id: reel.id,
+                      source: CommentSource.reel,
+                    ),
+                  );
+                }
+              },
+              child: Container(
+                height: 40,
+                width: 335,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(80),
+                  color: AppColors.surface,
                 ),
-              ),
-            ),
-          ),
-        ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Write a comment...',
+                      style: AppTextStyles.overline))))))),
       ],
     );
   }

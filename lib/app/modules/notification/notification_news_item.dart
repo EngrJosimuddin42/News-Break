@@ -4,7 +4,7 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../models/news_model.dart';
 import '../../routes/app_pages.dart';
 import '../reels/full_screen_video_player.dart';
-import 'options_bottom_sheet.dart';
+import '../../widgets/options_bottom_sheet.dart';
 import 'notification_report_sheet.dart';
 
 class NotificationNewsItem extends StatelessWidget {

@@ -3,7 +3,7 @@ import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../models/community_post_model.dart';
 import '../../models/news_model.dart';
-import '../notification/options_bottom_sheet.dart';
+import '../../widgets/options_bottom_sheet.dart';
 import 'community_report_sheet.dart';
 
 class CommunityPostCard extends StatelessWidget {

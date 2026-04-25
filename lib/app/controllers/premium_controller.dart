@@ -30,3 +30,26 @@ class PremiumController extends GetxController {
     }
   }
 }
+
+
+/*import 'package:get/get.dart';
+import '../../widgets/app_snackbar.dart';
+
+class PremiumController extends GetxController {
+  var selectedPlan = 'yearly'.obs;
+
+  final List<Map<String, String>> features = [
+    {'title': 'Ad-free in App', 'subtitle': 'Millions of articles, videos, local Tvs, etc'},
+    {'title': 'Personalized recommendations', 'subtitle': 'See more stories that match your interest'},
+    {'title': 'Comment Boost', 'subtitle': 'Receive enhances visibility for your comments'},
+    {'title': 'Avatar ring', 'subtitle': 'Make your premium membership shine'},
+    {'title': 'Priority support', 'subtitle': 'Email: premium-support@news.com'},
+  ];
+
+  void selectPlan(String plan) => selectedPlan.value = plan;
+
+  void onStartTrial() {
+    // ✅ API: await ApiService.startTrial(selectedPlan.value);
+    AppSnackbar.success(message: '7-day free trial started!');
+  }
+}*/

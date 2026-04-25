@@ -14,7 +14,7 @@ class HomeBottomNavBar extends StatelessWidget {
       {'icon': 'assets/icons/home.png', 'label': 'Home'},
       {'icon': 'assets/icons/reels.png', 'label': 'Reels'},
       {'icon': 'assets/icons/notification.png', 'label': 'Notification'},
-      {'icon': 'assets/icons/actions_lovely.png', 'label': 'Community'},
+      {'icon': 'assets/icons/actions_lovely.png', 'label': 'Socials'},
       {'icon': 'assets/icons/person.png', 'label': 'Me'},
     ];
 

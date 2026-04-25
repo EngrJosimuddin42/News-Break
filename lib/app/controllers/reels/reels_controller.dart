@@ -118,21 +118,25 @@ class ReelsController extends GetxController {
     AppSnackbar.success(message:'Copied to clipboard');
   }
 
-  void onShareOptionTap(int reelId, String platform) async {
+  void onShareOptionTap(int reelId, String platform, {String? shareUrl, String? userName}) async {
     int index = reelsList.indexWhere((r) => r.id == reelId);
-    if (index == -1) return;
+    final String url = shareUrl ??
+        (index != -1
+            ? 'https://newsbreak.com/reels/$reelId'
+            : 'https://newsbreak.com/news/$reelId');
+
+    final String author = userName ??
+        (index != -1 ? reelsList[index].userName : '');
 
     if (platform == 'Copy link') {
-      await Clipboard.setData(
-          ClipboardData(text: 'https://newsbreak.com/reels/$reelId'));
-      incrementShare(index);
+      await Clipboard.setData(ClipboardData(text: url));
+      if (index != -1) incrementShare(index);
       Get.back();
 
     } else if (platform == 'More') {
       Get.back();
-      await Share.share(
-          'Check out this story by ${reelsList[index].userName}: https://newsbreak.com/reels/$reelId');
-      incrementShare(index);
+      await Share.share('Check out this story by $author: $url');
+      if (index != -1) incrementShare(index);
     }
   }
 

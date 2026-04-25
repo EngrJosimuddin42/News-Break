@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
-import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import '../models/news_model.dart';
 import '../modules/create_post/tag_location_sheet.dart';
@@ -11,9 +10,6 @@ import '../modules/create_post/tag_location_sheet.dart';
 class CreatePostController extends GetxController {
   final TextEditingController textController = TextEditingController();
   final TextEditingController locationSearchController = TextEditingController();
-
-  late VideoPlayerController videoController;
-  var isVideoInitialized = false.obs;
 
   var selectedLocation = "".obs;
   var isLoading = false.obs;
@@ -28,26 +24,27 @@ class CreatePostController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    resetAll();
     filteredLocations.assignAll(allLocations);
-
-    if (Get.arguments != null) {
-      if (Get.arguments is File) {
-        final file = Get.arguments as File;
-        selectedMedia.value = file;
-        if (file.path.toLowerCase().endsWith('.mp4') ||
-            file.path.toLowerCase().endsWith('.mov')) {
-          isReel.value = true;
-          _generateThumbnail(file.path);
-        }
-      }
-      else if (Get.arguments is NewsModel) {
-        final news = Get.arguments as NewsModel;
-
-        textController.text = "${news.title}\n\n";
-      }
-    }
+    _handleArguments();
   }
 
+
+  void _handleArguments() {
+    final args = Get.arguments;
+    if (args == null) return;
+
+    if (args is File) {
+      selectedMedia.value = args;
+      if (args.path.toLowerCase().endsWith('.mp4') ||
+          args.path.toLowerCase().endsWith('.mov')) {
+        isReel.value = true;
+        _generateThumbnail(args.path);
+      }
+    } else if (args is NewsModel) {
+      textController.text = "${args.title}\n\n";
+    }
+  }
 
   @override
   void onClose() {
@@ -67,13 +64,11 @@ class CreatePostController extends GetxController {
       if (thumbPath != null) {
         videoThumbnail.value = File(thumbPath);
         videoThumbnail.refresh();
-        debugPrint("Thumbnail Generated: $thumbPath");
       }
     } catch (e) {
       debugPrint("Thumbnail Error: $e");
     }
   }
-
 
   void onAddMedia() async {
     final XFile? pickedFile = isReel.value
@@ -82,7 +77,6 @@ class CreatePostController extends GetxController {
 
     if (pickedFile != null) {
       selectedMedia.value = File(pickedFile.path);
-
       if (isReel.value) {
         await _generateThumbnail(pickedFile.path);
       } else {
@@ -96,34 +90,40 @@ class CreatePostController extends GetxController {
       Get.snackbar('Video Required', 'Please select a video for your reel.');
       return;
     }
-    if (!isReel.value && textController.text.trim().isEmpty && selectedMedia.value == null) {
-      AppSnackbar.warning(title: 'Empty Post',message:  'Please add some text or an image.');
+    if (!isReel.value &&
+        textController.text.trim().isEmpty &&
+        selectedMedia.value == null) {
+      AppSnackbar.warning(title: 'Empty Post', message: 'Please add some text or an image.');
       return;
     }
     try {
       isLoading.value = true;
       await Future.delayed(const Duration(seconds: 2));
-      String message = isReel.value ? 'Your reel has been posted!' : 'Your post has been shared!';
-      _resetAll();
+      final String message = isReel.value
+          ? 'Your reel has been posted!'
+          : 'Your post has been shared!';
+      resetAll();
       Get.back();
-     AppSnackbar.success(message: message);
+      AppSnackbar.success(message: message);
     } catch (e) {
-      AppSnackbar.error(message:  'Something went wrong while uploading.');
+      AppSnackbar.error(message: 'Something went wrong while uploading.');
     } finally {
       isLoading.value = false;
     }
   }
 
-  void _resetAll() {
+  //  Public From Any Where Call
+  void resetAll() {
     textController.clear();
     selectedMedia.value = null;
     videoThumbnail.value = null;
     selectedLocation.value = '';
     isReel.value = false;
+    isLoading.value = false;
   }
 
   void onBack() {
-    _resetAll();
+    resetAll();
     Get.back();
   }
 
@@ -131,12 +131,12 @@ class CreatePostController extends GetxController {
     locationSearchController.clear();
     filteredLocations.assignAll(allLocations);
     final result = await showModalBottomSheet(
-        context: Get.context!,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        useSafeArea: true,
-        builder: (context) => const TagLocationSheet());
-
+      context: Get.context!,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      useSafeArea: true,
+      builder: (context) => const TagLocationSheet(),
+    );
     if (result != null && result is Map) {
       selectedLocation.value = result['city'] ?? "";
     }

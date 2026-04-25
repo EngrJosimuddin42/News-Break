@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../controllers/ad_banner_controller.dart';
 import '../../controllers/community/community_controller.dart';
+import '../../widgets/publisher_avatar.dart';
 import 'community_insight_view.dart';
 import 'community_post_card.dart';
 
@@ -37,44 +39,37 @@ class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-// ── Body ────────────────────────────────────────
+// Body
 class CommunityBody extends GetView<CommunityController> {
   const CommunityBody({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final adBanner = Get.find<AdBannerController>();
     return ListView(
       children: [
-        // Ad banner
-        Column(
+
+        Obx(() => adBanner.isBannerVisible.value
+            ? Column(
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Row(
                 children: [
-                  ClipOval(
-                    child: Image.asset(
-                      'assets/images/publisher.png',
-                      width: 48,
-                      height: 48,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => CircleAvatar(
-                        radius: 21,
-                        backgroundColor: Colors.grey[800],
-                        child: Text('F',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
+                  PublisherAvatar.fromUrl(
+                    imageUrl: adBanner.adBanner.value.imageUrl,
+                    name: adBanner.adBanner.value.title,
+                    size: 48),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('FoodRadar', style: AppTextStyles.bodyMedium),
-                        Text('Find Free Food Near You Instantly. 100% Free, No Ads.',
-                          style: AppTextStyles.labelMedium.copyWith(color: const Color(0xFF929292)),
+                        Text(adBanner.adBanner.value.title,
+                            style: AppTextStyles.bodyMedium),
+                        Text(adBanner.adBanner.value.body,
+                          style: AppTextStyles.labelMedium.copyWith(
+                              color: const Color(0xFF929292)),
                           maxLines: 2,
                         ),
                       ],
@@ -85,14 +80,14 @@ class CommunityBody extends GetView<CommunityController> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () => adBanner.isBannerVisible.value = false,
                         child: const Icon(Icons.close, color: Colors.grey, size: 20),
                       ),
                       const SizedBox(height: 10),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => adBanner.openExternalLink(),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:AppColors.surface,
+                          backgroundColor: AppColors.surface,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                           padding: EdgeInsets.zero,
@@ -101,8 +96,9 @@ class CommunityBody extends GetView<CommunityController> {
                           elevation: 0,
                         ),
                         child: Text('Open',
-                          style: AppTextStyles.bodyMedium.copyWith(color: Color(0xFF242424)),
-                            ),
+                          style: AppTextStyles.bodyMedium.copyWith(
+                              color: const Color(0xFF242424)),
+                        ),
                       ),
                     ],
                   ),
@@ -111,7 +107,10 @@ class CommunityBody extends GetView<CommunityController> {
             ),
             const Divider(color: Colors.white12, height: 1),
           ],
+        )
+            : const SizedBox.shrink(),
         ),
+
 
         // Create post row
         Padding(

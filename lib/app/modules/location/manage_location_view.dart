@@ -3,8 +3,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../controllers/ad_banner_controller.dart';
 import '../../controllers/location/manage_location_controller.dart';
-import '../../models/news_model.dart';
 import '../../widgets/publisher_avatar.dart';
 
 class ManageLocationView extends StatelessWidget {
@@ -14,6 +14,7 @@ class ManageLocationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ManageLocationController());
+    final adBanner = Get.find<AdBannerController>();
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -109,30 +110,23 @@ class ManageLocationView extends StatelessWidget {
 
 
           // Bottom Ad banner
-          Obx(() => controller.isBannerVisible.value
-              ? Positioned(bottom: 32, left: 16, right: 16,
+          Obx(() => adBanner.isBannerVisible.value
+              ? Positioned(
+            bottom: 32, left: 16, right: 16,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               decoration: BoxDecoration(
                 color: const Color(0xFF444447),
-                borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PublisherAvatar.fromNews(
-                    news: NewsModel(
-                      id: 1,
-                      author: '',
-                      category: '',
-                      imageUrl: '',
-                      publisherMeta: '',
-                      timeAgo: '',
-                      publisherName:'',
-                      title: controller.adBanner.value.title,
-                      body: controller.adBanner.value.body,
-                      publisherImageUrl: controller.adBanner.value.imageUrl,
-                    ),
-                    size: 48),
+                  PublisherAvatar.fromUrl(
+                    imageUrl: adBanner.adBanner.value.imageUrl,
+                    name: adBanner.adBanner.value.title,
+                    size: 48,
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -142,39 +136,43 @@ class ManageLocationView extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(controller.adBanner.value.title, style: AppTextStyles.bodyMedium),
+                            Text(adBanner.adBanner.value.title,
+                                style: AppTextStyles.bodyMedium),
                             GestureDetector(
-                              onTap: () {
-                                controller.isBannerVisible.value = false;
-                              },
+                              onTap: () => adBanner.isBannerVisible.value = false,
                               child: const Icon(Icons.close, color: Colors.grey, size: 20),
                             ),
                           ],
                         ),
-
                         const SizedBox(height: 6),
-
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Expanded(
-                              child: Text(controller.adBanner.value.body, style:AppTextStyles.overline,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis)),
+                              child: Text(
+                                adBanner.adBanner.value.body,
+                                style: AppTextStyles.overline,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis)),
                             const SizedBox(width: 8),
                             ElevatedButton(
-                                onPressed: () {
-                                  controller.openExternalLink();
-                                },
+                              onPressed: () => adBanner.openExternalLink(),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 foregroundColor: const Color(0xFF242424),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
                                 minimumSize: Size.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                              child: Text('Open', style: AppTextStyles.bodyMedium.copyWith(color: Color(0xFF242424)))),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: Text('Open',
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                    color: const Color(0xFF242424)),
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -184,7 +182,8 @@ class ManageLocationView extends StatelessWidget {
               ),
             ),
           )
-              : const SizedBox.shrink())
+              : const SizedBox.shrink(),
+          ),
         ],
       ),
     );

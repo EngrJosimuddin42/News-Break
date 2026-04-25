@@ -19,6 +19,9 @@ class NewsDetailView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    final HomeController controller = Get.isRegistered<HomeController>()
+        ? Get.find<HomeController>()
+        : Get.put(HomeController());
     final NewsModel news = Get.arguments;
     return Scaffold(
       backgroundColor: Colors.black,
@@ -138,10 +141,7 @@ class NewsDetailView extends GetView<HomeController> {
                     errorBuilder: (context, error, stackTrace) => Container(
                       height: 200,
                       color: Colors.grey[800],
-                      child: const Icon(Icons.image, color: Colors.grey),
-                    ),
-                  ),
-                ),
+                      child: const Icon(Icons.image, color: Colors.grey)))),
                 const SizedBox(height: 8),
                 if (news.imageCaption.isNotEmpty)
                   Padding(
@@ -188,8 +188,12 @@ class NewsDetailView extends GetView<HomeController> {
                       decoration: BoxDecoration(
                         color: const Color(0xFF333333),
                         borderRadius: BorderRadius.circular(48)),
-                      child:Text('Write a comment', style:AppTextStyles.overline.copyWith(fontSize: 11))))),
-                       const SizedBox(width: 16),
+                      child: Text('Write a comment',
+                        style: AppTextStyles.overline,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center)))),
+                const SizedBox(width: 16),
 
                   // Like, Comment, Share Action Buttons
                 Obx(() {
@@ -199,8 +203,11 @@ class NewsDetailView extends GetView<HomeController> {
                     news.likes, () => controller.onLikePressed(news),
                     color: isLiked ? Colors.blue : Colors.white);
                 }),
+
                 const SizedBox(width: 16),
-                  _actionItem(null, news.comments, () => controller.onCommentPressed(news), asset: 'assets/icons/comment.png'),
+                  _actionItem(null, news.comments, () {
+                    controller.onCommentPressed(news);}, asset: 'assets/icons/comment.png'),
+
                   const SizedBox(width: 16),
                    _actionItem(null, 'Share', () => controller.onSharePressed(news), asset: 'assets/icons/share.png'),
                ],

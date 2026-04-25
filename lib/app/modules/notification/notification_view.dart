@@ -110,7 +110,7 @@ class NotificationBody extends GetView<NotificationController> {
 
     return ListView.separated(
       itemCount: controller.followItems.length,
-      separatorBuilder: (_, __) =>
+      separatorBuilder: (context, index) =>
       const Divider(color: Colors.white12, height: 1),
       itemBuilder: (context, index) {
         final user = controller.followItems[index];

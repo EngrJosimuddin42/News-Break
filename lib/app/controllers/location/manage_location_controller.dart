@@ -5,8 +5,6 @@ import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:news_break/app/controllers/auth/auth_controller.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../../models/ad_banner_model.dart';
 import '../../routes/app_pages.dart';
 
 class ManageLocationController extends GetxController {
@@ -15,7 +13,6 @@ class ManageLocationController extends GetxController {
 
   // Reactive Variables
   var isLocationSelected = false.obs;
-  var isBannerVisible = true.obs;
   var isDarkMode = true.obs;
   var currentMapUrl = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png'.obs;
 
@@ -95,30 +92,4 @@ class ManageLocationController extends GetxController {
       AppSnackbar.error(message: "Location not found. Try: City, Country");
     }
   }
-
-  void openExternalLink() async {
-    final String urlString = adBanner.value.externalLink;
-    final Uri url = Uri.parse(urlString);
-
-    try {
-      bool launched = await launchUrl(
-        url,
-        mode: LaunchMode.externalApplication,
-      );
-      if (!launched) {
-        AppSnackbar.error(message: "Could not launch the link.");
-      }
-    } catch (e) {
-      AppSnackbar.error(message: "Error: $e");
-    }
-  }
-
-  final adBanner = AdBannerModel(
-    id: 1,
-    title: 'FoodRadar',
-    body: 'Find Free Food Near You Instantly. 100% Free, No Ads.',
-    imageUrl: 'assets/images/publisher.png',
-    externalLink: 'https://www.google.com/maps/search/food+near+me',
-  ).obs;
-
 }

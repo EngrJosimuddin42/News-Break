@@ -137,7 +137,12 @@ class ShareSheet extends GetView<ReelsController> {
                             color: Colors.white,
                             size: 20),
                         onTap: () {
-                          controller.onShareOptionTap(reel.id ?? 0, option['label']);
+                          controller.onShareOptionTap(
+                            reel.id ?? 0,
+                            option['label'],
+                            userName: reel.userName,
+                            shareUrl: 'https://newsbreak.com/news/${reel.id}',
+                          );
                         },
                         dense: true);
                   },

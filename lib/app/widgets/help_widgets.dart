@@ -38,7 +38,10 @@ class HelpWidgets {
 // Shared Footer
   static Widget helpFooter() {
     final String year = DateTime.now().year.toString();
-    final controller = Get.find<SettingsController>();
+    if (!Get.isRegistered<SettingsController>()) {
+      Get.put(SettingsController());
+    }
+    final SettingsController controller = Get.find<SettingsController>();
     return Container(
       color: AppColors.surface,
       width: double.infinity,

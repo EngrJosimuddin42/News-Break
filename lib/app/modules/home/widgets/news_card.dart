@@ -78,7 +78,7 @@ class _NewsCardState extends State<NewsCard> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PublisherAvatar(news: news),
+          PublisherAvatar.fromNews(news: news),
           const SizedBox(width: 10),
           Expanded(
             child: Column(

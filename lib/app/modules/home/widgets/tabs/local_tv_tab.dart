@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../../../controllers/auth/auth_controller.dart';
 import '../../../../controllers/home_controller.dart';
 import '../../../../theme/app_colors.dart';
 import '../ad_video_card.dart';
@@ -15,20 +14,20 @@ class LocalTvTab extends GetView<HomeController> {
     super.key,
     this.message = 'No relevant articles',
   });
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final loggedIn = AuthController.to.user.value != null;
-
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
       }
-      return loggedIn ? _buildLoggedIn() : _buildLoggedOut();
+
+      final hasLocation = controller.selectedLocation.value != null;
+      return hasLocation ? _buildWithLocation() : _buildWithoutLocation();
     });
   }
 
-  // Logged out
-  Widget _buildLoggedOut() {
+  Widget _buildWithoutLocation() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -61,8 +60,7 @@ class LocalTvTab extends GetView<HomeController> {
     );
   }
 
-  // Logged in video news cards
-  Widget _buildLoggedIn() {
+  Widget _buildWithLocation() {
       return ListView.builder(
         padding: const EdgeInsets.only(top: 4, bottom: 16),
         itemCount: controller.localTvNews.length,

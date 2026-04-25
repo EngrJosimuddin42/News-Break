@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../theme/app_colors.dart';
 import '../../../../theme/app_text_styles.dart';
-import '../about/sub_pages/help_widgets.dart';
+import '../../../../widgets/help_widgets.dart';
 
 class HelpDetailView extends StatelessWidget {
   final String title;

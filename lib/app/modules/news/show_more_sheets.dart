@@ -49,8 +49,7 @@ class NewsBottomSheets {
                             id: news.id,
                             userName: news.publisherName,
                             description: news.title,
-                            userProfileImage: news.publisherImageUrl ?? "",
-                              )),
+                            userProfileImage: news.publisherImageUrl)),
                           isScrollControlled: true);
                     }),
                     const SizedBox(width: 10),
@@ -58,8 +57,10 @@ class NewsBottomSheets {
 
                     _topActionCard(assetPath: 'assets/icons/plump_feather_pen.png', label: 'Short Post',onTap: () {
                       Get.back();
-                      Get.toNamed(Routes.CREATE_POST);
-                    },),
+                      Get.toNamed(
+                          Routes.CREATE_POST,
+                          arguments: news);
+                    }),
                   ],
                 ),
               ),

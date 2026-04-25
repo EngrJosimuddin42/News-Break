@@ -3,11 +3,14 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/home_controller.dart';
+import '../../controllers/nbot_controller.dart';
 import '../../controllers/signin_controller.dart';
 import '../../models/news_model.dart';
+import '../../routes/app_pages.dart';
 import '../../widgets/about_profile_sheet.dart';
 import '../../widgets/follow_button.dart';
 import '../../widgets/publisher_avatar.dart';
+import '../ai/nbot_sheet.dart';
 import '../signin/signin_view.dart';
 import 'show_more_sheets.dart';
 
@@ -27,7 +30,17 @@ class NewsDetailView extends GetView<HomeController> {
           child: Icon(Icons.arrow_back_ios, color:AppColors.textOnDark, size: 20),
         ),
         title: GestureDetector(
-          onTap: () {},
+          onTap: () {
+            if (!Get.isRegistered<NBotController>()) {
+              Get.lazyPut(() => NBotController());
+            }
+            Get.bottomSheet(
+              const NBotSheet(),
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              ignoreSafeArea: false,
+            );
+          },
           child: Container(
             height: 36,
             decoration: BoxDecoration(
@@ -45,8 +58,14 @@ class NewsDetailView extends GetView<HomeController> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.bookmark_border, color:AppColors.textOnDark,size: 20),
-            onPressed: () {},
+            icon: Icon(Icons.bookmark_border, color: AppColors.textOnDark, size: 20),
+            onPressed: () {
+              if (controller.isLoggedIn) {
+                controller.onSaveNews(news);
+              } else {
+                Get.toNamed(Routes.SIGNIN);
+              }
+            },
           ),
           IconButton(
             icon: Icon(Icons.more_vert, color:AppColors.textOnDark,size: 24,),
@@ -74,10 +93,9 @@ class NewsDetailView extends GetView<HomeController> {
                 const SizedBox(height: 12),
 
                 // Publisher row
-                // Publisher row
                 Row(
                   children: [
-                    PublisherAvatar(news: news),
+                    PublisherAvatar.fromNews(news: news),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Column(
@@ -149,8 +167,7 @@ class NewsDetailView extends GetView<HomeController> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: const BoxDecoration(
-              color: Colors.black,
-            ),
+              color: Colors.black),
             child: Row(
               children: [
                 Expanded(
@@ -167,12 +184,11 @@ class NewsDetailView extends GetView<HomeController> {
                         );
                       },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
                       decoration: BoxDecoration(
                         color: const Color(0xFF333333),
-                        borderRadius: BorderRadius.circular(48),
-                      ),
-                      child:Text('Write a comment', style:AppTextStyles.overline)))),
+                        borderRadius: BorderRadius.circular(48)),
+                      child:Text('Write a comment', style:AppTextStyles.overline.copyWith(fontSize: 11))))),
                        const SizedBox(width: 16),
 
                   // Like, Comment, Share Action Buttons

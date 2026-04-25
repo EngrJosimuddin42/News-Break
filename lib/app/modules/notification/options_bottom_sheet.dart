@@ -38,9 +38,7 @@ class OptionsBottomSheet {
                   iconColor: Colors.white,
                   title: 'Show less about: ${news.author}',
                   onTap: () {
-                    // আগে শিট ক্লোজ করুন যাতে Snackbar সামনে দেখা যায়
                     Get.back();
-                    // তারপর লজিক কল করুন
                     controller.showLessAbout(news.author);
                   },
                 ),
@@ -98,7 +96,7 @@ class OptionsBottomSheet {
               },
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 30),
         ],
       ),
     );

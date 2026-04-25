@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:news_break/app/modules/me/settings/about/sub_pages/help_widgets.dart';
+import 'package:news_break/app/widgets/help_widgets.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 
 enum LegalType { terms, privacy, notice }
@@ -73,9 +73,6 @@ class SharedView extends StatelessWidget {
             Text(importantNotice, style:AppTextStyles.button.copyWith(color:Colors.black)),
             const SizedBox(height: 16),
             Text(body, style:AppTextStyles.caption.copyWith(color: Colors.black)),
-
-            const SizedBox(height: 350),
-            HelpWidgets.helpFooter(),
           ],
         ),
       ),

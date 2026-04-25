@@ -111,6 +111,7 @@ class NBotSheet extends GetView<NBotController> {
               ),
             ),
           ),
+          SizedBox(height: 12)
         ],
       ),
     );

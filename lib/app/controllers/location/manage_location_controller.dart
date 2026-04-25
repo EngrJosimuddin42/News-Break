@@ -3,10 +3,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:news_break/app/controllers/auth/auth_controller.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../models/ad_banner_model.dart';
+import '../../routes/app_pages.dart';
 
 class ManageLocationController extends GetxController {
   final TextEditingController searchController = TextEditingController();
@@ -56,6 +57,15 @@ class ManageLocationController extends GetxController {
   }
 
   void saveBookmark() {
+    final bool loggedIn = AuthController.to.isLoggedIn;
+    if (!loggedIn) {
+      AppSnackbar.warning(
+          title: 'Login Required',
+          message: 'Please login to save your favorite locations.'
+      );
+      Get.toNamed(Routes.SIGNIN);
+      return;
+    }
     if (isLocationSelected.value) {
       AppSnackbar.success(message: "Location added to your bookmarks");
     } else {

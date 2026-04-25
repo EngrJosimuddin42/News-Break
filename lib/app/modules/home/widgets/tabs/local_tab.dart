@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../../../controllers/auth/auth_controller.dart';
 import '../../../../controllers/home_controller.dart';
 import '../../../../theme/app_colors.dart';
 import '../ad_video_card.dart';
@@ -21,18 +20,18 @@ class LocalTab extends GetView<HomeController> {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
       }
-      return _buildAuthAwareContent();
+      return _buildLocationAwareContent();
     });
   }
 
-  Widget _buildAuthAwareContent() {
+  Widget _buildLocationAwareContent() {
     return Obx(() {
-      final loggedIn = AuthController.to.user.value != null;
-      return loggedIn ? _buildLoggedIn() : _buildLoggedOut();
+      final hasLocation = controller.selectedLocation.value != null;
+      return hasLocation ? _buildWithLocation() : _buildWithoutLocation();
     });
   }
 
-  Widget _buildLoggedOut() {
+  Widget _buildWithoutLocation() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -56,7 +55,7 @@ class LocalTab extends GetView<HomeController> {
     );
   }
 
-  Widget _buildLoggedIn() {
+  Widget _buildWithLocation() {
     return ListView(
       padding: const EdgeInsets.only(top: 4, bottom: 16),
       children: [

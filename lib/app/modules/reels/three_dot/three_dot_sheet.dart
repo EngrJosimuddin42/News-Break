@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../../controllers/nbot_controller.dart';
 import '../../../controllers/reels/reels_controller.dart';
+import '../../ai/nbot_sheet.dart';
 
 class ThreeDotSheet extends StatelessWidget {
   final int reelId;
@@ -94,7 +96,19 @@ class ThreeDotSheet extends StatelessWidget {
                       icon: 'assets/icons/add.png',
                       iconColor: Colors.blueAccent,
                       label: 'Ask/request/report anything',
-                      onTap: () => controller.openHelpCenter())),
+                      onTap: () {
+                        if (!Get.isRegistered<NBotController>()) {
+                          Get.lazyPut(() => NBotController());
+                        }
+                        Get.bottomSheet(
+                          const NBotSheet(),
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          ignoreSafeArea: false,
+                        );
+                      }
+                      ),
+                  ),
                   const SizedBox(height: 20),
                 ],
               ),

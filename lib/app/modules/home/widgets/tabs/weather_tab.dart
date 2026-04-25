@@ -2,42 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../../../controllers/auth/auth_controller.dart';
 import '../../../../controllers/home_controller.dart';
 import '../ad_video_card.dart';
 import '../category_news_card.dart';
 
 class WeatherTab extends GetView<HomeController> {
   const WeatherTab({super.key});
+  bool get _showAds => controller.isLoggedIn;
+
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final loggedIn = AuthController.to.user.value != null;
 
+    return Obx(() {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
       }
 
-      return loggedIn ? _buildLoggedIn() : _buildLoggedOut();
+      final hasLocation = controller.selectedLocation.value != null;
+      return hasLocation ? _buildWithLocation() : _buildWithoutLocation();
     });
   }
 
-  Widget _buildLoggedOut() {
+  Widget _buildWithoutLocation() {
     return ListView.builder(
       padding: const EdgeInsets.only(top: 4, bottom: 16),
       itemCount: controller.weatherNews.length,
       itemBuilder: (context, index) {
         final news = controller.weatherNews[index];
         if (news.publisherType == 'Ad') {
-          return const SizedBox.shrink();
+          return _showAds ? AdVideoCard(news: news) : const SizedBox.shrink();
         }
         return CategoryNewsCard(news: news);
       },
     );
   }
 
-  Widget _buildLoggedIn() {
+  Widget _buildWithLocation() {
     return ListView(
       padding: const EdgeInsets.only(bottom: 16),
       children: [
@@ -48,7 +49,7 @@ class WeatherTab extends GetView<HomeController> {
 
         ...controller.weatherNews.map((news) {
           if (news.publisherType == 'Ad') {
-            return AdVideoCard(news: news);
+            return _showAds ? AdVideoCard(news: news) : const SizedBox.shrink();
           }
           return CategoryNewsCard(news: news);
         }),

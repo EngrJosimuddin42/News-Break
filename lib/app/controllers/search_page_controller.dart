@@ -7,37 +7,18 @@ class SearchPageController extends GetxController {
 
   var query = ''.obs;
   var selectedItem = ''.obs;
-
-
-  final List<String> trendingItems = [
-    'First selection',
-    'Second selection',
-    'Third selection',
-    'Fourth selection',
-    'Fifth selection',
-  ];
-
-  List<String> get filteredItems {
-    if (filterController.text.isEmpty) return trendingItems;
-    return trendingItems
-        .where((item) => item.toLowerCase().contains(filterController.text.toLowerCase()))
-        .toList();
-  }
-
-  void onSearchChanged(String val) => query.value = val;
-
-  void selectItem(String item) => selectedItem.value = item;
-
-  void clearSearch() {
-    searchController.clear();
-    query.value = '';
-  }
+  var filteredResult = <String>[].obs;
 
   @override
   void onInit() {
     super.onInit();
+    filteredResult.assignAll(trendingItems);
     filterController.addListener(() {
-      update();
+      _performFilter(filterController.text);
+    });
+    searchController.addListener(() {
+      query.value = searchController.text;
+      _performFilter(searchController.text);
     });
   }
 
@@ -47,4 +28,35 @@ class SearchPageController extends GetxController {
     filterController.dispose();
     super.onClose();
   }
+
+  void _performFilter(String text) {
+    if (text.isEmpty) {
+      filteredResult.assignAll(trendingItems);
+    } else {
+      var results = trendingItems
+          .where((item) => item.toLowerCase().contains(text.toLowerCase()))
+          .toList();
+      filteredResult.assignAll(results);
+    }
+  }
+
+  void selectItem(String item) {
+    selectedItem.value = item;
+  }
+
+  void clearSearch() {
+    searchController.clear();
+    filterController.clear();
+    query.value = '';
+    filteredResult.assignAll(trendingItems);
+  }
+
+  final RxList<String> trendingItems = [
+    'First selection',
+    'Second selection',
+    'Third selection',
+    'Fourth selection',
+    'Fifth selection',
+  ].obs;
+
 }

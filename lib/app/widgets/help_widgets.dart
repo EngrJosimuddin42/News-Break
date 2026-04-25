@@ -4,8 +4,10 @@ import 'package:news_break/app/modules/me/settings/about/sub_pages/what_we_do_vi
 import 'package:news_break/app/modules/me/settings/about/sub_pages/who_are_we_view.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import 'blog_view.dart';
-import 'creator_page_view.dart';
+import '../controllers/me/settings_controller.dart';
+import '../modules/me/settings/about/legal_view.dart';
+import '../modules/me/settings/about/sub_pages/blog_view.dart';
+import '../modules/me/settings/about/sub_pages/creator_page_view.dart';
 
 class HelpWidgets {
   // Shared AppBar
@@ -33,48 +35,58 @@ class HelpWidgets {
     );
   }
 
-// ── Shared Footer ────────────────────────────
+// Shared Footer
   static Widget helpFooter() {
     final String year = DateTime.now().year.toString();
+    final controller = Get.find<SettingsController>();
     return Container(
-        color:AppColors.surface,
-        width: double.infinity,
-        child: Column(
-      children: [
-        SizedBox(height: 40),
-        const Divider(height: 2, color: Color(0xFFCCCCCC)),
-        SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Terms of Use',
-                  style:AppTextStyles.overline.copyWith(color: AppColors.background)),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Text('|',
-                    style:AppTextStyles.overline.copyWith(color: AppColors.background)),
-              ),
-              Text('Privacy Policy',
-                  style:AppTextStyles.overline.copyWith(color: AppColors.background)),
-            ],
+      color: AppColors.surface,
+      width: double.infinity,
+      child: Column(
+        children: [
+          const SizedBox(height: 40),
+          const Divider(height: 2, color: Color(0xFFCCCCCC)),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+
+                //  Terms of Use
+                GestureDetector(
+                  onTap: () => Get.to(() => const LegalView(type: LegalType.terms)),
+                  child: Text('Terms of Use', style: AppTextStyles.overline.copyWith(color: AppColors.background))),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text('|', style: AppTextStyles.overline.copyWith(color: AppColors.background))),
+
+                //  Privacy Policy
+                GestureDetector(
+                  onTap: () => Get.to(() => const LegalView(type: LegalType.privacy)),
+                  child: Text('Privacy Policy', style: AppTextStyles.overline.copyWith(color: AppColors.background)),
+                ),
+              ],
+            ),
           ),
-        ),
-        Text('© $year Particle Media. All Rights Reserved.',
-            style:AppTextStyles.overline),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('English (US)',
-                style:AppTextStyles.overline.copyWith(color: AppColors.background)),
-            Icon(Icons.keyboard_arrow_down, color:AppColors.background, size: 20),
-          ],
-        ),
-        const SizedBox(height: 32),
-      ],
-    ),
+          Text('© $year Particle Media. All Rights Reserved.', style: AppTextStyles.overline),
+          const SizedBox(height: 8),
+
+          //  English (US)
+          Obx(() => GestureDetector(
+            onTap: () => controller.showLanguagePicker(),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  controller.currentLanguageName, style: AppTextStyles.overline.copyWith(color: AppColors.background)),
+                const Icon(Icons.keyboard_arrow_down, color: AppColors.background, size: 20),
+              ],
+            ),
+          )),
+          const SizedBox(height: 32),
+        ],
+      ),
     );
   }
 
@@ -84,10 +96,8 @@ class HelpWidgets {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: const Color(0xFFFFEDED),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Text(label,
-          style:AppTextStyles.buttonOutline.copyWith(color: Color(0xFFFF413F))),
+        borderRadius: BorderRadius.circular(10)),
+      child: Text(label, style:AppTextStyles.buttonOutline.copyWith(color: Color(0xFFFF413F))),
     );
   }
 }
@@ -186,9 +196,7 @@ class _HelpTabBarState extends State<HelpTabBar> {
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                             color: Colors.transparent,
-                            child: Text(item, style: AppTextStyles.caption.copyWith(color: Color(0xFF252F39))),
-                          ),
-                        ),
+                            child: Text(item, style: AppTextStyles.caption.copyWith(color: Color(0xFF252F39))))),
                       ],
                     );
                   }).toList(),
@@ -219,8 +227,7 @@ class _HelpTabBarState extends State<HelpTabBar> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Text(_tabs[i],
-                    style: const TextStyle(color: Colors.black54, fontSize: 13)),
-              ),
+                    style: const TextStyle(color: Colors.black54, fontSize: 13))),
             );
           }),
         ),

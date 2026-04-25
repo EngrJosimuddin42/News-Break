@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../../controllers/reels/reels_controller.dart';
+import '../../me/settings/about/about_view.dart';
 
 class ReportVideoSheet extends StatelessWidget {
   const ReportVideoSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ReelsController controller = Get.find<ReelsController>();
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -61,7 +59,7 @@ class ReportVideoSheet extends StatelessWidget {
                       TextSpan(text: 'Visit the '),
                       WidgetSpan(
                         child: GestureDetector(
-                          onTap: () => controller.openHelpCenter(),
+                          onTap: () => Get.to(() => const AboutView()),
                           child: Text('help center',
                               style:AppTextStyles.overline.copyWith(color: AppColors.textGreen)),
                         ),
@@ -76,9 +74,9 @@ class ReportVideoSheet extends StatelessWidget {
                   width: 311,
                   height: 48,
                   child: ElevatedButton(
-                    onPressed: () {
-                      controller.openHelpCenter();
-                    },
+                      onPressed: () {
+                        Get.to(() => const AboutView());
+                      },
                     style: ElevatedButton.styleFrom(
                       backgroundColor:AppColors.linkColor,
                       shape: RoundedRectangleBorder(

@@ -41,7 +41,7 @@ class AdVideoCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
       child: Row(
         children: [
-          PublisherAvatar(news: news),
+          PublisherAvatar.fromNews(news: news),
           const SizedBox(width: 10),
           _buildPublisherInfo(),
           _buildCloseButton(),

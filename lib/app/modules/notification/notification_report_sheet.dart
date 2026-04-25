@@ -99,7 +99,7 @@ class _ReportBottomSheetState extends State<NotificationReportSheet> {
           },
           nextLabel: 'Submit',
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 30),
       ],
     );
   }
@@ -133,7 +133,7 @@ class _ReportBottomSheetState extends State<NotificationReportSheet> {
           },
           nextLabel: 'Next',
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 30),
       ],
     );
   }
@@ -172,14 +172,14 @@ class _ReportBottomSheetState extends State<NotificationReportSheet> {
                 backgroundColor:AppColors.surface,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.symmetric(vertical: 8),
               ),
               child:Text('Submit',
                   style:AppTextStyles.bodySmall),
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
       ],
     );
   }

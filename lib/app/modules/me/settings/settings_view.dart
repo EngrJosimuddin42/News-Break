@@ -100,7 +100,7 @@ class _SettingsViewState extends State<SettingsView> {
                       iconPath: 'assets/icons/language.png',
                       title: 'Language',
                       trailing: Text(lang, style: AppTextStyles.overline),
-                      onTap: () => _showLanguagePicker(),
+                      onTap: () => SettingsController.to.showLanguagePicker(),
                     ),
 
                 // Text size
@@ -212,7 +212,7 @@ class _SettingsViewState extends State<SettingsView> {
                 ],
               ),
             ),
-            if (trailing != null) trailing,
+            trailing ?? const SizedBox.shrink(),
           ],
         ),
       ),
@@ -231,67 +231,6 @@ class _SettingsViewState extends State<SettingsView> {
     );
   }
 
-  // ── Language picker ──────────────────────────
-  void _showLanguagePicker() {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        backgroundColor: const Color(0xFF282828),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const SizedBox(width: 24),
-                  Text('Language',
-                      style: AppTextStyles.displaySmall.copyWith(fontWeight: FontWeight.w500)),
-                  GestureDetector(
-                    onTap: () {
-                      Get.back();
-                      },
-                    child: const Icon(Icons.close, color: Colors.white, size: 20),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 50),
-
-              _buildLanguageButton('English'),
-
-              const SizedBox(height: 12),
-
-              _buildLanguageButton('Bangla'),
-
-              const SizedBox(height: 12)
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLanguageButton(String lang) {
-    return GestureDetector(
-    onTap: () {
-      SettingsController.to.changeLanguage(lang);
-      Get.back();
-    },
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        decoration: BoxDecoration(
-          color: AppColors.linkColor,
-          borderRadius: BorderRadius.circular(70),
-        ),
-        child: Center(
-          child: Text(lang,
-            style:AppTextStyles.bodySmall),
-        ),
-      ),
-    );
-  }
 
   void _showTextSizePicker() {
     showDialog(

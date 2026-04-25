@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/controllers/signin_controller.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
 import 'package:share_plus/share_plus.dart';
 import '../models/comment_model.dart';
@@ -7,6 +8,7 @@ import '../models/comment_source.dart';
 import '../models/news_model.dart';
 import '../models/reel_model.dart';
 import '../modules/reels/comments/comments_sheet.dart';
+import '../modules/signin/signin_view.dart';
 import 'auth/auth_controller.dart';
 import '../routes/app_pages.dart';
 import '../modules/ai/nbot_sheet.dart';
@@ -70,6 +72,17 @@ class HomeController extends GetxController {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => const NBotSheet());
+  }
+
+  void onSaveNews(NewsModel news) {
+    if (!isLoggedIn) {
+      if (!Get.isRegistered<SignInController>()) {
+        Get.lazyPut(() => SignInController());
+      }
+      Get.toNamed(Routes.SIGNIN);
+      return;
+    }
+    AppSnackbar.success(message: "News saved to your bookmarks");
   }
 
   void toggleFollow(dynamic item) {

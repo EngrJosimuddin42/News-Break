@@ -75,7 +75,7 @@ class CategoryNewsCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
       child: Row(
         children: [
-          PublisherAvatar(news: news),
+          PublisherAvatar.fromNews(news: news),
           const SizedBox(width: 8),
           Expanded(
             child: Column(

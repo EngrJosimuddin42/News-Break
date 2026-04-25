@@ -7,6 +7,7 @@ class AuthController extends GetxController {
 
   static AuthController get to => Get.find();
   final user = Rxn<UserModel>();
+  bool get isLoggedIn => user.value != null;
 
   String get userInitial =>
       user.value?.name.isNotEmpty == true

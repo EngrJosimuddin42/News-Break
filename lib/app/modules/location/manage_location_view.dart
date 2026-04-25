@@ -119,7 +119,7 @@ class ManageLocationView extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PublisherAvatar(
+                  PublisherAvatar.fromNews(
                     news: NewsModel(
                       id: 1,
                       author: '',

@@ -1,43 +1,61 @@
 import 'package:flutter/material.dart';
-
 import '../models/news_model.dart';
 
-
 class PublisherAvatar extends StatelessWidget {
-  final NewsModel news;
   final double size;
+  final String imageUrl;
+  final String name;
+  final BoxShape shape;
 
-  const PublisherAvatar({
+  // NewsModel
+  PublisherAvatar.fromNews({
     super.key,
-    required this.news,
+    required NewsModel news,
     this.size = 42.0,
+    this.shape = BoxShape.circle,
+  })  : imageUrl = news.publisherImageUrl,
+        name = news.publisherName;
+
+  // Direct URL (ShareSheet, ReelModel)
+  const PublisherAvatar.fromUrl({
+    super.key,
+    required this.imageUrl,
+    required this.name,
+    this.size = 42.0,
+    this.shape = BoxShape.circle,
   });
 
   @override
   Widget build(BuildContext context) {
-    final String imageUrl = news.publisherImageUrl;
+    final borderRadius = shape == BoxShape.circle
+        ? BorderRadius.circular(size)
+        : BorderRadius.circular(12);
 
-    return ClipOval(
-      child: SizedBox(width: size, height: size,
+    return ClipRRect(
+      borderRadius: borderRadius,
+      child: SizedBox(
+        width: size,
+        height: size,
         child: (imageUrl.isNotEmpty && imageUrl.startsWith('http'))
-            ? Image.network(imageUrl,
+            ? Image.network(
+          imageUrl,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) => _buildFallbackAvatar())
-            : Image.asset(imageUrl.isNotEmpty ? imageUrl : 'assets/images/publisher.png',
+            : Image.asset(
+          imageUrl.isNotEmpty ? imageUrl : 'assets/images/publisher.png',
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => _buildFallbackAvatar(),
-        ),
-      ),
+          errorBuilder: (context, error, stackTrace) => _buildFallbackAvatar())),
     );
   }
 
   Widget _buildFallbackAvatar() {
-    return Container(width: size, height: size,
+    return Container(
+      width: size,
+      height: size,
       color: Colors.grey[800],
       alignment: Alignment.center,
-      child: Text( news.publisherName.isNotEmpty ? news.publisherName[0].toUpperCase() : '?',
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      ),
+      child: Text(name.isNotEmpty ? name[0].toUpperCase() : '?',
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
+import '../models/news_model.dart';
 import '../modules/create_post/tag_location_sheet.dart';
 
 class CreatePostController extends GetxController {
@@ -30,13 +31,19 @@ class CreatePostController extends GetxController {
     filteredLocations.assignAll(allLocations);
 
     if (Get.arguments != null) {
-      final file = Get.arguments as File;
-      selectedMedia.value = file;
+      if (Get.arguments is File) {
+        final file = Get.arguments as File;
+        selectedMedia.value = file;
+        if (file.path.toLowerCase().endsWith('.mp4') ||
+            file.path.toLowerCase().endsWith('.mov')) {
+          isReel.value = true;
+          _generateThumbnail(file.path);
+        }
+      }
+      else if (Get.arguments is NewsModel) {
+        final news = Get.arguments as NewsModel;
 
-      if (file.path.toLowerCase().endsWith('.mp4') ||
-          file.path.toLowerCase().endsWith('.mov')) {
-        isReel.value = true;
-        _generateThumbnail(file.path);
+        textController.text = "${news.title}\n\n";
       }
     }
   }

@@ -22,8 +22,7 @@ class WhoAreWeView extends StatelessWidget {
             child: Obx(() {
               if (controller.isLoading.value) {
                 return const Center(
-                  child: CircularProgressIndicator(color: Colors.red),
-                );
+                  child: CircularProgressIndicator(color: Colors.red));
               }
               if (!controller.isLoading.value && controller.aboutSections.isEmpty) {
                 return const Center(child: Text("No information available."));

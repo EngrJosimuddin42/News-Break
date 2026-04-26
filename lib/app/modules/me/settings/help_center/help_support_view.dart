@@ -22,8 +22,7 @@ class HelpSupportView extends StatelessWidget {
           onTap: () => Get.back(),
           child: Icon(Icons.arrow_back_ios, color: AppColors.textOnDark, size: 20)),
         title: Text('Help & Support', style: AppTextStyles.displaySmall),
-        centerTitle: true,
-      ),
+        centerTitle: true),
 
       body: Column(
         children: [
@@ -67,16 +66,14 @@ class HelpSupportView extends StatelessWidget {
     return Stack(
       children: [
         Image.asset('assets/images/banar_bg.png',
-          width: double.infinity,
-          height: 150,
+            width: double.infinity, height: 150,
           fit: BoxFit.cover),
         Positioned.fill(child: Container(color: Colors.black38)),
         Positioned( left: 20, right: 20, top: 30,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Hi, How Can We Help You?',
-                textAlign: TextAlign.center,
+              Text('Hi, How Can We Help You?', textAlign: TextAlign.center,
                 style: AppTextStyles.displaySmall.copyWith(fontWeight: FontWeight.w400)),
               const SizedBox(height: 20),
               Container(width: 306, height: 40,
@@ -129,8 +126,7 @@ class HelpSupportView extends StatelessWidget {
                       BoxShadow(
                         color: const Color(0x40888787),
                         blurRadius: 32,
-                        offset: Offset.zero,
-                      ),
+                        offset: Offset.zero),
                     ],
                   ),
                   child: Center(

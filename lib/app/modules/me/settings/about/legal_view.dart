@@ -1,22 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:news_break/app/widgets/help_widgets.dart';
+import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import 'package:news_break/app/widgets/help_widgets.dart';
+
+import '../../../../controllers/me/about_controller.dart';
 
 enum LegalType { terms, privacy, notice }
-const Map<LegalType, Map<String, String>> _legalData = {
-  LegalType.terms: {
-    'title': 'Terms of Use',
-    'subtitle': 'NewsBreak\nTerms of Use',
-  },
-  LegalType.privacy: {
-    'title': 'Privacy Policy',
-    'subtitle': 'Privacy Policy',
-  },
-  LegalType.notice: {
-    'title': 'Legal Notice',
-    'subtitle': 'Legal Notice',
-  },
-};
 
 class LegalView extends StatelessWidget {
   final LegalType type;
@@ -25,19 +14,23 @@ class LegalView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final data = _legalData[type]!;
-    return SharedView(
-      title: data['title']!,
-      subtitle: data['subtitle']!,
-      lastUpdated: 'Last Updated: October 13, 2025',
-      importantNotice: 'IMPORTANT NOTICE: IMPORTANT NOTICE:DISPUTES ABOUT THESE TERMS ARE SUBJECT TO BINDING ARBITRATION AND A WAIVER OF CLASS ACTION RIGHTS AS DETAILED IN THE "MANDATORY ARBITRATION AND CLASS ACTION WAIVER" PROVISIONS BELOW IN SECTION 14.',
-      body: 'Lorem ipsum dolor sit amet consectetur. Quis vel scelerisque dignissim nulla urna tellus. Et molestie fusce purus amet in dignissim. Pharetra donec habitasse lectus ultrices lobortis egestas donec non varius. Nisl ornare tellus risus varius arcu. Purus aliquam scelerisque ut quis.'
-    );
+    final controller = Get.put(AboutController());
+    controller.fetchLegalData(type.name);
+
+    return Obx(() => SharedView(
+      isLoading: controller.isLoading.value,
+      title: controller.title.value,
+      subtitle: controller.subtitle.value,
+      lastUpdated: controller.lastUpdated.value,
+      importantNotice: controller.importantNotice.value,
+      body: controller.body.value,
+    ));
   }
 }
 
 // ── SharedView
 class SharedView extends StatelessWidget {
+  final bool isLoading;
   final String title;
   final String subtitle;
   final String lastUpdated;
@@ -46,6 +39,7 @@ class SharedView extends StatelessWidget {
 
   const SharedView({
     super.key,
+    required this.isLoading,
     required this.title,
     required this.subtitle,
     required this.lastUpdated,

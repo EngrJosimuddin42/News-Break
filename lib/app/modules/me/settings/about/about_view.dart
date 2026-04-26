@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:news_break/app/modules/premium/premium_screen.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-
 import '../../../../bindings/premium_binding.dart';
 import 'legal_view.dart';
 
@@ -19,35 +18,27 @@ class AboutView extends StatelessWidget {
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios, color:AppColors.textOnDark, size: 20),
-        ),
-        title:Text('About',
-            style:AppTextStyles.displaySmall),
-        centerTitle: true,
-      ),
-      body: Padding(
+          child: Icon(Icons.arrow_back_ios, color:AppColors.textOnDark, size: 20)),
+        title:Text('About', style:AppTextStyles.displaySmall),
+        centerTitle: true),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
             const SizedBox(height: 60),
             // Logo
-            Image.asset(
-              'assets/images/newsbreak_logo.png',
-              width: 100,
-              height: 100,
-              ),
+            Image.asset('assets/images/newsbreak_logo.png', width: 100, height: 100),
             // App name
-            Text('Newsbreak',
-                style: AppTextStyles.displaySmall),
+            Text('Newsbreak', style: AppTextStyles.displaySmall),
             const SizedBox(height: 6),
 
             // Version
-            Text('Version 26.10.1.4',
-                style:AppTextStyles.labelSmall),
+            Text('Version 26.10.1.4', style:AppTextStyles.labelSmall),
             const SizedBox(height: 4),
 
-            Text('NewsBreak is your personalized news app.',
-                style:AppTextStyles.labelSmall),
+            Text('NewsBreak is your personalized news app.', style:AppTextStyles.labelSmall),
 
             const SizedBox(height: 48),
 
@@ -62,6 +53,7 @@ class AboutView extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 
@@ -73,13 +65,9 @@ class AboutView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           border: Border.all(color:AppColors.surface),
-          borderRadius: BorderRadius.circular(8),
-        ),
+          borderRadius: BorderRadius.circular(8)),
         child: Center(
-          child: Text(label,
-              style: AppTextStyles.caption),
-        ),
-      ),
+          child: Text(label, style: AppTextStyles.caption))),
     );
   }
 }

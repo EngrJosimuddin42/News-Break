@@ -1,4 +1,4 @@
-class CommunityPostModel {
+class CommunityModel {
   final int id;
   final String category;
   final String userName;
@@ -11,7 +11,7 @@ class CommunityPostModel {
   final String comments;
   final String shares;
 
-  CommunityPostModel({
+  CommunityModel({
     required this.id,
     this.category = 'Community',
     required this.userName,

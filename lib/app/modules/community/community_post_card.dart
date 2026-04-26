@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../models/community_post_model.dart';
+import '../../controllers/social_interaction_controller.dart';
+import '../../models/comment_source.dart';
+import '../../models/community_model.dart';
 import '../../models/news_model.dart';
+import '../../routes/app_pages.dart';
 import '../../widgets/options_bottom_sheet.dart';
+import '../../widgets/publisher_avatar.dart';
 import 'community_report_sheet.dart';
 
 class CommunityPostCard extends StatelessWidget {
-  final CommunityPostModel post;
+  final CommunityModel post;
 
   const CommunityPostCard({
     super.key,
@@ -26,23 +31,14 @@ class CommunityPostCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 24,
-                backgroundImage: NetworkImage(post.userImageUrl),
-                backgroundColor: Colors.grey[800],
-              ),
+              PublisherAvatar.fromUrl(
+                imageUrl: post.userImageUrl,
+                name: post.userName,
+                size: 42),
               const SizedBox(width: 10),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(post.userName, style: AppTextStyles.bodyMedium),
-                    const SizedBox(height: 2),
-                    Text(post.text, style: AppTextStyles.bodyLarge.copyWith(color: Color(0xFF929292)),
-                    ),
-                  ],
-                ),
-              ),
+                child: Text(post.userName, style: AppTextStyles.bodyMedium)),
+
               GestureDetector(
                 onTap: () {
                   final postAsNews = NewsModel(
@@ -54,9 +50,8 @@ class CommunityPostCard extends StatelessWidget {
                     timeAgo: post.timeAgo,
                     imageUrl: post.imageUrls.isNotEmpty ? post.imageUrls[0] : '',
                     body: post.text,
-                    publisherMeta: post.userRole,
-                  );
-                  OptionsBottomSheet.show(
+                    publisherMeta: post.userRole);
+                   OptionsBottomSheet.show(
                     context,
                     news: postAsNews,
                     reportSheet: const CommunityReportSheet(),
@@ -67,56 +62,101 @@ class CommunityPostCard extends StatelessWidget {
             ],
           ),
 
-          // Images
-          if (post.imageUrls.isNotEmpty) ...[
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 60),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Column(
-                  children: post.imageUrls.map((url) =>
-                      Image.network(
-                        url,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) =>
-                            Container(
-                              height: 160, color: Colors.grey[900],
-                            ),
-                      )).toList(),
-                ),
-              ),
-            ),
-          ],
+       // Post Text
+          const SizedBox(height: 8),
+        GestureDetector(
+          onTap: () => Get.toNamed(Routes.NEWS_DETAIL, arguments: NewsModel(
+            id: post.id,
+            category: post.category,
+            title: post.text,
+            author: post.userName,
+            publisherName: post.userRole,
+            timeAgo: post.timeAgo,
+            imageUrl: post.imageUrls.isNotEmpty ? post.imageUrls[0] : '',
+            body: post.text,
+            publisherMeta: post.userRole,
+            likes: post.likes,
+            comments: post.comments)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Text
+              Text(post.text, style: AppTextStyles.bodyLarge.copyWith(color: Colors.white),
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis),
+              const SizedBox(height: 10),
+
+             // Images
+              if (post.imageUrls.isNotEmpty)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Column(
+                    children: post.imageUrls.map((url) =>
+                        Image.network( url,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            height: 160,
+                            color: Colors.grey[900],
+                            child: const Icon(Icons.image, color: Colors.white24, size: 40))),
+                    ).toList())),
+            ],
+          ),
+        ),
 
           // Engagement
           const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 65),
-            child: Row(
-              children: [
-                Image.asset('assets/icons/heart.png', width: 20, height: 20),
-                const SizedBox(width: 4),
-                Text(post.likes, style: AppTextStyles.bodyLarge.copyWith(
-                    color: AppColors.surface)),
-                const SizedBox(width: 20),
-                Image.asset('assets/icons/comment.png', width: 20, height: 20),
-                const SizedBox(width: 4),
-                Text(post.comments, style: AppTextStyles.bodyLarge.copyWith(
-                    color: AppColors.surface)),
-                const SizedBox(width: 20),
-                Image.asset('assets/icons/share.png', width: 20, height: 20),
-                const SizedBox(width: 4),
-                Text(post.shares, style: AppTextStyles.bodyLarge.copyWith(
-                    color: AppColors.surface)),
-              ],
-            ),
-          ),
+                 Row(
+                  children: [
+                    //  Like
+                    Obx(() {
+                      final isLiked = SocialInteractionController.to.isLiked(post.id, type: 'post');
+                      return GestureDetector(
+                        onTap: () => SocialInteractionController.to.toggleLike(post.id, type: 'post'),
+                        child: Row(
+                          children: [
+                            Image.asset('assets/icons/heart.png', width: 20, height: 20,
+                              color: isLiked ? Colors.red : AppColors.surface),
+                            const SizedBox(width: 4),
+                            Text(post.likes, style: AppTextStyles.bodyLarge.copyWith( color: isLiked ? Colors.red : AppColors.surface)),
+                          ],
+                        ),
+                      );
+                    }),
+
+                    const SizedBox(width: 20),
+
+                    //Comment
+                    GestureDetector(
+                      onTap: () => SocialInteractionController.to.openComments( post.id, CommentSource.post),
+                      child: Row(
+                        children: [
+                          Image.asset('assets/icons/comment.png', width: 20, height: 20),
+                          const SizedBox(width: 4),
+                          Text(post.comments, style: AppTextStyles.bodyLarge.copyWith(color: AppColors.surface)),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(width: 20),
+
+                    // Share
+                    GestureDetector(
+                      onTap: () => SocialInteractionController.to.share(id: post.id, title: post.text, type: 'post'),
+                      child: Row(
+                        children: [
+                          Image.asset('assets/icons/share.png', width: 20, height: 20),
+                          const SizedBox(width: 4),
+                          Text(post.shares, style: AppTextStyles.bodyLarge.copyWith(color: AppColors.surface)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
           const SizedBox(height: 12),
           const Divider(color: Colors.white12, height: 1),
         ],
       ),
     );
   }
-  }
+}

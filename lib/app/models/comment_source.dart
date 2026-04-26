@@ -1,1 +1,1 @@
-enum CommentSource { reel, news }
+enum CommentSource { reel, news, post }

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 
+import '../../controllers/auth/auth_controller.dart';
 import '../../controllers/community/community_controller.dart';
+import '../../widgets/publisher_avatar.dart';
 
 class CommunityCreatePostView extends StatefulWidget {
   final bool openImagePicker;
@@ -49,14 +51,16 @@ class _CreatePostViewState extends State<CommunityCreatePostView> {
                   // User row
                   Row(
                     children: [
-                      Obx(() => CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Colors.grey[800],
-                        backgroundImage: NetworkImage(controller.userProfilePic.value),
-                      )),
+                      Obx(() {
+                        final user = AuthController.to.user.value;
+                        return PublisherAvatar.fromUrl(
+                          imageUrl: user?.profileImageUrl ?? '',
+                          name: user?.name ?? '',
+                          size: 40);
+                      }),
                       const SizedBox(width: 10),
                       Obx(() => Text(
-                        controller.userName.value,
+                        AuthController.to.user.value?.name ?? 'Guest',
                         style: AppTextStyles.button,
                       )),
                     ],

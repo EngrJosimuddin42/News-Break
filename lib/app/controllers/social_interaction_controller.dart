@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/models/comment_source.dart';
 import 'package:share_plus/share_plus.dart';
+import '../modules/reels/comments/comments_sheet.dart';
 import '../widgets/app_snackbar.dart';
 import 'auth/auth_helper.dart';
 import 'comment_controller.dart';
@@ -8,15 +10,12 @@ import 'comment_controller.dart';
 class SocialInteractionController extends GetxController {
   static SocialInteractionController get to => Get.find();
 
-  bool isJoined(int index) => joinedCommunityIds.contains(index);
-  final joinedCommunityIds = <int>{}.obs;
-
   // ── Liked IDs ─────────────────────────────────
-  final likedIds = <int>{}.obs;
-  final dislikedIds = <int>{}.obs;
+  final likedIds = <String>{}.obs;
+  final dislikedIds = <String>{}.obs;
 
   // ── Saved IDs ─────────────────────────────────
-  final savedIds = <int>{}.obs;
+  final savedIds = <String>{}.obs;
 
   // ── Followed ──────────────────────────────────
   final followedPublishers = <String>{}.obs;
@@ -25,57 +24,66 @@ class SocialInteractionController extends GetxController {
   final blockedSources = <String>{}.obs;
 
   // ── Hidden IDs ────────────────────────────────
-  final hiddenIds = <int>{}.obs;
+  final hiddenIds = <String>{}.obs;
 
   // ── Reported IDs ──────────────────────────────
-  final reportedIds = <int>{}.obs;
+  final reportedIds = <String>{}.obs;
+
+  // ── Joined Community IDs ──────────────────────
+  final joinedCommunityIds = <int>{}.obs;
 
   // ── LIKE ──────────────────────────────────────
-  void toggleLike(int id) {
-    if (!AuthHelper.checkLogin()) return; // ✅ login check
-    if (likedIds.contains(id)) {
-      likedIds.remove(id);
+  void toggleLike(int id, {String type = 'news'}) {
+    if (!AuthHelper.checkLogin()) return;
+    final key = '${type}_$id';
+    if (likedIds.contains(key)) {
+      likedIds.remove(key);
     } else {
-      likedIds.add(id);
-      dislikedIds.remove(id);
+      likedIds.add(key);
+      dislikedIds.remove(key); // like করলে dislike সরবে
     }
-    // ✅ API: await ApiService.toggleLike(id);
+    // ✅ API: await ApiService.toggleLike(id, type);
   }
 
-  bool isLiked(int id) => likedIds.contains(id);
+  bool isLiked(int id, {String type = 'news'}) =>
+      likedIds.contains('${type}_$id');
 
   // ── DISLIKE ───────────────────────────────────
-  void toggleDislike(int id) {
-    if (!AuthHelper.checkLogin()) return; // ✅ login check
-    if (dislikedIds.contains(id)) {
-      dislikedIds.remove(id);
+  void toggleDislike(int id, {String type = 'news'}) {
+    if (!AuthHelper.checkLogin()) return;
+    final key = '${type}_$id';
+    if (dislikedIds.contains(key)) {
+      dislikedIds.remove(key);
     } else {
-      dislikedIds.add(id);
-      likedIds.remove(id);
+      dislikedIds.add(key);
+      likedIds.remove(key); // dislike করলে like সরবে
     }
-    // ✅ API: await ApiService.toggleDislike(id);
+    // ✅ API: await ApiService.toggleDislike(id, type);
   }
 
-  bool isDisliked(int id) => dislikedIds.contains(id);
+  bool isDisliked(int id, {String type = 'news'}) =>
+      dislikedIds.contains('${type}_$id');
 
   // ── SAVE ──────────────────────────────────────
-  void toggleSave(int id) {
-    if (!AuthHelper.checkLogin()) return; // ✅ login check
-    if (savedIds.contains(id)) {
-      savedIds.remove(id);
+  void toggleSave(int id, {String type = 'news'}) {
+    if (!AuthHelper.checkLogin()) return;
+    final key = '${type}_$id';
+    if (savedIds.contains(key)) {
+      savedIds.remove(key);
       AppSnackbar.success(message: 'Removed from saved');
     } else {
-      savedIds.add(id);
+      savedIds.add(key);
       AppSnackbar.success(message: 'Saved successfully');
     }
-    // ✅ API: await ApiService.toggleSave(id);
+    // ✅ API: await ApiService.toggleSave(id, type);
   }
 
-  bool isSaved(int id) => savedIds.contains(id);
+  bool isSaved(int id, {String type = 'news'}) =>
+      savedIds.contains('${type}_$id');
 
   // ── FOLLOW ────────────────────────────────────
   void toggleFollow(String publisherName) {
-    if (!AuthHelper.checkLogin()) return; // ✅ login check
+    if (!AuthHelper.checkLogin()) return;
     if (followedPublishers.contains(publisherName)) {
       followedPublishers.remove(publisherName);
       AppSnackbar.success(message: 'Unfollowed $publisherName');
@@ -91,7 +99,7 @@ class SocialInteractionController extends GetxController {
 
   // ── BLOCK ─────────────────────────────────────
   void blockSource(String publisherName) {
-    if (!AuthHelper.checkLogin()) return; // ✅ login check
+    if (!AuthHelper.checkLogin()) return;
     blockedSources.add(publisherName);
     AppSnackbar.success(message: 'Blocked $publisherName');
     // ✅ API: await ApiService.blockSource(publisherName);
@@ -101,23 +109,47 @@ class SocialInteractionController extends GetxController {
       blockedSources.contains(publisherName);
 
   // ── HIDE ──────────────────────────────────────
-  void hideContent(int id) {
-    hiddenIds.add(id);
+  void hideContent(int id, {String type = 'news'}) {
+    final key = '${type}_$id';
+    hiddenIds.add(key);
     AppSnackbar.success(message: 'Content hidden from your feed');
-    // ✅ API: await ApiService.hideContent(id);
+    // ✅ API: await ApiService.hideContent(id, type);
   }
 
-  bool isHidden(int id) => hiddenIds.contains(id);
+  bool isHidden(int id, {String type = 'news'}) =>
+      hiddenIds.contains('${type}_$id');
 
-  // ── REPORT ────────────────────────────────────
-  void report(int id, String reason) {
-    if (!AuthHelper.checkLogin()) return; // ✅ login check
-    reportedIds.add(id);
+  //  REPORT
+  var selectedReason = Rxn<String>();
+  var isReportSubmitted = false.obs;
+  var reportContentId = 0.obs;
+  var reportContentType = ''.obs;
+
+  void selectReason(String reason) => selectedReason.value = reason;
+
+  void openReport(int id, String type) {
+    reportContentId.value = id;
+    reportContentType.value = type;
+    resetReport();
+  }
+
+  void resetReport() {
+    selectedReason.value = null;
+    isReportSubmitted.value = false;
+  }
+
+  void submitReport() {
+    if (selectedReason.value == null) return;
+    final key = '${reportContentType.value}_${reportContentId.value}';
+    reportedIds.add(key);
+    //  API: await ApiService.report(reportContentId.value, reportContentType.value, selectedReason.value);
+    isReportSubmitted.value = true;
     AppSnackbar.success(message: 'Reported successfully');
-    // ✅ API: await ApiService.report(id, reason);
   }
 
-  bool isReported(int id) => reportedIds.contains(id);
+  bool isReported(int id, {String type = 'news'}) =>
+      reportedIds.contains('${type}_$id');
+
 
   // ── SHARE ─────────────────────────────────────
   Future<void> share({
@@ -127,12 +159,35 @@ class SocialInteractionController extends GetxController {
   }) async {
     final String url = 'https://newsbreak.com/$type/$id';
     await Share.share('$title\n$url');
-    // ✅ API: await ApiService.incrementShare(id);
   }
 
-  // ── COMMENT ───────────────────────────────────
+  // COMMENT
   void openComments(int id, CommentSource source) {
-    if (!AuthHelper.checkLogin()) return; // ✅ login check
+    if (!AuthHelper.checkLogin()) return;
     Get.find<CommentController>().loadComments(id, source);
+    showModalBottomSheet(
+      context: Get.context!,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(Get.context!).size.width),
+      builder: (_) => CommentsSheet(id: id, source: source),
+    );
   }
+
+  // ── JOIN COMMUNITY ────────────────────────────
+  void toggleJoin(int communityId) {
+    if (!AuthHelper.checkLogin()) return;
+    if (joinedCommunityIds.contains(communityId)) {
+      joinedCommunityIds.remove(communityId);
+      AppSnackbar.success(message: 'Left community');
+    } else {
+      joinedCommunityIds.add(communityId);
+      AppSnackbar.success(message: 'Joined community!');
+    }
+    // ✅ API: await ApiService.toggleJoin(communityId);
+  }
+
+  bool isJoined(int communityId) =>
+      joinedCommunityIds.contains(communityId);
 }

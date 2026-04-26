@@ -1,58 +1,99 @@
 import 'package:get/get.dart';
-import '../../models/community_post_model.dart';
-import '../../modules/me/edit_profile_view.dart';
+import '../../models/community_model.dart';
 import '../../modules/community/community_create_post_view.dart';
+import '../../modules/me/edit_profile_view.dart';
 import '../../widgets/app_snackbar.dart';
 
 class CommunityController extends GetxController {
-  final userName = "Amalia".obs;
-  final userProfilePic = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100".obs;
-  var posts = <CommunityPostModel>[].obs;
-  bool isJoined(int index) => joinedCommunityIds.contains(index);
-  final joinedCommunityIds = <int>{}.obs;
 
+  // Posts
+  var posts = <CommunityModel>[].obs;
+  var isPostsLoading = false.obs;
 
+  @override
   void onInit() {
     super.onInit();
     fetchPosts();
   }
 
+  //  Navigation
   void onCreatePost() => Get.to(() => const CommunityCreatePostView(openImagePicker: true));
+
   void onEditProfile() => Get.to(() => const EditProfileView());
 
-  void submitPost(String content) {}
 
-  void toggleJoin(int index) {
-    if (joinedCommunityIds.contains(index)) {
-      joinedCommunityIds.remove(index);
-      AppSnackbar.success(message: 'Left community');
-    } else {
-      joinedCommunityIds.add(index);
-      AppSnackbar.success(message: 'Joined community!');
+
+  // Report Reasons
+  final reportReasons = <String>[
+    'Abusive or hateful',
+    'Misleading or spam',
+    'Violence or gory',
+    'Sexual Content',
+    'Minor safety',
+    'Dangerous or criminal',
+    'Others',
+  ].obs;
+
+  // Posts
+  Future<void> fetchPosts() async {
+    try {
+      isPostsLoading.value = true;
+      //  API: posts.assignAll(await ApiService.getCommunityPosts());
+      await Future.delayed(const Duration(milliseconds: 300));
+      posts.assignAll(_mockPosts());
+    } catch (e) {
+      AppSnackbar.error(message: 'Failed to load posts');
+    } finally {
+      isPostsLoading.value = false;
     }
   }
 
+  Future<void> submitPost(String content, {String? imageUrl}) async {
+    if (content.trim().isEmpty) {
+      AppSnackbar.warning(title: 'Empty Post', message: 'Please write something');
+      return;
+    }
+    try {
+      //  API: await ApiService.createPost(content, imageUrl);
+      final newPost = CommunityModel(
+        id: DateTime.now().millisecondsSinceEpoch,
+        category: 'General',
+        userName: 'Me',
+        userRole: 'Member',
+        timeAgo: 'Just now',
+        userImageUrl: '',
+        text: content,
+        imageUrls: imageUrl != null ? [imageUrl] : [],
+        likes: '0',
+        comments: '0',
+        shares: '0',
+      );
+      posts.insert(0, newPost);
+      AppSnackbar.success(message: 'Post shared!');
+    } catch (e) {
+      AppSnackbar.error(message: 'Failed to submit post');
+    }
+  }
 
-  void fetchPosts() {
-    var data = [
-      CommunityPostModel(
-        id: 1,
-        category: 'Iran',
-        userName: 'Donald Trump',
-        userRole: 'The guardian',
-        timeAgo: '2d ago',
-        userImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
-        text: 'Lorem ipsum dolor sit amet consectetur. Ut sed elementum pellentesque erat. In nisl facilisis ornare felis cras purus amet cursus.',
-        imageUrls:
-        ['https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600',
+  //  Mock Data
+  List<CommunityModel> _mockPosts() => [
+    CommunityModel(
+      id: 1,
+      category: 'Iran',
+      userName: 'Donald Trump',
+      userRole: 'The guardian',
+      timeAgo: '2d ago',
+      userImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
+      text: 'Lorem ipsum dolor sit amet consectetur. Ut sed elementum pellentesque erat. In nisl facilisis ornare felis cras purus amet cursus.',
+      imageUrls: [
+        'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600',
         'https://images.unsplash.com/photo-1495020689067-958852a7765e?w=600',
-        ],
+      ],
       likes: '1.4K',
       comments: '4K',
       shares: '67',
-      ),
-
-    CommunityPostModel(
+    ),
+    CommunityModel(
       id: 2,
       category: 'Politics',
       userName: 'Jordan',
@@ -64,9 +105,44 @@ class CommunityController extends GetxController {
       likes: '980',
       comments: '2.1K',
       shares: '34',
-    )
+    ),
+  ];
 
-    ];
-    posts.assignAll(data);
-  }
+  var communityInsights = <Map<String, String>>[
+    {
+      'title': 'Become a "LeftoverHero"',
+      'subtitle': 'Lorem ipsum dolor sit amet consectetur. Id ipsum hac habitant',
+      'imageUrl': 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200',
+    },
+    {
+      'title': 'Become a "LeftoverHero"',
+      'subtitle': 'Lorem ipsum dolor sit amet consectetur. Id ipsum hac habitant',
+      'imageUrl': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200',
+    },
+    {
+      'title': 'Become a "LeftoverHero"',
+      'subtitle': 'Lorem ipsum dolor sit amet consectetur. Id ipsum hac habitant',
+      'imageUrl': 'https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=200',
+    },
+    {
+      'title': 'Become a "LeftoverHero"',
+      'subtitle': 'Lorem ipsum dolor sit amet consectetur. Id ipsum hac habitant',
+      'imageUrl': 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200',
+    },
+    {
+      'title': 'Become a "LeftoverHero"',
+      'subtitle': 'Lorem ipsum dolor sit amet consectetur. Id ipsum hac habitant',
+      'imageUrl': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200',
+    },
+    {
+      'title': 'Become a "LeftoverHero"',
+      'subtitle': 'Lorem ipsum dolor sit amet consectetur. Id ipsum hac habitant',
+      'imageUrl': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=200',
+    },
+    {
+      'title': 'Become a "LeftoverHero"',
+      'subtitle': 'Lorem ipsum dolor sit amet consectetur. Id ipsum hac habitant',
+      'imageUrl': 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=200',
+    },
+  ].obs;
 }

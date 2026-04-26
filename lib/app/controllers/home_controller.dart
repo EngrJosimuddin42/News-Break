@@ -8,7 +8,6 @@ import '../models/comment_source.dart';
 import '../models/news_model.dart';
 import '../models/reel_model.dart';
 import '../modules/reels/comments/comments_sheet.dart';
-import '../modules/signin/signin_view.dart';
 import 'auth/auth_controller.dart';
 import '../routes/app_pages.dart';
 import '../modules/ai/nbot_sheet.dart';
@@ -45,28 +44,26 @@ class HomeController extends GetxController {
   String get locationTitle => selectedLocation.value?['city'] ?? 'Choose Your Location';
   RxList<ReelModel> customReelsForNavigation = <ReelModel>[].obs;
   RxInt customReelsInitialIndex = 0.obs;
+  final selectedDayIndex = (DateTime.now().weekday % 7).obs;
+  final currentDate = DateTime.now().obs;
 
   // Auth check
   bool get isLoggedIn => AuthController.to.user.value != null;
   String get userName => AuthController.to.user.value?.name ?? '';
-
-  final selectedDayIndex = (DateTime.now().weekday % 7).obs;
-  final currentDate = DateTime.now().obs;
 
   String get monthAndDay {
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     return '${months[currentDate.value.month - 1]} ${currentDate.value.day}';
   }
 
-  void selectDay(int index) {
-    selectedDayIndex.value = index;
-  }
-
-
   @override
   void onClose() {
     searchController.dispose();
     super.onClose();
+  }
+
+  void selectDay(int index) {
+    selectedDayIndex.value = index;
   }
 
   void onNavTap(int index) {

@@ -8,7 +8,7 @@ import 'package:news_break/app/modules/home/widgets/tabs/entertainment_tab.dart'
 import 'package:news_break/app/modules/home/widgets/tabs/food_tab.dart';
 import 'package:news_break/app/modules/home/widgets/tabs/for_you_tab.dart';
 import 'package:news_break/app/modules/home/widgets/tabs/health_tab.dart';
-import 'package:news_break/app/modules/home/widgets/tabs/home_week_bar.dart';
+import 'package:news_break/app/modules/home/widgets/home_week_bar.dart';
 import 'package:news_break/app/modules/home/widgets/tabs/local_tab.dart';
 import 'package:news_break/app/modules/home/widgets/tabs/local_tv_tab.dart';
 import 'package:news_break/app/modules/home/widgets/tabs/reactions_tab.dart';
@@ -67,8 +67,9 @@ class HomeView extends GetView<HomeController> {
         appBar: const HomeAppBar(),
         body: Column(
           children: [
+            const SizedBox(height: 6),
             const HomeTabBar(),
-            const SizedBox(height: 8),
+            const SizedBox(height: 24),
             const HomeWeekBar(),
             const SizedBox(height: 8),
             Expanded(

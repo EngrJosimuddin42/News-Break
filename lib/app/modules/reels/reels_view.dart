@@ -12,6 +12,7 @@ import '../../controllers/comment_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/reels/reels_controller.dart';
 import '../../models/comment_source.dart';
+import '../../widgets/publisher_avatar.dart';
 import '../../widgets/reels_follow_button.dart';
 import 'create_reel_view.dart';
 
@@ -94,12 +95,44 @@ class _ReelsViewState extends State<ReelsView> {
               },
               child: Container(width: 36, height: 36,
                 decoration: BoxDecoration(
-                  color: Color(0xFF282828),
-                  shape: BoxShape.circle),
+                    color: Color(0xFF282828),
+                    shape: BoxShape.circle),
                 child:Icon(Icons.camera_alt_outlined,color:AppColors.surface, size: 20),
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProfileCard(dynamic reel) {
+    return Container( width: 279,  height: 60,
+      padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+      decoration: BoxDecoration(
+        color: const Color(0x66000000),
+        borderRadius: BorderRadius.circular(48),
+        border: Border.all( color: const Color(0xFF616161), width: 1)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          PublisherAvatar.fromUrl(
+              imageUrl: reel.userProfileImage ?? "",
+            name: reel.userName ?? "U",
+            size: 32.0,
+            shape: BoxShape.circle),
+          const SizedBox(width: 8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(reel.userName ?? "User",
+                style: AppTextStyles.bodyMedium),
+              Text(reel.source?? "Just now", style: AppTextStyles.overline),
+            ],
+          ),
+          const SizedBox(width: 12),
+          ReelsFollowButton(reel: reel),
         ],
       ),
     );
@@ -115,6 +148,7 @@ class _ReelsViewState extends State<ReelsView> {
             thumbnail: reel.imageUrl,
           ),
         ),
+
         // Dark gradient bottom
         Positioned(
           bottom: 0, left: 0, right: 0,
@@ -129,6 +163,11 @@ class _ReelsViewState extends State<ReelsView> {
             ),
           ),
         ),
+
+        Positioned(
+          top: MediaQuery.of(context).padding.top + 8,
+          left: 16,
+          child: _buildProfileCard(reel)),
 
         // Right side actions
         Positioned(
@@ -280,30 +319,6 @@ class _ReelsViewState extends State<ReelsView> {
           ),
         ),
 
-        // Bottom info
-        Positioned(
-          left: 16, right: 80, bottom: 60,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(reel.source ?? "", style: AppTextStyles.small),
-              const SizedBox(height: 6),
-              Row(
-                children: [
-                  Text(reel.userName ?? "", style: AppTextStyles.bodyMedium),
-                  const SizedBox(width: 32),
-
-                  //Follow Button
-                  ReelsFollowButton(reel: reel),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Text(reel.description ?? "", style: AppTextStyles.small),
-            ],
-          ),
-        ),
-
-        // Comment input
         // Comment input
         Positioned(
           bottom: 20,
@@ -313,19 +328,16 @@ class _ReelsViewState extends State<ReelsView> {
             child: GestureDetector(
               onTap: () {
                 if (AuthHelper.checkLogin()) {
-                  // CommentController লোড করা হচ্ছে
                   Get.find<CommentController>().loadComments(
                     reel.id,
-                    CommentSource.reel,
-                  );
+                    CommentSource.reel);
 
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
                     constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width,
-                    ),
+                      maxWidth: MediaQuery.of(context).size.width),
                     builder: (context) => CommentsSheet(
                       id: reel.id,
                       source: CommentSource.reel,
@@ -334,8 +346,7 @@ class _ReelsViewState extends State<ReelsView> {
                 }
               },
               child: Container(
-                height: 40,
-                width: 335,
+                height: 40, width: 335,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(80),
                   color: AppColors.surface,
@@ -364,15 +375,11 @@ class _ReelsViewState extends State<ReelsView> {
         children: [
           assetIcon != null
               ? Image.asset(
-            assetIcon,
-            width: 28,
-            height: 28,
-            color: color,
-          )
+            assetIcon, width: 28, height: 28,
+            color: color)
               : Icon(icon, color: color, size: 28),
           const SizedBox(height: 2),
-          Text(count,
-              style: AppTextStyles.buttonOutline),
+          Text(count, style: AppTextStyles.buttonOutline),
         ],
       ),
     );

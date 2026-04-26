@@ -113,16 +113,16 @@ class LocalTab extends GetView<HomeController> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF808080)),
+                color: AppColors.textGreen,
                   borderRadius: BorderRadius.circular(50)),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Image.asset('assets/icons/weather_storm.png', color: AppColors.textOnDark, height: 20, width: 20),
+                    Image.asset('assets/icons/weather_storm.png', color: AppColors.surface, height: 20, width: 20),
                     const SizedBox(width: 6),
-                    Text('$condition expected', style: AppTextStyles.overline),
+                    Text('$condition expected', style: AppTextStyles.labelMedium),
                     const SizedBox(width: 6),
-                    const Icon(Icons.chevron_right, color: AppColors.textOnDark, size: 20),
+                    const Icon(Icons.chevron_right, color: AppColors.surface, size: 20),
                   ],
                 ),
               ),

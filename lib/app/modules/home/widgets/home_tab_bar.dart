@@ -18,7 +18,7 @@ class HomeTabBar extends StatelessWidget {
         physics: const ClampingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: c.tabs.length + 1,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        separatorBuilder: (context, index) => const SizedBox(width: 8),
         itemBuilder: (_, i) {
           // First item = edit icon
           if (i == 0) {

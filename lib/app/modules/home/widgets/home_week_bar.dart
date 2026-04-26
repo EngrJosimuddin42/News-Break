@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../controllers/home_controller.dart';
-import '../../../../theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../../controllers/home_controller.dart';
+import '../../../theme/app_colors.dart';
 
 class HomeWeekBar extends GetView<HomeController> {
   const HomeWeekBar({super.key});
 
-  static const List<String> _days = [
-    'Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'
-  ];
+  static const List<String> _days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 
   @override
   Widget build(BuildContext context) {
@@ -28,29 +27,18 @@ class HomeWeekBar extends GetView<HomeController> {
                   onTap: () => controller.selectDay(i),
                   child: Text(
                     _days[i],
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.grey,
-                      fontSize: 12,
+                    style: TextStyle(color: isSelected ? Colors.white : Color(0xFF6C6C6C), fontSize: 12,
                       fontWeight: isSelected
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                    ),
-                  ),
+                          ? FontWeight.w500
+                          : FontWeight.w400)),
                 );
               }),
             ),
             const SizedBox(height: 6),
             // Month & Day
-            Text(
-              controller.monthAndDay,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 6),
-            const Divider(color: Colors.white12, height: 1),
+            Text(controller.monthAndDay, style:AppTextStyles.tagline.copyWith(color: Color(0xFFD9D9D9))),
+            const SizedBox(height: 12),
+            const Divider(color: Colors.white12, height: 2, thickness: 3),
           ],
         ),
       );

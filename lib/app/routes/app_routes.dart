@@ -8,7 +8,7 @@ abstract class Routes {
   static const HOME = _Paths.HOME;
   static const EDIT_TABS = _Paths.EDIT_TABS;
   static const CREATE_POST = _Paths.CREATE_POST;
-  static const COMMUNITY_CREATE_POST = _Paths.COMMUNITY_CREATE_POST;
+  static const SOCIALS_CREATE_POST = _Paths.SOCIALS_CREATE_POST;
   static const NEWS_DETAIL = _Paths.NEWS_DETAIL;
 }
 
@@ -20,6 +20,6 @@ abstract class _Paths {
   static const HOME = '/home';
   static const EDIT_TABS = '/edit-tabs';
   static const CREATE_POST = '/create-post';
-  static const COMMUNITY_CREATE_POST = '/community-create-post';
+  static const SOCIALS_CREATE_POST = '/socials-create-post';
   static const NEWS_DETAIL = '/news-detail';
 }

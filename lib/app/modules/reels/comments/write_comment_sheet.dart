@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/widgets/bottom_sheet_handle.dart';
 import '../../../controllers/comment_controller.dart';
+import '../../../controllers/social_utility_controller.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
+import '../../../widgets/my_gif_picker.dart';
 
 class WriteCommentSheet extends StatefulWidget {
   final dynamic reelId;
@@ -16,19 +18,20 @@ class WriteCommentSheet extends StatefulWidget {
 }
 
 class _WriteCommentSheetState extends State<WriteCommentSheet> {
-  final controller = Get.find<CommentController>();
+  final commentController = Get.find<CommentController>();
+  final utility = Get.find<SocialUtilityController>();
 
   @override
   void dispose() {
-    controller.clearCommentMedia();
+    utility.clearAllMedia();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (controller.isGifPickerMode.value) {
-        return _buildGifPicker();
+      if (utility.isGifPickerMode.value) {
+        return MyGifPicker(controller: utility);
       }
       return _buildWriteComment();
     });
@@ -52,7 +55,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
-                controller: controller.commentTextController,
+                controller: CommentController().commentTextController,
                 autofocus: true,
                 maxLines: null,
                 style: AppTextStyles.labelMedium,
@@ -68,12 +71,12 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
               child: Row(
                 children: [
                   IconButton(
-                      onPressed: controller.onAddMedia,
+                      onPressed: utility.pickImage,
                       icon: const Icon(Icons.image_outlined,
                           color: AppColors.surface, size: 22)),
                   const SizedBox(width: 4),
                   GestureDetector(
-                      onTap: () => controller.isGifPickerMode.value = true,
+                      onTap: () => utility.isGifPickerMode.value = true,
                       child: Container(
                           padding: const EdgeInsets.symmetric( horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
@@ -81,14 +84,14 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                               borderRadius: BorderRadius.circular(6)),
                           child: Text('GIF', style: AppTextStyles.display.copyWith(fontSize: 10)))),
                   const Spacer(),
-                  Obx(() => controller.isSendingComment.value
+                  Obx(() => commentController.isSendingComment.value
                       ? const SizedBox(width: 24, height: 24,
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: AppColors.primary))
                       : GestureDetector(
-                      onTap: () => controller.submitComment(
+                      onTap: () => commentController.submitComment(
                           widget.reelId,
-                          controller.selectedGifUrl.value),
+                          commentController.selectedGifUrl.value),
                       child: Image.asset('assets/icons/send2.png', height: 24, width: 24))),
                 ],
               ),
@@ -112,7 +115,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
             text: TextSpan(style: AppTextStyles.overline,
               children: [
                 const TextSpan(text: 'Please be respectful. Make sure your comment meets our '),
-                TextSpan(text: 'community guidelines.', style: AppTextStyles.overline.copyWith(
+                TextSpan(text: 'socials guidelines.', style: AppTextStyles.overline.copyWith(
                         color: AppColors.textGreen,
                         decoration: TextDecoration.underline)),
               ],
@@ -125,9 +128,9 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
 
   Widget _buildMediaPreview() {
     return Obx(() {
-      final gif = controller.selectedGifUrl.value;
-      final image = controller.selectedImage.value;
-      final bytes = controller.selectedImageBytes.value;
+      final gif = utility.selectedGifUrl.value;
+      final image = utility.selectedImage.value;
+      final bytes = utility.selectedImageBytes.value;
 
       if ((gif == null || gif.isEmpty) && image == null && bytes == null) {
         return const SizedBox.shrink();
@@ -150,7 +153,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
             ),
             Positioned(right: 5, top: 5,
               child: GestureDetector(
-                onTap: controller.clearCommentMedia,
+                onTap: utility.clearAllMedia,
                 child: const CircleAvatar(radius: 12,
                     backgroundColor: Colors.black54,
                     child: Icon(Icons.close, size: 16, color: Colors.white)))),
@@ -161,89 +164,29 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
   }
 
   Widget _buildReactionRow() {
+    final utility = Get.find<SocialUtilityController>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: controller.reactions
-              .map((r) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6),
-            child: GestureDetector(
-                onTap: () {
-                  controller.commentTextController.text += r;
-                },
-                child: Text(r, style: const TextStyle(fontSize: 22)))))
-              .toList())),
-    );
-  }
-
-  Widget _buildGifPicker() {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.9,
-      decoration: const BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 12, 8, 8),
-            child: Row(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      controller.isGifPickerMode.value = false;
-                      controller.gifSearchQuery.value = '';
-                    },
-                    icon: const Icon(Icons.close, color: AppColors.textOnDark, size: 20)),
-                Expanded(
-                  child: Container(height: 40,
-                    decoration: BoxDecoration(
-                        color: const Color(0xFF121212),
-                        borderRadius: BorderRadius.circular(8)),
-                    child: TextField(
-                      style: AppTextStyles.caption.copyWith(color: AppColors.textOnDark),
-                      onChanged: (val) =>
-                      controller.gifSearchQuery.value = val,
-                      decoration: InputDecoration(
-                          hintText: 'Search for GIFs',
-                          hintStyle: AppTextStyles.caption.copyWith(color: AppColors.textOnDark),
-                          prefixIcon: const Icon(Icons.search, color: AppColors.textOnDark, size: 20),
-                          border: InputBorder.none,
-                          contentPadding:
-                          const EdgeInsets.symmetric(vertical: 10))))),
-                TextButton(
-                    onPressed: () {
-                      controller.isGifPickerMode.value = false;
-                      controller.gifSearchQuery.value = '';
-                    },
-                    child: Text('Cancel', style: AppTextStyles.bodyMedium)),
-              ],
-            ),
-          ),
-          const Divider(color: Colors.white12, height: 1),
-
-          Expanded(
-            child: Obx(() => GridView.builder(
-              padding: const EdgeInsets.all(2),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 2,
-                  mainAxisSpacing: 2),
-              itemCount: controller.filteredGifImages.length,
-              itemBuilder: (_, i) => GestureDetector(
-                onTap: () => controller.selectGif(controller.filteredGifImages[i]),
-                child: Image.network(
-                  controller.filteredGifImages[i],
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      Container(color: Colors.grey[800]),
-                ),
-              ),
-            )),
-          ),
-        ],
+          children: utility.reactions.map((emoji) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: GestureDetector(
+                  onTap: () {
+                    commentController.commentTextController.text += emoji;
+                    commentController.commentTextController.selection =
+                        TextSelection.fromPosition(
+                          TextPosition(offset: commentController
+                              .commentTextController.text.length),
+                        );
+                  },
+                  child: Text(emoji, style: const TextStyle(fontSize: 22))),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
-}
+  }

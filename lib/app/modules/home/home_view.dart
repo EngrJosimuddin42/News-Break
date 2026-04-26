@@ -14,8 +14,8 @@ import 'package:news_break/app/modules/home/widgets/tabs/local_tv_tab.dart';
 import 'package:news_break/app/modules/home/widgets/tabs/reactions_tab.dart';
 import 'package:news_break/app/modules/home/widgets/tabs/sports_tab.dart';
 import 'package:news_break/app/modules/home/widgets/tabs/weather_tab.dart';
+import 'package:news_break/app/modules/socials/socials_view.dart';
 import '../../theme/app_colors.dart';
-import '../community/community_view.dart';
 import '../me/me_view.dart';
 import '../notification/notification_view.dart';
 import '../reels/reels_view.dart';
@@ -47,8 +47,8 @@ class HomeView extends GetView<HomeController> {
       if (navIndex == 3) {
         return Scaffold(
           backgroundColor: Colors.black,
-          appBar: const CommunityAppBar(),
-          body: const CommunityBody(),
+          appBar: const SocialsAppBar(),
+          body: const SocialsBodyView(),
           bottomNavigationBar: SafeArea(child: const HomeBottomNavBar()),
         );
       }

@@ -31,7 +31,7 @@ class WhatWeDoController extends GetxController {
     WhatWeDoSection(
       tag: 'For Contributors',
       title: 'Share Your Stories',
-      subtitle: 'Earn recognition and revenue by sharing important stories from your community',
+      subtitle: 'Earn recognition and revenue by sharing important stories from your socials',
       buttonLabel: 'Become a contributor',
       pageKey: 'contributor',
     ),

@@ -184,7 +184,7 @@ class ProfileOptionSheet {
               const SizedBox(height: 12),
               Padding(
                   padding: const EdgeInsets.only(left: 36),
-                  child: Text('your feedback is important in helping us keep our community safe', style: AppTextStyles.overline)),
+                  child: Text('your feedback is important in helping us keep our socials safe', style: AppTextStyles.overline)),
               const SizedBox(height: 20),
             ],
           ),

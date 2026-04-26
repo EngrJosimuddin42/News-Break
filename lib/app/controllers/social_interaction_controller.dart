@@ -180,10 +180,10 @@ class SocialInteractionController extends GetxController {
     if (!AuthHelper.checkLogin()) return;
     if (joinedCommunityIds.contains(communityId)) {
       joinedCommunityIds.remove(communityId);
-      AppSnackbar.success(message: 'Left community');
+      AppSnackbar.success(message: 'Left socials');
     } else {
       joinedCommunityIds.add(communityId);
-      AppSnackbar.success(message: 'Joined community!');
+      AppSnackbar.success(message: 'Joined socials!');
     }
     // ✅ API: await ApiService.toggleJoin(communityId);
   }

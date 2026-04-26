@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import 'package:news_break/app/widgets/report_success.dart';
-import '../../controllers/community/community_controller.dart';
 import '../../controllers/social_interaction_controller.dart';
+import '../../controllers/socials/socials_controller.dart';
 import '../../widgets/bottom_sheet_handle.dart';
 
-class CommunityReportSheet extends GetView<CommunityController> {
-  const CommunityReportSheet({super.key});
+class SocialsReportSheet extends GetView<SocialsController> {
+  const SocialsReportSheet({super.key});
 
   @override
   Widget build(BuildContext context) {

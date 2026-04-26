@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/modules/socials/socials_post_card.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/ad_banner_controller.dart';
 import '../../controllers/auth/auth_controller.dart';
-import '../../controllers/community/community_controller.dart';
+import '../../controllers/create_post_controller.dart';
+import '../../controllers/socials/socials_controller.dart';
 import '../../widgets/publisher_avatar.dart';
 import 'community_insight_view.dart';
-import 'community_post_card.dart';
 
 // ── AppBar
-class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CommunityAppBar({super.key});
+class SocialsAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const SocialsAppBar({super.key});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -34,12 +35,16 @@ class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 // Body
-class CommunityBody extends GetView<CommunityController> {
-  const CommunityBody({super.key});
+class SocialsBodyView extends GetView<SocialsController> {
+  const SocialsBodyView({super.key});
 
   @override
   Widget build(BuildContext context) {
     final adBanner = Get.find<AdBannerController>();
+    final createPostController = Get.find<CreatePostController>();
+    if (Get.arguments == 'social') {
+      createPostController.postType.value = PostType.social;
+    }
     return ListView(
       children: [
 
@@ -145,7 +150,7 @@ class CommunityBody extends GetView<CommunityController> {
           itemCount: controller.posts.length,
           itemBuilder: (context, index) {
             final post = controller.posts[index];
-            return CommunityPostCard(
+            return SocialsPostCard(
               post: post);
           },
           );

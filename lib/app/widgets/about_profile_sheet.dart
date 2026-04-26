@@ -81,7 +81,7 @@ class AboutProfileSheet extends StatelessWidget {
               children: [
                 const TextSpan(text: 'All content is required to comply with our '),
                 TextSpan(text: 'Community Standards', style: AppTextStyles.overline.copyWith(color: const Color(0xFF56CCF2))),
-                const TextSpan(text: '. Please help us keep our community safe by reporting any violations.'),
+                const TextSpan(text: '. Please help us keep our socials safe by reporting any violations.'),
               ],
             ),
           ),

@@ -4,13 +4,13 @@ import '../bindings/edit_tabs_binding.dart';
 import '../bindings/fullscreen_binding.dart';
 import '../bindings/signin_binding.dart';
 import '../bindings/splash_binding.dart';
-import '../modules/community/community_create_post_view.dart';
 import '../modules/create_post/create_post_view.dart';
 import '../modules/edit_tabs/edit_tabs_view.dart';
 import '../modules/fullscreen/fullscreen_view.dart';
 import '../modules/home/home_view.dart';
 import '../modules/news/news_detail_view.dart';
 import '../modules/signin/signin_view.dart';
+import '../modules/socials/socials_create_post_view.dart';
 import '../modules/splash/splash_view.dart';
 
 part 'app_routes.dart';
@@ -51,8 +51,9 @@ class AppPages {
       binding: CreatePostBinding(),
     ),
     GetPage(
-      name: _Paths.COMMUNITY_CREATE_POST,
-      page: () => const CommunityCreatePostView(),
+      name: _Paths.SOCIALS_CREATE_POST,
+      page: () => const SocialsCreatePostView(),
+      binding: CreatePostBinding(),
     ),
     GetPage(
       name: _Paths.NEWS_DETAIL,

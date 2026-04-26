@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
-import '../../models/community_model.dart';
-import '../../modules/community/community_create_post_view.dart';
+import '../../models/socials_model.dart';
 import '../../modules/me/edit_profile_view.dart';
+import '../../routes/app_pages.dart';
 import '../../widgets/app_snackbar.dart';
 
-class CommunityController extends GetxController {
+class SocialsController extends GetxController {
 
   // Posts
-  var posts = <CommunityModel>[].obs;
+  var posts = <SocialsModel>[].obs;
   var isPostsLoading = false.obs;
 
   @override
@@ -17,7 +17,9 @@ class CommunityController extends GetxController {
   }
 
   //  Navigation
-  void onCreatePost() => Get.to(() => const CommunityCreatePostView(openImagePicker: true));
+  void onCreatePost() {
+    Get.toNamed(Routes.SOCIALS_CREATE_POST, arguments: 'social');
+  }
 
   void onEditProfile() => Get.to(() => const EditProfileView());
 
@@ -55,7 +57,7 @@ class CommunityController extends GetxController {
     }
     try {
       //  API: await ApiService.createPost(content, imageUrl);
-      final newPost = CommunityModel(
+      final newPost = SocialsModel(
         id: DateTime.now().millisecondsSinceEpoch,
         category: 'General',
         userName: 'Me',
@@ -76,8 +78,8 @@ class CommunityController extends GetxController {
   }
 
   //  Mock Data
-  List<CommunityModel> _mockPosts() => [
-    CommunityModel(
+  List<SocialsModel> _mockPosts() => [
+    SocialsModel(
       id: 1,
       category: 'Iran',
       userName: 'Donald Trump',
@@ -93,7 +95,7 @@ class CommunityController extends GetxController {
       comments: '4K',
       shares: '67',
     ),
-    CommunityModel(
+    SocialsModel(
       id: 2,
       category: 'Politics',
       userName: 'Jordan',

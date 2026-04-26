@@ -79,7 +79,7 @@ Widget _buildCreatorPage({
                     Text(heroTitle,
                         style:AppTextStyles.chart.copyWith(color: Colors.black)),
                     const SizedBox(height: 8),
-                    Text('Share your perspective on local life and turn everyday moments into stories your readers can\'t wait to open. Build a loyal community, deepen your connection, and keep your neighbors informed-on your terms.',
+                    Text('Share your perspective on local life and turn everyday moments into stories your readers can\'t wait to open. Build a loyal socials, deepen your connection, and keep your neighbors informed-on your terms.',
                       style:AppTextStyles.overline.copyWith(color: Color(0xFF6C6C6C))),
 
                     // Primary Button Logic
@@ -153,7 +153,7 @@ Widget _buildMissionSection(String chipLabel) {
         Text('Calling all writers & video content creators.',
             style: AppTextStyles.chart.copyWith(color: Colors.black)),
         const SizedBox(height: 8),
-        Text('Share your perspective on local life and turn everyday moments into stories your readers can’t wait to open. Build a loyal community, deepen your connection, and keep your neighbors informed-on your terms',
+        Text('Share your perspective on local life and turn everyday moments into stories your readers can’t wait to open. Build a loyal socials, deepen your connection, and keep your neighbors informed-on your terms',
             style:AppTextStyles.overline.copyWith(color: Color(0xFF6C6C6C))),
         const SizedBox(height: 16),
         Center(

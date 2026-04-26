@@ -64,7 +64,8 @@ class CreatePostView extends GetView<CreatePostController> {
               }
 
               return Container(
-                width: 75, height: 67,
+                height: 150,
+                width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: Colors.black,

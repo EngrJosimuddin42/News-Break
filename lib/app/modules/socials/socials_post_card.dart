@@ -4,17 +4,17 @@ import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/social_interaction_controller.dart';
 import '../../models/comment_source.dart';
-import '../../models/community_model.dart';
+import '../../models/socials_model.dart';
 import '../../models/news_model.dart';
 import '../../routes/app_pages.dart';
 import '../../widgets/options_bottom_sheet.dart';
 import '../../widgets/publisher_avatar.dart';
-import 'community_report_sheet.dart';
+import 'socials_report_sheet.dart';
 
-class CommunityPostCard extends StatelessWidget {
-  final CommunityModel post;
+class SocialsPostCard extends StatelessWidget {
+  final SocialsModel post;
 
-  const CommunityPostCard({
+  const SocialsPostCard({
     super.key,
     required this.post,
   });
@@ -54,7 +54,7 @@ class CommunityPostCard extends StatelessWidget {
                    OptionsBottomSheet.show(
                     context,
                     news: postAsNews,
-                    reportSheet: const CommunityReportSheet(),
+                    reportSheet: const SocialsReportSheet(),
                   );
                 },
                 child: const Icon(Icons.more_vert, color: Color(0xFF959595), size: 24),
@@ -128,7 +128,7 @@ class CommunityPostCard extends StatelessWidget {
 
                     //Comment
                     GestureDetector(
-                      onTap: () => SocialInteractionController.to.openComments( post.id, CommentSource.post),
+                      onTap: () => SocialInteractionController.to.openComments( post.id, CommentSource.social),
                       child: Row(
                         children: [
                           Image.asset('assets/icons/comment.png', width: 20, height: 20),

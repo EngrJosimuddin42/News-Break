@@ -150,7 +150,7 @@ class _ReportBottomSheetState extends State<NotificationReportSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               Text('We only remove content that goes against our community standard. Review your report details below.',
+               Text('We only remove content that goes against our socials standard. Review your report details below.',
                 style: AppTextStyles.caption),
               const SizedBox(height: 16),
               _infoField('Why are you reporting this?', _selectedReason ?? ''),

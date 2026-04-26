@@ -2,24 +2,37 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:news_break/app/controllers/social_utility_controller.dart';
+import 'package:news_break/app/controllers/socials/socials_controller.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import '../models/news_model.dart';
 import '../modules/create_post/tag_location_sheet.dart';
 
+//  Post type enum
+enum PostType { news, reel, social }
+
 class CreatePostController extends GetxController {
   final TextEditingController textController = TextEditingController();
   final TextEditingController locationSearchController = TextEditingController();
+  final utility = Get.find<SocialUtilityController>();
 
+  // ── State
   var selectedLocation = "".obs;
   var isLoading = false.obs;
   var filteredLocations = <Map<String, String>>[].obs;
+  var postType = PostType.news.obs;
 
   final Rx<File?> selectedMedia = Rx<File?>(null);
   final Rx<File?> videoThumbnail = Rx<File?>(null);
   final RxBool isReel = false.obs;
 
   final ImagePicker _picker = ImagePicker();
+
+  //  Post type getters
+  bool get isNewsPost => postType.value == PostType.news;
+  bool get isReelPost => postType.value == PostType.reel;
+  bool get isSocialPost => postType.value == PostType.social;
 
   @override
   void onInit() {
@@ -38,11 +51,17 @@ class CreatePostController extends GetxController {
       selectedMedia.value = args;
       if (args.path.toLowerCase().endsWith('.mp4') ||
           args.path.toLowerCase().endsWith('.mov')) {
+        postType.value = PostType.reel;
         isReel.value = true;
         _generateThumbnail(args.path);
+      } else {
+        postType.value = PostType.news;
       }
     } else if (args is NewsModel) {
+      postType.value = PostType.news;
       textController.text = "${args.title}\n\n";
+    } else if (args is String && args == 'social') {
+      postType.value = PostType.social;
     }
   }
 
@@ -85,23 +104,22 @@ class CreatePostController extends GetxController {
     }
   }
 
+  //  Post type অনুযায়ী validation ও submit
   void onPost() async {
-    if (isReel.value && selectedMedia.value == null) {
-      Get.snackbar('Video Required', 'Please select a video for your reel.');
-      return;
-    }
-    if (!isReel.value &&
-        textController.text.trim().isEmpty &&
-        selectedMedia.value == null) {
-      AppSnackbar.warning(title: 'Empty Post', message: 'Please add some text or an image.');
-      return;
-    }
+    if (!_validate()) return;
+
     try {
       isLoading.value = true;
       await Future.delayed(const Duration(seconds: 2));
-      final String message = isReel.value
-          ? 'Your reel has been posted!'
-          : 'Your post has been shared!';
+
+      if (isSocialPost) {
+        await Get.find<SocialsController>().submitPost(
+          textController.text,
+          imageUrl: utility.selectedImage.value?.path,
+        );
+      }
+
+      final String message = _getSuccessMessage();
       resetAll();
       Get.back();
       AppSnackbar.success(message: message);
@@ -112,7 +130,37 @@ class CreatePostController extends GetxController {
     }
   }
 
-  //  Public From Any Where Call
+  //  Type validation
+  bool _validate() {
+    if (isReelPost && selectedMedia.value == null) {
+      AppSnackbar.warning(title: 'Video Required', message: 'Please select a video.');
+      return false;
+    }
+    if (!isReelPost &&
+        textController.text.trim().isEmpty &&
+        selectedMedia.value == null &&
+        utility.selectedImage.value == null &&
+        utility.selectedGifUrl.value == null) {
+      AppSnackbar.warning(title: 'Empty Post', message: 'Please add some text or media.');
+      return false;
+    }
+    return true;
+  }
+
+  //  Type success message
+  String _getSuccessMessage() {
+    switch (postType.value) {
+      case PostType.reel:
+        return 'Your reel has been posted!';
+      case PostType.social:
+        return 'Your post has been shared!';
+      case PostType.news:
+      default:
+        return 'Your post has been shared!';
+    }
+  }
+
+  // Public reset
   void resetAll() {
     textController.clear();
     selectedMedia.value = null;
@@ -120,6 +168,9 @@ class CreatePostController extends GetxController {
     selectedLocation.value = '';
     isReel.value = false;
     isLoading.value = false;
+    postType.value = PostType.news;
+    utility.clearAllMedia();
+    utility.clearTags();
   }
 
   void onBack() {

@@ -22,6 +22,14 @@ class _CreatePostViewState extends State<SocialsCreatePostView> {
   final utility = Get.find<SocialUtilityController>();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<CreatePostController>().postType.value = PostType.social;
+    });
+  }
+
+  @override
   void dispose() {
     _textController.dispose();
     utility.clearAllMedia();

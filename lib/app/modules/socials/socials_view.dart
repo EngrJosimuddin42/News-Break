@@ -41,10 +41,6 @@ class SocialsBodyView extends GetView<SocialsController> {
   @override
   Widget build(BuildContext context) {
     final adBanner = Get.find<AdBannerController>();
-    final createPostController = Get.find<CreatePostController>();
-    if (Get.arguments == 'social') {
-      createPostController.postType.value = PostType.social;
-    }
     return ListView(
       children: [
 

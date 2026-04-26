@@ -3,6 +3,7 @@ import '../../models/socials_model.dart';
 import '../../modules/me/edit_profile_view.dart';
 import '../../routes/app_pages.dart';
 import '../../widgets/app_snackbar.dart';
+import '../auth/auth_controller.dart';
 
 class SocialsController extends GetxController {
 
@@ -52,7 +53,6 @@ class SocialsController extends GetxController {
 
   Future<void> submitPost(String content, {String? imageUrl}) async {
     if (content.trim().isEmpty) {
-      AppSnackbar.warning(title: 'Empty Post', message: 'Please write something');
       return;
     }
     try {
@@ -60,10 +60,10 @@ class SocialsController extends GetxController {
       final newPost = SocialsModel(
         id: DateTime.now().millisecondsSinceEpoch,
         category: 'General',
-        userName: 'Me',
+        userName: AuthController.to.user.value?.name ?? 'Me', // ✅ real name
         userRole: 'Member',
         timeAgo: 'Just now',
-        userImageUrl: '',
+        userImageUrl: AuthController.to.user.value?.profileImageUrl ?? '', // ✅ real image
         text: content,
         imageUrls: imageUrl != null ? [imageUrl] : [],
         likes: '0',

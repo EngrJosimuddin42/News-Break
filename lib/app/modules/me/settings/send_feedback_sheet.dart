@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import 'package:news_break/app/widgets/bottom_sheet_handle.dart';
+
+import '../../../controllers/me/settings_controller.dart';
 
 class SendFeedbackSheet extends StatefulWidget {
   const SendFeedbackSheet({super.key});
@@ -22,33 +25,24 @@ class _SendFeedbackSheetState extends State<SendFeedbackSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final settingsController = Get.find<SettingsController>();
     return Container(
       decoration: const BoxDecoration(
         color: Color(0xFF282828),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom + 30, top: 30),
+        bottom: MediaQuery.of(context).viewInsets.bottom + 30, top: 10),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Handle
-          Center(
-            child: Container(
-              width: 36, height: 4,
-              decoration: BoxDecoration(
-                color: Color(0xFF444444),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
+          const BottomSheetHandle(),
           const SizedBox(height: 16),
 
           // Title
           Center(
-            child: Text('Share your feedback',
-              style: AppTextStyles.displaySmall.copyWith(fontWeight: FontWeight.w700))),
+            child: Text('Share your feedback',style: AppTextStyles.displaySmall.copyWith(fontWeight: FontWeight.w700))),
           const SizedBox(height: 16),
 
           // Star rating
@@ -65,9 +59,7 @@ class _SendFeedbackSheetState extends State<SendFeedbackSheet> {
                           ? 'assets/icons/star.png'
                           : 'assets/icons/star1.png',
                       width: 32,
-                      height: 32,
-                    ),
-                  ),
+                      height: 32)),
                 );
               }),
             ),
@@ -81,32 +73,25 @@ class _SendFeedbackSheetState extends State<SendFeedbackSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Label
-                Text('Write your feedback',
-                  style: AppTextStyles.overline.copyWith(fontSize: 14, color: Colors.white70),
-                ),
+                Text('Write your feedback', style: AppTextStyles.overline.copyWith(fontSize: 14, color: Colors.white70)),
                 const SizedBox(height: 12),
 
                 // Text area
-                Container(
-                  height: 130,
+                Container( height: 130,
                   decoration: BoxDecoration(
                     border: Border.all(color: Color(0xFFE5E5E5)),
                     borderRadius: BorderRadius.circular(8),
-                    color: AppColors.surface
-                  ),
+                    color: AppColors.surface),
                   child: TextField(
                     controller: _feedbackController,
                     maxLines: null,
                     expands: true,
-                    style:AppTextStyles.overline.copyWith(color: Colors.black),
+                    style:AppTextStyles.overline.copyWith(color: Colors.black,fontSize: 14),
                     decoration: InputDecoration(
                       hintText: 'Write your feedback here...',
                       hintStyle: AppTextStyles.overline.copyWith(color: Color(0xFFB7B7B7)),
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(12),
-                    ),
-                  ),
-                ),
+                      contentPadding: EdgeInsets.all(12)))),
               ],
             ),
           ),
@@ -114,22 +99,20 @@ class _SendFeedbackSheetState extends State<SendFeedbackSheet> {
 
           // Send button
           Center(
-            child: SizedBox(
-            width: 335,
-            height: 48,
-            child: ElevatedButton(
-              onPressed: () {
-                Get.back();
-              },
+            child: SizedBox( width: 335, height: 48,
+                child: Obx(() => ElevatedButton(
+                onPressed: settingsController.isFeedbackLoading.value
+                    ? null
+                    : () {
+                  settingsController.sendFeedback(
+                    comment: _feedbackController.text,
+                    rating: _rating);
+                },
               style: ElevatedButton.styleFrom(
                 backgroundColor:AppColors.linkColor,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8))),
-              child: Text('Send Feedback',
-                  style:AppTextStyles.bodyMedium.copyWith(color: AppColors.background)),
-            ),
-          ),
-    )
+              child: Text('Send Feedback', style:AppTextStyles.bodyMedium.copyWith(color: AppColors.background))))))
         ],
       ),
     );

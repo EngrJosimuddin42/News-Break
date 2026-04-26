@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import 'package:news_break/app/widgets/app_snackbar.dart';
 
 class SettingsController extends GetxController {
   static SettingsController get to => Get.find();
@@ -10,6 +11,7 @@ class SettingsController extends GetxController {
   var isDarkMode = true.obs;
   var selectedTextSize = 'Medium'.obs;
   var isLocationVisible = true.obs;
+  var isFeedbackLoading = false.obs;
 
   void toggleLocationVisible(bool value) => isLocationVisible.value = value;
   void toggleDarkMode(bool value) => isDarkMode.value = value;
@@ -31,6 +33,23 @@ class SettingsController extends GetxController {
       Get.updateLocale(const Locale('en', 'US'));
     } else {
       Get.updateLocale(const Locale('bn', 'BD'));
+    }
+  }
+
+
+  Future<void> sendFeedback({required String comment, required int rating}) async {
+    if (comment.isEmpty) {
+      AppSnackbar.error(message: "Please write something first!");
+      return;
+    }
+    try {
+      isFeedbackLoading.value = true;
+      Get.back();
+      AppSnackbar.success(message: "Thank you for your feedback!");
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong. Try again.");
+    } finally {
+      isFeedbackLoading.value = false;
     }
   }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../../../../controllers/me/blog_controller.dart';
+import '../../../../../controllers/me/settings/blog_controller.dart';
 import '../../../../../models/blog_model.dart';
 import '../../../../../widgets/help_widgets.dart';
 

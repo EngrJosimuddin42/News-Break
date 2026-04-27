@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../../controllers/me/settings_controller.dart';
+import '../../../controllers/me/settings/settings_controller.dart';
 
 class PrivacyView extends StatelessWidget {
   const PrivacyView({super.key});

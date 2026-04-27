@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import 'package:news_break/app/widgets/help_widgets.dart';
 
-import '../../../../controllers/me/about_controller.dart';
+import '../../../../controllers/me/settings/about_controller.dart';
 
 enum LegalType { terms, privacy, notice }
 

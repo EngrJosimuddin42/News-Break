@@ -4,7 +4,7 @@ import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import 'package:news_break/app/widgets/bottom_sheet_handle.dart';
 
-import '../../../controllers/me/settings_controller.dart';
+import '../../../controllers/me/settings/settings_controller.dart';
 
 class SendFeedbackSheet extends StatefulWidget {
   const SendFeedbackSheet({super.key});

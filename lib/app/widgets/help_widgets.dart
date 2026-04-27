@@ -4,7 +4,7 @@ import 'package:news_break/app/modules/me/settings/about/sub_pages/what_we_do_vi
 import 'package:news_break/app/modules/me/settings/about/sub_pages/who_are_we_view.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../controllers/me/settings_controller.dart';
+import '../controllers/me/settings/settings_controller.dart';
 import '../modules/me/settings/about/legal_view.dart';
 import '../modules/me/settings/about/sub_pages/blog_view.dart';
 import '../modules/me/settings/about/sub_pages/creator_page_view.dart';

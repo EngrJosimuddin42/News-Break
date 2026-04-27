@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../../models/creator_page_model.dart';
+import '../../../models/creator_page_model.dart';
 
 class CreatorPageController extends GetxController {
   var currentPageData = Rxn<HelpPageData>();

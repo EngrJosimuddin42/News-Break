@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../models/help_center_model.dart';
+import '../../../models/help_center_model.dart';
 
 class HelpCenterController extends GetxController {
   final TextEditingController searchController = TextEditingController();

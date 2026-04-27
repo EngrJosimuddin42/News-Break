@@ -71,8 +71,7 @@ class _EditProfileViewState extends State<EditProfileView> {
         backgroundColor: Colors.black,
         leading: GestureDetector(
           onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios,color:AppColors.textOnDark, size: 20),
-        ),
+          child: Icon(Icons.arrow_back_ios,color:AppColors.textOnDark, size: 20)),
         title: Text('Edit Profile',
           style: AppTextStyles.displaySmall),
         centerTitle: true,
@@ -86,7 +85,7 @@ class _EditProfileViewState extends State<EditProfileView> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
                   // Avatar
@@ -105,64 +104,47 @@ class _EditProfileViewState extends State<EditProfileView> {
                               : null,
                         )),
                         const SizedBox(height: 8),
-                        Text('Edit Photo',
-                            style:AppTextStyles.caption),
+                        Text('Edit Photo', style:AppTextStyles.caption),
                       ],
                     ),
                   ),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
 
                   // Name
                   _inputField('Name', _nameController),
                   const SizedBox(height: 12),
 
+              Row(
+                children: [
                   // User Name
-                  _inputField('User Name', _userNameController),
-                  const SizedBox(height: 12),
+                 Expanded(child: _inputField('User Name', _userNameController)),
+                  const SizedBox(width: 20),
+                  // Email
+                 Expanded(child: _inputField('Email Address', _emailController,
+                      keyboardType: TextInputType.emailAddress)),
+                    ]
+                  ),
 
+                  const SizedBox(height: 20),
                   // Bio
                   _inputField('Bio', _bioController),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 20),
 
-                  // Website
+                   // Website
                   _inputField('Website', _websiteController),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
 
-                  // Get content prompt
-                  Align(
-                    alignment: Alignment.center,
-                    child:Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(width: 10, height: 10,
-                        decoration: BoxDecoration(
-                          color:AppColors.linkColor,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                       Text('Get content you`ll really like! Tell us more.',
-                        style:AppTextStyles.overline.copyWith(color: Color(0xFFDBDBDB)) ,
-                      ),
-                    ],
-                  ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // Email
-                  _inputField('Email Address', _emailController,
-                      keyboardType: TextInputType.emailAddress),
-                  const SizedBox(height: 12),
-
+              Row(
+                children: [
                   // Birth year
                   _dropdownField(
                     label: 'Birth year',
                     value: DateFormat('dd/MM/yyyy').format(_selectedBirthDate),
                     onTap: _showBirthDatePicker,
+                    isDate: true,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(width: 20),
 
                   // Gender
                   _dropdownField(
@@ -170,6 +152,8 @@ class _EditProfileViewState extends State<EditProfileView> {
                     value: _selectedGender,
                     onTap: _showGenderPicker,
                   ),
+                  ],
+              ),
 
                   const SizedBox(height: 24),
                 ],
@@ -214,26 +198,24 @@ class _EditProfileViewState extends State<EditProfileView> {
       TextEditingController controller, {
         TextInputType keyboardType = TextInputType.text,
       }) {
-    return Container(
-      height: 60,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.textOnDark),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        textAlignVertical: TextAlignVertical.center,
-        style:AppTextStyles.caption.copyWith(color: Color(0xFFF3F3F3)),
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle:AppTextStyles.display.copyWith(color: AppColors.textOnDark),
-          border: InputBorder.none,
-          contentPadding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        ),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: AppTextStyles.labelSmall.copyWith(color: Color(0xFF626262))), // লেবেল বাইরে
+        const SizedBox(height: 12),
+        Container(
+          height: 52,
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.textOnDark),
+            borderRadius: BorderRadius.circular(6)),
+          child: TextField(
+            controller: controller,
+            keyboardType: keyboardType,
+            style: AppTextStyles.bodyMedium,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(horizontal: 16)))),
+      ],
     );
   }
 
@@ -242,37 +224,40 @@ class _EditProfileViewState extends State<EditProfileView> {
     required String label,
     required String value,
     required VoidCallback onTap,
+    bool isDate = false,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding:
-        const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColors.textOnDark),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: AppTextStyles.labelSmall.copyWith(color: Colors.grey)),
+          const SizedBox(height: 12),
+          GestureDetector(
+            onTap: onTap,
+            child: Container(
+              height: 52,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.textOnDark),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(label,
-                      style: AppTextStyles.display.copyWith(color: AppColors.textOnDark)),
-                  const SizedBox(height: 2),
-                  Text(value,
-                      style: AppTextStyles.caption.copyWith(color: Color(0xFFF3F3F3))),
+                  Text(value, style: AppTextStyles.bodyMedium),
+                  Icon(
+                      isDate ? Icons.calendar_month_outlined : Icons.keyboard_arrow_down,
+                      color: AppColors.info,
+                      size: 20
+                  ),
                 ],
               ),
             ),
-            Icon(Icons.keyboard_arrow_down, color:AppColors.textOnDark, size: 20),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-
 
 // ── Birth year picker ────────────────────────
   void _showBirthDatePicker() async {

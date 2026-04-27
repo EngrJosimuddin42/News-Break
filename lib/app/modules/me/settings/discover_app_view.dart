@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 
-import '../../../controllers/me/discover_app_controller.dart';
+import '../../../controllers/me/settings/discover_app_controller.dart';
 import '../../../widgets/publisher_avatar.dart';
 
 class DiscoverAppView extends StatelessWidget {

@@ -5,7 +5,7 @@ import '../controllers/comment_controller.dart';
 import '../controllers/create_post_controller.dart';
 import '../controllers/home_controller.dart';
 import '../controllers/me/me_controller.dart';
-import '../controllers/me/settings_controller.dart';
+import '../controllers/me/settings/settings_controller.dart';
 import '../controllers/notification/notification_controller.dart';
 import '../controllers/reels/reels_controller.dart';
 import '../controllers/social_interaction_controller.dart';

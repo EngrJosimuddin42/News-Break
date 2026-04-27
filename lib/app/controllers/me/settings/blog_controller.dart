@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../../models/blog_model.dart';
+import '../../../models/blog_model.dart';
 
 class BlogController extends GetxController {
   var posts = <BlogPost>[].obs;

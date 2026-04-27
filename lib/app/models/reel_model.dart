@@ -1,5 +1,6 @@
 class ReelModel {
   int? id;
+  final String type = 'reel';
   String imageUrl;
   final String? videoUrl;
   String userProfileImage;

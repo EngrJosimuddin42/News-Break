@@ -52,29 +52,19 @@ class SocialsController extends GetxController {
   }
 
   Future<void> submitPost(String content, {String? imageUrl}) async {
-    if (content.trim().isEmpty) {
-      return;
-    }
-    try {
-      //  API: await ApiService.createPost(content, imageUrl);
-      final newPost = SocialsModel(
-        id: DateTime.now().millisecondsSinceEpoch,
-        category: 'General',
-        userName: AuthController.to.user.value?.name ?? 'Me', // ✅ real name
-        userRole: 'Member',
-        timeAgo: 'Just now',
-        userImageUrl: AuthController.to.user.value?.profileImageUrl ?? '', // ✅ real image
-        text: content,
-        imageUrls: imageUrl != null ? [imageUrl] : [],
-        likes: '0',
-        comments: '0',
-        shares: '0',
-      );
-      posts.insert(0, newPost);
-      AppSnackbar.success(message: 'Post shared!');
-    } catch (e) {
-      AppSnackbar.error(message: 'Failed to submit post');
-    }
+    if (content.trim().isEmpty && imageUrl == null) return;
+
+    final newPost = SocialsModel(
+      id: DateTime.now().millisecondsSinceEpoch,
+      category: 'General',
+      userName: AuthController.to.user.value?.name ?? 'Me',
+      userRole: 'Member',
+      timeAgo: 'Just now',
+      userImageUrl: AuthController.to.user.value?.profileImageUrl ?? '',
+      text: content,
+      imageUrls: imageUrl != null ? [imageUrl] : [],
+    );
+    posts.insert(0, newPost);
   }
 
   //  Mock Data

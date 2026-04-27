@@ -9,7 +9,7 @@ import '../../controllers/home_controller.dart';
 import '../../controllers/me/me_controller.dart';
 import 'history_item.dart';
 
-// ── AppBar
+// AppBar
 class MeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MeAppBar({super.key});
 
@@ -24,18 +24,16 @@ class MeAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           icon: Image.asset('assets/icons/add.png', width: 22, height: 22),
-          onPressed: () => Get.find<MeController>().onAI(),
-        ),
+          onPressed: () => Get.find<MeController>().onAI()),
         IconButton(
           icon: const Icon(Icons.settings_outlined, color: Colors.white),
-          onPressed: () => Get.find<MeController>().onSettings(),
-        ),
+          onPressed: () => Get.find<MeController>().onSettings()),
       ],
     );
   }
 }
 
-// ── Body
+// Body
 class MeBody extends GetView<MeController> {
   const MeBody({super.key});
 
@@ -49,7 +47,7 @@ class MeBody extends GetView<MeController> {
     });
   }
 
-  // ── Logged Out ──────────────────────────────
+  // Logged Out
   Widget _buildLoggedOut(BuildContext context) {
     return Column(
       children: [
@@ -75,9 +73,7 @@ class MeBody extends GetView<MeController> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text('Keep your preferences, articles, and topics saved in your NewsBreak account.',
-                  style: AppTextStyles.labelSmall.copyWith(color:AppColors.info),
-                ),
-              ),
+                  style: AppTextStyles.labelSmall.copyWith(color:AppColors.info))),
 
               const SizedBox(height: 16),
 

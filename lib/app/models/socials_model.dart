@@ -1,5 +1,6 @@
 class SocialsModel {
   final int id;
+  final String type = 'social';
   final String category;
   final String userName;
   final String userImageUrl;
@@ -13,15 +14,15 @@ class SocialsModel {
 
   SocialsModel({
     required this.id,
-    this.category = 'Community',
+    this.category = 'Social',
     required this.userName,
     required this.userImageUrl,
     required this.text,
     required this.userRole,
     required this.timeAgo,
     required this.imageUrls,
-    this.likes = '0',
-    this.comments = '0',
-    this.shares = '0',
+    this.likes = '5',
+    this.comments = '3',
+    this.shares = '2',
   });
 }

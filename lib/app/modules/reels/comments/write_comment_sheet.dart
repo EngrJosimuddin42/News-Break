@@ -11,7 +11,9 @@ import '../../../widgets/my_gif_picker.dart';
 
 class WriteCommentSheet extends StatefulWidget {
   final dynamic reelId;
-  const WriteCommentSheet({super.key, required this.reelId});
+  final String type;
+  final bool onlyEmoji;
+  const WriteCommentSheet({super.key, required this.reelId,this.type = 'news', this.onlyEmoji = false});
 
   @override
   State<WriteCommentSheet> createState() => _WriteCommentSheetState();
@@ -55,7 +57,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
-                controller: CommentController().commentTextController,
+                  controller: commentController.commentTextController,
                 autofocus: true,
                 maxLines: null,
                 style: AppTextStyles.labelMedium,
@@ -65,15 +67,16 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                     border: InputBorder.none))),
 
             _buildReactionRow(),
+
             const Divider(color: Colors.grey, height: 1),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
                 children: [
+                  if (!widget.onlyEmoji) ...[
                   IconButton(
                       onPressed: utility.pickImage,
-                      icon: const Icon(Icons.image_outlined,
-                          color: AppColors.surface, size: 22)),
+                      icon: const Icon(Icons.image_outlined, color: AppColors.surface, size: 22)),
                   const SizedBox(width: 4),
                   GestureDetector(
                       onTap: () => utility.isGifPickerMode.value = true,
@@ -82,16 +85,23 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                           decoration: BoxDecoration(
                               border: Border.all(color: AppColors.surface),
                               borderRadius: BorderRadius.circular(6)),
-                          child: Text('GIF', style: AppTextStyles.display.copyWith(fontSize: 10)))),
+                          child: Text('GIF', style: AppTextStyles.display.copyWith(fontSize: 10))))],
                   const Spacer(),
                   Obx(() => commentController.isSendingComment.value
                       ? const SizedBox(width: 24, height: 24,
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: AppColors.primary))
                       : GestureDetector(
-                      onTap: () => commentController.submitComment(
+                      onTap: () {
+                        final String? gifUrl = utility.selectedGifUrl.value;
+                        final String? imagePath = utility.selectedImage.value?.path;
+
+                        commentController.submitComment(
                           widget.reelId,
-                          commentController.selectedGifUrl.value),
+                          gifUrl: gifUrl,
+                          imagePath: imagePath,
+                        );
+                      },
                       child: Image.asset('assets/icons/send2.png', height: 24, width: 24))),
                 ],
               ),
@@ -175,12 +185,13 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: GestureDetector(
                   onTap: () {
-                    commentController.commentTextController.text += emoji;
+                    final text = commentController.commentTextController.text;
+                    commentController.commentTextController.text = text + emoji;
                     commentController.commentTextController.selection =
                         TextSelection.fromPosition(
-                          TextPosition(offset: commentController
-                              .commentTextController.text.length),
+                          TextPosition(offset: commentController.commentTextController.text.length),
                         );
+                    setState(() {});
                   },
                   child: Text(emoji, style: const TextStyle(fontSize: 22))),
             );

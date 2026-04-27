@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../controllers/home_controller.dart';
+import '../../../controllers/social_interaction_controller.dart';
+import '../../../models/comment_source.dart';
 import '../../../models/news_model.dart';
 import '../../../routes/app_pages.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/about_profile_sheet.dart';
 import '../../../widgets/follow_button.dart';
+import '../../../widgets/network_or_file_image.dart';
 import '../../../widgets/publisher_avatar.dart';
 import '../../reels/full_screen_video_player.dart';
 
@@ -41,6 +43,9 @@ class _NewsCardState extends State<NewsCard> {
         children: [
           // Publisher Row
           _buildPublisherRow(news),
+
+          SizedBox(height:24),
+
           GestureDetector(
             onTap: () {
               if (hasVideo) {
@@ -52,11 +57,13 @@ class _NewsCardState extends State<NewsCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // News Title (Text)
-                _buildTitleSection(news),
-
                 // Media Section (Image/Video)
                 _buildMediaSection(news, hasVideo),
+
+                SizedBox(height:16),
+
+                // News Title (Text)
+                _buildTitleSection(news),
               ],
             ),
           ),
@@ -92,19 +99,24 @@ class _NewsCardState extends State<NewsCard> {
                       child: Text(news.publisherName, style: AppTextStyles.bodyMedium,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1))),
-                    const SizedBox(width: 6),
-                    Text('· ${news.timeAgo}', style: AppTextStyles.overline.copyWith(color: AppColors.info)),
                   ],
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 8),
                 Row(
                   children: [
-                    Image.asset('assets/icons/person.png', height: 14, width: 14),
+                    Image.asset('assets/icons/location1.png', height: 14, width: 14),
                     const SizedBox(width: 3),
-                    Flexible(
-                      child: Text(news.publisherMeta, style: AppTextStyles.overline.copyWith(color: AppColors.info),
+                    Expanded(
+                      child: Text(news.publisherMeta, style: AppTextStyles.overline.copyWith(color: AppColors.info,fontSize: 10),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1)),
+                    const SizedBox(width: 2),
+                    Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                    Image.asset('assets/icons/time.png', height: 14, width: 14),
+                    const SizedBox(width: 3),
+                    Text(news.timeAgo, style: AppTextStyles.overline.copyWith(color: AppColors.info))]),
                   ],
                 ),
               ],
@@ -120,7 +132,7 @@ class _NewsCardState extends State<NewsCard> {
   // Title Section with "See more"
   Widget _buildTitleSection(NewsModel news) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(68, 10, 16, 10),
+      padding: const EdgeInsets.fromLTRB(20, 10, 16, 10),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final textStyle = AppTextStyles.bodyMedium;
@@ -157,55 +169,47 @@ class _NewsCardState extends State<NewsCard> {
   // Media Section
   Widget _buildMediaSection(NewsModel news, bool hasVideo) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 68),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Image.network(
-                news.imageUrl,
-                width: double.infinity,
-                height: 220,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                    Container(height: 220,
-                        color: Colors.grey[900],
-                        child: const Icon(Icons.image, color: Colors.white10))),
-            if (hasVideo)
-              Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                      color: Colors.black45,
-                      shape: BoxShape.circle),
-                  child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 40)),
-          ],
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          NetworkOrFileImage(
+            url: news.imageUrl,
+            height: 220,
+            width: double.infinity,
+          ),
+          if (hasVideo)
+            Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                    color: Colors.black45,
+                    shape: BoxShape.circle),
+                child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 40)),
+        ],
       ),
     );
   }
 
   // Action Row
   Widget _buildActionRow(NewsModel news) {
-    final controller = Get.find<HomeController>();
+    final socialCtrl = Get.find<SocialInteractionController>();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 68, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Row(
         children: [
           Obx(() {
-            final isLiked = controller.isLiked(news.id);
+            final isLiked = socialCtrl.isLiked(news.id, type: 'news');
             return _engagementItem(
-              isLiked
-                  ? 'assets/icons/like_filled.png'
-                  : 'assets/icons/like.png',
-              news.likes, () => controller.onLikePressed(news),
-              color: isLiked ? Colors.blue : Colors.white);
+              isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
+              news.likes,
+                  () => socialCtrl.toggleLike(news.id, type: 'news'),
+              color: isLiked ? Colors.blue : Colors.white,
+            );
           }),
           const SizedBox(width: 80),
-          _engagementItem('assets/icons/comment.png',
-              news.comments, () => controller.onCommentPressed(news)
-          ),
+          _engagementItem('assets/icons/comment.png', news.comments,
+                  () => socialCtrl.openComments(news.id, CommentSource.news)),
         ],
       ),
     );

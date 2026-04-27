@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/modules/notification/notification_item_card.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../models/user_model.dart';
 import '../premium/widgets/premium_banner.dart';
 import '../../controllers/notification/notification_controller.dart';
-import 'notification_news_item.dart';
 import 'notification_settings_view.dart';
 
 // AppBar
@@ -40,47 +40,6 @@ class NotificationAppBar extends GetView<NotificationController>
         labelStyle: AppTextStyles.caption,
         unselectedLabelStyle: const TextStyle(fontSize: 14),
         tabs: NotificationController.tabs.map((t) => Tab(text: t)).toList()),
-    );
-  }
-}
-
-// Follow Notification Item
-class FollowNotificationItem extends StatelessWidget {
-  final UserModel user;
-  const FollowNotificationItem({super.key, required this.user});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: user.isHighlighted ? const Color(0xFF2C3C53) : Colors.transparent,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 24,
-            backgroundColor: Colors.grey[800],
-            backgroundImage: (user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty)
-                ? NetworkImage(user.profileImageUrl!)
-                : null,
-            child: (user.profileImageUrl == null || user.profileImageUrl!.isEmpty)
-                ? Image.asset('assets/images/publisher.png')
-                : null),
-          const SizedBox(width: 12),
-
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(user.name, style: AppTextStyles.caption),
-                const SizedBox(height: 2),
-                Text('Started following you', style: AppTextStyles.labelSmall.copyWith(color: AppColors.light)),
-                const SizedBox(height: 2),
-                Text(user.timeAgo ?? 'Just now', style: AppTextStyles.labelSmall.copyWith(color: AppColors.accentLight)),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -128,13 +87,20 @@ class NotificationBody extends GetView<NotificationController> {
 
       return ListView(
         children: [
-          const PremiumBanner(),
+          SizedBox(height: 12),
+
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20,vertical: 8),
+            child: PremiumBanner(),
+          ),
+
+          const SizedBox(height: 16),
 
           if (controller.newsItems.length >= 2) ...[
             _sectionLabel('Today'),
             ...controller.newsItems.take(2).map((model) => Column(
               children: [
-                NotificationNewsItem(news: model),
+                NotificationItemCard(item: model),
                 const Divider(color: Colors.white12, height: 1),
               ],
             )),
@@ -144,7 +110,7 @@ class NotificationBody extends GetView<NotificationController> {
             _sectionLabel('Earlier'),
             ...controller.newsItems.skip(2).map((model) => Column(
               children: [
-                NotificationNewsItem(news: model),
+                NotificationItemCard(item: model),
                 const Divider(color: Colors.white12, height: 1),
               ],
             )),
@@ -173,10 +139,81 @@ class NotificationBody extends GetView<NotificationController> {
   }
 
   Widget _sectionLabel(String label) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+    return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          decoration: BoxDecoration(
+            color: const Color(0xFF212121)),
       child: Text(label,
           style:AppTextStyles.textSmall),
+    );
+  }
+}
+
+
+
+// Follow Notification Item
+class FollowNotificationItem extends StatelessWidget {
+  final UserModel user;
+  const FollowNotificationItem({super.key, required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: user.isHighlighted ? const Color(0xFF2C3C53) : Colors.transparent,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Row(
+        children: [
+          CircleAvatar(
+              radius: 24,
+              backgroundColor: Colors.grey[800],
+              backgroundImage: (user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty)
+                  ? NetworkImage(user.profileImageUrl!)
+                  : null,
+              child: (user.profileImageUrl == null || user.profileImageUrl!.isEmpty)
+                  ? Image.asset('assets/images/publisher.png')
+                  : null),
+          const SizedBox(width: 12),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(user.name, style: AppTextStyles.caption),
+                const SizedBox(height: 2),
+                Text('Started following you', style: AppTextStyles.labelSmall.copyWith(color: AppColors.light)),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Image.asset('assets/icons/location1.png'),
+                const SizedBox(width: 3),
+                    Flexible(
+                    flex: 2,
+                      child: Text(
+                        user.publisherMeta ?? '',
+                        style: AppTextStyles.labelSmall.copyWith(color: AppColors.light),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Image.asset('assets/icons/time.png'),
+                    const SizedBox(width: 3),
+                    Flexible(
+                      flex: 2,
+                      child: Text(
+                        user.timeAgo ?? 'Just now',
+                        style: AppTextStyles.labelSmall.copyWith(color: AppColors.light),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

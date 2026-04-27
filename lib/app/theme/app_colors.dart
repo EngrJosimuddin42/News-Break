@@ -33,6 +33,7 @@ class AppColors {
   static const Color background = Color(0xFF242424);
   static const Color primary = Color(0xFF9C9C9C);
   static const Color white = Colors.white;
+  static const Color dot = Color(0xFFAAB6C6);
   static const Color textSecondary = Color(0xFF9E9E9E);
   static const Color linkColor = Color(0xFFFE5C5A);
   static const Color red = Color(0xFFFE5C5A);

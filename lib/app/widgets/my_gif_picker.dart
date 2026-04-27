@@ -18,10 +18,12 @@ class MyGifPicker extends StatelessWidget {
       decoration: const BoxDecoration(
           color: Colors.black,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      child: Column(
+      child: SafeArea(
+        bottom: true,
+        child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(8, 12, 8, 8),
+            padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
             child: Row(
               children: [
                 IconButton(
@@ -60,33 +62,37 @@ class MyGifPicker extends StatelessWidget {
               ],
             ),
           ),
-          const Divider(color: Colors.white12, height: 1),
 
           Expanded(
             child: Obx(() =>
                 GridView.builder(
-                  padding: const EdgeInsets.all(2),
+                  padding: const EdgeInsets.all(16),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      crossAxisSpacing: 2,
-                      mainAxisSpacing: 2),
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12),
                   itemCount: controller.filteredGifImages.length,
                   itemBuilder: (_, i) =>
                       GestureDetector(
-                        onTap: () =>
-                            controller.selectGif(
-                                controller.filteredGifImages[i]),
-                        child: Image.network(
+                        onTap: () {
+                          controller.selectGif(controller.filteredGifImages[i]);
+                          controller.isGifPickerMode.value = false;
+                          controller.gifSearchQuery.value = '';
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),  child: Image.network(
                           controller.filteredGifImages[i],
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
                               Container(color: Colors.grey[800]),
+                        ),
                         ),
                       ),
                 )),
           ),
         ],
       ),
+    ),
     );
   }
 }

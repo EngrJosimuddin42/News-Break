@@ -7,14 +7,13 @@ import '../../../../controllers/me/about_controller.dart';
 
 enum LegalType { terms, privacy, notice }
 
-class LegalView extends StatelessWidget {
-  final LegalType type;
+class LegalView extends StatelessWidget { final LegalType type;
 
   const LegalView({super.key, required this.type});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(AboutController());
+    final controller = Get.put(AboutController(), tag: type.name);
     controller.fetchLegalData(type.name);
 
     return Obx(() => SharedView(

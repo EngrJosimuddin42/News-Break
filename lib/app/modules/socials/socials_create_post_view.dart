@@ -334,7 +334,9 @@ class _CreatePostViewState extends State<SocialsCreatePostView> {
           SizedBox(
             width: double.infinity,
             child: Obx(() => ElevatedButton(
-              onPressed: () {
+              onPressed: createPostController.isLoading.value
+                  ? null
+                  : () {
                 createPostController.textController.text = _textController.text;
                 createPostController.onPost();
               },

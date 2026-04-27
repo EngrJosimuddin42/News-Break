@@ -255,7 +255,7 @@ class CommentsSheet extends StatelessWidget {
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-        builder: (context) => WriteCommentSheet(reelId: id));
+        builder: (context) => WriteCommentSheet(reelId: id, onlyEmoji: false));
   }
 
   void _showCommentOptionsSheet(BuildContext context, dynamic id, String name) {

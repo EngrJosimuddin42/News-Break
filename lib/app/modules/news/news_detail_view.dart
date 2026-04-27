@@ -9,6 +9,7 @@ import '../../models/news_model.dart';
 import '../../routes/app_pages.dart';
 import '../../widgets/about_profile_sheet.dart';
 import '../../widgets/follow_button.dart';
+import '../../widgets/network_or_file_image.dart';
 import '../../widgets/publisher_avatar.dart';
 import '../ai/nbot_sheet.dart';
 import '../signin/signin_view.dart';
@@ -131,17 +132,12 @@ class NewsDetailView extends GetView<HomeController> {
                 const SizedBox(height: 12),
 
                 // Main image
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    news.imageUrl,
-                    width: double.infinity,
-                    height: 200,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      height: 200,
-                      color: Colors.grey[800],
-                      child: const Icon(Icons.image, color: Colors.grey)))),
+                NetworkOrFileImage(
+                  url: news.imageUrl,
+                  height: 200,
+                  width: double.infinity,
+                  borderRadius: BorderRadius.circular(8)),
+
                 const SizedBox(height: 8),
                 if (news.imageCaption.isNotEmpty)
                   Padding(
@@ -232,4 +228,5 @@ class NewsDetailView extends GetView<HomeController> {
         ],
       ),
     );
-  }}
+  }
+}

@@ -10,50 +10,37 @@ class PremiumBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-          height: 100,
-          width: 335,
-          margin: const EdgeInsets.all(12),
+    return Container( height: 120, width: 335,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            image: const DecorationImage(
-                image: AssetImage('assets/images/premium_bg.jpg'),
-                fit: BoxFit.cover),
-          ),
+            border: Border.all(color:Color(0xFF282828)),
+            borderRadius: BorderRadius.circular(16)),
           child: Row(
             children: [
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Try Premium for FREE',
-                      style: AppTextStyles.buttonOutline,
-                    ),
+                    Text('Try Premium for FREE', style: AppTextStyles.buttonOutline),
                     SizedBox(height: 4),
-                    Text(
-                      'Ad-free reading, boosted comments,\nsmarter recommendations and more.',
-                      style: AppTextStyles.textSmall.copyWith(color: Color(0xFFF3DAD5)),
-                    ),
+                    Text('Ad-free reading, boosted \ncomments,smarter \nrecommendations and more.',
+                      style: AppTextStyles.textSmall.copyWith(color: Color(0xFFF3DAD5))),
                   ],
                 ),
               ),
               ElevatedButton(
                 onPressed: () => Get.to(
                       () => const PremiumScreen(),
-                  binding: PremiumBinding(),
-                ),
+                  binding: PremiumBinding()),
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFFFD5F5C),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(48)),
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16)),
                 child: Text('Upgrade',
-                  style: AppTextStyles.bodySmall.copyWith(color:AppColors.surface),
-                ),
-              ),
+                  style: AppTextStyles.bodySmall.copyWith(color:AppColors.surface))),
             ],
           ),
         );
-  }
+      }
   }

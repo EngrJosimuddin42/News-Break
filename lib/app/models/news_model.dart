@@ -1,7 +1,9 @@
 class NewsModel {
   final int id;
+  final String type = 'news';
   final String category;
   final String title;
+  final String subtitle;
   final String author;
   final String timeAgo;
   final String publisherName;
@@ -25,6 +27,7 @@ class NewsModel {
      required this.id,
     required this.category,
     required this.title,
+     this.subtitle='',
     required this.author,
     required this.timeAgo,
     required this.publisherName,
@@ -37,10 +40,10 @@ class NewsModel {
     this.videoUrl,
     this.imageCaption = '',
     required this.body,
-    this.likes = '0',
-    this.comments = '0',
-    this.shares='0',
-    this.reactions = '0',
+    this.likes = '20',
+    this.comments = '15',
+    this.shares='10',
+    this.reactions = '5',
     this.isVerified = true,
     this.isFollowing = false,
   });

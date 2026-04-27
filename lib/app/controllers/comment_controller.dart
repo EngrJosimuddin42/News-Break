@@ -54,9 +54,13 @@ class CommentController extends GetxController {
   }
 
 
-  Future<void> submitComment(dynamic id, String? gifUrl) async {
+  // gifUrl এবং imagePath কে ঐচ্ছিক (optional) এবং Named করার জন্য {} ব্যবহার করা হয়েছে
+  Future<void> submitComment(dynamic id, {String? gifUrl, String? imagePath}) async {
     String text = commentTextController.text.trim();
-    if (text.isEmpty && gifUrl == null && selectedImage.value == null) return;
+
+    // এখানে imagePath প্যারামিটারটি ব্যবহার করা হয়েছে চেক করার জন্য
+    if (text.isEmpty && gifUrl == null && imagePath == null) return;
+
     isSendingComment.value = true;
 
     final user = Get.find<AuthController>().user.value;
@@ -66,22 +70,27 @@ class CommentController extends GetxController {
       location: user?.location ?? 'Online',
       text: text,
       gifUrl: gifUrl,
-      imagePath: selectedImage.value?.path,
+      // এখানে সরাসরি imagePath প্যারামিটার থেকে ডাটা নেওয়া হচ্ছে
+      imagePath: imagePath,
       userProfileImage: user?.profileImageUrl ?? '',
       likes: 0,
       createdAt: 'Just now',
     );
 
     commentsList.insert(0, newComment);
+
+    // সব ক্লিয়ার করা
     commentTextController.clear();
     selectedGifUrl.value = null;
     selectedImage.value = null;
     selectedImageBytes.value = null;
+
     isSendingComment.value = false;
     FocusManager.instance.primaryFocus?.unfocus();
+
+    // শিট বন্ধ করা
     Get.back();
   }
-
 
   //  Copy comment
   void copyComment(String text) {

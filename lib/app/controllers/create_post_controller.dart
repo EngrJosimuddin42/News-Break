@@ -8,6 +8,8 @@ import 'package:news_break/app/widgets/app_snackbar.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import '../models/news_model.dart';
 import '../modules/create_post/tag_location_sheet.dart';
+import '../routes/app_pages.dart';
+import 'home_controller.dart';
 
 //  Post type enum
 enum PostType { news, reel, social }
@@ -110,25 +112,36 @@ class CreatePostController extends GetxController {
 
     try {
       isLoading.value = true;
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
 
+      final mediaUrl = utility.selectedImage.value?.path
+          ?? utility.selectedGifUrl.value;
+
+      //  post type অনুযায়ী submit
       if (isSocialPost) {
-        await Get.find<SocialsController>().submitPost(
+        Get.find<SocialsController>().submitPost(
           textController.text,
-          imageUrl: utility.selectedImage.value?.path,
+          imageUrl: mediaUrl,
+        );
+      } else if (isNewsPost) {
+        Get.find<HomeController>().addUserPost(
+          text: textController.text,
+          imageUrl: mediaUrl,
         );
       }
 
-      final String message = _getSuccessMessage();
+      utility.clearAllMedia();
+      utility.clearTags();
       resetAll();
-      Get.back();
-      AppSnackbar.success(message: message);
+      Get.until((route) => route.settings.name == Routes.HOME);
+      AppSnackbar.success(message: _getSuccessMessage());
     } catch (e) {
       AppSnackbar.error(message: 'Something went wrong while uploading.');
     } finally {
       isLoading.value = false;
     }
   }
+
 
   //  Type validation
   bool _validate() {

@@ -38,7 +38,7 @@ class HomeWeekBar extends GetView<HomeController> {
             // Month & Day
             Text(controller.monthAndDay, style:AppTextStyles.tagline.copyWith(color: Color(0xFFD9D9D9))),
             const SizedBox(height: 12),
-            const Divider(color: Colors.white12, height: 2, thickness: 3),
+            const Divider(color: Colors.white12, height: 1, thickness: 1),
           ],
         ),
       );

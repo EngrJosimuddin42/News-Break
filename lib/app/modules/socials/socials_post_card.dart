@@ -7,6 +7,7 @@ import '../../models/comment_source.dart';
 import '../../models/socials_model.dart';
 import '../../models/news_model.dart';
 import '../../routes/app_pages.dart';
+import '../../widgets/network_or_file_image.dart';
 import '../../widgets/options_bottom_sheet.dart';
 import '../../widgets/publisher_avatar.dart';
 import 'socials_report_sheet.dart';
@@ -91,15 +92,12 @@ class SocialsPostCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Column(
-                    children: post.imageUrls.map((url) =>
-                        Image.network( url,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
-                            height: 160,
-                            color: Colors.grey[900],
-                            child: const Icon(Icons.image, color: Colors.white24, size: 40))),
-                    ).toList())),
+                    children: post.imageUrls.map((url) => NetworkOrFileImage(
+                      url: url,
+                      width: double.infinity,
+                    )).toList(),
+                  ),
+                ),
             ],
           ),
         ),

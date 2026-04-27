@@ -3,14 +3,35 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../controllers/notification/notification_controller.dart';
 import '../models/news_model.dart';
+import '../models/reel_model.dart';
+import '../models/socials_model.dart';
 import 'bottom_sheet_handle.dart';
 
 class OptionsBottomSheet {
   static void show(BuildContext context, {
-    required NewsModel news,
+    required dynamic news,
     required Widget reportSheet,
   }) {
     final controller = Get.find<NotificationController>();
+
+
+    String author = 'Author';
+    String category = 'Category';
+    String publisher = 'Source';
+
+    if (news is NewsModel) {
+      author = news.author;
+      category = news.category;
+      publisher = news.publisherName;
+    } else if (news is ReelModel) {
+      author = news.userName;
+      category = 'Reels';
+      publisher = news.userName;
+    } else if (news is SocialsModel) {
+      author = news.userName;
+      category = news.category;
+      publisher = news.userName;
+    }
 
     showModalBottomSheet(
       context: context,
@@ -18,65 +39,66 @@ class OptionsBottomSheet {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-        builder: (_) => SingleChildScrollView(
-          child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const BottomSheetHandle(),
-          const SizedBox(height: 16),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF444444),
-              borderRadius: BorderRadius.circular(12),
+      builder: (_) => SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const BottomSheetHandle(),
+            const SizedBox(height: 16),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF444444),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+
+                  _optionTile(
+                    icon: Icons.thumb_down_outlined,
+                    iconColor: Colors.white,
+                    title: 'Show less about: $author',
+                    onTap: () {
+                      Get.back();
+                      controller.showLessAbout(author);
+                    },
+                  ),
+
+                  _optionTile(
+                    icon: Icons.thumb_down_outlined,
+                    iconColor: Colors.white,
+                    title: 'Show less about: $category',
+                    onTap: () {
+                      Get.back();
+                      controller.showLessAbout(category);
+                    },
+                  ),
+
+
+                  _optionTile(
+                    icon: Icons.block,
+                    iconColor: Colors.white,
+                    title: 'Block source: $publisher',
+                    onTap: () {
+                      Get.back();
+                      controller.blockSource(publisher);
+                    },
+                  ),
+
+                  _optionTile(
+                    icon: Icons.error_outline,
+                    iconColor: Colors.red,
+                    title: 'Report',
+                    titleColor: Colors.red,
+                    onTap: () {
+                      Get.back();
+                      _showReportSheet(context, reportSheet);
+                    },
+                  ),
+                ],
+              ),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-
-                _optionTile(
-                  icon: Icons.thumb_down_outlined,
-                  iconColor: Colors.white,
-                  title: 'Show less about: ${news.author}',
-                  onTap: () {
-                    Get.back();
-                    controller.showLessAbout(news.author);
-                  },
-                ),
-
-                _optionTile(
-                  icon: Icons.thumb_down_outlined,
-                  iconColor: Colors.white,
-                  title: 'Show less about: ${news.category}',
-                  onTap: () {
-                    Get.back();
-                    controller.showLessAbout(news.category);
-                  },
-                ),
-
-                _optionTile(
-                  icon: Icons.block,
-                  iconColor: Colors.white,
-                  title: 'Block source: ${news.publisherName}',
-                  onTap: () {
-                    Get.back();
-                    controller.blockSource(news.publisherName);
-                  },
-                ),
-
-                _optionTile(
-                  icon: Icons.error_outline,
-                  iconColor: Colors.red,
-                  title: 'Report',
-                  titleColor: Colors.red,
-                  onTap: () {
-                    Get.back();
-                    _showReportSheet(context, reportSheet);
-                  },
-                ),
-              ],
-            ),
-          ),
 
           const SizedBox(height: 16),
 

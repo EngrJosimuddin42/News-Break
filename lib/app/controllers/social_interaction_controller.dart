@@ -10,27 +10,15 @@ import 'comment_controller.dart';
 class SocialInteractionController extends GetxController {
   static SocialInteractionController get to => Get.find();
 
-  // ── Liked IDs ─────────────────────────────────
   final likedIds = <String>{}.obs;
   final dislikedIds = <String>{}.obs;
-
-  // ── Saved IDs ─────────────────────────────────
   final savedIds = <String>{}.obs;
-
-  // ── Followed ──────────────────────────────────
   final followedPublishers = <String>{}.obs;
-
-  // ── Blocked ───────────────────────────────────
   final blockedSources = <String>{}.obs;
-
-  // ── Hidden IDs ────────────────────────────────
   final hiddenIds = <String>{}.obs;
-
-  // ── Reported IDs ──────────────────────────────
   final reportedIds = <String>{}.obs;
-
-  // ── Joined Community IDs ──────────────────────
   final joinedCommunityIds = <int>{}.obs;
+  final reactions = <String, String>{}.obs;
 
   // ── LIKE ──────────────────────────────────────
   void toggleLike(int id, {String type = 'news'}) {
@@ -45,8 +33,9 @@ class SocialInteractionController extends GetxController {
     // ✅ API: await ApiService.toggleLike(id, type);
   }
 
-  bool isLiked(int id, {String type = 'news'}) =>
+  bool isLiked(dynamic id, {String type = 'news'}) =>
       likedIds.contains('${type}_$id');
+
 
   // ── DISLIKE ───────────────────────────────────
   void toggleDislike(int id, {String type = 'news'}) {
@@ -61,7 +50,7 @@ class SocialInteractionController extends GetxController {
     // ✅ API: await ApiService.toggleDislike(id, type);
   }
 
-  bool isDisliked(int id, {String type = 'news'}) =>
+  bool isDisliked(dynamic id, {String type = 'news'}) =>
       dislikedIds.contains('${type}_$id');
 
   // ── SAVE ──────────────────────────────────────
@@ -174,6 +163,24 @@ class SocialInteractionController extends GetxController {
       builder: (_) => CommentsSheet(id: id, source: source),
     );
   }
+
+  // Reaction
+  void updateReaction(dynamic id, String type, String emoji) {
+    if (!AuthHelper.checkLogin()) return;
+
+    final String key = '${type}_$id';
+    reactions[key] = emoji;
+    // API Call: api.sendReaction(id: id, type: type, emoji: emoji);
+  }
+
+  String getMyReaction(dynamic id, String type) {
+    return reactions['${type}_$id'] ?? '';
+  }
+
+  String getSelectedReaction(dynamic id, {String type = 'news'}) =>
+      reactions['${type}_$id'] ?? '';
+
+
 
   // ── JOIN COMMUNITY ────────────────────────────
   void toggleJoin(int communityId) {

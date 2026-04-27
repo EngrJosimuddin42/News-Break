@@ -1,6 +1,7 @@
 class UserModel {
   final String name;
   final String? username;
+  final String? publisherMeta;
   final String email;
   final String? bio;
   final String? website;
@@ -14,6 +15,7 @@ class UserModel {
   UserModel({
     required this.name,
     this.username,
+    this.publisherMeta,
     required this.email,
     this.bio,
     this.website,

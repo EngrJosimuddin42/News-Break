@@ -21,13 +21,16 @@ class NotificationController extends GetxController with GetSingleTickerProvider
   var frequency = 0.5.obs;
   var isLockScreenEnabled = false.obs;
 
-
+  final RxList<String> reportReasons = <String>[].obs;
+  final RxMap<String, List<String>> reportSubReasons = <String, List<String>>{}.obs;
   static const List<String> tabs = ['News', 'Likes', 'Replies', 'Follows', 'Others'];
+
 
   @override
   void onInit() {
     super.onInit();
     tabController = TabController(length: tabs.length, vsync: this);
+    _loadReportReasons();
   }
 
   void updateSwitch(String key, bool value) {}
@@ -64,16 +67,48 @@ class NotificationController extends GetxController with GetSingleTickerProvider
     );
   }
 
+  void _loadReportReasons() {
+    reportReasons.assignAll([
+      'Hate or Harassment',
+      'Sensitive or Disturbing Content',
+      'Safety',
+      'False or Misleading Content',
+      'Fraudulent Behavior and spam',
+      'Commercial and Promotional Content',
+      'Content Rights',
+      'Readability and Relevance',
+      'Video Quality Issues',
+      'Other',
+    ]);
+
+    reportSubReasons.assignAll({
+      'Hate or Harassment': ['Hateful Behavior', 'Harassment and Bullying'],
+      'Sensitive or Disturbing Content': ['Graphic Violence', 'Adult Content', 'Self-Harm'],
+      'Safety': ['Dangerous Activities', 'Threat or Violence'],
+      'False or Misleading Content': ['Misinformation', 'Fake News', 'Satire'],
+      'Fraudulent Behavior and spam': ['Scam', 'Spam', 'Fake Account'],
+      'Commercial and Promotional Content': ['Unauthorized Ads', 'Misleading Promotion'],
+      'Content Rights': ['Copyright Violation', 'Privacy Violation'],
+      'Readability and Relevance': ['Off-topic', 'Low Quality'],
+      'Video Quality Issues': ['Poor Resolution', 'Audio Issues'],
+      'Other': ['Other'],
+    });
+  }
+
+  Future<void> submitReport(String reason, String subReason) async {
+  }
+
 
   final RxList<NewsModel> newsItems = <NewsModel>[
     NewsModel(
       id: 1,
       category: 'Breaking News',
       title: 'FCC chair threatens over Iran war coverage',
+      subtitle: 'For seven long years, he served without ever asking for anything in... ',
       publisherName: 'USA TODAY',
       author: 'Hary',
       publisherMeta: 'Partner publisher',
-      timeAgo: '9h',
+      timeAgo: '9hr',
       imageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=200',
       body: 'Full news content goes here...',
       likes: '1.4K',
@@ -85,10 +120,11 @@ class NotificationController extends GetxController with GetSingleTickerProvider
       id: 2,
       category: 'Breaking News',
       title: 'FCC chair threatens over Iran war coverage',
+      subtitle: 'For seven long years, he served without ever asking for anything in... ',
       publisherName: 'USA TODAY',
       author: 'Hary',
       publisherMeta: 'Partner publisher',
-      timeAgo: '9h',
+      timeAgo: '9hr',
       imageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=200',
       videoUrl: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4',
       body: 'Full news content goes here...',
@@ -101,10 +137,11 @@ class NotificationController extends GetxController with GetSingleTickerProvider
       id: 3,
       category: 'Breaking News',
       title: 'FCC chair threatens over Iran war coverage',
+      subtitle: 'For seven long years, he served without ever asking for anything in... ',
       author: 'John Doe',
       publisherName: 'BBC News',
       publisherMeta: 'Global News Network',
-      timeAgo: '9h',
+      timeAgo: '9hr',
       imageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=200',
       body: 'Detailed report on trade policies...',
       reactions: '900',
@@ -118,29 +155,33 @@ class NotificationController extends GetxController with GetSingleTickerProvider
     UserModel(
       name: 'Banny',
       email: 'banny@example.com',
+      publisherMeta: 'Beverl Hills, CA',
       profileImageUrl: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=100',
-      timeAgo: '1h',
+      timeAgo: '6 days ago',
       isHighlighted: true,
     ),
     UserModel(
       name: 'James K.',
       email: 'james@example.com',
+      publisherMeta: 'Beverl Hills, CA',
       profileImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
-      timeAgo: '3h',
+      timeAgo: '10 days ago',
       isHighlighted: false,
     ),
     UserModel(
       name: 'Sophia Lee',
       email: 'sophia@example.com',
+      publisherMeta: 'Beverl Hills, CA',
       profileImageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
-      timeAgo: '5h',
+      timeAgo: '2 days ago',
       isHighlighted: false,
     ),
     UserModel(
       name: 'Marcus T.',
       email: 'marcus@example.com',
+      publisherMeta: 'Beverl Hills, CA',
       profileImageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100',
-      timeAgo: '1d',
+      timeAgo: '15 days ago',
       isHighlighted: false,
     ),
   ].obs;

@@ -85,17 +85,24 @@ class HomeController extends GetxController {
       builder: (_) => const NBotSheet());
   }
 
-  void addUserPost({required String text, String? imageUrl}) {
+  void addUserPost({required String text, String? imageUrl, String? location}) {
+    final user = AuthController.to.user.value;
+
+    final postLocation = location?.isNotEmpty == true
+        ? location!
+        : (user?.location?.isNotEmpty == true ? user!.location! : '');
+
     final newNews = NewsModel(
       id: DateTime.now().millisecondsSinceEpoch,
       category: 'General',
       title: text,
-      author: AuthController.to.user.value?.name ?? 'Me',
-      publisherName: AuthController.to.user.value?.name ?? 'Me',
-      publisherMeta: 'Just now',
+      author: user?.name ?? 'Me',
+      publisherName: user?.name ?? 'Me',
+      publisherMeta: postLocation,
       timeAgo: 'Just now',
       imageUrl: imageUrl ?? '',
       body: text,
+      publisherImageUrl: user?.profileImageUrl ?? '',
     );
 
     //  reactions tab  add

@@ -12,8 +12,10 @@ import '../../../widgets/my_gif_picker.dart';
 class WriteCommentSheet extends StatefulWidget {
   final dynamic reelId;
   final String type;
+  final String? replyToId;
+  final String? replyToName;
   final bool onlyEmoji;
-  const WriteCommentSheet({super.key, required this.reelId,this.type = 'news', this.onlyEmoji = false});
+  const WriteCommentSheet({super.key, required this.reelId,this.type = 'news',this.replyToId,this.replyToName, this.onlyEmoji = false});
 
   @override
   State<WriteCommentSheet> createState() => _WriteCommentSheetState();

@@ -7,6 +7,7 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import 'package:news_break/app/widgets/bottom_sheet_handle.dart';
 import '../../../controllers/auth/auth_controller.dart';
 import '../../../controllers/comment_controller.dart';
+import '../../../controllers/social_interaction_controller.dart';
 import '../../../models/comment_model.dart';
 import '../../../models/comment_source.dart';
 import 'option_sheet.dart';
@@ -25,6 +26,7 @@ class CommentsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final authController = Get.find<AuthController>();
     final commentController = Get.find<CommentController>();
+    final socialCtrl = Get.find<SocialInteractionController>();
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.7,
@@ -62,14 +64,16 @@ class CommentsSheet extends StatelessWidget {
               }
               if (commentController.commentsList.isEmpty) {
                 return const Center(
-                    child: Text("No comments yet",
-                        style: TextStyle(color: Colors.white)));
+                    child: Text("No comments yet", style: TextStyle(color: Colors.white)));
               }
               return ListView.builder(
                 padding: const EdgeInsets.only(top: 8),
                 itemCount: commentController.commentsList.length,
                 itemBuilder: (_, i) => _buildComment(
-                    context, commentController.commentsList[i], commentController),
+                    context,
+                    commentController.commentsList[i],
+                    commentController,
+                    socialCtrl),
               );
             }),
           ),
@@ -113,7 +117,7 @@ class CommentsSheet extends StatelessWidget {
   }
 
   Widget _buildComment(BuildContext context, CommentModel comment,
-      CommentController commentController) {
+      CommentController commentController,SocialInteractionController socialCtrl) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
@@ -141,9 +145,9 @@ class CommentsSheet extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => commentController.toggleFollow(comment),
-                      child: Builder(builder: (_) {
-                        final bool isFollowing = comment.isFollowing ?? false;
+                      onTap: () => socialCtrl.toggleFollow(comment.userName),
+                      child: Obx(() {
+                        final bool isFollowing = socialCtrl.isFollowing(comment.userName);
                         return Text(
                           isFollowing ? 'Following' : 'Follow',
                           style: AppTextStyles.overline.copyWith(
@@ -163,18 +167,50 @@ class CommentsSheet extends StatelessWidget {
                 // Actions
                 Row(
                   children: [
-                    _commentAction('assets/icons/comment.png', 'Reply'),
+
+                    // Reply Button
+                    _commentAction('assets/icons/comment.png', 'Reply', onTap: () {
+                      _showWriteCommentSheet(context, id,
+                          replyToId: comment.id.toString(),
+                          replyToName: comment.userName
+                      );
+                    }),
                     const SizedBox(width: 16),
-                    GestureDetector(
-                      onTap: () =>
-                          commentController.toggleCommentLike(comment.id),
-                      child: _commentAction(
-                          'assets/icons/like_up.png',
-                          commentController.formatCount(comment.likes))),
+
+                    //  LIKE Button
+                    Obx(() {
+                      final commentId = comment.id.toString();
+                      final isLiked = socialCtrl.isCommentLiked(commentId);
+                      final currentLikes = socialCtrl.getAdjustedLikes(commentId, comment.likes);
+
+                      return _commentAction(
+                        'assets/icons/like_up.png',
+                        commentController.formatCount(currentLikes),
+                        onTap: () => socialCtrl.likeComment(commentId),
+                        iconColor: isLiked ? Colors.blue : Colors.white,
+                      );
+                    }),
+
                     const SizedBox(width: 16),
-                    _commentAction('assets/icons/like_down.png', ''),
+
+                    // DISLIKE Button
+                    Obx(() {
+                      final commentId = comment.id.toString();
+                      final isDisliked = socialCtrl.isCommentDisliked(commentId);
+                      return _commentAction(
+                         'assets/icons/like_down.png','',
+                        onTap: () => socialCtrl.dislikeComment(commentId),
+                        iconColor: isDisliked ? Colors.blue : Colors.white,
+                      );
+                    }),
+
                     const SizedBox(width: 16),
-                    _commentAction('assets/icons/share.png', 'Share'),
+
+                    // SHARE Button
+                    _commentAction('assets/icons/share.png', 'Share', onTap: () {
+                      socialCtrl.shareContent(comment.id.toString(), type: 'comment');
+                    }),
+
                     const Spacer(),
                     Text(comment.createdAt,
                         style: const TextStyle(color: Colors.grey, fontSize: 10)),
@@ -233,13 +269,14 @@ class CommentsSheet extends StatelessWidget {
     );
   }
 
-  Widget _commentAction(String assetIcon, String label, {VoidCallback? onTap}) {
+  Widget _commentAction(String assetIcon, String label, {VoidCallback? onTap, Color iconColor = Colors.white}) {
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(assetIcon, width: 16, height: 16),
+          Image.asset(assetIcon, width: 16, height: 16, color: iconColor),
           if (label.isNotEmpty) ...[
             const SizedBox(width: 4),
             Text(label, style: AppTextStyles.labelMedium),
@@ -249,13 +286,13 @@ class CommentsSheet extends StatelessWidget {
     );
   }
 
-  void _showWriteCommentSheet(BuildContext context, dynamic id) {
+  void _showWriteCommentSheet(BuildContext context, dynamic id, {String? replyToId, String? replyToName}) {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-        builder: (context) => WriteCommentSheet(reelId: id, onlyEmoji: false));
+        builder: (context) => WriteCommentSheet(reelId: id, onlyEmoji: false,replyToId: replyToId,replyToName: replyToName));
   }
 
   void _showCommentOptionsSheet(BuildContext context, dynamic id, String name) {

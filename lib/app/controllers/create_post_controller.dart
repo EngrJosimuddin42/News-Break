@@ -114,10 +114,10 @@ class CreatePostController extends GetxController {
       isLoading.value = true;
       await Future.delayed(const Duration(seconds: 1));
 
-      final mediaUrl = utility.selectedImage.value?.path
+      final mediaUrl = selectedMedia.value?.path
+          ?? utility.selectedImage.value?.path
           ?? utility.selectedGifUrl.value;
 
-      //  post type অনুযায়ী submit
       if (isSocialPost) {
         Get.find<SocialsController>().submitPost(
           textController.text,
@@ -127,6 +127,7 @@ class CreatePostController extends GetxController {
         Get.find<HomeController>().addUserPost(
           text: textController.text,
           imageUrl: mediaUrl,
+          location: selectedLocation.value,
         );
       }
 

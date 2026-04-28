@@ -19,8 +19,20 @@ class SocialInteractionController extends GetxController {
   final reportedIds = <String>{}.obs;
   final joinedCommunityIds = <int>{}.obs;
   final reactions = <String, String>{}.obs;
+  var likedComments = <String>[].obs;
+  var dislikedComments = <String>[].obs;
+  var savedItems = <String>[].obs;
+  var selectedReason = Rxn<String>();
+  var isReportSubmitted = false.obs;
+  var reportContentId = 0.obs;
+  var reportContentType = ''.obs;
 
-  // ── LIKE ──────────────────────────────────────
+  void selectReason(String reason) => selectedReason.value = reason;
+  bool isCommentLiked(String id) => likedComments.contains(id);
+  bool isCommentDisliked(String id) => dislikedComments.contains(id);
+
+
+  // LIKE
   void toggleLike(int id, {String type = 'news'}) {
     if (!AuthHelper.checkLogin()) return;
     final key = '${type}_$id';
@@ -28,16 +40,31 @@ class SocialInteractionController extends GetxController {
       likedIds.remove(key);
     } else {
       likedIds.add(key);
-      dislikedIds.remove(key); // like করলে dislike সরবে
+      dislikedIds.remove(key);
     }
-    // ✅ API: await ApiService.toggleLike(id, type);
+  }
+
+  void likeComment(String id) {
+    if (!likedComments.contains(id)) {
+      likedComments.add(id);
+      dislikedComments.remove(id);
+    }
   }
 
   bool isLiked(dynamic id, {String type = 'news'}) =>
       likedIds.contains('${type}_$id');
 
+  int getAdjustedLikes(String commentId, int originalLikes) {
+    if (isCommentLiked(commentId)) {
+      return originalLikes + 1;
+    } else if (isCommentDisliked(commentId) && originalLikes > 0) {
+      return originalLikes - 1;
+    }
+    return originalLikes;
+  }
 
-  // ── DISLIKE ───────────────────────────────────
+
+  //  DISLIKE
   void toggleDislike(int id, {String type = 'news'}) {
     if (!AuthHelper.checkLogin()) return;
     final key = '${type}_$id';
@@ -45,15 +72,31 @@ class SocialInteractionController extends GetxController {
       dislikedIds.remove(key);
     } else {
       dislikedIds.add(key);
-      likedIds.remove(key); // dislike করলে like সরবে
+      likedIds.remove(key);
     }
-    // ✅ API: await ApiService.toggleDislike(id, type);
+
   }
 
   bool isDisliked(dynamic id, {String type = 'news'}) =>
       dislikedIds.contains('${type}_$id');
 
-  // ── SAVE ──────────────────────────────────────
+  void dislikeComment(String id) {
+    if (!dislikedComments.contains(id)) {
+      dislikedComments.add(id);
+      likedComments.remove(id);
+    }
+  }
+
+  void toggleCommentDislike(String id) {
+    if (dislikedComments.contains(id)) {
+      dislikedComments.remove(id);
+    } else {
+      dislikedComments.add(id);
+      likedComments.remove(id);
+    }
+  }
+
+  // SAVE
   void toggleSave(int id, {String type = 'news'}) {
     if (!AuthHelper.checkLogin()) return;
     final key = '${type}_$id';
@@ -64,13 +107,13 @@ class SocialInteractionController extends GetxController {
       savedIds.add(key);
       AppSnackbar.success(message: 'Saved successfully');
     }
-    // ✅ API: await ApiService.toggleSave(id, type);
   }
 
   bool isSaved(int id, {String type = 'news'}) =>
       savedIds.contains('${type}_$id');
 
-  // ── FOLLOW ────────────────────────────────────
+
+  // FOLLOW
   void toggleFollow(String publisherName) {
     if (!AuthHelper.checkLogin()) return;
     if (followedPublishers.contains(publisherName)) {
@@ -80,42 +123,32 @@ class SocialInteractionController extends GetxController {
       followedPublishers.add(publisherName);
       AppSnackbar.success(message: 'Following $publisherName');
     }
-    // ✅ API: await ApiService.toggleFollow(publisherName);
   }
 
   bool isFollowing(String publisherName) =>
       followedPublishers.contains(publisherName);
 
-  // ── BLOCK ─────────────────────────────────────
+  //  BLOCK
   void blockSource(String publisherName) {
     if (!AuthHelper.checkLogin()) return;
     blockedSources.add(publisherName);
     AppSnackbar.success(message: 'Blocked $publisherName');
-    // ✅ API: await ApiService.blockSource(publisherName);
   }
 
   bool isBlocked(String publisherName) =>
       blockedSources.contains(publisherName);
 
-  // ── HIDE ──────────────────────────────────────
+  // HIDE
   void hideContent(int id, {String type = 'news'}) {
     final key = '${type}_$id';
     hiddenIds.add(key);
     AppSnackbar.success(message: 'Content hidden from your feed');
-    // ✅ API: await ApiService.hideContent(id, type);
   }
 
   bool isHidden(int id, {String type = 'news'}) =>
       hiddenIds.contains('${type}_$id');
 
   //  REPORT
-  var selectedReason = Rxn<String>();
-  var isReportSubmitted = false.obs;
-  var reportContentId = 0.obs;
-  var reportContentType = ''.obs;
-
-  void selectReason(String reason) => selectedReason.value = reason;
-
   void openReport(int id, String type) {
     reportContentId.value = id;
     reportContentType.value = type;
@@ -131,7 +164,6 @@ class SocialInteractionController extends GetxController {
     if (selectedReason.value == null) return;
     final key = '${reportContentType.value}_${reportContentId.value}';
     reportedIds.add(key);
-    //  API: await ApiService.report(reportContentId.value, reportContentType.value, selectedReason.value);
     isReportSubmitted.value = true;
     AppSnackbar.success(message: 'Reported successfully');
   }
@@ -140,7 +172,7 @@ class SocialInteractionController extends GetxController {
       reportedIds.contains('${type}_$id');
 
 
-  // ── SHARE ─────────────────────────────────────
+  // ── SHARE
   Future<void> share({
     required int id,
     required String title,
@@ -148,6 +180,12 @@ class SocialInteractionController extends GetxController {
   }) async {
     final String url = 'https://newsbreak.com/$type/$id';
     await Share.share('$title\n$url');
+  }
+
+  void shareContent(String id, {required String type}) async {
+    String message = "Check out this $type on News Break!";
+    String url = "https://newsbreak.com/$type/$id";
+    await Share.share('$message\n$url');
   }
 
   // COMMENT
@@ -164,13 +202,21 @@ class SocialInteractionController extends GetxController {
     );
   }
 
+  void toggleCommentLike(String id) async {
+    if (isCommentLiked(id)) {
+      likedComments.remove(id);
+    } else {
+      likedComments.add(id);
+      dislikedComments.remove(id);
+    }
+  }
+
+
   // Reaction
   void updateReaction(dynamic id, String type, String emoji) {
     if (!AuthHelper.checkLogin()) return;
-
     final String key = '${type}_$id';
     reactions[key] = emoji;
-    // API Call: api.sendReaction(id: id, type: type, emoji: emoji);
   }
 
   String getMyReaction(dynamic id, String type) {
@@ -182,7 +228,7 @@ class SocialInteractionController extends GetxController {
 
 
 
-  // ── JOIN COMMUNITY ────────────────────────────
+  // JOIN COMMUNITY
   void toggleJoin(int communityId) {
     if (!AuthHelper.checkLogin()) return;
     if (joinedCommunityIds.contains(communityId)) {
@@ -192,7 +238,6 @@ class SocialInteractionController extends GetxController {
       joinedCommunityIds.add(communityId);
       AppSnackbar.success(message: 'Joined socials!');
     }
-    // ✅ API: await ApiService.toggleJoin(communityId);
   }
 
   bool isJoined(int communityId) =>

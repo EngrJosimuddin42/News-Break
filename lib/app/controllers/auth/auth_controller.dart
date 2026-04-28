@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:news_break/app/widgets/app_snackbar.dart';
 import '../../models/user_model.dart';
 import '../../bindings/signin_binding.dart';
 import '../../modules/signin/signin_view.dart';
@@ -8,6 +10,8 @@ class AuthController extends GetxController {
   static AuthController get to => Get.find();
   final user = Rxn<UserModel>();
   bool get isLoggedIn => user.value != null;
+
+  final _picker = ImagePicker();
 
   String get userInitial =>
       user.value?.name.isNotEmpty == true
@@ -32,6 +36,25 @@ class AuthController extends GetxController {
     Get.offAll( () => const SignInView(),
       binding: SignInBinding(),
     );
+  }
+
+
+
+  Future<void> pickAndUploadImage(ImageSource source) async {
+    final XFile? image = await _picker.pickImage(source: source);
+
+    if (image != null) {
+      if (user.value != null) {
+        user.value!.profileImageUrl = image.path;
+        user.refresh();
+      }
+    }
+  }
+
+  void deleteAccount() {
+    user.value = null;
+    Get.offAll(() => const SignInView(), binding: SignInBinding());
+    AppSnackbar.success(message: 'Your account has been deleted permanently.');
   }
 
   void updateProfile({

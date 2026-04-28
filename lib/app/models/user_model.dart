@@ -7,7 +7,7 @@ class UserModel {
   final String? website;
   final String? gender;
   final String? birthYear;
-  final String? profileImageUrl;
+  String? profileImageUrl;
   final String? location;
   final String? timeAgo;
   final bool isHighlighted;

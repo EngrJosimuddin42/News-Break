@@ -23,13 +23,30 @@ class _SingleReelPlayerState extends State<SingleReelPlayer> {
   }
 
   void _initializeManager() {
-    flickManager = FlickManager(
-      videoPlayerController: VideoPlayerController.networkUrl(
-        Uri.parse(widget.videoUrl),
-      ),
-      autoPlay: true);
+    final videoController = VideoPlayerController.networkUrl(
+      Uri.parse(widget.videoUrl),
+    );
 
-    flickManager.flickVideoManager?.videoPlayerController?.addListener(_onVideoError);
+    flickManager = FlickManager(
+      videoPlayerController: videoController,
+      autoPlay: true,
+      autoInitialize: true,
+    );
+
+    videoController.addListener(() {
+      if (videoController.value.isInitialized) {
+        if (videoController.value.volume == 0) {
+          videoController.setVolume(1.0);
+        }
+        if (!videoController.value.isLooping) {
+          videoController.setLooping(true);
+        }
+      }
+
+      if (videoController.value.hasError) {
+        if (mounted) setState(() => _hasError = true);
+      }
+    });
   }
 
   void _onVideoError() {

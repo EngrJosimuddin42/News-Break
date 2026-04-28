@@ -8,6 +8,8 @@ import '../../modules/reels/three_dot/report_reels_sheet.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 
+import '../auth/auth_controller.dart';
+
 class ReelsController extends GetxController {
 
 //  Reels Data
@@ -60,6 +62,24 @@ class ReelsController extends GetxController {
       pageController.jumpToPage(index);
     }
   }
+
+  void addUserReel({
+    required String videoPath,
+    required String thumbnailPath,
+    required String text,
+  }) {
+    final user = AuthController.to.user.value;
+    final newReel = ReelModel(
+      id: DateTime.now().millisecondsSinceEpoch,
+      videoUrl: videoPath,
+      imageUrl: thumbnailPath,
+      userName: user?.name ?? 'Me',
+      userProfileImage: user?.profileImageUrl ?? '',
+      description: text,
+    );
+    reelsList.insert(0, newReel);
+  }
+
 
   void toggleLike(int index) {
     reelsList[index].isLiked = !reelsList[index].isLiked;

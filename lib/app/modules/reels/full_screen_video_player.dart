@@ -12,15 +12,34 @@ class FullScreenVideoPlayer extends StatefulWidget {
 
 class _FullScreenVideoPlayerState extends State<FullScreenVideoPlayer> {
   late FlickManager flickManager;
+  bool isInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    flickManager = FlickManager(
-      videoPlayerController: VideoPlayerController.networkUrl(
-        Uri.parse(widget.url),
-      ),
+    _initializeManager();
+  }
+
+  void _initializeManager() {
+    final videoController = VideoPlayerController.networkUrl(
+      Uri.parse(widget.url),
     );
+
+    flickManager = FlickManager(
+      videoPlayerController: videoController,
+      autoPlay: true,
+    );
+
+    videoController.initialize().then((_) {
+      videoController.setVolume(1.0);
+      if (mounted) {
+        setState(() {
+          isInitialized = true;
+        });
+      }
+    }).catchError((error) {
+      debugPrint("Video Error: $error");
+    });
   }
 
   @override

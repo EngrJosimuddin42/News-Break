@@ -151,9 +151,14 @@ class _CreateReelViewState extends State<CreateReelView> {
           if (index == 0) {
             await controller.onAddMedia();
             if (controller.selectedMedia.value != null) {
+              final file = controller.selectedMedia.value!;
               await Get.delete<CreatePostController>();
-              Get.put(CreatePostController());
-              Get.to(() => const CreatePostView(), arguments: controller.selectedMedia.value);
+              final postController = Get.put(CreatePostController());
+              postController.selectedMedia.value = file;
+              postController.isReel.value = true;
+              postController.postType.value = PostType.reel;
+              await postController.generateThumbnail(file.path);
+              Get.to(() => const CreatePostView());
             }
           }
         },

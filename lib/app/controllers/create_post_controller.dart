@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:news_break/app/controllers/reels/reels_controller.dart';
 import 'package:news_break/app/controllers/social_utility_controller.dart';
 import 'package:news_break/app/controllers/socials/socials_controller.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
@@ -55,7 +56,7 @@ class CreatePostController extends GetxController {
           args.path.toLowerCase().endsWith('.mov')) {
         postType.value = PostType.reel;
         isReel.value = true;
-        _generateThumbnail(args.path);
+        generateThumbnail(args.path);
       } else {
         postType.value = PostType.news;
       }
@@ -74,7 +75,7 @@ class CreatePostController extends GetxController {
     super.onClose();
   }
 
-  Future<void> _generateThumbnail(String path) async {
+  Future<void> generateThumbnail(String path) async {
     try {
       final thumbPath = await VideoThumbnail.thumbnailFile(
         video: path,
@@ -99,7 +100,7 @@ class CreatePostController extends GetxController {
     if (pickedFile != null) {
       selectedMedia.value = File(pickedFile.path);
       if (isReel.value) {
-        await _generateThumbnail(pickedFile.path);
+        await generateThumbnail(pickedFile.path);
       } else {
         videoThumbnail.value = null;
       }
@@ -129,13 +130,19 @@ class CreatePostController extends GetxController {
           imageUrl: mediaUrl,
           location: selectedLocation.value,
         );
+      } else if (isReelPost) {
+        Get.find<ReelsController>().addUserReel(
+        videoPath: selectedMedia.value!.path,
+        thumbnailPath: videoThumbnail.value?.path ?? '',
+         text: textController.text,
+        );
       }
-
+      final successMsg = _getSuccessMessage();
       utility.clearAllMedia();
       utility.clearTags();
       resetAll();
       Get.until((route) => route.settings.name == Routes.HOME);
-      AppSnackbar.success(message: _getSuccessMessage());
+      AppSnackbar.success(message: successMsg);
     } catch (e) {
       AppSnackbar.error(message: 'Something went wrong while uploading.');
     } finally {
@@ -170,7 +177,7 @@ class CreatePostController extends GetxController {
         return 'Your post has been shared!';
       case PostType.news:
       default:
-        return 'Your post has been shared!';
+        return 'Your news has been shared!';
     }
   }
 

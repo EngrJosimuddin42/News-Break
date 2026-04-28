@@ -19,15 +19,12 @@ class PeopleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      height: 160,
+    return Container( width: 150, height: 160,
       padding: EdgeInsets.all(6),
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A1A),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Color(0xFF434447)),
-      ),
+        border: Border.all(color: Color(0xFF434447))),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -43,15 +40,12 @@ class PeopleCard extends StatelessWidget {
             radius: 22,
             backgroundColor: Color(0xFF7A1CA4),
             child: Text(name[0],
-                style: const TextStyle(color: Colors.white, fontSize: 20)),
-          ),
+                style: const TextStyle(color: Colors.white, fontSize: 20))),
           const SizedBox(height: 8),
           Text(name, style: const TextStyle(color: Colors.white, fontSize: 16)),
           Text(subtitle, style: const TextStyle(color: Colors.white54, fontSize: 11)),
           SizedBox(height: 12),
-          SizedBox(
-            width: 125,
-            height: 36,
+          SizedBox( width: 125, height: 36,
             child: OutlinedButton(
                 onPressed: onFollow,
                 style: OutlinedButton.styleFrom(

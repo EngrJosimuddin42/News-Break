@@ -18,8 +18,7 @@ class ChooseLocationSheet extends GetView<HomeController> {
         height: MediaQuery.of(context).size.height * 0.80,
         decoration: const BoxDecoration(
           color: Color(0xFF252525),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
         child: Column(
           children: [
             // Handle bar
@@ -53,8 +52,7 @@ class ChooseLocationSheet extends GetView<HomeController> {
               child: Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      height: 40,
+                    child: Container( height: 40,
                       decoration: BoxDecoration(
                         color: const Color(0xFF444444),
                         border: Border.all(color: Color(0xFF6B6B6B)),

@@ -123,8 +123,7 @@ class CategoryNewsCard extends StatelessWidget {
           const SizedBox(width: 16),
           GestureDetector(
             onTap: () => controller.hideNews(news),
-            child: const Icon(Icons.close, color: Color(0xFF6C6C6C), size: 20),
-          ),
+            child: const Icon(Icons.close, color: Color(0xFF6C6C6C), size: 20)),
         ],
       ),
     );
@@ -146,9 +145,7 @@ class CategoryNewsCard extends StatelessWidget {
                     color: Colors.black,
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 2)),
-                child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 35),
-              ),
-            ),
+                child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 35))),
         ],
       ),
     );
@@ -170,8 +167,7 @@ class CategoryNewsCard extends StatelessWidget {
                     backgroundColor: Colors.transparent,
                     builder: (context) => WriteCommentSheet(
                       reelId: news.id,
-                      onlyEmoji: true,
-                    ),
+                      onlyEmoji: true),
                   );
                 },
                 child: Obx(() {
@@ -210,7 +206,8 @@ class CategoryNewsCard extends StatelessWidget {
                   onTap: () => socialCtrl.openComments(news.id, CommentSource.news)),
               const SizedBox(width: 16),
               _engagementItem('assets/icons/share.png', 'Share',
-                  onTap: () => socialCtrl.share(id: news.id, title: news.title, type: 'news')),            ],
+                  onTap: () => socialCtrl.share(id: news.id, title: news.title, type: 'news')),
+            ]
           ),
         ],
       ),

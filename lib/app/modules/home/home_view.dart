@@ -92,8 +92,7 @@ class HomeView extends GetView<HomeController> {
               backgroundColor: AppColors.backgroundAss,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30)),
-              child: Image.asset('assets/icons/plump_feather_pen.png',
-                  width: 24, height: 24),
+              child: Image.asset('assets/icons/plump_feather_pen.png',width: 24, height: 24),
             );
           }
           return const SizedBox.shrink();

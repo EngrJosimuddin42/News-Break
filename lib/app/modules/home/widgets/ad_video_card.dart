@@ -57,9 +57,7 @@ class AdVideoCard extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () => AboutProfileSheet.showFromNews(Get.context!, news),
-            child: Text(
-              news.publisherName,
-              style: AppTextStyles.bodyMedium,
+            child: Text( news.publisherName,  style: AppTextStyles.bodyMedium,
               overflow: TextOverflow.ellipsis,
               maxLines: 1)),
           Text('Ad', style: AppTextStyles.overline),
@@ -94,9 +92,7 @@ class AdVideoCard extends StatelessWidget {
   }
 
   Widget _buildDurationTag(AdVideoController adController) {
-    return Positioned(
-      top: 8,
-      right: 8,
+    return Positioned( top: 8,  right: 8,
         child: ValueListenableBuilder(
           valueListenable: adController.videoController,
           builder: (context, value, stackTrace) => Text(
@@ -106,9 +102,7 @@ class AdVideoCard extends StatelessWidget {
   }
 
   Widget _buildControls(AdVideoController adController) {
-    return Positioned(
-      bottom: 8,
-      left: 8,
+    return Positioned( bottom: 8, left: 8,
       child: Row(
         children: [
           // Play/Pause Button

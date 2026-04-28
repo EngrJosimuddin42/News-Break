@@ -18,12 +18,10 @@ class HomeBottomNavBar extends StatelessWidget {
       {'icon': 'assets/icons/person.png', 'label': 'Me'},
     ];
 
-    return Obx(() => Container(
-      height: 64,
+    return Obx(() => Container( height: 64,
       decoration: const BoxDecoration(
         color: AppColors.background,
-        border: Border(top: BorderSide(color: Colors.white12)),
-      ),
+        border: Border(top: BorderSide(color: Colors.white12))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: List.generate(items.length, (i) {
@@ -31,29 +29,20 @@ class HomeBottomNavBar extends StatelessWidget {
           return GestureDetector(
             onTap: () => c.onNavTap(i),
             behavior: HitTestBehavior.opaque,
-            child: SizedBox(
-              width: 60,
+            child: SizedBox( width: 60,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    items[i]['icon']!,
-                    width: 24,
-                    height: 24,
+                  Image.asset( items[i]['icon']!, width: 24, height: 24,
                     color: isSelected
                         ? AppColors.red
-                        : AppColors.textSecondary,
-                  ),
+                        : AppColors.textSecondary),
                   const SizedBox(height: 4),
-                  Text(
-                    items[i]['label']!,
-                    style: AppTextStyles.bodySmall.copyWith(
-                      fontSize: 10,
+                  Text( items[i]['label']!,
+                    style: AppTextStyles.bodySmall.copyWith( fontSize: 10,
                       color: isSelected
                           ? AppColors.red
-                          : AppColors.textSecondary,
-                    ),
-                  ),
+                          : AppColors.textSecondary)),
                 ],
               ),
             ),

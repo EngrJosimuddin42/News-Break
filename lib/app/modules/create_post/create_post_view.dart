@@ -58,8 +58,7 @@ class CreatePostView extends GetView<CreatePostController> {
                     decoration: BoxDecoration(
                         color: const Color(0xFF444444),
                         borderRadius: BorderRadius.circular(8)),
-                    child: const Icon(Icons.add, color: Colors.white, size: 28),
-                  ),
+                    child: const Icon(Icons.add, color: Colors.white, size: 28)),
                 );
               }
 
@@ -73,8 +72,7 @@ class CreatePostView extends GetView<CreatePostController> {
                       ? (thumbFile != null
                       ? DecorationImage(image: FileImage(thumbFile), fit: BoxFit.cover)
                       : null)
-                      : DecorationImage(image: FileImage(mediaFile), fit: BoxFit.cover),
-                ),
+                      : DecorationImage(image: FileImage(mediaFile), fit: BoxFit.cover)),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -91,9 +89,7 @@ class CreatePostView extends GetView<CreatePostController> {
                           controller.videoThumbnail.value = null;
                           controller.isReel.value = false;
                         },
-                        child: const Icon(Icons.cancel, color: Colors.red, size: 20),
-                      ),
-                    ),
+                        child: const Icon(Icons.cancel, color: Colors.red, size: 20))),
                   ],
                 ),
               );

@@ -181,9 +181,7 @@ class LocalTab extends GetView<HomeController> {
                         borderRadius: BorderRadius.circular(14)),
                       child: CustomPaint(
                         size: Size.infinite,
-                        painter: _RainChartPainter(data: barData),
-                      ),
-                    ),
+                        painter: _RainChartPainter(data: barData))),
                   ],
                 );
               }),

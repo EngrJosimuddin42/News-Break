@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../../controllers/home_controller.dart';
 import '../ad_video_card.dart';
 import '../clip_card.dart';
@@ -27,8 +28,7 @@ class ForYouTab extends GetView<HomeController> {
       }
       return Column(
         children: [
-        SizedBox(
-        height: 175,
+        SizedBox( height: 175,
         child: ListView.separated(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           scrollDirection: Axis.horizontal,
@@ -75,8 +75,7 @@ class ForYouTab extends GetView<HomeController> {
                   child: ClipCard(
                     title: reel.userName,
                     subtitle: reel.description,
-                    imageUrl: reel.imageUrl,
-              )
+                    imageUrl: reel.imageUrl)
               );
             },
           ),
@@ -104,14 +103,8 @@ class ForYouTab extends GetView<HomeController> {
   Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-      child: Text(
-        title,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+      child: Text( title,
+        style:AppTextStyles.headlineMedium),
     );
   }
 }

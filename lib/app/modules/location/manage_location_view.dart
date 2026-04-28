@@ -111,22 +111,19 @@ class ManageLocationView extends StatelessWidget {
 
           // Bottom Ad banner
           Obx(() => adBanner.isBannerVisible.value
-              ? Positioned(
-            bottom: 32, left: 16, right: 16,
+              ? Positioned( bottom: 32, left: 16, right: 16,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               decoration: BoxDecoration(
                 color: const Color(0xFF444447),
-                borderRadius: BorderRadius.circular(12),
-              ),
+                borderRadius: BorderRadius.circular(12)),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   PublisherAvatar.fromUrl(
                     imageUrl: adBanner.adBanner.value.imageUrl,
                     name: adBanner.adBanner.value.title,
-                    size: 48,
-                  ),
+                    size: 48),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -136,12 +133,10 @@ class ManageLocationView extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(adBanner.adBanner.value.title,
-                                style: AppTextStyles.bodyMedium),
+                            Text(adBanner.adBanner.value.title, style: AppTextStyles.bodyMedium),
                             GestureDetector(
                               onTap: () => adBanner.isBannerVisible.value = false,
-                              child: const Icon(Icons.close, color: Colors.grey, size: 20),
-                            ),
+                              child: const Icon(Icons.close, color: Colors.grey, size: 20)),
                           ],
                         ),
                         const SizedBox(height: 6),
@@ -161,18 +156,12 @@ class ManageLocationView extends StatelessWidget {
                                 backgroundColor: Colors.white,
                                 foregroundColor: const Color(0xFF242424),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
+                                  borderRadius: BorderRadius.circular(20)),
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16, vertical: 8),
                                 minimumSize: Size.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              child: Text('Open',
-                                style: AppTextStyles.bodyMedium.copyWith(
-                                    color: const Color(0xFF242424)),
-                              ),
-                            ),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                              child: Text('Open', style: AppTextStyles.bodyMedium.copyWith( color: const Color(0xFF242424)))),
                           ],
                         ),
                       ],
@@ -192,15 +181,11 @@ class ManageLocationView extends StatelessWidget {
   Widget _mapButton(IconData icon, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        width: 40,
-        height: 40,
+      child: Container( width: 40, height: 40,
         decoration: BoxDecoration(
           color: const Color(0xFF2C2C2E),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, color: Colors.white, size: 20),
-      ),
+          borderRadius: BorderRadius.circular(8)),
+        child: Icon(icon, color: Colors.white, size: 20)),
     );
   }
 }

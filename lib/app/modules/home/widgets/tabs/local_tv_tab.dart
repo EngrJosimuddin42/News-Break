@@ -6,7 +6,6 @@ import '../../../../theme/app_colors.dart';
 import '../ad_video_card.dart';
 import '../category_news_card.dart';
 
-
 class LocalTvTab extends GetView<HomeController> {
   final String message;
 
@@ -32,15 +31,9 @@ class LocalTvTab extends GetView<HomeController> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            'assets/images/socket.png',
-            width: 130,
-            height: 130,
-          ),
+          Image.asset( 'assets/images/socket.png', width: 130, height: 130),
           const SizedBox(height: 16),
-          Text(message,
-            style:AppTextStyles.caption.copyWith(color: Color(0xFF9B9B9B)),
-          ),
+          Text(message, style:AppTextStyles.caption.copyWith(color: Color(0xFF9B9B9B))),
           const SizedBox(height: 16),
           OutlinedButton(
             onPressed: controller.onTryAgain,
@@ -49,12 +42,8 @@ class LocalTvTab extends GetView<HomeController> {
               minimumSize: const Size(90, 50),
               side: const BorderSide(color: AppColors.linkColor),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(60)),
-            ),
-            child:Text('Try Again',
-              style:AppTextStyles.caption.copyWith(color: AppColors.linkColor),
-            ),
-          ),
+                  borderRadius: BorderRadius.circular(60))),
+            child:Text('Try Again', style:AppTextStyles.caption.copyWith(color: AppColors.linkColor))),
         ],
       ),
     );

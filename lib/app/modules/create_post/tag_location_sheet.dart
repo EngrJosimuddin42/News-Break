@@ -14,8 +14,7 @@ class TagLocationSheet extends GetView<CreatePostController> {
       height: MediaQuery.of(context).size.height * 0.9,
       decoration: const BoxDecoration(
         color: Color(0xFF1A1A1A),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
       child: Column(
         children: [
           const BottomSheetHandle(),
@@ -38,16 +37,11 @@ class TagLocationSheet extends GetView<CreatePostController> {
                         hintStyle: TextStyle(color: Colors.white54, fontSize: 14),
                         prefixIcon: Icon(Icons.search, color: Colors.white54, size: 18),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(vertical: 10),
-                      ),
-                    ),
-                  ),
-                ),
+                        contentPadding: EdgeInsets.symmetric(vertical: 10))))),
                 const SizedBox(width: 12),
                 GestureDetector(
                   onTap: () => Get.back(),
-                  child: const Text('Cancel', style: TextStyle(color: Colors.blue, fontSize: 14)),
-                ),
+                  child: const Text('Cancel', style: TextStyle(color: Colors.blue, fontSize: 14))),
               ],
             ),
           ),

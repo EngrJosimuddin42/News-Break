@@ -70,6 +70,7 @@ class _NewsCardState extends State<NewsCard> {
 
           // Action Row (Like/Comment)
           _buildActionRow(news),
+
           SizedBox(height:16),
           const Divider(color: Colors.white12, height: 2, thickness: 3),
           SizedBox(height:4),
@@ -158,8 +159,7 @@ class _NewsCardState extends State<NewsCard> {
                 ],
               ),
               maxLines: 4,
-              overflow: TextOverflow.ellipsis,
-            ),
+              overflow: TextOverflow.ellipsis),
           );
         },
       ),
@@ -174,10 +174,7 @@ class _NewsCardState extends State<NewsCard> {
         alignment: Alignment.center,
         children: [
           NetworkOrFileImage(
-            url: news.imageUrl,
-            height: 220,
-            width: double.infinity,
-          ),
+            url: news.imageUrl, height: 220, width: double.infinity),
           if (hasVideo)
             Container(
                 padding: const EdgeInsets.all(8),

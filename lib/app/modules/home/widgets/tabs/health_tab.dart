@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../../controllers/home_controller.dart';
 import '../ad_video_card.dart';
 import '../category_news_card.dart';

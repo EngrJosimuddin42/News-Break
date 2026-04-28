@@ -445,3 +445,238 @@ class PremiumView extends GetView<PremiumController> {
   }
 }
  */
+
+/*
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:news_break/app/theme/app_colors.dart';
+import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../controllers/premium_controller.dart';
+import 'payment_method_screen.dart';
+
+class PremiumScreen extends GetView<PremiumController> {
+  const PremiumScreen({super.key});
+
+  static const _features = [
+    {'icon': 'assets/icons/ad_free.png',    'title': 'Ad-free in App',                 'subtitle': 'Millions of articles, videos, local Tvs, etc'},
+    {'icon': 'assets/icons/recommend.png',  'title': 'Personalized recommendations',   'subtitle': 'See more stories that match your interest'},
+    {'icon': 'assets/icons/comment1.png',   'title': 'Comment Boost',                  'subtitle': 'Receive enhances visibility for your comments'},
+    {'icon': 'assets/icons/avatar.png',     'title': 'Avatar ring',                    'subtitle': 'Make your premium membership shine'},
+    {'icon': 'assets/icons/support.png',    'title': 'Priority support',               'subtitle': 'Email: premium-support@news.com'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ── AppBar row ─────────────────────────────────────────────────
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () => Get.back(),
+                    icon: const Icon(Icons.arrow_back_ios,
+                        color: Colors.white, size: 20),
+                  ),
+                ],
+              ),
+            ),
+
+            // ── Title ──────────────────────────────────────────────────────
+            Text('Choose Your Plan',
+                style: AppTextStyles.displaySmall
+                    .copyWith(fontSize: 22, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            Text('Become a Premium Member',
+                style: AppTextStyles.display
+                    .copyWith(color: Colors.white54)),
+            const SizedBox(height: 20),
+
+            // ── Scrollable body ────────────────────────────────────────────
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Obx(() => Column(
+                  children: [
+                    // Yearly Card
+                    _planCard(
+                      isSelected: controller.isYearly.value,
+                      badge: 'Best Value',
+                      plan: 'Yearly',
+                      price: '\$59.99',
+                      period: '/year',
+                      onTap: () => controller.selectPlan(true),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Monthly Card
+                    _planCard(
+                      isSelected: !controller.isYearly.value,
+                      plan: 'Monthly',
+                      price: '\$19.99',
+                      period: '/Month',
+                      onTap: () => controller.selectPlan(false),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // ── CTA Button ─────────────────────────────────────────
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton(
+                        onPressed: () =>
+                            Get.to(() => const PaymentMethodScreen()),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.linkColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          elevation: 0,
+                        ),
+                        child: Text('Start 7day Free Trial',
+                            style: AppTextStyles.bodySmall.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600)),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // ── Disclaimer ─────────────────────────────────────────
+                    Text(
+                      'Lorem ipsum dolor sit amet consectetur. Sapien netus sed turpis euismod tortor. Consequat arcu commodo non habitant sit cras aliquam elementum commodo. Proin viverra pharetra etiam nibh nunc.',
+                      style: AppTextStyles.display
+                          .copyWith(color: Colors.white38),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                )),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Plan Card ───────────────────────────────────────────────────────────────
+  Widget _planCard({
+    required bool isSelected,
+    String? badge,
+    required String plan,
+    required String price,
+    required String period,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF111111),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isSelected ? AppColors.linkColor : const Color(0xFF2A2A2A),
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Badge (optional) ──────────────────────────────────────────
+            if (badge != null) ...[
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.linkColor,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(badge,
+                    style: AppTextStyles.small.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600)),
+              ),
+              const SizedBox(height: 10),
+            ],
+
+            // ── Plan name + Price row ─────────────────────────────────────
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(plan,
+                    style: AppTextStyles.bodyMedium
+                        .copyWith(color: Colors.white, fontSize: 16)),
+                RichText(
+                  text: TextSpan(children: [
+                    TextSpan(
+                        text: price,
+                        style: AppTextStyles.headlineMedium.copyWith(
+                            color: AppColors.linkColor, fontSize: 20)),
+                    TextSpan(
+                        text: period,
+                        style: AppTextStyles.small
+                            .copyWith(color: AppColors.linkColor)),
+                  ]),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 14),
+            const Divider(color: Color(0xFF2A2A2A), height: 1),
+            const SizedBox(height: 12),
+
+            // ── Feature list ──────────────────────────────────────────────
+            ..._features.map((f) => _featureRow(f['title']!, f['subtitle']!)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Single feature row ──────────────────────────────────────────────────────
+  Widget _featureRow(String title, String subtitle) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Checkbox icon
+          Container(
+            width: 22,
+            height: 22,
+            margin: const EdgeInsets.only(top: 1),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(color: Colors.white38, width: 1.5),
+            ),
+            child: const Icon(Icons.check, color: Colors.white, size: 14),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title,
+                    style: AppTextStyles.buttonOutline
+                        .copyWith(color: Colors.white, fontSize: 13)),
+                const SizedBox(height: 2),
+                Text(subtitle,
+                    style: AppTextStyles.display
+                        .copyWith(color: Colors.white54, fontSize: 11)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+ */

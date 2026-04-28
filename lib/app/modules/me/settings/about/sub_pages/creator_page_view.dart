@@ -5,6 +5,7 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../../../controllers/me/settings/creator_page_controller.dart';
 import '../../../../../models/creator_page_model.dart';
 import '../../../../../widgets/help_widgets.dart';
+import 'open_positions_view.dart';
 
 
 class CreatorPageView extends StatelessWidget {
@@ -31,7 +32,13 @@ class CreatorPageView extends StatelessWidget {
       return _buildCreatorPage(
         context: context,
         data: data,
-        primaryOnTap: () {},
+        primaryOnTap: () {
+          switch (pageKey) {
+            case 'careers':
+              Get.to(() => const OpenPositionsView());
+              break;
+          }
+        },
         secondaryOnTap: () {},
       );
     });

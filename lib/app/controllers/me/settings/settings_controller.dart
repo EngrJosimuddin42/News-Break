@@ -99,7 +99,7 @@ class SettingsController extends GetxController {
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           color: AppColors.linkColor,
-          borderRadius: BorderRadius.circular(70),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Center(
           child: Text(lang, style: AppTextStyles.bodySmall),

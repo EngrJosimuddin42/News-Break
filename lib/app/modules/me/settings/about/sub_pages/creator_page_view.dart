@@ -14,8 +14,7 @@ class CreatorPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(CreatorPageController());
-
+    final controller = Get.put(CreatorPageController(), tag: pageKey);
     controller.loadPageData(pageKey);
 
     return Obx(() {

@@ -39,7 +39,8 @@ class _SettingsViewState extends State<SettingsView> {
             centerTitle: true,
             leading: GestureDetector(
                 onTap: () => Get.back(),
-                child: Icon(Icons.arrow_back_ios, color: AppColors.textOnDark, size: 20))),
+                child: Icon(Icons.arrow_back_ios, color: AppColors.textOnDark,
+                    size: 20))),
         body: Column(
           children: [
             Expanded(
@@ -58,7 +59,8 @@ class _SettingsViewState extends State<SettingsView> {
                   _settingsTile(
                       iconPath: 'assets/icons/notification.png',
                       title: 'Notification',
-                      onTap: () => Get.to(() => const NotificationSettingsView())),
+                      onTap: () =>
+                          Get.to(() => const NotificationSettingsView())),
 
                   // Privacy
                   _settingsTile(
@@ -76,13 +78,18 @@ class _SettingsViewState extends State<SettingsView> {
                         child: Transform.scale(
                             scale: 0.7,
                             alignment: Alignment.centerRight,
-                        child:Switch(
-                            value: SettingsController.to.isDarkMode.value,
-                            onChanged: (bool newValue) { SettingsController.to.toggleDarkMode(newValue);},
-                            activeColor: AppColors.textGreen,
-                            thumbColor: const WidgetStatePropertyAll(Colors.black)))),
-                    onTap: () { SettingsController.to.toggleDarkMode(
-                        !SettingsController.to.isDarkMode.value);
+                            child: Switch(
+                                value: SettingsController.to.isDarkMode.value,
+                                onChanged: (bool newValue) {
+                                  SettingsController.to.toggleDarkMode(
+                                      newValue);
+                                },
+                                activeColor: AppColors.textGreen,
+                                thumbColor: const WidgetStatePropertyAll(
+                                    Colors.black)))),
+                    onTap: () {
+                      SettingsController.to.toggleDarkMode(
+                          !SettingsController.to.isDarkMode.value);
                     },
                   ),
 
@@ -114,7 +121,8 @@ class _SettingsViewState extends State<SettingsView> {
                         showModalBottomSheet(
                             context: context,
                             isScrollControlled: true,
-                            constraints: const BoxConstraints(maxWidth: double.infinity),
+                            constraints: const BoxConstraints(maxWidth: double
+                                .infinity),
                             builder: (_) => const SendFeedbackSheet());
                       }),
 
@@ -142,14 +150,16 @@ class _SettingsViewState extends State<SettingsView> {
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
                 child: GestureDetector(
                   onTap: () => _showLogoutDialog(context),
-                  child: Container(width: 335, height: 48,
+                  child: Container(width: 335,
+                    height: 48,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     decoration: BoxDecoration(
                         color: AppColors.linkColor,
                         borderRadius: BorderRadius.circular(12)),
                     child: Column(
                       children: [
-                        Text('Log out', style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w400)),
+                        Text('Log out', style: AppTextStyles.bodySmall.copyWith(
+                            fontWeight: FontWeight.w400)),
                       ],
                     ),
                   ),
@@ -182,13 +192,14 @@ class _SettingsViewState extends State<SettingsView> {
             border: Border.all(color: Color(0xFF26272D))),
         child: Row(
           children: [
-            Image.asset( iconPath, width: 16, height: 16),
+            Image.asset(iconPath, width: 16, height: 16),
             const SizedBox(width: 10),
             Expanded(
-                child: Text(title, style: AppTextStyles.bodyMedium.copyWith(color: Colors.white))),
-            if (trailing != null) trailing,
-            if (trailing == null && showArrow)
-              const Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 16),
+                child: Text(title, style: AppTextStyles.bodyMedium.copyWith(
+                    color: Colors.white))),
+            trailing ?? (showArrow
+                ? const Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 16)
+                : const SizedBox.shrink()),
           ],
         ),
       ),
@@ -198,29 +209,31 @@ class _SettingsViewState extends State<SettingsView> {
   void _showTextSizePicker() {
     showDialog(
       context: context,
-      builder: (context) => Dialog(
-        backgroundColor: const Color(0xFF282828),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                      onPressed: () => Get.back(),
-                      icon: const Icon(Icons.close, color: Colors.white, size: 20))),
+      builder: (context) =>
+          Dialog(
+            backgroundColor: const Color(0xFF282828),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                          onPressed: () => Get.back(),
+                          icon: const Icon(
+                              Icons.close, color: Colors.white, size: 20))),
 
-              _buildTextSizeOption('Small'),
-              const Divider(color: Color(0xFFDEDEE8), height: 1),
-              _buildTextSizeOption('Medium'),
-              const Divider(color: Color(0xFFDEDEE8), height: 1),
-              _buildTextSizeOption('Large'),
-              const SizedBox(height: 10),
-            ],
+                  _buildTextSizeOption('Small'),
+                  const Divider(color: Color(0xFFDEDEE8), height: 1),
+                  _buildTextSizeOption('Medium'),
+                  const Divider(color: Color(0xFFDEDEE8), height: 1),
+                  _buildTextSizeOption('Large'),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
     );
   }
 
@@ -233,7 +246,9 @@ class _SettingsViewState extends State<SettingsView> {
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: isSelected ? Color(0xFF257A5D): Color(0xFFA6A7AC), width: 2)),
+                border: Border.all(
+                    color: isSelected ? Color(0xFF257A5D) : Color(0xFFA6A7AC),
+                    width: 2)),
             child: isSelected
                 ? Icon(Icons.check, size: 14, color: Color(0xFF257A5D))
                 : const SizedBox(width: 14, height: 14)),
@@ -248,39 +263,66 @@ class _SettingsViewState extends State<SettingsView> {
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => Dialog(
-        backgroundColor: const Color(0xFF282828),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Log out', style: AppTextStyles.caption.copyWith(fontSize: 18)),
-              const SizedBox(height: 12),
-              Text('Are you sure you want to log out?', textAlign: TextAlign.center,
-                  style: AppTextStyles.labelMedium),
-              const SizedBox(height: 32),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      builder: (context) =>
+          Dialog(
+            backgroundColor: const Color(0xFF282828),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Cancel Button
-                  GestureDetector(
-                      onTap: () => Get.back(),
-                      child:Text('Cancel', style: AppTextStyles.headlineMedium)),
-                  // Logout Button
-                  GestureDetector(
-                      onTap: () {
-                        Get.back();
-                        AuthController.to.logout();
-                      },
-                      child:Text('Logout', style:  AppTextStyles.headlineMedium.copyWith(color: AppColors.linkColor))),
+                  Image.asset(
+                      'assets/icons/Logout.png', width: 40, height: 40),
+                  const SizedBox(height: 16),
+                  Text('Are you sure you want to log out?',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.label.copyWith(
+                          color: AppColors.surface)),
+                  const SizedBox(height: 32),
+
+                  Row(
+                    children: [
+                      Expanded(
+                          child: GestureDetector(
+                              onTap: () => Get.back(),
+                              child: Container(
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                          color: const Color(0xFFE6E6E6),
+                                          width: 1)),
+                                  alignment: Alignment.center,
+                                  child: Text('Cancel', style: AppTextStyles
+                                      .large.copyWith(
+                                      color: Color(0xFF6C6C6C)))))),
+                      const SizedBox(width: 12),
+                      // Logout Button
+                      Expanded(
+                          child: GestureDetector(
+                              onTap: () {
+                                Get.back();
+                                AuthController.to.logout();
+                              },
+                              child: Container(
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.linkColor,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text('Log Out',
+                                      style: AppTextStyles.large.copyWith(
+                                          color: AppColors.background))))),
+                    ],
+                  ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
     );
   }
 }

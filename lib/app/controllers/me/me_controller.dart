@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
+import '../../models/history_model.dart';
 import '../../modules/me/settings/settings_view.dart';
 import '../auth/auth_controller.dart';
 import '../../modules/ai/nbot_sheet.dart';
@@ -20,31 +21,34 @@ class MeController extends GetxController {
   final hasHistory = true.obs;
   final isCreator = false.obs;
 
-  var historyItems = [
-    {
-      'id': '101',
-      'title': 'FCC chair threatens over Iran war coverage',
-      'source': 'Robblyn',
-      'timeAgo': '1d',
-      'videoUrl': 'https://www.w3schools.com/html/mov_bbb.mp4',
-      'thumbnailUrl': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400',
-    },
-    {
-      'id': '102',
-      'title': 'The future of Artificial Intelligence in 2026: What to expect',
-      'source': 'TechRadar',
-      'timeAgo': '5h',
-      'videoUrl': 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
-      'thumbnailUrl': 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400',
-    },
-    {
-      'id': '103',
-      'title': 'SpaceX Starship mission reaches new milestone in Mars journey',
-      'source': 'SpaceNews',
-      'timeAgo': '12h',
-      'videoUrl': 'https://www.w3schools.com/html/movie.mp4',
-      'thumbnailUrl': 'https://images.unsplash.com/photo-1517976487492-5750f3195933?w=400',
-    },
+  var historyItems = <HistoryModel>[
+    HistoryModel(
+      id: '101',
+      title: 'FCC chair threatens over Iran war coverage',
+      subtitle: 'For seven long years, he served without ever asking for anything in... ',
+      source: 'USA TODAY',
+      timeAgo: '9hr',
+      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+      thumbnailUrl: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400',
+    ),
+  HistoryModel(
+    id: '102',
+    title: 'The future of Artificial Intelligence in 2026: What to expect',
+    subtitle: 'For seven long years, he served without ever asking for anything in... ',
+    source: 'TechRadar',
+    timeAgo: '5h',
+    videoUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400',
+  ),
+    HistoryModel(
+      id: '103',
+      title: 'SpaceX Starship mission reaches new milestone in Mars journey',
+      subtitle: 'For seven long years, he served without ever asking for anything in... ',
+      source: 'SpaceNews',
+      timeAgo: '12h',
+      videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+      thumbnailUrl: 'https://images.unsplash.com/photo-1517976487492-5750f3195933?w=400',
+    ),
   ].obs;
 
   var selectedChipIndex = 0.obs;
@@ -54,7 +58,7 @@ class MeController extends GetxController {
   void updateContentChip(int index) => selectedContentChipIndex.value = index;
 
   void deleteSingleHistoryItem(String id) {
-    historyItems.removeWhere((item) => item['id'] == id);
+    historyItems.removeWhere((item) => item.id == id);
     if (historyItems.isEmpty) hasHistory.value = false;
   }
 

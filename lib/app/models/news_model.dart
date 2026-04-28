@@ -13,6 +13,7 @@ class NewsModel {
   final String publisherImageUrl;
   final String imageUrl;
   final String? secondaryImageUrl;
+  final String? secondarySubtitle;
   final String? videoUrl;
   final String imageCaption;
   final String body;
@@ -37,6 +38,7 @@ class NewsModel {
     this.publisherImageUrl = 'assets/images/publisher.png',
     required this.imageUrl,
     this.secondaryImageUrl,
+     this.secondarySubtitle,
     this.videoUrl,
     this.imageCaption = '',
     required this.body,

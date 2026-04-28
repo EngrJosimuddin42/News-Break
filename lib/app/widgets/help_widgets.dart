@@ -176,19 +176,19 @@ class _HelpTabBarState extends State<HelpTabBar> {
                                 Get.to(() => WhoAreWeView());
                                 break;
                               case 'Careers':
-                                Get.to(() => const CreatorPageView(pageKey: 'careers'));
+                                Get.to(() => const CreatorPageView(pageKey: 'careers'),preventDuplicates: false);
                                 break;
                               case 'Contributors':
-                                Get.to(() => const CreatorPageView(pageKey: 'default'));
+                                Get.to(() => const CreatorPageView(pageKey: 'default'),preventDuplicates: false);
                                 break;
                               case 'Publishers':
-                                Get.to(() => const CreatorPageView(pageKey: 'default'));
+                                Get.to(() => const CreatorPageView(pageKey: 'default'),preventDuplicates: false);
                                 break;
                               case 'Advertisers':
-                                Get.to(() => const CreatorPageView(pageKey: 'default'));
+                                Get.to(() => const CreatorPageView(pageKey: 'default'),preventDuplicates: false);
                                 break;
                               case 'Podcast':
-                                Get.to(() => const CreatorPageView(pageKey: 'default'));
+                                Get.to(() => const CreatorPageView(pageKey: 'default'),preventDuplicates: false);
                                 break;
                               case 'Blog':
                                Get.to(() => const BlogView());

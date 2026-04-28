@@ -107,7 +107,7 @@ class CreatePostController extends GetxController {
     }
   }
 
-  //  Post type অনুযায়ী validation ও submit
+  //  Post type  validation & submit
   void onPost() async {
     if (!_validate()) return;
 

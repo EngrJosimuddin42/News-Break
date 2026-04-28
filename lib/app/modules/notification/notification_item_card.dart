@@ -102,11 +102,11 @@ class NotificationItemCard extends StatelessWidget {
                   Row(children: [
                   Image.asset('assets/icons/type.png'),
                   SizedBox(width: 6),
-                  Text(publisher, style: AppTextStyles.button.copyWith(color: AppColors.dot)),
+                  Text(publisher, style: AppTextStyles.buttonOutline.copyWith(color: AppColors.dot)),
                     SizedBox(width: 16),
                     Image.asset('assets/icons/time.png'),
                     SizedBox(width: 6),
-                    Text(time, style: AppTextStyles.button.copyWith(color: AppColors.dot)),
+                    Text(time, style: AppTextStyles.buttonOutline.copyWith(color: AppColors.dot)),
                   ]),
                   const SizedBox(height: 8),
 

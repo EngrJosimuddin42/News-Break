@@ -80,21 +80,35 @@ class NewsDetailView extends GetView<HomeController> {
         children: [
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(17),
               children: [
-
-                // category
-                Text(news.category.toUpperCase(), style: AppTextStyles.small.copyWith(color:AppColors.accentLight)),
-                const SizedBox(height: 8),
                 // Title
                 Text(news.title,
                   style:AppTextStyles.heading),
                 const SizedBox(height: 12),
 
-                // Author + time
-                Text('By ${news.author.toUpperCase()} · ${news.timeAgo}',
-                    style: AppTextStyles.overline.copyWith(color: Color(0xFF9C9C9C))),
-                const SizedBox(height: 12),
+                // Category & Time
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 12, 12, 16),
+                  child: Row(
+                    children: [
+                      Image.asset('assets/icons/person.png', height: 14, width: 14),
+                      const SizedBox(width: 3),
+                      Text(news.category, style: AppTextStyles.overline),
+                      const SizedBox(width: 8),
+                      Image.asset('assets/icons/location1.png', height: 14, width: 14),
+                      const SizedBox(width: 3),
+                      Flexible(
+                          child: Text(news.publisherMeta, style: AppTextStyles.overline.copyWith(color: AppColors.info,fontSize: 10),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1)),
+                      const SizedBox(width: 8),
+                      Image.asset('assets/icons/time.png', height: 14, width: 14),
+                      const SizedBox(width: 3),
+                      Text(news.timeAgo, style: AppTextStyles.overline.copyWith(color: AppColors.info)),
+                    ],
+                  ),
+                ),
 
                 // Publisher row
                 Row(
@@ -146,15 +160,26 @@ class NewsDetailView extends GetView<HomeController> {
                 const SizedBox(height: 16),
 
                 // Body text
-                if (news.secondaryImageUrl != null)
+                Text( news.body,style: AppTextStyles.caption),
+                if (news.secondaryImageUrl != null && news.secondaryImageUrl!.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.network(news.secondaryImageUrl!),
+                      child: Image.network(
+                        news.secondaryImageUrl!,
+                        errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+                      ),
                     ),
                   ),
-                Text( news.body,style: AppTextStyles.caption),
+                if (news.secondarySubtitle != null && news.secondarySubtitle!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text(
+                      news.secondarySubtitle!,
+                      style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ),
               ],
             ),
           ),

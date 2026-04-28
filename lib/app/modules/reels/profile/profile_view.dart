@@ -41,76 +41,81 @@ class _ProfileViewState extends State<ProfileView> {
         backgroundColor: Colors.black,
         elevation: 0,
         leading: GestureDetector(
-          onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios, color:AppColors.textOnDark,size: 20)),
+            onTap: () => Get.back(),
+            child: Icon(Icons.arrow_back_ios, color:AppColors.textOnDark,size: 20)),
         actions: [
           GestureDetector(
-            onTap: () {
-              ProfileOptionSheet.showOptions(context, user: widget.user,onBlockConfirm:
-                  () {},
-                onReportSubmit: (String reason) {},
-              );
-            },
-            child: const Padding(
-              padding: EdgeInsets.only(right: 16),
-              child: Icon(Icons.more_vert, color:AppColors.textOnDark,size: 24))),
+              onTap: () {
+                ProfileOptionSheet.showOptions(context, user: widget.user,onBlockConfirm:
+                    () {},
+                  onReportSubmit: (String reason) {},
+                );
+              },
+              child: const Padding(
+                  padding: EdgeInsets.only(right: 16),
+                  child: Icon(Icons.more_vert, color:AppColors.textOnDark,size: 24))),
         ],
       ),
       body: ListView(
         children: [
           // Profile header
+
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Avatar
                 CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage(widget.user?.userProfileImage ?? ""),
-                  backgroundColor: Colors.grey[800]),
-                const SizedBox(width: 20),
+                    radius: 30,
+                    backgroundImage: NetworkImage(widget.user?.userProfileImage ?? ""),
+                    backgroundColor: Colors.grey[800]),
 
-                // Stats
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _statItem(widget.user?.totalPosts?.toString() ?? '0', 'Post'),
-                      _statItem(widget.user?.totalViews?.toString() ?? '0', 'Views'),
-                      _statItem(widget.user?.totalFollowers?.toString() ?? '0', 'Followers'),
-                    ],
-                  ),
+                const SizedBox(height: 16),
+
+                // Name + meta
+                Text(widget.user?.userName ?? "Unknown",
+                    style:AppTextStyles.bodySmall.copyWith(color: Color(0xFFEAEAEA))),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset('assets/icons/calender.png',height: 14,width: 14),
+                    const SizedBox(width: 4),
+                    Text('user since ${widget.user?.userSince ?? "Unknown"}',
+                        style: AppTextStyles.overline.copyWith(color: AppColors.info)),
+                    const SizedBox(width: 12),
+                    Image.asset('assets/icons/location1.png',height: 14,width: 14),
+                    const SizedBox(width: 4),
+
+                    Flexible(
+                      child: Text(widget.user?.location ?? "Unknown Location",
+                          style: AppTextStyles.overline,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-
-          // Name + meta
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text(widget.user?.userName ?? "Unknown",
-                style:AppTextStyles.bodySmall.copyWith(color: Color(0xFFEAEAEA)))),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
-            child: Row(
-              children: [
-               Image.asset('assets/icons/person.png',height: 14,width: 14),
-                SizedBox(width: 4),
-                Text('user since ${widget.user?.userSince ?? "Unknown"}',
-                    style: AppTextStyles.overline.copyWith(color: AppColors.info)),
-                SizedBox(width: 12),
-                Image.asset('assets/icons/location1.png',height: 14,width: 14),
-                SizedBox(width: 4),
-              Text(widget.user?.location ?? "Unknown Location",
-                    style: AppTextStyles.overline),
+                const SizedBox(height: 16),
+                // Stats
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _statItem(widget.user?.totalPosts?.toString() ?? '0', 'Post'),
+                    _buildVerticalDivider(),
+                    _statItem(widget.user?.totalViews?.toString() ?? '0', 'Views'),
+                    _buildVerticalDivider(),
+                    _statItem(widget.user?.totalFollowers?.toString() ?? '0', 'Followers'),
+                  ],
+                ),
               ],
             ),
           ),
 
           // Action buttons
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 12),
             child: Row(
               children: [
                 Expanded(
@@ -143,18 +148,18 @@ class _ProfileViewState extends State<ProfileView> {
                   child: GestureDetector(
                     onTap: () {
                       final reelDataForProfile = ReelModel(
-                        id: widget.user?.id ?? 0,
-                        userName: widget.user?.userName ?? "Unknown",
-                        userProfileImage: widget.user?.userProfileImage ?? "",
-                        imageUrl: widget.user?.userProfileImage ?? "");
+                          id: widget.user?.id ?? 0,
+                          userName: widget.user?.userName ?? "Unknown",
+                          userProfileImage: widget.user?.userProfileImage ?? "",
+                          imageUrl: widget.user?.userProfileImage ?? "");
 
                       showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
                         backgroundColor: Colors.transparent,
                         constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width),
-                          builder: (_) => ShareSheet(
+                            maxWidth: MediaQuery.of(context).size.width),
+                        builder: (_) => ShareSheet(
                             reel: reelDataForProfile,
                             isProfileShare: true),
                       );
@@ -162,8 +167,8 @@ class _ProfileViewState extends State<ProfileView> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1D1D1D),
-                        borderRadius: BorderRadius.circular(8)),
+                          color: const Color(0xFF1D1D1D),
+                          borderRadius: BorderRadius.circular(8)),
                       child: Center(
                         child: Text('Share',
                             style: AppTextStyles.buttonOutline),
@@ -181,7 +186,7 @@ class _ProfileViewState extends State<ProfileView> {
 
           // Tabs
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
                 _tabItem('Posts', 0),
@@ -190,7 +195,7 @@ class _ProfileViewState extends State<ProfileView> {
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           const Divider(color: Colors.white12, height: 1),
           const SizedBox(height: 8),
 
@@ -202,96 +207,102 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
+  Widget _buildVerticalDivider() {
+    return Container( height: 30,  width: 1,  color: Color(0xFF333333));
+  }
+
   Widget _buildPostsTab() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Videos chip
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            decoration: BoxDecoration(
-              color:AppColors.surface,
-              borderRadius: BorderRadius.circular(60)),
-            child: Text('Videos',
-                style:AppTextStyles.overline.copyWith(color: AppColors.background)))),
+            padding: const EdgeInsets.fromLTRB(20, 8, 16, 12),
+            child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                decoration: BoxDecoration(
+                    color:AppColors.surface,
+                    borderRadius: BorderRadius.circular(60)),
+                child: Text('Videos',
+                    style:AppTextStyles.overline.copyWith(color: AppColors.background)))),
         if (widget.user?.userVideos == null || widget.user!.userVideos.isEmpty)
           const Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 40),
-              child: Text("No videos found", style: TextStyle(color: Colors.white))))
+              child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 40),
+                  child: Text("No videos found", style: TextStyle(color: Colors.white))))
         else
         // Grid
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 2),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 6,
-            mainAxisSpacing: 6,
-            childAspectRatio: 1),
-          itemCount: widget.user?.userVideos.length ?? 0,
-          itemBuilder: (_, i) {
-            final video = widget.user!.userVideos[i];
-             return GestureDetector(
-               onTap: () {
-                 final ReelsController reelsController = Get.find<ReelsController>();
-                 int index = reelsController.reelsList.indexWhere(
-                         (r) => r.id.toString() == video['id'].toString());
-                 if (index != -1) {
-                   reelsController.updatePage(index);
-                   Get.back();
-                 } else {
-                   Get.to(() => FullScreenVideoPlayer(url: video['videoUrl'] ?? ""));
-                 }
-               },
-
-              child:Stack(
-              children: [
-                Positioned.fill(
-                  child: Image.network(
-                    video['imageUrl'] ?? "",
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, _, _) => Container(
-                      color: Colors.grey[900],
-                      child: const Icon(Icons.play_circle_outline, color: Colors.white24),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0, left: 0, right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.fromLTRB(8, 20, 8, 6),
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [Colors.black87, Colors.transparent],
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 6,
+                mainAxisSpacing: 6,
+                childAspectRatio: 1),
+            itemCount: widget.user?.userVideos.length ?? 0,
+            itemBuilder: (_, i) {
+              final video = widget.user!.userVideos[i];
+              return GestureDetector(
+                onTap: () {
+                  final ReelsController reelsController = Get.find<ReelsController>();
+                  int index = reelsController.reelsList.indexWhere(
+                          (r) => r.id.toString() == video['id'].toString());
+                  if (index != -1) {
+                    reelsController.updatePage(index);
+                    Get.back();
+                  } else {
+                    Get.to(() => FullScreenVideoPlayer(url: video['videoUrl'] ?? ""));
+                  }
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                child:Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Image.network(
+                        video['imageUrl'] ?? "",
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, _, _) => Container(
+                          color: Colors.grey[900],
+                          child: const Icon(Icons.play_circle_outline, color: Colors.white24),
+                        ),
                       ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(video['title']!,
-                            style: AppTextStyles.labelMedium),
-                        Row(
+                    Positioned(
+                      bottom: 0, left: 0, right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(8, 20, 8, 6),
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [Colors.black87, Colors.transparent],
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Icon(Icons.play_arrow, color: Colors.white, size: 24),
-                            Text(video['views']!,
+                            Text(video['title']!,
                                 style: AppTextStyles.labelMedium),
+                            Row(
+                              children: [
+                                const Icon(Icons.play_arrow, color: Colors.white, size: 24),
+                                Text(video['views']!,
+                                    style: AppTextStyles.labelMedium),
+                              ],
+                            ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-            );
-          },
-        ),
+              ),
+              );
+            },
+          ),
       ],
     );
   }
@@ -306,10 +317,10 @@ class _ProfileViewState extends State<ProfileView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Avatar + reaction icon
-                  CircleAvatar(
+              CircleAvatar(
                   radius: 16,
                   backgroundImage: NetworkImage(widget.user?.userProfileImage ?? ""),
-                   backgroundColor: Colors.grey[800]),
+                  backgroundColor: Colors.grey[800]),
               const SizedBox(width: 10),
 
               // Info
@@ -325,10 +336,10 @@ class _ProfileViewState extends State<ProfileView> {
                         Text('reacted',
                             style:AppTextStyles.display.copyWith(color: AppColors.secondary)),
                         const SizedBox(width: 6),
-                           Container(width: 16, height: 16,
+                        Container(width: 16, height: 16,
                             decoration: BoxDecoration(
-                              color:AppColors.textGreen,
-                              shape: BoxShape.circle),
+                                color:AppColors.textGreen,
+                                shape: BoxShape.circle),
                             child:Icon(Icons.thumb_up, color: AppColors.surface, size: 10)),
                       ],
                     ),
@@ -359,42 +370,42 @@ class _ProfileViewState extends State<ProfileView> {
                         }
                       },
                       child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: 48,
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            alignment: Alignment.centerLeft,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF333333),
-                              borderRadius: BorderRadius.circular(6)),
-                            child: Text( reaction['title'] ?? "",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.textSmall.copyWith(color: AppColors.surface)))),
+                        children: [
+                          Expanded(
+                              child: Container(
+                                  height: 48,
+                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  alignment: Alignment.centerLeft,
+                                  decoration: BoxDecoration(
+                                      color: const Color(0xFF333333),
+                                      borderRadius: BorderRadius.circular(6)),
+                                  child: Text( reaction['title'] ?? "",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTextStyles.textSmall.copyWith(color: AppColors.surface)))),
 
-                        const SizedBox(width: 8),
+                          const SizedBox(width: 8),
 
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Image.network( reaction['imageUrl']!,
-                                width: 64,
-                                height: 48,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, _, _) => Container(
-                                  width: 64, height: 48,
-                                  color: Colors.grey[800],
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(6),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Image.network( reaction['imageUrl']!,
+                                  width: 64,
+                                  height: 48,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, _, _) => Container(
+                                    width: 64, height: 48,
+                                    color: Colors.grey[800],
+                                  ),
                                 ),
-                              ),
-                              const Icon(Icons.play_arrow, color: Colors.white, size: 18),
-                            ],
+                                const Icon(Icons.play_arrow, color: Colors.white, size: 18),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

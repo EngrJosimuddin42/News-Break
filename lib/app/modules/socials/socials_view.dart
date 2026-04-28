@@ -5,7 +5,6 @@ import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/ad_banner_controller.dart';
 import '../../controllers/auth/auth_controller.dart';
-import '../../controllers/create_post_controller.dart';
 import '../../controllers/socials/socials_controller.dart';
 import '../../widgets/publisher_avatar.dart';
 import 'community_insight_view.dart';
@@ -99,7 +98,7 @@ class SocialsBodyView extends GetView<SocialsController> {
 
         // Create post row
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             children: [
               Obx(() {
@@ -132,8 +131,9 @@ class SocialsBodyView extends GetView<SocialsController> {
           ),
         ),
 
+        const SizedBox(height: 6),
         const Divider(color: Colors.white12, height: 2, thickness: 1),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
 
         // Posts
         Obx(() {

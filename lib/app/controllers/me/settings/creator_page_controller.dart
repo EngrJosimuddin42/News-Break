@@ -7,13 +7,16 @@ class CreatorPageController extends GetxController {
 
 
   void loadPageData(String key) async {
-    isLoading.value = true;
+    try {
+      isLoading.value = true;
+      currentPageData.value = null;
 
-    await Future.delayed(const Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 300));
 
-    currentPageData.value = _localData[key] ?? _localData['default'];
-
-    isLoading.value = false;
+      currentPageData.value = _localData[key] ?? _localData['default'];
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   final Map<String, HelpPageData> _localData = {

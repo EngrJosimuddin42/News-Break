@@ -140,7 +140,7 @@ class NotificationBody extends GetView<NotificationController> {
 
   Widget _sectionLabel(String label) {
     return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: const Color(0xFF212121)),
       child: Text(label,

@@ -10,7 +10,7 @@ import '../../../widgets/about_profile_sheet.dart';
 import '../../../widgets/follow_button.dart';
 import '../../../widgets/network_or_file_image.dart';
 import '../../../widgets/publisher_avatar.dart';
-import '../../reels/full_screen_video_player.dart';
+import '../../reels/player/full_screen_video_player.dart';
 
 class NewsCard extends StatefulWidget {
   final NewsModel news;

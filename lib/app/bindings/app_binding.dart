@@ -7,6 +7,7 @@ import '../controllers/home_controller.dart';
 import '../controllers/me/me_controller.dart';
 import '../controllers/me/settings/settings_controller.dart';
 import '../controllers/notification/notification_controller.dart';
+import '../controllers/premium_controller.dart';
 import '../controllers/reels/reels_controller.dart';
 import '../controllers/social_interaction_controller.dart';
 import '../controllers/social_utility_controller.dart';
@@ -27,5 +28,5 @@ class AppBinding extends Bindings {
     Get.lazyPut<SocialInteractionController>(() => SocialInteractionController(), fenix: true);
     Get.lazyPut<SocialUtilityController>(() => SocialUtilityController(), fenix: true);
     Get.lazyPut<CreatePostController>(() => CreatePostController(), fenix: true);
-  }
+    Get.lazyPut<PremiumController>(() => PremiumController(), fenix: true);  }
 }

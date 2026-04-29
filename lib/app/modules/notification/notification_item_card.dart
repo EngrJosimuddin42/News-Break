@@ -9,7 +9,7 @@ import '../../models/reel_model.dart';
 import '../../models/socials_model.dart';
 import '../../routes/app_pages.dart';
 import '../reels/comments/write_comment_sheet.dart';
-import '../reels/full_screen_video_player.dart';
+import '../reels/player/full_screen_video_player.dart';
 import '../../widgets/options_bottom_sheet.dart';
 import 'notification_report_sheet.dart';
 

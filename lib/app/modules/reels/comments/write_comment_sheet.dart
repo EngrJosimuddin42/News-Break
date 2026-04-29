@@ -161,8 +161,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                   ? Image.memory(bytes!,
                   height: 120, width: 160, fit: BoxFit.cover)
                   : Image.file(File(image!.path),
-                  height: 120, width: 160, fit: BoxFit.cover),
-            ),
+                  height: 120, width: 160, fit: BoxFit.cover)),
             Positioned(right: 5, top: 5,
               child: GestureDetector(
                 onTap: utility.clearAllMedia,
@@ -191,8 +190,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                     commentController.commentTextController.text = text + emoji;
                     commentController.commentTextController.selection =
                         TextSelection.fromPosition(
-                          TextPosition(offset: commentController.commentTextController.text.length),
-                        );
+                          TextPosition(offset: commentController.commentTextController.text.length));
                     setState(() {});
                   },
                   child: Text(emoji, style: const TextStyle(fontSize: 22))),

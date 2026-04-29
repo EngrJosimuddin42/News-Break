@@ -12,7 +12,7 @@ import '../../../widgets/follow_button.dart';
 import '../../../widgets/network_or_file_image.dart';
 import '../../../widgets/publisher_avatar.dart';
 import '../../reels/comments/write_comment_sheet.dart';
-import '../../reels/full_screen_video_player.dart';
+import '../../reels/player/full_screen_video_player.dart';
 
 class CategoryNewsCard extends StatelessWidget {
   final NewsModel news;

@@ -103,8 +103,7 @@ class CommentsSheet extends StatelessWidget {
                             color: Colors.grey,
                             size: 28)))),
                     const SizedBox(width: 10),
-                    Text('Write a comment...',
-                        style: AppTextStyles.overline.copyWith(fontSize: 10)),
+                    Text('Write a comment...', style: AppTextStyles.overline.copyWith(fontSize: 10)),
                   ],
                 ),
               ),
@@ -167,7 +166,6 @@ class CommentsSheet extends StatelessWidget {
                 // Actions
                 Row(
                   children: [
-
                     // Reply Button
                     _commentAction('assets/icons/comment.png', 'Reply', onTap: () {
                       _showWriteCommentSheet(context, id,

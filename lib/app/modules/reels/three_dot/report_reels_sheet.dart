@@ -49,9 +49,7 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
                   child: const Icon(Icons.arrow_back_ios,
                       color: Colors.white, size: 20)),
               Expanded(
-                  child: Text('Report',
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.caption)),
+                  child: Text('Report',  textAlign: TextAlign.center,  style: AppTextStyles.caption)),
               GestureDetector(
                   onTap: () => Get.back(),
                   child: const Icon(Icons.close, color: Colors.white, size: 20)),
@@ -61,7 +59,6 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
         const SizedBox(height: 4),
         const Divider(color: Colors.white12, height: 1),
 
-        // ✅ reportReasons CommentController থেকে
         Column(
           children: commentController.reportReasons.map((reason) {
             return RadioListTile<String>(
@@ -85,13 +82,11 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
               context: context,
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width),
+              constraints: BoxConstraints( maxWidth: MediaQuery.of(context).size.width),
               builder: (_) => const ReportVideoSheet(),
             );
           },
-          dense: true,
-        ),
+          dense: true),
 
         // Buttons
         Padding(
@@ -107,11 +102,8 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
                       padding: const EdgeInsets.symmetric(vertical: 14)),
-                  child: Text('Cancel',
-                      style: AppTextStyles.bodySmall
-                          .copyWith(color: const Color(0xFFC4C4C4))),
-                ),
-              ),
+                  child: Text('Cancel', style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFFC4C4C4))))),
+
               const SizedBox(width: 12),
               Expanded(
                 child: ElevatedButton(
@@ -120,8 +112,7 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
                       commentController.submitReport(
                         id: widget.reelId,
                         reason: _selectedReason!,
-                        type: 'reel',
-                      );
+                        type: 'reel');
                       setState(() => _step = 1);
                     }
                   },
@@ -130,9 +121,7 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
                       padding: const EdgeInsets.symmetric(vertical: 14)),
-                  child: Text('Submit', style: AppTextStyles.bodySmall),
-                ),
-              ),
+                  child: Text('Submit', style: AppTextStyles.bodySmall))),
             ],
           ),
         ),

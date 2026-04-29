@@ -7,7 +7,6 @@ import '../../controllers/premium_controller.dart';
 class PaymentMethodScreen extends GetView<PremiumController> {
   const PaymentMethodScreen({super.key});
 
-  static const _methods = ['Bkash', 'Nagad', 'Rocket'];
 
   @override
   Widget build(BuildContext context) {
@@ -17,19 +16,17 @@ class PaymentMethodScreen extends GetView<PremiumController> {
         backgroundColor: Colors.black,
         leading: GestureDetector(
           onTap: () => Get.back(),
-          child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
-        ),
+          child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20)),
         title: Text('Payment Method', style: AppTextStyles.displaySmall),
         centerTitle: true,
-        elevation: 0,
-      ),
+        elevation: 0),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             const SizedBox(height: 30),
             Obx(() => Column(
-              children: _methods.map((method) => Padding(
+              children: controller.paymentMethods.map((method) => Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: GestureDetector(
                   onTap: () => controller.selectPaymentMethod(method),
@@ -37,8 +34,7 @@ class PaymentMethodScreen extends GetView<PremiumController> {
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     decoration: BoxDecoration(
                       color: const Color(0xFF333333),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                      borderRadius: BorderRadius.circular(8)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -62,22 +58,15 @@ class PaymentMethodScreen extends GetView<PremiumController> {
 
             Obx(() => controller.selectedMethod.value == null
                 ? const SizedBox.shrink()
-                : SizedBox(
-              width: 311,
-              height: 48,
+                : SizedBox( width: 311, height: 48,
               child: ElevatedButton(
                 onPressed: () => controller.processPayment(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor:AppColors.linkColor,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                 child: controller.isLoading.value
                     ? const CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
-                    : Text('Continue',
-                    style: AppTextStyles.caption),
-              ),
-            ),
-            ),
+                    : Text('Continue', style: AppTextStyles.caption)))),
             const SizedBox(height: 24),
           ],
         ),

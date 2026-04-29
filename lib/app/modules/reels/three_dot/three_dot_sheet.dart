@@ -35,8 +35,7 @@ class ThreeDotSheet extends StatelessWidget {
           children: [
             const SizedBox(height: 12),
             // Handle Bar
-            Container(
-              width: 40, height: 5,
+            Container( width: 40, height: 5,
               decoration: BoxDecoration(
                 color: Colors.grey[600], borderRadius: BorderRadius.circular(20))),
             const SizedBox(height: 12),
@@ -44,8 +43,7 @@ class ThreeDotSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
-                  Container(
-                    width: double.infinity,
+                  Container( width: double.infinity,
                     decoration: BoxDecoration(
                       color: const Color(0xFF444444),
                       borderRadius: BorderRadius.circular(12)),
@@ -87,8 +85,7 @@ class ThreeDotSheet extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Container(
-                    width: double.infinity,
+                  Container( width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(8)),

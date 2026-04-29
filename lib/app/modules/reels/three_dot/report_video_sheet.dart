@@ -14,8 +14,7 @@ class ReportVideoSheet extends StatelessWidget {
       width: double.infinity,
       decoration: const BoxDecoration(
         color: Color(0xFF252525),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -30,9 +29,7 @@ class ReportVideoSheet extends StatelessWidget {
                   },
                   child: const Icon(Icons.arrow_back_ios,color: Colors.white, size: 20)),
                 Expanded(
-                  child: Text('Report video',
-                      textAlign: TextAlign.center,
-                      style:AppTextStyles.caption)),
+                  child: Text('Report video',  textAlign: TextAlign.center, style:AppTextStyles.caption)),
                 GestureDetector(
                   onTap: (){
                     Get.back();
@@ -49,19 +46,16 @@ class ReportVideoSheet extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Infringing my rights',
-                    style: AppTextStyles.caption),
+                Text('Infringing my rights', style: AppTextStyles.caption),
                 const SizedBox(height: 12),
                 RichText(
-                  text: TextSpan(
-                    style:AppTextStyles.overline,
+                  text: TextSpan( style:AppTextStyles.overline,
                     children: [
                       TextSpan(text: 'Visit the '),
                       WidgetSpan(
                         child: GestureDetector(
                           onTap: () => Get.to(() => const AboutView()),
-                          child: Text('help center',
-                              style:AppTextStyles.overline.copyWith(color: AppColors.textGreen)),
+                          child: Text('help center',  style:AppTextStyles.overline.copyWith(color: AppColors.textGreen)),
                         ),
                       ),
                        TextSpan( text: ' for more information to submit a copyright infringement notice.'),
@@ -70,9 +64,7 @@ class ReportVideoSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 Center(
-                  child: SizedBox(
-                  width: 311,
-                  height: 48,
+                  child: SizedBox( width: 311,  height: 48,
                   child: ElevatedButton(
                       onPressed: () {
                         Get.to(() => const AboutView());
@@ -82,8 +74,7 @@ class ReportVideoSheet extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
                       padding: const EdgeInsets.symmetric(vertical: 14)),
-                    child:Text('Open Help Center',
-                        style:AppTextStyles.bodySmall)))),
+                    child:Text('Open Help Center', style:AppTextStyles.bodySmall)))),
                 const SizedBox(height: 40),
               ],
             ),

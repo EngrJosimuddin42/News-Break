@@ -27,9 +27,7 @@ class _CreateReelViewState extends State<CreateReelView> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             stops: [0.0232, 0.6799],
-            colors: [Color(0xFF583658), Color(0xFF657BC3)],
-          ),
-        ),
+            colors: [Color(0xFF583658), Color(0xFF657BC3)])),
         child: Column(
           children: [
             // Close Button
@@ -50,8 +48,7 @@ class _CreateReelViewState extends State<CreateReelView> {
             // Header Section
             Text('Create on NewsBreak', style: AppTextStyles.displaySmall),
             const SizedBox(height: 8),
-            Text(
-              'To create videos, allow access to your\ncamera and microphone',
+            Text( 'To create videos, allow access to your\ncamera and microphone',
               textAlign: TextAlign.center,
               style: AppTextStyles.overline.copyWith(color: const Color(0xFFC4C4C4))),
 
@@ -95,8 +92,7 @@ class _CreateReelViewState extends State<CreateReelView> {
             const SizedBox(height: 16),
 
             // Bottom Tabs
-            Container(
-              width: double.infinity,
+            Container( width: double.infinity,
               padding: const EdgeInsets.only(top: 25, bottom: 40, left: 20, right: 160),
               decoration: const BoxDecoration(color: Color(0xFF222222)),
               child: Row(
@@ -117,9 +113,7 @@ class _CreateReelViewState extends State<CreateReelView> {
   Widget _accessButton(IconData icon, String label, VoidCallback onTap, bool isPressed) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        width: 195,
-        height: 44,
+      child: Container( width: 195,  height: 44,
         decoration: BoxDecoration(
           color: isPressed
               ? Colors.green.withValues(alpha: 0.7)
@@ -133,8 +127,7 @@ class _CreateReelViewState extends State<CreateReelView> {
                 color: Colors.white,
                 size: 18),
             const SizedBox(width: 8),
-            Text(
-              isPressed ? 'Allowed' : label, style: AppTextStyles.buttonOutline),
+            Text( isPressed ? 'Allowed' : label, style: AppTextStyles.buttonOutline),
           ],
         ),
       ),

@@ -6,7 +6,7 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/reels/reels_controller.dart';
 import '../../../models/reel_model.dart';
 import '../../../widgets/app_snackbar.dart';
-import '../full_screen_video_player.dart';
+import '../player/full_screen_video_player.dart';
 import '../share_sheet.dart';
 
 class ProfileView extends StatefulWidget {
@@ -19,12 +19,11 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   int _selectedTab = 0; // 0=Posts, 1=Reactions
-  bool _isFollowing = false;
+
 
   @override
   void initState() {
     super.initState();
-    _isFollowing = widget.user?.isFollowing ?? false;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final ReelsController controller = Get.find<ReelsController>();
@@ -93,8 +92,7 @@ class _ProfileViewState extends State<ProfileView> {
                       child: Text(widget.user?.location ?? "Unknown Location",
                           style: AppTextStyles.overline,
                           overflow: TextOverflow.ellipsis,
-                          maxLines: 1),
-                    ),
+                          maxLines: 1)),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -128,17 +126,12 @@ class _ProfileViewState extends State<ProfileView> {
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
                             color: const Color(0xFF1D1D1D),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                            borderRadius: BorderRadius.circular(8)),
                           child: Center(
                             child: Text(
                               isFollowing ? 'Following' : 'Follow',
                               style: AppTextStyles.buttonOutline.copyWith(
-                                color: isFollowing ? Colors.grey : Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
+                                color: isFollowing ? Colors.grey : Colors.white)))),
                       );
                     },
                   ),
@@ -171,11 +164,7 @@ class _ProfileViewState extends State<ProfileView> {
                           borderRadius: BorderRadius.circular(8)),
                       child: Center(
                         child: Text('Share',
-                            style: AppTextStyles.buttonOutline),
-                      ),
-                    ),
-                  ),
-                ),
+                            style: AppTextStyles.buttonOutline))))),
               ],
             ),
           ),
@@ -223,8 +212,7 @@ class _ProfileViewState extends State<ProfileView> {
                 decoration: BoxDecoration(
                     color:AppColors.surface,
                     borderRadius: BorderRadius.circular(60)),
-                child: Text('Videos',
-                    style:AppTextStyles.overline.copyWith(color: AppColors.background)))),
+                child: Text('Videos', style:AppTextStyles.overline.copyWith(color: AppColors.background)))),
         if (widget.user?.userVideos == null || widget.user!.userVideos.isEmpty)
           const Center(
               child: Padding(
@@ -266,31 +254,23 @@ class _ProfileViewState extends State<ProfileView> {
                         fit: BoxFit.cover,
                         errorBuilder: (context, _, _) => Container(
                           color: Colors.grey[900],
-                          child: const Icon(Icons.play_circle_outline, color: Colors.white24),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0, left: 0, right: 0,
+                          child: const Icon(Icons.play_circle_outline, color: Colors.white24)))),
+                    Positioned( bottom: 0, left: 0, right: 0,
                       child: Container(
                         padding: const EdgeInsets.fromLTRB(8, 20, 8, 6),
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
-                            colors: [Colors.black87, Colors.transparent],
-                          ),
-                        ),
+                            colors: [Colors.black87, Colors.transparent])),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(video['title']!,
-                                style: AppTextStyles.labelMedium),
+                            Text(video['title']!,  style: AppTextStyles.labelMedium),
                             Row(
                               children: [
                                 const Icon(Icons.play_arrow, color: Colors.white, size: 24),
-                                Text(video['views']!,
-                                    style: AppTextStyles.labelMedium),
+                                Text(video['views']!, style: AppTextStyles.labelMedium),
                               ],
                             ),
                           ],
@@ -330,11 +310,9 @@ class _ProfileViewState extends State<ProfileView> {
                   children: [
                     Row(
                       children: [
-                        Text(widget.user?.userName ?? "User",
-                            style:AppTextStyles.textSmall.copyWith(color:AppColors.secondary)),
+                        Text(widget.user?.userName ?? "User",  style:AppTextStyles.textSmall.copyWith(color:AppColors.secondary)),
                         const SizedBox(width: 6),
-                        Text('reacted',
-                            style:AppTextStyles.display.copyWith(color: AppColors.secondary)),
+                        Text('reacted', style:AppTextStyles.display.copyWith(color: AppColors.secondary)),
                         const SizedBox(width: 6),
                         Container(width: 16, height: 16,
                             decoration: BoxDecoration(
@@ -344,8 +322,7 @@ class _ProfileViewState extends State<ProfileView> {
                       ],
                     ),
                     const SizedBox(height: 6),
-                    Text(reaction['time'] ?? "",
-                        style: AppTextStyles.display.copyWith(color:AppColors.textOnDark)),
+                    Text(reaction['time'] ?? "", style: AppTextStyles.display.copyWith(color:AppColors.textOnDark)),
 
                     const SizedBox(height: 12),
 
@@ -361,9 +338,7 @@ class _ProfileViewState extends State<ProfileView> {
                           Get.back();
                         } else {
                           if (reaction['videoUrl'] != null && reaction['videoUrl'] != "") {
-                            Get.to(() => FullScreenVideoPlayer(
-                              url: reaction['videoUrl'],
-                            ));
+                            Get.to(() => FullScreenVideoPlayer( url: reaction['videoUrl']));
                           } else {
                             AppSnackbar.error(message: 'Video link not found!');
                           }
@@ -372,8 +347,7 @@ class _ProfileViewState extends State<ProfileView> {
                       child: Row(
                         children: [
                           Expanded(
-                              child: Container(
-                                  height: 48,
+                              child: Container( height: 48,
                                   padding: const EdgeInsets.symmetric(horizontal: 12),
                                   alignment: Alignment.centerLeft,
                                   decoration: BoxDecoration(
@@ -391,15 +365,10 @@ class _ProfileViewState extends State<ProfileView> {
                             child: Stack(
                               alignment: Alignment.center,
                               children: [
-                                Image.network( reaction['imageUrl']!,
-                                  width: 64,
-                                  height: 48,
-                                  fit: BoxFit.cover,
+                                Image.network( reaction['imageUrl']!,  width: 64,  height: 48, fit: BoxFit.cover,
                                   errorBuilder: (context, _, _) => Container(
                                     width: 64, height: 48,
-                                    color: Colors.grey[800],
-                                  ),
-                                ),
+                                    color: Colors.grey[800])),
                                 const Icon(Icons.play_arrow, color: Colors.white, size: 18),
                               ],
                             ),
@@ -423,8 +392,7 @@ class _ProfileViewState extends State<ProfileView> {
       onTap: () => setState(() => _selectedTab = index),
       child: Column(
         children: [
-          Text(label,
-              style: AppTextStyles.caption),
+          Text(label, style: AppTextStyles.caption),
           const SizedBox(height: 2),
           if (isSelected)
             Container(height: 2, width: 50, color: Colors.white),

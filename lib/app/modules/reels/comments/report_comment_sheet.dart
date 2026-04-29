@@ -21,8 +21,7 @@ class _ReportCommentSheetState extends State<ReportCommentSheet> {
     return Container(
       decoration: const BoxDecoration(
         color: Color(0xFF252525),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       child: _step == 0
           ? _buildReportBody()
           : ReportSuccess(onDone: () => Get.back()),
@@ -42,12 +41,9 @@ class _ReportCommentSheetState extends State<ReportCommentSheet> {
             children: [
               GestureDetector(
                 onTap: () => Get.back(),
-                child: Icon(Icons.arrow_back_ios,
-                    color: AppColors.surface, size: 20)),
+                child: Icon(Icons.arrow_back_ios, color: AppColors.surface, size: 20)),
               Expanded(
-                child: Text('Report Comment',
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.caption)),
+                child: Text('Report Comment', textAlign: TextAlign.center, style: AppTextStyles.caption)),
               GestureDetector(
                 onTap: () => Get.back(),
                 child: Icon(Icons.close, color: AppColors.surface, size: 20)),
@@ -88,9 +84,7 @@ class _ReportCommentSheetState extends State<ReportCommentSheet> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.symmetric(vertical: 14)),
-              child: Text('Submit',
-                  style: AppTextStyles.buttonOutline
-                      .copyWith(color: AppColors.background))))),
+              child: Text('Submit', style: AppTextStyles.buttonOutline.copyWith(color: AppColors.background))))),
         SizedBox(height: 6)
       ],
     );

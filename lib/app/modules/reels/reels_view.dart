@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/modules/reels/comments/comments_sheet.dart';
-import 'package:news_break/app/modules/reels/single_reel_player.dart';
+import 'package:news_break/app/modules/reels/player/single_reel_player.dart';
 import 'package:news_break/app/modules/reels/three_dot/three_dot_sheet.dart';
 import 'package:news_break/app/modules/reels/share_sheet.dart';
 import 'package:news_break/app/modules/reels/profile/profile_view.dart';
@@ -145,34 +145,23 @@ class _ReelsViewState extends State<ReelsView> {
         Positioned.fill(
           child: SingleReelPlayer(
             videoUrl: reel.videoUrl ?? "",
-            thumbnail: reel.imageUrl,
-          ),
-        ),
+            thumbnail: reel.imageUrl)),
 
         // Dark gradient bottom
-        Positioned(
-          bottom: 0, left: 0, right: 0,
-          child: Container(
-            height: 300,
+        Positioned( bottom: 0, left: 0, right: 0,
+          child: Container( height: 300,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
-                colors: [Colors.black87, Colors.transparent],
-              ),
-            ),
-          ),
-        ),
+                colors: [Colors.black87, Colors.transparent])))),
 
         Positioned(
-          top: MediaQuery.of(context).padding.top + 8,
-          left: 16,
+          top: MediaQuery.of(context).padding.top + 8,  left: 16,
           child: _buildProfileCard(reel)),
 
         // Right side actions
-        Positioned(
-          right: 12,
-          bottom: 120,
+        Positioned( right: 12, bottom: 120,
           child: Column(
             children: [
               // Profile
@@ -184,29 +173,18 @@ class _ReelsViewState extends State<ReelsView> {
                 },
                 child: Stack(
                 children: [
-                  Container(
-                    width: 44,
-                    height: 44,
+                  Container( width: 44, height: 44,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
                         image: AssetImage('assets/images/timer.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: 18,
-                      height: 18,
+                        fit: BoxFit.cover))),
+                  Positioned( bottom: 0, right: 0,
+                    child: Container( width: 18,  height: 18,
                       decoration: BoxDecoration(
                         color:AppColors.textGreen,
                         shape: BoxShape.circle),
-                      child: const Icon(Icons.add, color: Colors.white, size: 14),
-                    ),
-                  ),
+                      child: const Icon(Icons.add, color: Colors.white, size: 14))),
                 ],
               ),
                 ),
@@ -242,15 +220,9 @@ class _ReelsViewState extends State<ReelsView> {
                      context: context,
                      isScrollControlled: true,
                      backgroundColor: Colors.transparent,
-                     constraints: BoxConstraints(
-                         maxWidth: MediaQuery
-                             .of(context)
-                             .size
-                             .width),
+                     constraints: BoxConstraints( maxWidth: MediaQuery.of(context) .size.width),
                      builder: (context) =>
-                         CommentsSheet(
-                             id: reel.id,
-                             source: CommentSource.reel),
+                         CommentsSheet( id: reel.id,  source: CommentSource.reel),
                    );
                  }
                 },
@@ -267,8 +239,7 @@ class _ReelsViewState extends State<ReelsView> {
                     context: context,
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
-                    constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width),
+                    constraints: BoxConstraints( maxWidth: MediaQuery.of(context).size.width),
                     builder: (_) => ShareSheet(reel: reel),
                   );
                 },
@@ -294,8 +265,7 @@ class _ReelsViewState extends State<ReelsView> {
                         context: context,
                         isScrollControlled: true,
                         backgroundColor: Colors.transparent,
-                        constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width),
+                        constraints: BoxConstraints( maxWidth: MediaQuery.of(context).size.width),
                         builder: (_) => ShareSheet(reel: reel),
                       );
                     },
@@ -320,17 +290,12 @@ class _ReelsViewState extends State<ReelsView> {
         ),
 
         // Comment input
-        Positioned(
-          bottom: 20,
-          left: 0,
-          right: 0,
+        Positioned( bottom: 20, left: 0, right: 0,
           child: Center(
             child: GestureDetector(
               onTap: () {
                 if (AuthHelper.checkLogin()) {
-                  Get.find<CommentController>().loadComments(
-                    reel.id,
-                    CommentSource.reel);
+                  Get.find<CommentController>().loadComments( reel.id, CommentSource.reel);
 
                   showModalBottomSheet(
                     context: context,
@@ -338,26 +303,19 @@ class _ReelsViewState extends State<ReelsView> {
                     backgroundColor: Colors.transparent,
                     constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width),
-                    builder: (context) => CommentsSheet(
-                      id: reel.id,
-                      source: CommentSource.reel,
-                    ),
+                    builder: (context) => CommentsSheet( id: reel.id, source: CommentSource.reel),
                   );
                 }
               },
-              child: Container(
-                height: 40, width: 335,
+              child: Container( height: 40, width: 335,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(80),
-                  color: AppColors.surface,
-                ),
+                  color: AppColors.surface),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Write a comment...',
-                      style: AppTextStyles.overline))))))),
+                      alignment: Alignment.centerLeft,
+                    child: Text( 'Write a comment...', style: AppTextStyles.overline))))))),
       ],
     );
   }

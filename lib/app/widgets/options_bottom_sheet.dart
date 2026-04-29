@@ -37,8 +37,7 @@ class OptionsBottomSheet {
       context: context,
       backgroundColor: const Color(0xFF252525),
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -49,8 +48,7 @@ class OptionsBottomSheet {
               margin: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                 color: const Color(0xFF444444),
-                borderRadius: BorderRadius.circular(12),
-              ),
+                borderRadius: BorderRadius.circular(12)),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -107,8 +105,7 @@ class OptionsBottomSheet {
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
               color: const Color(0xFF000000),
-              borderRadius: BorderRadius.circular(12),
-            ),
+              borderRadius: BorderRadius.circular(12)),
             child: _optionTile(
               icon: 'assets/icons/add.png',
               iconColor: Colors.blueAccent,
@@ -156,9 +153,7 @@ class OptionsBottomSheet {
             const SizedBox(width: 12),
             Expanded(
               child: Text(title, style: AppTextStyles.caption.copyWith(color: titleColor),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+                overflow: TextOverflow.ellipsis)),
           ],
         ),
       ),

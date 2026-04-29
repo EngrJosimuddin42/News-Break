@@ -128,7 +128,7 @@ class MeBody extends GetView<MeController> {
                           publisherName: AuthController.to.user.value?.name ?? 'User',
                           publisherType: 'User',
                           publisherMeta: AuthController.to.user.value?.publisherMeta ?? 'Joined recently'),
-                      child: Text( AuthController.to.user.value?.name ?? 'User',
+                          child: Text( AuthController.to.user.value?.name ?? 'User',
                           style:AppTextStyles.bodyMedium.copyWith(color: Color(0xFFC4C4C4)))),
               const SizedBox(height: 16),
               Row(
@@ -176,6 +176,7 @@ class MeBody extends GetView<MeController> {
         ),
 
         SizedBox(height: 16),
+
         // Action buttons
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -199,7 +200,10 @@ class MeBody extends GetView<MeController> {
                     style: AppTextStyles.buttonOutline))),
               const SizedBox(width: 12),
               Expanded(
-                child: OutlinedButton(
+                child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      OutlinedButton(
                   onPressed: controller.onCompleteProfile,
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(160, 50),
@@ -207,7 +211,19 @@ class MeBody extends GetView<MeController> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
                     padding: const EdgeInsets.symmetric(vertical: 14)),
-                  child:Text('Complete profile', style:AppTextStyles.buttonOutline))),
+                  child:Text('Complete profile', style:AppTextStyles.buttonOutline)),
+
+                      // Red dot
+                      if (!controller.isProfileComplete)
+                        Positioned( top: 8, right: 8,
+                          child: Container( width: 6,  height: 6,
+                            decoration:BoxDecoration(
+                              color:AppColors.linkColor,
+                              shape: BoxShape.circle))),
+                    ],
+                ),
+              ),
+
             ],
           )),
         ),

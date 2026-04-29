@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-
 import '../../controllers/me/me_controller.dart';
 
 class CreatorOnboardView extends StatefulWidget {
@@ -14,34 +13,8 @@ class CreatorOnboardView extends StatefulWidget {
 
 class _CreatorOnboardViewState extends State<CreatorOnboardView> {
   final PageController _pageController = PageController();
+  final controller = Get.find<MeController>();
   int _currentPage = 0;
-
-  static const List<Map<String, String>> _slides = [
-    {
-      'imageUrl': 'https://images.unsplash.com/photo-1504703395950-b89145a5425b?w=800',
-      'title': 'Read Real News',
-      'subtitle': 'Lorem ipsum dolor sit amet consectetur. Tempus consectetur placerat facilisis sed diam malesuada libero interdum. Elit nulla non sit et cursus.',
-      'likes': '2.5k',
-      'comments': '1.2k',
-      'followers': '1.3k',
-    },
-    {
-      'imageUrl': 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
-      'title': 'Be a Voice',
-      'subtitle': 'Lorem ipsum dolor sit amet consectetur. Tempus consectetur placerat facilisis sed diam malesuada libero interdum. Elit nulla non sit et cursus.',
-      'likes': '2.5k',
-      'comments': '1.2k',
-      'followers': '1.3k',
-    },
-    {
-      'imageUrl': 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800',
-      'title': 'Capture Moments',
-      'subtitle': 'Lorem ipsum dolor sit amet consectetur. Tempus consectetur placerat facilisis sed diam malesuada libero interdum. Elit nulla non sit et cursus.',
-      'likes': '2.5k',
-      'comments': '1.2k',
-      'followers': '1.3k',
-    },
-  ];
 
   @override
   void dispose() {
@@ -55,202 +28,186 @@ class _CreatorOnboardViewState extends State<CreatorOnboardView> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Full screen page view
-          PageView.builder(
-            controller: _pageController,
-            itemCount: _slides.length,
-            onPageChanged: (i) => setState(() => _currentPage = i),
-            itemBuilder: (_, i) {
-              final slide = _slides[i];
-              return Stack(
-                children: [
-                  // Background image
-                  Positioned.fill(
-                    child: (slide['imageUrl'] != null && slide['imageUrl'].toString().isNotEmpty)
-                        ? Image.network(
-                      slide['imageUrl']!,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        );
-                      },
-                      errorBuilder: (_, __, ___) => Container(
-                        color: Colors.grey[900],
-                        child: const Icon(Icons.broken_image, color: Colors.white24),
-                      ),
-                    )
-                        : Container(color: Colors.grey[900]),
-                  ),
+          _buildPageView(),
 
-                  // Dark overlay
-                  Positioned.fill(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.black87,
-                          ],
-                          stops: [0.4, 1.0],
-                        ),
-                      ),
-                    ),
-                  ),
+          _buildBackButton(),
 
-                  // Right side actions
-                  Positioned(
-                    right: 16,
-                    top: MediaQuery.of(context).size.height * 0.35,
-                    child: Column(
-                      children: [
-                        // Timer icon
-                        Stack(
-                          children: [
-                            Container(
-                              width: 44,
-                              height: 44,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: AssetImage('assets/images/timer.png'),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                width: 18,
-                                height: 18,
-                                decoration: BoxDecoration(
-                                  color:AppColors.textGreen,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(Icons.add, color: Colors.white, size: 14),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        // Like
-                        const Icon(Icons.thumb_up_outlined, color: Colors.white, size: 44),
-                        Text(slide['likes'] ?? '0',
-                            style:AppTextStyles.buttonOutline),
-                        const SizedBox(height: 16),
-                        // Comment
-                        Image.asset('assets/icons/comment2.png', color: Colors.white, width: 44,height: 44),
-                        Text(slide['comments'] ?? '0',
-                            style:AppTextStyles.buttonOutline),
-                        const SizedBox(height: 16),
-                        // Share
-                        Image.asset('assets/icons/share1.png',height: 44,width: 44),
-                        Text('Share',
-                            style:AppTextStyles.buttonOutline),
-                        const SizedBox(height: 16),
-                        // More
-                        const Icon(Icons.more_vert, color: Colors.white, size: 32),
-                      ],
-                    ),
-                  ),
-
-                  // Bottom content
-                  Positioned(
-                    bottom: 100,
-                    left: 16,
-                    right: 80,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                            alignment: Alignment.center,
-                            child: Text('${slide['followers'] ?? '0'} Followers',
-                          style: AppTextStyles.button.copyWith(fontSize: 34),
-                        )),
-                        const SizedBox(height: 8),
-                        Text(
-                          slide['title']!,
-                          style: AppTextStyles.button.copyWith(fontSize: 26),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          slide['subtitle']!,
-                          style: AppTextStyles.display,
-                          maxLines: 4,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Page indicators
-                  Positioned(
-                    bottom: 82,
-                    left: 0,
-                    right: 0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        _slides.length,
-                            (i) => Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 3),
-                          width: _currentPage == i ? 8 : 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: _currentPage == i
-                                ? Colors.white
-                                : Color(0xFF6E6D6D),
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Create Now button
-                  Positioned(
-                    bottom: 26,
-                    left: 20,
-                    right: 20,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Get.find<MeController>().completeOnboarding();
-                        Get.back();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        padding:
-                        const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      child:Text('Create Now',
-                          style:AppTextStyles.bodyMedium.copyWith(color: AppColors.background)),
-                    ),
-                  ),
-
-                  // Back button
-                  Positioned(
-                    top: MediaQuery.of(context).padding.top + 8,
-                    left: 16,
-                    child: GestureDetector(
-                      onTap: () => Get.back(),
-                      child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
+          _buildBottomActions(),
         ],
       ),
+    );
+  }
+
+
+  Widget _buildPageView() {
+    return PageView.builder(
+      controller: _pageController,
+      itemCount: controller.onboardSlides.length,
+      onPageChanged: (i) => setState(() => _currentPage = i),
+      itemBuilder: (_, i) {
+        final slide = controller.onboardSlides[i];
+        return Stack(
+          children: [
+            _buildBackgroundImage(slide['imageUrl'] ?? ''),
+            _buildDarkOverlay(),
+            _buildRightActions(slide),
+            _buildBottomContent(slide),
+          ],
+        );
+      },
+    );
+  }
+
+
+  Widget _buildBackgroundImage(String url) {
+    return Positioned.fill(
+      child: url.isNotEmpty
+          ? Image.network(
+        url,
+        fit: BoxFit.cover,
+        loadingBuilder: (_, child, progress) => progress == null
+            ? child
+            : const Center(child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)),
+        errorBuilder: (context, error, stackTrace) =>
+            Container(color: Colors.grey[900], child: const Icon(Icons.broken_image, color: Colors.white24)))
+          : Container(color: Colors.grey[900]),
+    );
+  }
+
+
+  Widget _buildDarkOverlay() {
+    return Positioned.fill(
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.transparent, Colors.black87],
+            stops: [0.4, 1.0]))),
+    );
+  }
+
+  Widget _buildRightActions(Map<String, String> slide) {
+    return Positioned(
+      right: 16,
+      top: MediaQuery.of(context).size.height * 0.43,
+      child: Column(
+        children: [
+          _buildAvatarWithPlus(),
+          const SizedBox(height: 16),
+          _buildActionButton(Icons.thumb_up_outlined, slide['likes'] ?? '0'),
+          const SizedBox(height: 16),
+          _buildImageButton('assets/icons/comment2.png', slide['comments'] ?? '0'),
+          const SizedBox(height: 16),
+          _buildImageButton('assets/icons/share1.png', 'Share'),
+          const SizedBox(height: 16),
+          const Icon(Icons.more_vert, color: Colors.white, size: 32),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _buildBottomContent(Map<String, String> slide) {
+    return Positioned( bottom: 140, left: 16,  right: 80,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: Text('${slide['followers'] ?? '0'} Followers', textAlign: TextAlign.center,
+              style: AppTextStyles.displayMedium.copyWith(fontWeight: FontWeight.w500))),
+          const SizedBox(height: 32),
+          Text( slide['title'] ?? '', style: AppTextStyles.tagline.copyWith(fontWeight: FontWeight.w500)),
+          const SizedBox(height: 8),
+          Text(slide['subtitle'] ?? '', style: AppTextStyles.display.copyWith(color: Color(0xFFB4B4B4)), maxLines: 3,
+            overflow: TextOverflow.ellipsis),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _buildBottomActions() {
+    return Positioned( bottom: 5, left: 0, right: 0,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              controller.onboardSlides.length,
+                  (i) => AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                margin: const EdgeInsets.symmetric(horizontal: 3),
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: _currentPage == i ? Colors.white : Color(0xFF6E6D6D),
+                  shape: BoxShape.circle)))),
+          const SizedBox(height: 10),
+
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 26),
+            child: SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  controller.completeOnboarding();
+                  Get.back();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                child: Text('Create Now', style: AppTextStyles.bodyMedium.copyWith(color: AppColors.background))))),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _buildBackButton() {
+    return Positioned(
+      top: MediaQuery.of(context).padding.top + 10, left: 16,
+      child: GestureDetector(
+      onTap: () => Get.back(),
+      child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20)),
+    );
+  }
+
+  Widget _buildAvatarWithPlus() {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        const CircleAvatar(
+          radius: 22,
+          backgroundImage: AssetImage('assets/images/timer.png')),
+        Positioned( bottom: -5, left: 13,
+          child: Container(
+            padding: const EdgeInsets.all(2),
+            decoration: const BoxDecoration(color: AppColors.textGreen, shape: BoxShape.circle),
+            child: const Icon(Icons.add, color: Colors.white, size: 14))),
+      ],
+    );
+  }
+
+  Widget _buildActionButton(IconData icon, String label) {
+    return Column(
+      children: [
+        Icon(icon, color: Colors.white, size: 35),
+        const SizedBox(height: 4),
+        Text(label, style: AppTextStyles.buttonOutline.copyWith(fontSize: 12)),
+      ],
+    );
+  }
+
+  Widget _buildImageButton(String path, String label) {
+    return Column(
+      children: [
+        Image.asset(path, color: Colors.white, width: 35, height: 35),
+        const SizedBox(height: 4),
+        Text(label, style: AppTextStyles.buttonOutline.copyWith(fontSize: 12)),
+      ],
     );
   }
 }

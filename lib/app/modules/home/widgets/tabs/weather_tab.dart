@@ -65,7 +65,7 @@ class WeatherTab extends GetView<HomeController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Temperature + icon
-          Row(
+          Obx(() =>  Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Column(
@@ -75,17 +75,18 @@ class WeatherTab extends GetView<HomeController> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('44°', style: AppTextStyles.tagline),
+                      Text(controller.currentTemp.value, style: AppTextStyles.tagline),
                       const SizedBox(width: 6),
-                      Image.asset('assets/icons/weather_cloudy.png', width: 48, height: 48),
+                      Image.asset(controller.weatherIcon.value, width: 48, height: 48),
                     ],
                   ),
                   const SizedBox(height: 12),
                   Text.rich(
                     TextSpan(
                       children: [
-                        TextSpan(text: '30°/40°', style: AppTextStyles.overline),
-                        TextSpan(text: '  Cloudy', style: AppTextStyles.small.copyWith(color: Color(0xFFC4C4C4)))
+                        TextSpan(text: controller.lowHighTemp.value, style: AppTextStyles.overline),
+                        const WidgetSpan(child: SizedBox(width: 6)),
+                        TextSpan(text: controller.weatherCondition.value,style: AppTextStyles.small.copyWith(color: const Color(0xFFC4C4C4)))
                       ],
                     ),
                     textAlign: TextAlign.center,
@@ -94,6 +95,7 @@ class WeatherTab extends GetView<HomeController> {
               ),
             ],
           ),
+    ),
 
           const SizedBox(height: 16),
 
@@ -112,19 +114,20 @@ class WeatherTab extends GetView<HomeController> {
           const SizedBox(height: 16),
 
           // Forecasts header
-          Row(
+          Obx(() => Row(
             children: [
               Text('Forecasts', style: AppTextStyles.bodyMedium),
               const Spacer(),
               Image.asset('assets/icons/sunrise.png'),
               const SizedBox(width: 6),
-              Text('4:48 PM', style:AppTextStyles.display.copyWith(color: Color(0xFFC4C4C4))),
+              Text(controller.sunriseTime.value, style: AppTextStyles.display.copyWith(color: const Color(0xFFC4C4C4))),
               const SizedBox(width: 24),
               Image.asset('assets/icons/sunset.png'),
               const SizedBox(width: 6),
-              Text('5:48 AM', style:AppTextStyles.display.copyWith(color: Color(0xFFC4C4C4)))
+              Text(controller.sunsetTime.value, style: AppTextStyles.display.copyWith(color: const Color(0xFFC4C4C4)))
             ],
           ),
+        ),
 
           const SizedBox(height: 12),
 

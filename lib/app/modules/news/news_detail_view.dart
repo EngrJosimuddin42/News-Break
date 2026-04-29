@@ -31,8 +31,7 @@ class NewsDetailView extends GetView<HomeController> {
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Get.back(),
-          child: Icon(Icons.arrow_back_ios, color:AppColors.textOnDark, size: 20),
-        ),
+          child: Icon(Icons.arrow_back_ios, color:AppColors.textOnDark, size: 20)),
         title: GestureDetector(
           onTap: () {
             if (!Get.isRegistered<NBotController>()) {
@@ -42,11 +41,9 @@ class NewsDetailView extends GetView<HomeController> {
               const NBotSheet(),
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
-              ignoreSafeArea: false,
-            );
+              ignoreSafeArea: false);
           },
-          child: Container(
-            height: 36,
+          child: Container( height: 36,
             decoration: BoxDecoration(
               color: const Color(0xFF333333),
               borderRadius: BorderRadius.circular(8)),
@@ -127,9 +124,7 @@ class NewsDetailView extends GetView<HomeController> {
                                   child: Text(news.publisherName,
                                       style: AppTextStyles.bodyMedium,
                                       overflow: TextOverflow.ellipsis,
-                                      maxLines: 1),
-                                ),
-                              ),
+                                      maxLines: 1))),
                               if (news.isVerified) ...[
                                 const SizedBox(width: 6),
                                 Image.asset('assets/icons/verified.png', width: 20, height: 20),
@@ -146,40 +141,27 @@ class NewsDetailView extends GetView<HomeController> {
                 const SizedBox(height: 12),
 
                 // Main image
-                NetworkOrFileImage(
-                  url: news.imageUrl,
-                  height: 200,
-                  width: double.infinity,
+                NetworkOrFileImage( url: news.imageUrl,  height: 200,  width: double.infinity,
                   borderRadius: BorderRadius.circular(8)),
 
                 const SizedBox(height: 8),
                 if (news.imageCaption.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                  Padding( padding: const EdgeInsets.only(top: 8.0),
                     child: Text(news.imageCaption, style: AppTextStyles.overline.copyWith(color: const Color(0xFF9C9C9C)))),
                 const SizedBox(height: 16),
 
                 // Body text
                 Text( news.body,style: AppTextStyles.caption),
                 if (news.secondaryImageUrl != null && news.secondaryImageUrl!.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  Padding( padding: const EdgeInsets.symmetric(vertical: 16),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.network(
                         news.secondaryImageUrl!,
-                        errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
-                      ),
-                    ),
-                  ),
+                        errorBuilder: (context, error, stackTrace) => const SizedBox.shrink()))),
                 if (news.secondarySubtitle != null && news.secondarySubtitle!.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Text(
-                      news.secondarySubtitle!,
-                      style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                  Padding( padding: const EdgeInsets.only(top: 16),
+                    child: Text( news.secondarySubtitle!, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold))),
               ],
             ),
           ),
@@ -199,8 +181,7 @@ class NewsDetailView extends GetView<HomeController> {
                           context: context,
                           isScrollControlled: true,
                           backgroundColor: Colors.transparent,
-                          constraints: BoxConstraints(
-                              maxWidth: MediaQuery.of(context).size.width),
+                          constraints: BoxConstraints( maxWidth: MediaQuery.of(context).size.width),
                           builder: (context) => const SignInView(isSheet: true),
                         );
                       },
@@ -209,8 +190,7 @@ class NewsDetailView extends GetView<HomeController> {
                       decoration: BoxDecoration(
                         color: const Color(0xFF333333),
                         borderRadius: BorderRadius.circular(48)),
-                      child: Text('Write a comment',
-                        style: AppTextStyles.overline,
+                      child: Text('Write a comment', style: AppTextStyles.overline,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center)))),

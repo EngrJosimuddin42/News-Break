@@ -23,8 +23,7 @@ class SearchPageView extends GetView<SearchPageController> {
 
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
-              child: Text('Trending', style: AppTextStyles.button),
-            ),
+              child: Text('Trending', style: AppTextStyles.button)),
 
             Expanded(
               child: SingleChildScrollView(
@@ -35,8 +34,7 @@ class SearchPageView extends GetView<SearchPageController> {
                     decoration: BoxDecoration(
                       color: const Color(0xFF0B0B0B),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: const Color(0xFF737373)),
-                    ),
+                      border: Border.all(color: const Color(0xFF737373))),
                     padding: const EdgeInsets.all(8),
                     child: Column(
                       children: [
@@ -78,8 +76,7 @@ class SearchPageView extends GetView<SearchPageController> {
             child: Icon(Icons.arrow_back_ios, color: AppColors.textOnDark, size: 20)),
           const SizedBox(width: 8),
           Expanded(
-            child: Container(
-              height: 40,
+            child: Container( height: 40,
               decoration: BoxDecoration(
                 color: const Color(0xFF121212),
                 borderRadius: BorderRadius.circular(8)),
@@ -97,11 +94,7 @@ class SearchPageView extends GetView<SearchPageController> {
                     child: const Icon(Icons.cancel, color: Colors.grey, size: 20))
                       : const SizedBox.shrink()),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                ),
-              ),
-            ),
-          ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10))))),
         ],
       ),
     );
@@ -135,9 +128,7 @@ class SearchPageView extends GetView<SearchPageController> {
           decoration: BoxDecoration(
             color: const Color(0xFF121212),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: isSelected ? AppColors.textGreen : const Color(0xFF121212),
-              width: 1)),
+            border: Border.all( color: isSelected ? AppColors.textGreen : const Color(0xFF121212), width: 1)),
           child: Row(
             children: [
               Expanded(child: Text(item, style: AppTextStyles.caption)),

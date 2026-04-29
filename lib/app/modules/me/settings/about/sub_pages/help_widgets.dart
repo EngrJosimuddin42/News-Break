@@ -4,10 +4,10 @@ import 'package:news_break/app/modules/me/settings/about/sub_pages/what_we_do_vi
 import 'package:news_break/app/modules/me/settings/about/sub_pages/who_are_we_view.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../controllers/me/settings/settings_controller.dart';
-import '../modules/me/settings/about/legal_view.dart';
-import '../modules/me/settings/about/sub_pages/blog_view.dart';
-import '../modules/me/settings/about/sub_pages/creator_page_view.dart';
+import '../../../../../controllers/me/settings/settings_controller.dart';
+import '../legal_view.dart';
+import 'blog_view.dart';
+import 'creator_page_view.dart';
 
 class HelpWidgets {
   // Shared AppBar
@@ -17,8 +17,7 @@ class HelpWidgets {
       elevation: 0,
       leading: GestureDetector(
         onTap: () => Get.back(),
-        child:Icon(Icons.arrow_back_ios, color:AppColors.textOnDark, size: 20),
-      ),
+        child:Icon(Icons.arrow_back_ios, color:AppColors.textOnDark, size: 20)),
       title: Text(title,
           style: AppTextStyles.displaySmall),
       centerTitle: true,
@@ -28,9 +27,7 @@ class HelpWidgets {
           onTap: () => Get.back(),
           child: Padding(
             padding: EdgeInsets.only(right: 16),
-            child: Icon(Icons.close, color:AppColors.textOnDark, size: 20),
-          ),
-        ),
+            child: Icon(Icons.close, color:AppColors.textOnDark, size: 20))),
       ],
     );
   }
@@ -67,8 +64,7 @@ class HelpWidgets {
                 //  Privacy Policy
                 GestureDetector(
                   onTap: () => Get.to(() => const LegalView(type: LegalType.privacy)),
-                  child: Text('Privacy Policy', style: AppTextStyles.overline.copyWith(color: AppColors.background)),
-                ),
+                  child: Text('Privacy Policy', style: AppTextStyles.overline.copyWith(color: AppColors.background))),
               ],
             ),
           ),
@@ -146,17 +142,14 @@ class _HelpTabBarState extends State<HelpTabBar> {
             child: GestureDetector(
               onTap: _removeOverlay,
               behavior: HitTestBehavior.opaque,
-              child: const SizedBox.expand(),
-            ),
-          ),
+              child: const SizedBox.expand())),
           Positioned(
             left: position.dx,
             top: position.dy + renderBox.size.height,
             child: Material(
               elevation: 4,
               borderRadius: BorderRadius.circular(8),
-              child: Container(
-                width: 160,
+              child: Container( width: 160,
                 decoration: BoxDecoration(
                   color: Color(0xFFE7EDED),
                   borderRadius: BorderRadius.circular(8)),
@@ -215,10 +208,8 @@ class _HelpTabBarState extends State<HelpTabBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Container(  width:double.infinity, height: 48,
       color: Color(0xFFE7EDED),
-      width:double.infinity,
-      height: 48,
       child: Center(
         child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,

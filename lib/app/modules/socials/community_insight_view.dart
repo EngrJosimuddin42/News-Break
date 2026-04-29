@@ -36,8 +36,7 @@ class CommunityInsightView extends GetView<SocialsController> {
                     itemBuilder: (_, i) {
                       final item = controller.communityInsights[i];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
+                        padding: const EdgeInsets.symmetric( horizontal: 20, vertical: 12),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -48,8 +47,7 @@ class CommunityInsightView extends GetView<SocialsController> {
                                     item['imageUrl']!,
                                     width: 72, height: 72,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error,
-                                        stackTrace) =>
+                                    errorBuilder: (context, error, stackTrace) =>
                                         Container(width: 72, height: 72, color: Colors.grey[200]))),
                             const SizedBox(width: 12),
 

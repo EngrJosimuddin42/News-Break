@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../../../../controllers/me/settings/help_center_controller.dart';
 import '../../../../theme/app_colors.dart';
 import '../../../../theme/app_text_styles.dart';
-import '../../../../widgets/help_widgets.dart';
+import '../about/sub_pages/help_widgets.dart';
 
 class HelpDetailView extends StatelessWidget {
   final String title;
@@ -48,7 +48,10 @@ class HelpDetailView extends StatelessWidget {
                   child: Row(
                     children: [
                       Text('NewsBreak Help Center', style: AppTextStyles.caption.copyWith(color: AppColors.linkColor)),
-                      Text(' > $title', style:AppTextStyles.caption.copyWith(color: AppColors.textOnDark)),
+                     Flexible(
+                         child:Text(' > $title', style:AppTextStyles.caption.copyWith(color: AppColors.textOnDark),
+                       overflow: TextOverflow.ellipsis,
+                           maxLines: 1)),
                     ],
                   ),
                 ),

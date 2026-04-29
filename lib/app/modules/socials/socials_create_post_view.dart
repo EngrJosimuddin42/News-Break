@@ -47,11 +47,10 @@ class _CreatePostViewState extends State<SocialsCreatePostView> {
         backgroundColor: Colors.black,
         leading: GestureDetector(
           onTap: () => Get.back(),
-          child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
-        ),
+          child: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20)),
         title: Text('Create a Post', style: AppTextStyles.displaySmall),
-        centerTitle: true,
-      ),
+        centerTitle: true),
+
       body: Column(
         children: [
           Expanded(
@@ -70,12 +69,9 @@ class _CreatePostViewState extends State<SocialsCreatePostView> {
                     maxLines: null,
                     decoration: InputDecoration(
                       hintText: 'All your ideas, advice or daily experiences are welcome here!',
-                      hintStyle: AppTextStyles.labelMedium.copyWith(
-                          color: const Color(0xFF959595)),
+                      hintStyle: AppTextStyles.labelMedium.copyWith( color: const Color(0xFF959595)),
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                  ),
+                      contentPadding: EdgeInsets.zero)),
                   const SizedBox(height: 16),
 
                   // Location Preview
@@ -126,9 +122,7 @@ class _CreatePostViewState extends State<SocialsCreatePostView> {
         }),
         const SizedBox(width: 10),
         Obx(() => Text(
-          AuthController.to.user.value?.name ?? 'Guest',
-          style: AppTextStyles.button,
-        )),
+          AuthController.to.user.value?.name ?? 'Guest', style: AppTextStyles.button)),
       ],
     );
   }
@@ -144,13 +138,10 @@ class _CreatePostViewState extends State<SocialsCreatePostView> {
             const Icon(Icons.location_on, color: Colors.blue, size: 16),
             const SizedBox(width: 4),
             Expanded(
-              child: Text(controller.selectedLocation.value,
-                  style: AppTextStyles.labelSmall.copyWith(color: Colors.blue)),
-            ),
+              child: Text(controller.selectedLocation.value,  style: AppTextStyles.labelSmall.copyWith(color: Colors.blue))),
             GestureDetector(
               onTap: () => controller.selectedLocation.value = '',
-              child: const Icon(Icons.close, color: Colors.grey, size: 16),
-            ),
+              child: const Icon(Icons.close, color: Colors.grey, size: 16)),
           ],
         ),
       );
@@ -165,24 +156,14 @@ class _CreatePostViewState extends State<SocialsCreatePostView> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.network(
-              utility.selectedGifUrl.value!,
-              height: 150,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Positioned(
-            right: 5, top: 5,
+            child: Image.network( utility.selectedGifUrl.value!,  height: 150,  width: double.infinity, fit: BoxFit.cover)),
+          Positioned( right: 5, top: 5,
             child: GestureDetector(
               onTap: () => utility.selectedGifUrl.value = null,
               child: const CircleAvatar(
                 radius: 12,
                 backgroundColor: Colors.black54,
-                child: Icon(Icons.close, color: Colors.white, size: 16),
-              ),
-            ),
-          ),
+                child: Icon(Icons.close, color: Colors.white, size: 16)))),
         ],
       ),
     );
@@ -192,44 +173,30 @@ class _CreatePostViewState extends State<SocialsCreatePostView> {
   Widget _buildImagePreview() {
     return Stack(
       children: [
-        Container(
-          height: 150,
-          width: double.infinity,
+        Container( height: 150,  width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              image: FileImage(utility.selectedImage.value!),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        Positioned(
-          right: 0, top: 0,
+            image: DecorationImage( image: FileImage(utility.selectedImage.value!), fit: BoxFit.cover))),
+        Positioned( right: 0, top: 0,
           child: GestureDetector(
             onTap: () => utility.selectedImage.value = null,
-            child: const Icon(Icons.cancel, color: Colors.red, size: 24),
-          ),
-        ),
+            child: const Icon(Icons.cancel, color: Colors.red, size: 24))),
       ],
     );
   }
 
   // Add Image Box
   Widget _buildAddImageBox() {
-    return Container(
-      width: 90, height: 90,
+    return Container( width: 90, height: 90,
       decoration: BoxDecoration(
         color: const Color(0xFF444444),
-        borderRadius: BorderRadius.circular(10),
-      ),
+        borderRadius: BorderRadius.circular(10)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(Icons.add, color: Colors.white, size: 28),
           const SizedBox(height: 4),
-          Text('Add Image',
-              style: AppTextStyles.labelMedium.copyWith(
-                  color: const Color(0xFF959595))),
+          Text('Add Image',  style: AppTextStyles.labelMedium.copyWith( color: const Color(0xFF959595))),
         ],
       ),
     );
@@ -249,10 +216,8 @@ class _CreatePostViewState extends State<SocialsCreatePostView> {
                   context: context,
                   backgroundColor: const Color(0xFF1C1C1E),
                   shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                  ),
-                  builder: (_) => Padding(
-                    padding: const EdgeInsets.all(16),
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+                  builder: (_) => Padding( padding: const EdgeInsets.all(16),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -267,27 +232,21 @@ class _CreatePostViewState extends State<SocialsCreatePostView> {
                             return GestureDetector(
                               onTap: () => utility.toggleTag(tag),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
+                                padding: const EdgeInsets.symmetric( horizontal: 12, vertical: 8),
                                 decoration: BoxDecoration(
                                   color: isSelected
                                       ? Colors.blue
                                       : const Color(0xFF444444),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(tag,
-                                    style: AppTextStyles.labelMedium.copyWith(
+                                  borderRadius: BorderRadius.circular(20)),
+                                child: Text(tag, style: AppTextStyles.labelMedium.copyWith(
                                       color: isSelected
                                           ? Colors.white
-                                          : Colors.grey,
-                                    )),
-                              ),
+                                          : Colors.grey))),
                             );
                           }).toList(),
                         )),
                         const SizedBox(height: 16),
-                        SizedBox(
-                          width: double.infinity,
+                        SizedBox( width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
                               if (utility.tagsText.isNotEmpty) {
@@ -300,11 +259,8 @@ class _CreatePostViewState extends State<SocialsCreatePostView> {
                               backgroundColor: Colors.blue,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8)),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                            ),
-                            child: Text('Add Tags', style: AppTextStyles.bodyMedium),
-                          ),
-                        ),
+                              padding: const EdgeInsets.symmetric(vertical: 14)),
+                            child: Text('Add Tags', style: AppTextStyles.bodyMedium))),
                       ],
                     ),
                   ),
@@ -346,18 +302,11 @@ class _CreatePostViewState extends State<SocialsCreatePostView> {
                     : const Color(0xFF656565),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(vertical: 18),
-              ),
+                padding: const EdgeInsets.symmetric(vertical: 18)),
               child: createPostController.isLoading.value
-                  ? const SizedBox(
-                  width: 20, height: 20,
-                  child: CircularProgressIndicator(
-                      color: Colors.white, strokeWidth: 2))
-                  : Text('Post',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                      color: const Color(0xFF242424))),
-            )),
-          ),
+                  ? const SizedBox( width: 20, height: 20,
+                  child: CircularProgressIndicator( color: Colors.white, strokeWidth: 2))
+                  : Text('Post',  style: AppTextStyles.bodyMedium.copyWith( color: const Color(0xFF242424)))))),
         ],
       ),
     );

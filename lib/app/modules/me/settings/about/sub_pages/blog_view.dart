@@ -4,7 +4,7 @@ import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../../../controllers/me/settings/blog_controller.dart';
 import '../../../../../models/blog_model.dart';
-import '../../../../../widgets/help_widgets.dart';
+import 'help_widgets.dart';
 
 class BlogView extends StatelessWidget {
   const BlogView({super.key});

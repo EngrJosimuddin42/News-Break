@@ -54,10 +54,10 @@ class HelpCenterController extends GetxController {
   final List<HelpCategory> categories = [
     HelpCategory(name: 'Advertising', isClickable: true),
     HelpCategory(name: 'Publishers', isClickable: true),
-    HelpCategory(name: 'Reading News'),
-    HelpCategory(name: 'Comments and Notification'),
-    HelpCategory(name: 'Account, Profile, and Privacy'),
-    HelpCategory(name: 'Contact Us'),
+    HelpCategory(name: 'Reading News', isClickable: true),
+    HelpCategory(name: 'Comments and Notification', isClickable: true),
+    HelpCategory(name: 'Account, Profile, and Privacy', isClickable: true),
+    HelpCategory(name: 'Contact Us', isClickable: true),
   ];
 
   final List<HelpArticle> promotedArticles = [

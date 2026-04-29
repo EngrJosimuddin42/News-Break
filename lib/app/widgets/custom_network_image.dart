@@ -18,11 +18,7 @@ class CustomNetworkImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
-      child: Image.network(
-        imageUrl,
-        width: double.infinity,
-        height: height,
-        fit: fit,
+      child: Image.network( imageUrl, width: double.infinity, height: height, fit: fit,
 
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
@@ -34,9 +30,7 @@ class CustomNetworkImage extends StatelessWidget {
         },
         errorBuilder: (context, error, stackTrace) =>
             Container( height: height,  color: Colors.grey[200],
-          child: const Icon(Icons.broken_image, color: Colors.grey),
-        ),
-      ),
+          child: const Icon(Icons.broken_image, color: Colors.grey))),
     );
   }
 }

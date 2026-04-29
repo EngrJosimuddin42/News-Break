@@ -36,9 +36,13 @@ class HomeController extends GetxController {
   var isLocationLoading = false.obs;
   var currentAddress = "".obs;
   var currentTemp = "44°F".obs;
-  var weatherCondition = "Rain".obs;
+  var weatherCondition = "Cloudy".obs;
   var rainProbability = "71%".obs;
   var showAd = true.obs;
+  var weatherIcon = "assets/icons/weather_cloudy.png".obs;
+  var lowHighTemp = "30°/40°".obs;
+  var sunriseTime = "4:48 AM ".obs;
+  var sunsetTime = "5:48 PM".obs;
   final RxList<double> rainBarData = [0.06, 0.02, 0.04, 0.03, 0.08, 0.02, 0.05].obs;
   var chartData = <double>[0.06, 0.02, 0.04, 0.03, 0.08, 0.02, 0.05].obs;
   String get locationTitle => selectedLocation.value?['city'] ?? 'Choose Your Location';
@@ -842,6 +846,8 @@ class HomeController extends GetxController {
       subtitle: "'The View' Fans Think Whoopi Goldberg Has 'Lost Her Mind'...",
       imageCaption: 'Joe sussman / Shutterstock.com',
       body: 'Lorem ipsum dolor sit amet consectetur. Fames quisque feugiat fermentum dictum nulla netus cras pellentesque. ',
+      secondaryImageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800',
+      secondarySubtitle: 'Reach more than 40 million users across the U.S. and engage with your target audience at the right moment.',
       reactions: '1.4K',
       likes: '1.4K',
       comments: '4K',

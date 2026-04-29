@@ -11,10 +11,7 @@ class MyGifPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery
-          .of(context)
-          .size
-          .height * 0.9,
+      height: MediaQuery .of(context) .size .height * 0.9,
       decoration: const BoxDecoration(
           color: Colors.black,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
@@ -31,25 +28,18 @@ class MyGifPicker extends StatelessWidget {
                       controller.isGifPickerMode.value = false;
                       controller.gifSearchQuery.value = '';
                     },
-                    icon: const Icon(
-                        Icons.close, color: AppColors.textOnDark, size: 20)),
+                    icon: const Icon( Icons.close, color: AppColors.textOnDark, size: 20)),
                 Expanded(
                     child: Container(height: 40,
                         decoration: BoxDecoration(
                             color: const Color(0xFF121212),
                             borderRadius: BorderRadius.circular(8)),
-                        child: TextField(
-                            style: AppTextStyles.caption.copyWith(
-                                color: AppColors.textOnDark),
-                            onChanged: (val) =>
-                            controller.gifSearchQuery.value = val,
+                        child: TextField( style: AppTextStyles.caption.copyWith( color: AppColors.textOnDark),
+                            onChanged: (val) =>  controller.gifSearchQuery.value = val,
                             decoration: InputDecoration(
                                 hintText: 'Search for GIFs',
-                                hintStyle: AppTextStyles.caption.copyWith(
-                                    color: AppColors.textOnDark),
-                                prefixIcon: const Icon(
-                                    Icons.search, color: AppColors.textOnDark,
-                                    size: 20),
+                                hintStyle: AppTextStyles.caption.copyWith(  color: AppColors.textOnDark),
+                                prefixIcon: const Icon( Icons.search, color: AppColors.textOnDark, size: 20),
                                 border: InputBorder.none,
                                 contentPadding:
                                 const EdgeInsets.symmetric(vertical: 10))))),
@@ -84,12 +74,7 @@ class MyGifPicker extends StatelessWidget {
                           controller.filteredGifImages[i],
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
-                              Container(color: Colors.grey[800]),
-                        ),
-                        ),
-                      ),
-                )),
-          ),
+                              Container(color: Colors.grey[800]))))))),
         ],
       ),
     ),

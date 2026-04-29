@@ -19,14 +19,12 @@ class NewsBottomSheets {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width),
+      constraints: BoxConstraints( maxWidth: MediaQuery.of(context).size.width),
       isScrollControlled: true,
       builder: (_) => Container(
         decoration: const BoxDecoration(
           color: Color(0xFF252525),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
         child: SafeArea(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -34,8 +32,7 @@ class NewsBottomSheets {
               const BottomSheetHandle(),
               const SizedBox(height: 20),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+              Padding( padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Row(
                   children: [
 
@@ -73,9 +70,7 @@ class NewsBottomSheets {
                                 id: news.id,
                                 userName: news.publisherName,
                                 description: news.title,
-                                userProfileImage: news.publisherImageUrl,
-                              ),
-                            ),
+                                userProfileImage: news.publisherImageUrl)),
                           );
                         });
                       },
@@ -95,8 +90,6 @@ class NewsBottomSheets {
                         Get.toNamed(Routes.CREATE_POST, arguments: news);
                       },
                     ),
-
-
                   ],
                 ),
               ),
@@ -107,8 +100,7 @@ class NewsBottomSheets {
                 child: Container(
                   decoration: BoxDecoration(
                     color: const Color(0xFF444444),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                    borderRadius: BorderRadius.circular(12)),
                   child: Column(
                     children: [
                       _optionTile(
@@ -134,12 +126,10 @@ class NewsBottomSheets {
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Container(
-                  width: double.infinity,
+                child: Container( width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.black,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                    borderRadius: BorderRadius.circular(8)),
                   child: _optionTile(
                     assetPath: 'assets/icons/add.png',
                     iconColor: const Color(0xFF8FBFFA),
@@ -178,8 +168,7 @@ class NewsBottomSheets {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
-        child: Container(
-          height: 70,
+        child: Container( height: 70,
           decoration: BoxDecoration(
             color: const Color(0xFF444444),
             borderRadius: BorderRadius.circular(8)),

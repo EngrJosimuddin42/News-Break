@@ -22,19 +22,14 @@ class NetworkOrFileImage extends StatelessWidget {
     if (url.isEmpty) return const SizedBox.shrink();
 
     final image = url.startsWith('http')
+
         ? Image.network(
-      url,
-      width: width,
-      height: height,
-      fit: fit,
-      errorBuilder: (_, __, ___) => _fallback(),
-    )
+      url,  width: width, height: height, fit: fit,
+      errorBuilder: (context, error, stackTrace) => _fallback())
+
         : Image.file(
-      File(url),
-      width: width,
-      height: height,
-      fit: fit,
-      errorBuilder: (_, __, ___) => _fallback(),
+      File(url), width: width, height: height, fit: fit,
+      errorBuilder: (context, error, stackTrace) => _fallback(),
     );
 
     if (borderRadius != null) {
@@ -44,9 +39,7 @@ class NetworkOrFileImage extends StatelessWidget {
   }
 
   Widget _fallback() {
-    return Container(
-      width: width,
-      height: height ?? 160,
+    return Container( width: width,  height: height ?? 160,
       color: Colors.grey[900],
       child: const Icon(Icons.image, color: Colors.white24, size: 40),
     );

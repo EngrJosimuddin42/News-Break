@@ -194,8 +194,7 @@ class NotificationSettingsView extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0XFF26272D), width: 1.2),
-      ),
+        border: Border.all(color: const Color(0XFF26272D), width: 1.2)),
       child: child,
     );
   }
@@ -205,18 +204,14 @@ class NotificationSettingsView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
         if (showLabel) Text(label, style: AppTextStyles.large),
-        SizedBox(
-         height: 24,
+        SizedBox( height: 24,
           child: Transform.scale(
             scale: 0.7,
             child: Switch(
               value: value,
               onChanged: onChanged,
               activeColor: AppColors.textGreen,
-              thumbColor: const WidgetStatePropertyAll(Colors.black),
-            ),
-          ),
-        ),
+              thumbColor: const WidgetStatePropertyAll(Colors.black)))),
         ],
     );
 
@@ -243,9 +238,7 @@ class NotificationSettingsView extends StatelessWidget {
               value: value,
               onChanged: onChanged,
               activeColor: AppColors.textGreen,
-              thumbColor: const WidgetStatePropertyAll(Colors.black),
-            ),
-          ),
+              thumbColor: const WidgetStatePropertyAll(Colors.black))),
       ],
     );
 
@@ -253,10 +246,8 @@ class NotificationSettingsView extends StatelessWidget {
   }
 
   Widget _sectionLabel(String label) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-      child: Text(label,
-          style: AppTextStyles.button.copyWith(color:AppColors.textOnDark)),
+    return Padding( padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+      child: Text(label, style: AppTextStyles.button.copyWith(color:AppColors.textOnDark)),
     );
   }
 }

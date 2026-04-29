@@ -44,8 +44,7 @@ class PrivacyView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                SizedBox(
-                  height: 30,
+                SizedBox( height: 30,
                   child: Transform.scale(
                     scale: 0.7,
                     alignment: Alignment.centerRight,
@@ -53,10 +52,7 @@ class PrivacyView extends StatelessWidget {
                       value: SettingsController.to.isLocationVisible.value,
                       onChanged: (val) => SettingsController.to.toggleLocationVisible(val),
                       activeColor: AppColors.textGreen,
-                      thumbColor: const WidgetStatePropertyAll(Colors.black),
-                    ),
-                  ),
-                )
+                      thumbColor: const WidgetStatePropertyAll(Colors.black))))
               ],
             ),
           )),
@@ -105,9 +101,7 @@ class BlockedView extends StatelessWidget {
         title: Text('Blocked', style: AppTextStyles.displaySmall),
         leading: IconButton(
           onPressed: () => Get.back(),
-          icon: Icon(Icons.arrow_back_ios, color: AppColors.textOnDark, size: 20),
-        ),
-      ),
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.textOnDark, size: 20))),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

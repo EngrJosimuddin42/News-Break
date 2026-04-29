@@ -4,7 +4,7 @@ import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../../../controllers/me/settings/creator_page_controller.dart';
 import '../../../../../models/creator_page_model.dart';
-import '../../../../../widgets/help_widgets.dart';
+import 'help_widgets.dart';
 import 'open_positions_view.dart';
 
 

@@ -150,8 +150,7 @@ class _ReportBottomSheetState extends State<NotificationReportSheet> {
   }
 
   Widget _buildHeader(String title, {VoidCallback? onBack}) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+    return Padding( padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
       child: Row(
         children: [
           GestureDetector(
@@ -173,8 +172,7 @@ class _ReportBottomSheetState extends State<NotificationReportSheet> {
     required VoidCallback onNext,
     required String nextLabel,
   }) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+    return Padding( padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
       child: Row(
         children: [
           Expanded(

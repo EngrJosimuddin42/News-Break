@@ -27,6 +27,8 @@ class AuthController extends GetxController {
       email: 'amalia@example.com',
       profileImageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
       location: 'Dhaka, Bangladesh',
+      gender: 'Female',
+      birthYear: '12/12/2005',
       publisherMeta: 'user since Mar 2026',
     );
   }

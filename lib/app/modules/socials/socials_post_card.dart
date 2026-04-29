@@ -95,9 +95,7 @@ class SocialsPostCard extends StatelessWidget {
                     children: post.imageUrls.map((url) => NetworkOrFileImage(
                       url: url,
                       width: double.infinity,
-                    )).toList(),
-                  ),
-                ),
+                    )).toList())),
             ],
           ),
         ),

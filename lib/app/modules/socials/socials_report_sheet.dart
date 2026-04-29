@@ -18,8 +18,7 @@ class SocialsReportSheet extends GetView<SocialsController> {
     return Container(
       decoration: const BoxDecoration(
         color: Color(0xFF2C2C2E),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       child: Obx(() => socialController.isReportSubmitted.value
           ? ReportSuccess()
           : _buildSelectReason(context, socialController)),
@@ -48,8 +47,7 @@ class SocialsReportSheet extends GetView<SocialsController> {
                     socialController.resetReport();
                     Get.back();
                   },
-                  child: const Icon(Icons.close, color: Colors.white, size: 24),
-                ),
+                  child: const Icon(Icons.close, color: Colors.white, size: 24)),
               ],
             ),
           ),
@@ -89,8 +87,7 @@ class SocialsReportSheet extends GetView<SocialsController> {
                       side: const BorderSide(color: Color(0xFF959595)),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8))),
-                    child: Text('Cancel', style: AppTextStyles.bodySmall.copyWith(
-                            color: const Color(0xFFC4C4C4))))),
+                    child: Text('Cancel', style: AppTextStyles.bodySmall.copyWith( color: const Color(0xFFC4C4C4))))),
 
                 const SizedBox(width: 12),
 

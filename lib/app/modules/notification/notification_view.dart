@@ -125,14 +125,9 @@ class NotificationBody extends GetView<NotificationController> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/images/message.png',
-            width: 90,
-            height: 90,
-            fit: BoxFit.contain,
-          ),
+          Image.asset('assets/images/message.png', width: 90, height: 90, fit: BoxFit.contain),
           SizedBox(height: 16),
-          Text('No messages yet',
-              style: AppTextStyles.overline),
+          Text('No messages yet', style: AppTextStyles.overline),
         ],
       ),
     );
@@ -143,8 +138,7 @@ class NotificationBody extends GetView<NotificationController> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: const Color(0xFF212121)),
-      child: Text(label,
-          style:AppTextStyles.textSmall),
+      child: Text(label, style:AppTextStyles.textSmall),
     );
   }
 }
@@ -189,24 +183,18 @@ class FollowNotificationItem extends StatelessWidget {
                     Flexible(
                     flex: 2,
                       child: Text(
-                        user.publisherMeta ?? '',
-                        style: AppTextStyles.labelSmall.copyWith(color: AppColors.light),
+                        user.publisherMeta ?? '', style: AppTextStyles.labelSmall.copyWith(color: AppColors.light),
                         overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
+                        maxLines: 1)),
                     const SizedBox(width: 12),
                     Image.asset('assets/icons/time.png'),
                     const SizedBox(width: 3),
                     Flexible(
                       flex: 2,
                       child: Text(
-                        user.timeAgo ?? 'Just now',
-                        style: AppTextStyles.labelSmall.copyWith(color: AppColors.light),
+                        user.timeAgo ?? 'Just now', style: AppTextStyles.labelSmall.copyWith(color: AppColors.light),
                         overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
+                        maxLines: 1)),
                   ],
                 ),
               ],

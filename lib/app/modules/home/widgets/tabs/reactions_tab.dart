@@ -26,9 +26,7 @@ class ReactionsTab extends GetView<HomeController> {
           }
 
           return NewsCard(
-            news: news,
-            onFollow: () => controller.onFollow(news.publisherName),
-            onDismiss: () => controller.onDismiss(news.publisherName),
+              news: news, tabType: 'news_reactions'
           );
         },
       );

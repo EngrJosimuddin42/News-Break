@@ -58,7 +58,7 @@ class LocalTvTab extends GetView<HomeController> {
           if (news.publisherType == 'Ad') {
             return AdVideoCard(news: news);
           }
-          return CategoryNewsCard(news: news);
+          return CategoryNewsCard(news: news, tabType: 'news_localtv');
         },
       );
   }

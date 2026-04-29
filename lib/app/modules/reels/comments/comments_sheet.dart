@@ -45,7 +45,7 @@ class CommentsSheet extends StatelessWidget {
               children: [
                 Expanded(
                   child: Obx(() => Text(
-                      '${commentController.formatCount(commentController.commentsList.length)} Comments',
+                      '${socialCtrl.formatCount(commentController.commentsList.length)} Comments',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.bodyMedium))),
                 GestureDetector(
@@ -183,7 +183,7 @@ class CommentsSheet extends StatelessWidget {
 
                       return _commentAction(
                         'assets/icons/like_up.png',
-                        commentController.formatCount(currentLikes),
+                        socialCtrl.formatCount(currentLikes),
                         onTap: () => socialCtrl.likeComment(commentId),
                         iconColor: isLiked ? Colors.blue : Colors.white,
                       );

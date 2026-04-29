@@ -6,6 +6,7 @@ import '../../controllers/create_post_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/nbot_controller.dart';
 import '../../controllers/reels/reels_controller.dart';
+import '../../controllers/social_interaction_controller.dart';
 import '../../models/news_model.dart';
 import '../../models/reel_model.dart';
 import '../../routes/app_pages.dart';
@@ -15,7 +16,9 @@ import '../reels/share_sheet.dart';
 
 class NewsBottomSheets {
   static void showMoreSheet(BuildContext context, NewsModel news) {
+    final socialCtrl = Get.find<SocialInteractionController>();
     final controller = Get.find<HomeController>();
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -42,7 +45,7 @@ class NewsBottomSheets {
                       onTap: () {
                         Get.back();
                         if (controller.isLoggedIn) {
-                          controller.onSaveNews(news);
+                          socialCtrl.onSaveNews(news);
                         } else {
                           Get.toNamed(Routes.SIGNIN);
                         }

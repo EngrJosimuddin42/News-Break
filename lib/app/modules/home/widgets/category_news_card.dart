@@ -16,7 +16,8 @@ import '../../reels/player/full_screen_video_player.dart';
 
 class CategoryNewsCard extends StatelessWidget {
   final NewsModel news;
-  const CategoryNewsCard({super.key, required this.news});
+  final String tabType;
+  const CategoryNewsCard({super.key, required this.news,required this.tabType,});
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +82,7 @@ class CategoryNewsCard extends StatelessWidget {
         ),
       ),
             // Engagement Row
-            _buildEngagementRow(socialCtrl, context),
+            _buildEngagementRow(socialCtrl, context, tabType),
 
             SizedBox(height:4),
             const Divider(color: Colors.white12, height: 2, thickness: 3),
@@ -152,7 +153,8 @@ class CategoryNewsCard extends StatelessWidget {
   }
 
   // Engagement Row Widget
-  Widget _buildEngagementRow(SocialInteractionController socialCtrl, BuildContext context) {    return Padding(
+  Widget _buildEngagementRow(SocialInteractionController socialCtrl, BuildContext context,String tabType) {
+    return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 12, 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,22 +193,33 @@ class CategoryNewsCard extends StatelessWidget {
 
           Row(
             children: [
+
+              // Like Button
               Obx(() {
-                final isLiked = socialCtrl.isLiked(news.id, type: 'news');
+                final isLiked = socialCtrl.isLiked(news.id, type: tabType);
                 return _engagementItem(
                   isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
-                  news.likes,
-                  onTap: () => socialCtrl.toggleLike(news.id, type: 'news'),
+                  socialCtrl.getAdjustedNewsLikes(news, type: tabType),
+                  onTap: () => socialCtrl.toggleLike(news.id, type: tabType),
                   color: isLiked ? Colors.blue : Colors.white,
                 );
               }),
 
               const SizedBox(width: 16),
-              _engagementItem('assets/icons/comment.png', news.comments,
-                  onTap: () => socialCtrl.openComments(news.id, CommentSource.news)),
+
+              // Comment Button
+              Obx(() {
+                return _engagementItem(
+                  'assets/icons/comment.png',
+                  socialCtrl.formatCount(
+                    socialCtrl.getCommentCount(news, source: tabType).value),
+                  onTap: () => socialCtrl.openComments(news.id, CommentSource.news, tabType: tabType),
+                );
+              }),
+
               const SizedBox(width: 16),
-              _engagementItem('assets/icons/share.png', 'Share',
-                  onTap: () => socialCtrl.share(id: news.id, title: news.title, type: 'news')),
+              _engagementItem( 'assets/icons/share.png', 'Share',
+                onTap: () => socialCtrl.share(id: news.id, title: news.title, type: 'news')),
             ]
           ),
         ],

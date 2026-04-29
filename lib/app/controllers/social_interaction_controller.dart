@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/controllers/signin_controller.dart';
 import 'package:news_break/app/models/comment_source.dart';
 import 'package:share_plus/share_plus.dart';
+import '../models/comment_model.dart';
+import '../models/news_model.dart';
 import '../modules/reels/comments/comments_sheet.dart';
+import '../routes/app_pages.dart';
 import '../widgets/app_snackbar.dart';
+import 'auth/auth_controller.dart';
 import 'auth/auth_helper.dart';
 import 'comment_controller.dart';
 
@@ -19,6 +25,7 @@ class SocialInteractionController extends GetxController {
   final reportedIds = <String>{}.obs;
   final joinedCommunityIds = <int>{}.obs;
   final reactions = <String, String>{}.obs;
+  final commentCounts = <dynamic, RxInt>{}.obs;
   var likedComments = <String>[].obs;
   var dislikedComments = <String>[].obs;
   var savedItems = <String>[].obs;
@@ -30,6 +37,11 @@ class SocialInteractionController extends GetxController {
   void selectReason(String reason) => selectedReason.value = reason;
   bool isCommentLiked(String id) => likedComments.contains(id);
   bool isCommentDisliked(String id) => dislikedComments.contains(id);
+
+  // Auth check
+  bool get isLoggedIn => AuthController.to.user.value != null;
+  String get userName => AuthController.to.user.value?.name ?? '';
+
 
 
   // LIKE
@@ -44,6 +56,10 @@ class SocialInteractionController extends GetxController {
     }
   }
 
+  bool isLiked(dynamic id, {String type = 'news'}) =>
+      likedIds.contains('${type}_$id');
+
+
   void likeComment(String id) {
     if (!likedComments.contains(id)) {
       likedComments.add(id);
@@ -51,8 +67,24 @@ class SocialInteractionController extends GetxController {
     }
   }
 
-  bool isLiked(dynamic id, {String type = 'news'}) =>
-      likedIds.contains('${type}_$id');
+  void toggleCommentLike(CommentModel comment) {
+    if (!AuthHelper.checkLogin()) return;
+
+    final String id = comment.id.toString();
+
+    if (likedComments.contains(id)) {
+
+      likedComments.remove(id);
+      comment.likes--;
+    } else {
+      likedComments.add(id);
+      dislikedComments.remove(id);
+      comment.likes++;
+    }
+    if (Get.isRegistered<CommentController>()) {
+      Get.find<CommentController>().commentsList.refresh();
+    }
+  }
 
   int getAdjustedLikes(String commentId, int originalLikes) {
     if (isCommentLiked(commentId)) {
@@ -61,6 +93,14 @@ class SocialInteractionController extends GetxController {
       return originalLikes - 1;
     }
     return originalLikes;
+  }
+
+  String getAdjustedNewsLikes(NewsModel news, {String type = 'news'}) {
+    int currentLikes = _parseStatCount(news.likes);
+    if (isLiked(news.id, type: type)) {
+      return formatCount(currentLikes + 1);
+    }
+    return news.likes;
   }
 
 
@@ -96,6 +136,7 @@ class SocialInteractionController extends GetxController {
     }
   }
 
+
   // SAVE
   void toggleSave(int id, {String type = 'news'}) {
     if (!AuthHelper.checkLogin()) return;
@@ -109,34 +150,136 @@ class SocialInteractionController extends GetxController {
     }
   }
 
+  void onSaveNews(NewsModel news) {
+    if (!isLoggedIn) {
+      if (!Get.isRegistered<SignInController>()) {
+        Get.lazyPut(() => SignInController());
+      }
+      Get.toNamed(Routes.SIGNIN);
+      return;
+    }
+    AppSnackbar.success(message: "News saved to your bookmarks");
+  }
+
   bool isSaved(int id, {String type = 'news'}) =>
       savedIds.contains('${type}_$id');
 
 
   // FOLLOW
-  void toggleFollow(String publisherName) {
+  void toggleFollow(dynamic item) {
     if (!AuthHelper.checkLogin()) return;
-    if (followedPublishers.contains(publisherName)) {
-      followedPublishers.remove(publisherName);
-      AppSnackbar.success(message: 'Unfollowed $publisherName');
+
+    String name = "";
+
+    if (item is NewsModel) {
+      name = item.publisherName;
+    } else if (item is CommentModel) {
+      name = item.userName;
     } else {
-      followedPublishers.add(publisherName);
-      AppSnackbar.success(message: 'Following $publisherName');
+      name = item.publisherName ?? item.userName ?? "";
     }
+
+    if (name.isEmpty) return;
+
+    if (followedPublishers.contains(name)) {
+      // Unfollow logic
+      followedPublishers.remove(name);
+      item.isFollowing = false;
+      if (item is NewsModel) _updateFollowerCount(item, -1);
+      AppSnackbar.success(message: 'Unfollowed $name');
+    } else {
+      // Follow logic
+      followedPublishers.add(name);
+      item.isFollowing = true;
+      if (item is NewsModel) _updateFollowerCount(item, 1);
+      AppSnackbar.success(message: 'Following $name');
+    }
+    update();
+    if (Get.isRegistered<CommentController>()) {
+      Get.find<CommentController>().commentsList.refresh();
+    }
+  }
+
+  void _updateFollowerCount(dynamic item, int change) {
+    if (item.totalFollowers != null) {
+      int current = _parseStatCount(item.totalFollowers.toString());
+      item.totalFollowers = formatCount(current + change);
+    }
+  }
+
+  void onFollow(String publisher) {
+    if (!isLoggedIn) Get.toNamed(Routes.SIGNIN);
+  }
+
+  void onDismiss(String publisher) {}
+
+  void onFollowPeople(int index) {
+    if (!isLoggedIn) {
+      Get.toNamed(Routes.SIGNIN);
+      return;
+    }
+    suggestedPeople[index]['isFollowing'] = !suggestedPeople[index]['isFollowing'];
+    suggestedPeople.refresh();
+  }
+
+  void onDismissPeople(int index) {
+    suggestedPeople.removeAt(index);
   }
 
   bool isFollowing(String publisherName) =>
       followedPublishers.contains(publisherName);
 
+
+  // parse
+  int _parseStatCount(String count) {
+    count = count.toLowerCase().replaceAll(',', '');
+    if (count.contains('k')) {
+      return (double.parse(count.replaceAll('k', '')) * 1000).toInt();
+    } else if (count.contains('m')) {
+      return (double.parse(count.replaceAll('m', '')) * 1000000).toInt();
+    }
+    return int.tryParse(count) ?? 0;
+  }
+
+  String formatCount(int count) {
+    if (count >= 1000000) {
+      double formatted = count / 1000000;
+      return '${formatted.toStringAsFixed(formatted.truncateToDouble() == formatted ? 0 : 1)}m';
+    } else if (count >= 1000) {
+      double formatted = count / 1000;
+      return '${formatted.toStringAsFixed(formatted.truncateToDouble() == formatted ? 0 : 1)}k';
+    }
+    return count.toString();
+  }
+
+
   //  BLOCK
   void blockSource(String publisherName) {
     if (!AuthHelper.checkLogin()) return;
     blockedSources.add(publisherName);
+
+    if (Get.isRegistered<CommentController>()) {
+      Get.find<CommentController>().commentsList.removeWhere((c) => c.userName == publisherName);
+      Get.find<CommentController>().commentsList.refresh();
+    }
     AppSnackbar.success(message: 'Blocked $publisherName');
+  }
+
+  void blockUser(String userName) {
+    if (!AuthHelper.checkLogin()) return;
+    blockedSources.add(userName);
+    if (Get.isRegistered<CommentController>()) {
+      final commentCtrl = Get.find<CommentController>();
+      commentCtrl.commentsList.removeWhere((c) => c.userName == userName);
+      commentCtrl.commentsList.refresh();
+    }
+    if (Get.isOverlaysOpen) Get.back();
+    AppSnackbar.success(message: 'Content from $userName hidden');
   }
 
   bool isBlocked(String publisherName) =>
       blockedSources.contains(publisherName);
+
 
   // HIDE
   void hideContent(int id, {String type = 'news'}) {
@@ -168,6 +311,7 @@ class SocialInteractionController extends GetxController {
     AppSnackbar.success(message: 'Reported successfully');
   }
 
+
   bool isReported(int id, {String type = 'news'}) =>
       reportedIds.contains('${type}_$id');
 
@@ -182,6 +326,13 @@ class SocialInteractionController extends GetxController {
     await Share.share('$title\n$url');
   }
 
+  void onSharePressed(NewsModel news) async {
+    await Share.share(
+      'Check out this news: ${news.title}\nRead more at: ${news.imageUrl}',
+      subject: news.title,
+    );
+  }
+
   void shareContent(String id, {required String type}) async {
     String message = "Check out this $type on News Break!";
     String url = "https://newsbreak.com/$type/$id";
@@ -189,26 +340,54 @@ class SocialInteractionController extends GetxController {
   }
 
   // COMMENT
-  void openComments(int id, CommentSource source) {
+  void openComments(int id, CommentSource source, {String tabType = 'news'}) {
     if (!AuthHelper.checkLogin()) return;
-    Get.find<CommentController>().loadComments(id, source);
+    Get.find<CommentController>().loadComments(id, source, tabType: tabType);
+    showModalBottomSheet(
+      context: Get.context!,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      constraints: BoxConstraints(maxWidth: MediaQuery.of(Get.context!).size.width),
+      builder: (_) => CommentsSheet(id: id, source: source),
+    );
+  }
+
+
+  void onCommentPressed(NewsModel news) {
+    Get.find<CommentController>().loadComments(news.id, CommentSource.news);
     showModalBottomSheet(
       context: Get.context!,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       constraints: BoxConstraints(
           maxWidth: MediaQuery.of(Get.context!).size.width),
-      builder: (_) => CommentsSheet(id: id, source: source),
+      builder: (_) => CommentsSheet(
+          id: news.id,
+          source: CommentSource.news),
     );
   }
 
-  void toggleCommentLike(String id) async {
-    if (isCommentLiked(id)) {
-      likedComments.remove(id);
-    } else {
-      likedComments.add(id);
-      dislikedComments.remove(id);
+  RxInt getCommentCount(NewsModel news, {String source = 'news'}) {
+    final key = '${source}_${news.id}';
+    if (!commentCounts.containsKey(key)) {
+      int initialCount = _parseStatCount(news.comments);
+      commentCounts[key] = initialCount.obs;
     }
+    return commentCounts[key]!;
+  }
+
+
+  void incrementCommentCount(dynamic id, {String source = 'news'}) {
+    final key = '${source}_$id';
+    if (commentCounts.containsKey(key)) {
+      commentCounts[key]!.value++;
+    }
+  }
+
+  void copyComment(String text) {
+    Clipboard.setData(ClipboardData(text: text));
+    Get.back();
+    AppSnackbar.success(message: 'Copied to clipboard');
   }
 
 
@@ -240,6 +419,27 @@ class SocialInteractionController extends GetxController {
     }
   }
 
-  bool isJoined(int communityId) =>
-      joinedCommunityIds.contains(communityId);
+  bool isJoined(int communityId) =>  joinedCommunityIds.contains(communityId);
+
+  final RxList<Map<String, dynamic>> suggestedPeople = [
+    {
+      'name': 'Catherine',
+      'subtitle': 'Daily rising star',
+      'isFollowing': false,
+      'image': 'assets/images/user1.png'
+    },
+    {
+      'name': 'John Doe',
+      'subtitle': 'Tech Enthusiast',
+      'isFollowing': false,
+      'image': 'assets/images/user2.png'
+    },
+    {
+      'name': 'Amalia Rose',
+      'subtitle': 'Flutter Developer',
+      'isFollowing': false,
+      'image': 'assets/images/user3.png'
+    },
+  ].obs;
+
 }

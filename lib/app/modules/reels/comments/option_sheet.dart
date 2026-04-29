@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../../controllers/comment_controller.dart';
 import '../../../controllers/reels/reels_controller.dart';
+import '../../../controllers/social_interaction_controller.dart';
 
 class OptionsSheet extends StatelessWidget {
   final dynamic reelId;
@@ -18,7 +18,7 @@ class OptionsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final reelsController = Get.find<ReelsController>();
-    final commentController = Get.find<CommentController>();
+    final socialCtrl = Get.find<SocialInteractionController>();
 
     return Container(
       width: double.infinity,
@@ -55,7 +55,7 @@ class OptionsSheet extends StatelessWidget {
                 _optionTile(
                     icon: Icons.block_flipped,
                     label: 'Block : $authorName',
-                    onTap: () => commentController.blockUser(authorName)),
+                    onTap: () => socialCtrl.blockUser(authorName)),
                 _divider(),
                 _optionTile(
                     icon: Icons.report_gmailerrorred_outlined,

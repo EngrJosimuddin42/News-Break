@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/controllers/social_interaction_controller.dart';
 import '../models/comment_model.dart';
 import '../models/comment_source.dart';
-import '../widgets/app_snackbar.dart';
 import 'auth/auth_controller.dart';
 
 class CommentController extends GetxController {
@@ -18,10 +18,12 @@ class CommentController extends GetxController {
   final Rx<Uint8List?> selectedImageBytes = Rx<Uint8List?>(null);
   final RxnString selectedGifUrl = RxnString();
 
+  final Map<String, List<CommentModel>> _allCommentsCache = {};
+
   // Current source tracking
   dynamic currentId;
   CommentSource? currentSource;
-
+  String currentTabType = 'news';
 
   @override
   void onClose() {
@@ -29,48 +31,38 @@ class CommentController extends GetxController {
     super.onClose();
   }
 
-
-  void loadComments(dynamic id, CommentSource source) {
+  void loadComments(dynamic id, CommentSource source, {String tabType = 'news'}) {
     currentId = id;
     currentSource = source;
-    fetchComments(id);
-  }
+    currentTabType = tabType;
+    final String key = _getCacheKey(id, tabType);
 
-  void toggleCommentLike(dynamic commentId) {
-    final index = commentsList.indexWhere((c) => c.id == commentId);
-    if (index != -1) {
-      commentsList[index].isLiked = !commentsList[index].isLiked;
-      commentsList[index].isLiked
-          ? commentsList[index].likes++
-          : commentsList[index].likes--;
-      commentsList.refresh();
+    if (_allCommentsCache.containsKey(key) && _allCommentsCache[key]!.isNotEmpty) {
+      commentsList.assignAll(_allCommentsCache[key]!);
+    } else {
+      fetchComments(id, tabType: tabType);
     }
   }
 
-
-  void toggleFollow(CommentModel comment) {
-    comment.isFollowing = !(comment.isFollowing ?? false);
-    commentsList.refresh();
+  //tabType unique key
+  String _getCacheKey(dynamic id, String tabType) {
+    return '${tabType}_$id';
   }
 
-
-  // gifUrl এবং imagePath কে ঐচ্ছিক (optional) এবং Named করার জন্য {} ব্যবহার করা হয়েছে
   Future<void> submitComment(dynamic id, {String? gifUrl, String? imagePath}) async {
-    String text = commentTextController.text.trim();
-
-    // এখানে imagePath প্যারামিটারটি ব্যবহার করা হয়েছে চেক করার জন্য
+    final String text = commentTextController.text.trim();
     if (text.isEmpty && gifUrl == null && imagePath == null) return;
 
     isSendingComment.value = true;
 
     final user = Get.find<AuthController>().user.value;
-    var newComment = CommentModel(
+
+    final newComment = CommentModel(
       id: DateTime.now().millisecondsSinceEpoch,
       userName: user?.name ?? 'Guest',
       location: user?.location ?? 'Online',
       text: text,
       gifUrl: gifUrl,
-      // এখানে সরাসরি imagePath প্যারামিটার থেকে ডাটা নেওয়া হচ্ছে
       imagePath: imagePath,
       userProfileImage: user?.profileImageUrl ?? '',
       likes: 0,
@@ -79,62 +71,30 @@ class CommentController extends GetxController {
 
     commentsList.insert(0, newComment);
 
-    // সব ক্লিয়ার করা
+    // tabType  cache save
+    final String key = _getCacheKey(id, currentTabType);
+    _allCommentsCache[key] = List.from(commentsList);
+
+    // tabType  count increment
+    Get.find<SocialInteractionController>()
+        .incrementCommentCount(id, source: currentTabType);
+
+    // Reset UI
     commentTextController.clear();
     selectedGifUrl.value = null;
     selectedImage.value = null;
     selectedImageBytes.value = null;
-
     isSendingComment.value = false;
     FocusManager.instance.primaryFocus?.unfocus();
-
-    // শিট বন্ধ করা
     Get.back();
   }
 
-  //  Copy comment
-  void copyComment(String text) {
-    Clipboard.setData(ClipboardData(text: text));
-    Get.back();
-    AppSnackbar.success(message: 'Copied to clipboard');
-  }
-
-  //  Block user
-  void blockUser(String userName) {
-    commentsList.removeWhere((c) => c.userName == userName);
-    commentsList.refresh();
-    Get.back();
-    AppSnackbar.success(message: 'Content from $userName hidden');
-  }
-
-  //  Format count
-  String formatCount(int count) {
-    if (count >= 1000) return '${(count / 1000).toStringAsFixed(1)}K';
-    return count.toString();
-  }
-
-  int parseStatCount(String count) {
-    count = count.toLowerCase().replaceAll(',', '');
-    if (count.contains('k')) {
-      return (double.parse(count.replaceAll('k', '')) * 1000).toInt();
-    } else if (count.contains('m')) {
-      return (double.parse(count.replaceAll('m', '')) * 1000000).toInt();
-    }
-    return int.tryParse(count) ?? 0;
-  }
-
-  void submitReport({
-    dynamic id,
-    required String reason,
-    required String type, // 'reel' OR 'comment'
-  }) {}
-
-
-  Future<void> fetchComments(dynamic id) async {
+  Future<void> fetchComments(dynamic id, {String tabType = 'news'}) async {
     try {
       isCommentsLoading(true);
       await Future.delayed(const Duration(milliseconds: 500));
-      var dummyComments = [
+
+      final dummyComments = [
         CommentModel(
           id: 101,
           userName: 'Joser',
@@ -154,7 +114,11 @@ class CommentController extends GetxController {
           createdAt: '5h',
         ),
       ];
+
       commentsList.assignAll(dummyComments);
+
+      final String key = _getCacheKey(id, tabType);
+      _allCommentsCache[key] = List.from(dummyComments);
     } finally {
       isCommentsLoading(false);
     }
@@ -168,5 +132,4 @@ class CommentController extends GetxController {
     'Minor safety',
     'Dangerous or criminal',
   ];
-
 }

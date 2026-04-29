@@ -25,7 +25,7 @@ class HealthTab extends GetView<HomeController> {
               ? AdVideoCard(news: news)
               : const SizedBox.shrink();
         }
-        return CategoryNewsCard(news: news);
+        return CategoryNewsCard(news: news, tabType: 'news_health');
       },
     );
     });

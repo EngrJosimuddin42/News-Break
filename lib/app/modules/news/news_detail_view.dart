@@ -5,6 +5,7 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/nbot_controller.dart';
 import '../../controllers/signin_controller.dart';
+import '../../controllers/social_interaction_controller.dart';
 import '../../models/news_model.dart';
 import '../../routes/app_pages.dart';
 import '../../widgets/about_profile_sheet.dart';
@@ -20,6 +21,7 @@ class NewsDetailView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    final socialCtrl = Get.find<SocialInteractionController>();
     final HomeController controller = Get.isRegistered<HomeController>()
         ? Get.find<HomeController>()
         : Get.put(HomeController());
@@ -62,7 +64,7 @@ class NewsDetailView extends GetView<HomeController> {
             icon: Icon(Icons.bookmark_border, color: AppColors.textOnDark, size: 20),
             onPressed: () {
               if (controller.isLoggedIn) {
-                controller.onSaveNews(news);
+                socialCtrl.onSaveNews(news);
               } else {
                 Get.toNamed(Routes.SIGNIN);
               }
@@ -135,6 +137,7 @@ class NewsDetailView extends GetView<HomeController> {
                       ),
                     ),
                     const Spacer(),
+
                     FollowButton(news: news),
                   ],
                 ),
@@ -198,19 +201,19 @@ class NewsDetailView extends GetView<HomeController> {
 
                   // Like, Comment, Share Action Buttons
                 Obx(() {
-                  final isLiked = controller.isLiked(news.id);
+                  final isLiked = socialCtrl.isLiked(news.id);
                   return _actionItem(
                     isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
-                    news.likes, () => controller.onLikePressed(news),
+                    news.likes, () => socialCtrl.toggleLike(news.id),
                     color: isLiked ? Colors.blue : Colors.white);
                 }),
 
                 const SizedBox(width: 16),
                   _actionItem(null, news.comments, () {
-                    controller.onCommentPressed(news);}, asset: 'assets/icons/comment.png'),
+                    socialCtrl.onCommentPressed(news);}, asset: 'assets/icons/comment.png'),
 
                   const SizedBox(width: 16),
-                   _actionItem(null, 'Share', () => controller.onSharePressed(news), asset: 'assets/icons/share.png'),
+                   _actionItem(null, 'Share', () => socialCtrl.onSharePressed(news), asset: 'assets/icons/share.png'),
                ],
             ),
           ),

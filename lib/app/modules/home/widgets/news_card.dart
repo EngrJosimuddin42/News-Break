@@ -16,10 +16,12 @@ class NewsCard extends StatefulWidget {
   final NewsModel news;
   final VoidCallback? onFollow;
   final VoidCallback? onDismiss;
+  final String tabType;
 
   const NewsCard({
     super.key,
     required this.news,
+    required this.tabType,
     this.onFollow,
     this.onDismiss,
   });
@@ -190,29 +192,41 @@ class _NewsCardState extends State<NewsCard> {
   // Action Row
   Widget _buildActionRow(NewsModel news) {
     final socialCtrl = Get.find<SocialInteractionController>();
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Row(
         children: [
-          Obx(() {
-            final isLiked = socialCtrl.isLiked(news.id, type: 'news');
-            return _engagementItem(
-              isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
-              news.likes,
-                  () => socialCtrl.toggleLike(news.id, type: 'news'),
-              color: isLiked ? Colors.blue : Colors.white,
-            );
-          }),
+          _buildLikeButton(news, socialCtrl),
           const SizedBox(width: 80),
-          _engagementItem('assets/icons/comment.png', news.comments,
-                  () => socialCtrl.openComments(news.id, CommentSource.news)),
+          _buildCommentButton(news, socialCtrl),
         ],
       ),
     );
   }
 
-  Widget _engagementItem(String asset, String count, VoidCallback onTap,
+  Widget _buildLikeButton(NewsModel news, SocialInteractionController socialCtrl) {
+    return Obx(() {
+      final isLiked = socialCtrl.isLiked(news.id, type: widget.tabType);
+      return _engagementItem(
+        isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
+        socialCtrl.getAdjustedNewsLikes(news, type: widget.tabType),
+            () => socialCtrl.toggleLike(news.id, type: widget.tabType),
+        color: isLiked ? Colors.blue : Colors.white,
+      );
+    });
+  }
+
+  Widget _buildCommentButton(NewsModel news, SocialInteractionController socialCtrl) {
+    return _engagementItem(
+      'assets/icons/comment.png',
+      Obx(() => Text( socialCtrl.formatCount(
+          socialCtrl.getCommentCount(news, source: widget.tabType).value),
+        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary))),
+          () => socialCtrl.openComments(news.id, CommentSource.news, tabType: widget.tabType),
+    );
+  }
+
+  Widget _engagementItem(String asset, dynamic label, VoidCallback onTap,
       {Color color = Colors.white}) {
     return GestureDetector(
       onTap: onTap,
@@ -221,8 +235,10 @@ class _NewsCardState extends State<NewsCard> {
         children: [
           Image.asset(asset, width: 20, height: 20, color: color),
           const SizedBox(width: 6),
-          Text(count, style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.textSecondary)),
+          label is Widget
+              ? label
+              : Text(label.toString(),
+              style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
         ],
       ),
     );

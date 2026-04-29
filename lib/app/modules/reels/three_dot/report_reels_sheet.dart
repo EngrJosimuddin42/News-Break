@@ -4,6 +4,7 @@ import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/comment_controller.dart';
 import '../../../controllers/reels/reels_controller.dart';
+import '../../../controllers/social_interaction_controller.dart';
 import '../../../widgets/report_success.dart';
 import 'report_video_sheet.dart';
 
@@ -18,6 +19,8 @@ class ReportReelsSheet extends StatefulWidget {
 class _ReportReelsSheetState extends State<ReportReelsSheet> {
   final reelsController = Get.find<ReelsController>();
   final commentController = Get.find<CommentController>();
+  final socialCtrl = Get.find<SocialInteractionController>();
+
   int _step = 0;
   String? _selectedReason;
 
@@ -109,11 +112,13 @@ class _ReportReelsSheetState extends State<ReportReelsSheet> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (_selectedReason != null) {
-                      commentController.submitReport(
-                        id: widget.reelId,
-                        reason: _selectedReason!,
-                        type: 'reel');
+                      socialCtrl.selectedReason.value = _selectedReason;
+                      socialCtrl.reportContentId.value = widget.reelId;
+                      socialCtrl.reportContentType.value = 'reel';
+                      socialCtrl.submitReport();
+                     if (socialCtrl.isReportSubmitted.value) {
                       setState(() => _step = 1);
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(

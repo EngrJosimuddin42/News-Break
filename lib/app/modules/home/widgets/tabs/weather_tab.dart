@@ -33,7 +33,7 @@ class WeatherTab extends GetView<HomeController> {
         if (news.publisherType == 'Ad') {
           return _showAds ? AdVideoCard(news: news) : const SizedBox.shrink();
         }
-        return CategoryNewsCard(news: news);
+        return CategoryNewsCard(news: news, tabType: 'news_weather');
       },
     );
   }
@@ -51,7 +51,7 @@ class WeatherTab extends GetView<HomeController> {
           if (news.publisherType == 'Ad') {
             return _showAds ? AdVideoCard(news: news) : const SizedBox.shrink();
           }
-          return CategoryNewsCard(news: news);
+          return CategoryNewsCard(news: news, tabType: 'news_weather');
         }),
       ],
     );

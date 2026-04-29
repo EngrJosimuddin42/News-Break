@@ -137,7 +137,7 @@ class LocalTab extends GetView<HomeController> {
     return Obx(() => Column(
       children: controller.localNews.map((news) {
         if (news.publisherType == 'Ad') return AdVideoCard(news: news);
-        return CategoryNewsCard(news: news);
+        return CategoryNewsCard(news: news, tabType: 'news_local');
       }).toList(),
     ));
   }

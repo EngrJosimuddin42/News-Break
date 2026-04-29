@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../../controllers/home_controller.dart';
+import '../../../../controllers/social_interaction_controller.dart';
 import '../ad_video_card.dart';
 import '../clip_card.dart';
 import '../people_card.dart';
@@ -12,6 +13,7 @@ class ForYouTab extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    final socialController = Get.find<SocialInteractionController>();
     return Obx(() {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
@@ -23,7 +25,7 @@ class ForYouTab extends GetView<HomeController> {
         _buildSectionHeader('People You May Like'),
 
       Obx(() {
-      if (controller.suggestedPeople.isEmpty) {
+        if (socialController.suggestedPeople.isEmpty) {
       return const SizedBox.shrink();
       }
       return Column(
@@ -32,17 +34,17 @@ class ForYouTab extends GetView<HomeController> {
         child: ListView.separated(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           scrollDirection: Axis.horizontal,
-          itemCount: controller.suggestedPeople.length,
+          itemCount: socialController.suggestedPeople.length,
           separatorBuilder: (context, index) => const SizedBox(width: 12),
           itemBuilder: (_, i) {
-            final person = controller.suggestedPeople[i];
+            final person = socialController.suggestedPeople[i];
 
             return PeopleCard(
               name: person['name'],
               subtitle: person['subtitle'],
               isFollowing: person['isFollowing'],
-              onDismiss: () => controller.onDismissPeople(i),
-              onFollow: () => controller.onFollowPeople(i),
+              onDismiss: () => socialController.onDismissPeople(i),
+              onFollow: () => socialController.onFollowPeople(i),
             );
           },
         ),
@@ -91,7 +93,7 @@ class ForYouTab extends GetView<HomeController> {
                 ? AdVideoCard(news: news)
                 : const SizedBox.shrink();
           }
-          return CategoryNewsCard(news: news);
+          return CategoryNewsCard(news: news, tabType: 'news_foryou');
         }),
 
         const SizedBox(height: 16),

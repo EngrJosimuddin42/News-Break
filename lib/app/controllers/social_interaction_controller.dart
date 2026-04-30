@@ -23,6 +23,7 @@ class SocialInteractionController extends GetxController {
   final hiddenIds = <String>{}.obs;
   final reportedIds = <String>{}.obs;
   final joinedCommunityIds = <int>{}.obs;
+  final Map<String, RxInt> reactionCounts = {};
   final reactions = <String, String>{}.obs;
   final Map<dynamic, RxInt> commentCounts = {};
   final Map<String, bool> followedPublishers = {};
@@ -307,6 +308,7 @@ class SocialInteractionController extends GetxController {
   bool isHidden(int id, {String type = 'news'}) =>
       hiddenIds.contains('${type}_$id');
 
+
   //  REPORT
   void openReport(int id, String type) {
     reportContentId.value = id;
@@ -355,6 +357,7 @@ class SocialInteractionController extends GetxController {
     await Share.share('$message\n$url');
   }
 
+
   // COMMENT
   void openComments(int id, CommentSource source, {String tabType = 'news'}) {
     if (!AuthHelper.checkLogin()) return;
@@ -367,7 +370,6 @@ class SocialInteractionController extends GetxController {
       builder: (_) => CommentsSheet(id: id, source: source),
     );
   }
-
 
   void onCommentPressed(NewsModel news) {
     Get.find<CommentController>().loadComments(news.id, CommentSource.news);
@@ -414,12 +416,32 @@ class SocialInteractionController extends GetxController {
     reactions[key] = emoji;
   }
 
+  String getSelectedReaction(dynamic id, {String type = 'news'}) =>
+      reactions['${type}_$id'] ?? '';
+
   String getMyReaction(dynamic id, String type) {
     return reactions['${type}_$id'] ?? '';
   }
 
-  String getSelectedReaction(dynamic id, {String type = 'news'}) =>
-      reactions['${type}_$id'] ?? '';
+
+  RxInt getReactionCount(NewsModel news, {String source = 'news'}) {
+    final key = '${source}_${news.id}';
+    if (!reactionCounts.containsKey(key)) {
+      int initialCount = _parseStatCount(news.reactions);
+      reactionCounts[key] = initialCount.obs;
+    }
+    return reactionCounts[key]!;
+  }
+
+  void incrementReactionCount(dynamic id, {String source = 'news'}) {
+    final key = '${source}_$id';
+    if (!reactionCounts.containsKey(key)) {
+      reactionCounts[key] = 0.obs;
+    }
+    reactionCounts[key]!.value++;
+    reactionCounts[key]!.refresh();
+    update();
+  }
 
 
 

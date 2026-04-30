@@ -209,6 +209,7 @@ class _CategoryNewsCardState extends State<CategoryNewsCard> {
       padding: const EdgeInsets.fromLTRB(24, 0, 12, 16),
       child: Row(
         children: [
+
           Expanded(
             child: GestureDetector(
               onTap: () {
@@ -217,23 +218,20 @@ class _CategoryNewsCardState extends State<CategoryNewsCard> {
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
                   builder: (context) =>
-                      WriteCommentSheet(reelId: news.id, onlyEmoji: true),
+                      WriteCommentSheet(reelId: news.id, onlyEmoji: true,type: widget.tabType),
                 );
               },
               child: Obx(() {
-                final String myEmoji =
-                _socialCtrl.getSelectedReaction(news.id, type: 'news');
+                final int liveReactionCount =
+                    _socialCtrl.getReactionCount(news, source: widget.tabType).value;
+
                 return Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (myEmoji.isNotEmpty) ...[
-                      Text(myEmoji, style: const TextStyle(fontSize: 18)),
-                      const SizedBox(width: 4),
-                    ],
                     Image.asset('assets/icons/reactions.png', width: 50, height: 20),
                     const SizedBox(width: 4),
                     Flexible(
-                      child: Text(news.reactions,
+                      child: Text(_socialCtrl.formatCount(liveReactionCount),
                           style: AppTextStyles.labelMedium,
                           overflow: TextOverflow.ellipsis, maxLines: 1),
                     ),
@@ -242,6 +240,7 @@ class _CategoryNewsCardState extends State<CategoryNewsCard> {
               }),
             ),
           ),
+
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [

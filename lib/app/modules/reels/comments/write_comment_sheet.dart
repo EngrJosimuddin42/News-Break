@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/widgets/bottom_sheet_handle.dart';
 import '../../../controllers/comment_controller.dart';
+import '../../../controllers/social_interaction_controller.dart';
 import '../../../controllers/social_utility_controller.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
@@ -80,6 +81,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                       onPressed: utility.pickImage,
                       icon: const Icon(Icons.image_outlined, color: AppColors.surface, size: 22)),
                   const SizedBox(width: 4),
+
                   GestureDetector(
                       onTap: () => utility.isGifPickerMode.value = true,
                       child: Container(
@@ -94,7 +96,20 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: AppColors.primary))
                       : GestureDetector(
-                      onTap: () {
+                    onTap: () {
+                      if (widget.onlyEmoji) {
+                        final emoji = commentController.commentTextController.text.trim();
+                        if (emoji.isNotEmpty) {
+                          final socialCtrl = Get.find<SocialInteractionController>();
+
+                          socialCtrl.updateReaction(widget.reelId, widget.type, emoji);
+                          socialCtrl.incrementReactionCount(widget.reelId, source: widget.type);
+
+                          commentController.commentTextController.clear();
+                          Get.back();
+                        }
+                      } else {
+
                         final String? gifUrl = utility.selectedGifUrl.value;
                         final String? imagePath = utility.selectedImage.value?.path;
 
@@ -103,8 +118,10 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                           gifUrl: gifUrl,
                           imagePath: imagePath,
                         );
-                      },
-                      child: Image.asset('assets/icons/send2.png', height: 24, width: 24))),
+                      }
+                    },
+                    child: Image.asset('assets/icons/send2.png', height: 24, width: 24),
+                  )),
                 ],
               ),
             ),
@@ -176,6 +193,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
 
   Widget _buildReactionRow() {
     final utility = Get.find<SocialUtilityController>();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: SingleChildScrollView(
@@ -185,15 +203,12 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: GestureDetector(
-                  onTap: () {
-                    final text = commentController.commentTextController.text;
-                    commentController.commentTextController.text = text + emoji;
-                    commentController.commentTextController.selection =
-                        TextSelection.fromPosition(
-                          TextPosition(offset: commentController.commentTextController.text.length));
-                    setState(() {});
-                  },
-                  child: Text(emoji, style: const TextStyle(fontSize: 22))),
+                onTap: () {
+                  commentController.commentTextController.text = emoji;
+                  commentController.commentTextController.selection =
+                      TextSelection.fromPosition(TextPosition(offset: emoji.length));},
+                child: Text(emoji, style: const TextStyle(fontSize: 22)),
+              ),
             );
           }).toList(),
         ),

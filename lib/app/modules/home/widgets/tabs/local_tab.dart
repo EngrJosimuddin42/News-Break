@@ -41,15 +41,15 @@ class LocalTab extends GetView<HomeController> {
           Text(message, style: AppTextStyles.caption.copyWith(color: const Color(0xFF9B9B9B))),
           const SizedBox(height: 16),
           OutlinedButton(
-            onPressed: controller.onTryAgain,
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.all(20),
-              minimumSize: const Size(90, 50),
-              side: const BorderSide(color: AppColors.linkColor),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(60))),
+              onPressed: controller.onTryAgain,
+              style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.all(20),
+                  minimumSize: const Size(90, 50),
+                  side: const BorderSide(color: AppColors.linkColor),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(60))),
 
-            child: Text('Try Again', style: AppTextStyles.caption.copyWith(color: AppColors.linkColor))),
+              child: Text('Try Again', style: AppTextStyles.caption.copyWith(color: AppColors.linkColor))),
         ],
       ),
     );
@@ -81,9 +81,22 @@ class LocalTab extends GetView<HomeController> {
           children: [
             Row(
               children: [
-                Text(temp, style: AppTextStyles.displaySmall),
-                const SizedBox(width: 8),
-                Image.asset('assets/icons/weather_cloudy.png'),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                          color: Color(0xFF333333),
+                          width: 1)),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(temp, style: AppTextStyles.displaySmall),
+                      const SizedBox(width: 8),
+                      Image.asset('assets/icons/weather_cloudy.png', height: 30, width: 30),
+                    ],
+                  ),
+                ),
                 const SizedBox(width: 24),
                 Flexible(
                   child: SingleChildScrollView(
@@ -113,8 +126,8 @@ class LocalTab extends GetView<HomeController> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 decoration: BoxDecoration(
-                color: AppColors.textGreen,
-                  borderRadius: BorderRadius.circular(50)),
+                    color: AppColors.textGreen,
+                    borderRadius: BorderRadius.circular(50)),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -156,11 +169,11 @@ class LocalTab extends GetView<HomeController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Align(
-                alignment: Alignment.topRight,
-                child: GestureDetector(
-                  onTap: () => Get.back(),
-                  child:
-                  const Icon(Icons.close, color: Colors.white, size: 20))),
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                      onTap: () => Get.back(),
+                      child:
+                      const Icon(Icons.close, color: Colors.white, size: 20))),
               const SizedBox(height: 40),
               Text('Rain Forecast', style: AppTextStyles.button),
               const SizedBox(height: 6),
@@ -175,13 +188,13 @@ class LocalTab extends GetView<HomeController> {
                     Text('The probability of precipitation is $probability', style: AppTextStyles.labelMedium),
                     const SizedBox(height: 16),
                     Container(height: 250,
-                      padding: const EdgeInsets.fromLTRB(20, 70, 20, 50),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFFEBEBEB)),
-                        borderRadius: BorderRadius.circular(14)),
-                      child: CustomPaint(
-                        size: Size.infinite,
-                        painter: _RainChartPainter(data: barData))),
+                        padding: const EdgeInsets.fromLTRB(20, 70, 20, 50),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: const Color(0xFFEBEBEB)),
+                            borderRadius: BorderRadius.circular(14)),
+                        child: CustomPaint(
+                            size: Size.infinite,
+                            painter: _RainChartPainter(data: barData))),
                   ],
                 );
               }),
@@ -263,8 +276,8 @@ class _RainChartPainter extends CustomPainter {
     final yLabels = {'in': 0.0, '0.07': size.height * (0.08 / 0.08)};
     yLabels.forEach((text, yPos) {
       final tp = TextPainter(
-        text: TextSpan(text: text, style: yStyle),
-        textDirection: TextDirection.ltr)
+          text: TextSpan(text: text, style: yStyle),
+          textDirection: TextDirection.ltr)
         ..layout();
 
       if (text == 'in') {
@@ -297,9 +310,9 @@ class _RainChartPainter extends CustomPainter {
     while (drawn < distance) {
       final dashEnd = drawn + dashWidth;
       canvas.drawLine(
-        start + direction * drawn,
-        start + direction * (dashEnd < distance ? dashEnd : distance),
-        paint);
+          start + direction * drawn,
+          start + direction * (dashEnd < distance ? dashEnd : distance),
+          paint);
       drawn += dashWidth + dashSpace;
     }
   }

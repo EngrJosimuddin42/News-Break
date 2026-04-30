@@ -27,70 +27,76 @@ class CategoryNewsCard extends StatelessWidget {
 
     return Container(
       color: AppColors.background,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Publisher Header
-            _buildHeader(controller, context),
-      GestureDetector(
-        onTap: () {
-          if (hasVideo) {
-            Get.to(() => FullScreenVideoPlayer(url: news.videoUrl!));
-          } else {
-            Get.toNamed(Routes.NEWS_DETAIL, arguments: news);
-          }
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Media Section (Image/Video Thumbnail)
-            _buildMedia(hasVideo),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Publisher Header
+          _buildHeader(controller, context),
+          GestureDetector(
+            onTap: () {
+              if (hasVideo) {
+                Get.to(() => FullScreenVideoPlayer(url: news.videoUrl!));
+              } else {
+                Get.toNamed(Routes.NEWS_DETAIL, arguments: news);
+              }
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Media Section (Image/Video Thumbnail)
+                _buildMedia(hasVideo),
 
-            // Category & Time
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 12, 12, 4),
-              child: Row(
-                children: [
-                  Image.asset('assets/icons/person.png', height: 14, width: 14),
-                  const SizedBox(width: 3),
-                  Text(news.category, style: AppTextStyles.overline),
-                  const SizedBox(width: 8),
-                  Image.asset('assets/icons/location1.png', height: 14, width: 14),
-                  const SizedBox(width: 3),
-                  Flexible(
-                      child: Text(news.publisherMeta, style: AppTextStyles.overline.copyWith(color: AppColors.info,fontSize: 10),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1)),
-                  const SizedBox(width: 8),
-                  Image.asset('assets/icons/time.png', height: 14, width: 14),
-                  const SizedBox(width: 3),
-                  Text(news.timeAgo, style: AppTextStyles.overline.copyWith(color: AppColors.info)),
-                ],
-              ),
+                // Category & Time
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 12, 4),
+                  child: Row(
+                    children: [
+                      Image.asset('assets/icons/person.png', height: 14, width: 14),
+                      const SizedBox(width: 3),
+                      Flexible(
+                          child: Text(news.category, style: AppTextStyles.overline,
+                              overflow: TextOverflow.ellipsis, maxLines: 1)),
+                      const SizedBox(width: 8),
+                      Image.asset('assets/icons/location1.png', height: 14, width: 14),
+                      const SizedBox(width: 3),
+                      Flexible(
+                          child: Text(news.publisherMeta, style: AppTextStyles.overline.copyWith(color: AppColors.info,fontSize: 10),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1)),
+                      const SizedBox(width: 8),
+                      Image.asset('assets/icons/time.png', height: 14, width: 14),
+                      const SizedBox(width: 3),
+                      Flexible(
+                        child: Text(news.timeAgo,
+                            style: AppTextStyles.overline.copyWith(color: AppColors.info),
+                            overflow: TextOverflow.ellipsis, maxLines: 1),
+                      ),
+                    ],
+                  ),
+                ),
+
+                //  Title
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 12, 10),
+                    child: Text(news.title, style: AppTextStyles.button, maxLines: 1, overflow: TextOverflow.ellipsis)),
+
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 12, 12),
+                    child: Text(news.subtitle, style: AppTextStyles.labelMedium, maxLines: 3, overflow: TextOverflow.ellipsis)),
+
+              ],
             ),
+          ),
+          // Engagement Row
+          _buildEngagementRow(socialCtrl, context, tabType),
 
-            //  Title
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 12, 10),
-              child: Text(news.title, style: AppTextStyles.button, maxLines: 1, overflow: TextOverflow.ellipsis)),
-
-            Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 12, 12),
-                child: Text(news.subtitle, style: AppTextStyles.labelMedium, maxLines: 3, overflow: TextOverflow.ellipsis)),
-
-          ],
-        ),
+          SizedBox(height:4),
+          const Divider(color: Colors.white12, height: 2, thickness: 3),
+          SizedBox(height:4),
+        ],
       ),
-            // Engagement Row
-            _buildEngagementRow(socialCtrl, context, tabType),
-
-            SizedBox(height:4),
-            const Divider(color: Colors.white12, height: 2, thickness: 3),
-            SizedBox(height:4),
-          ],
-        ),
-      );
-    }
+    );
+  }
 
   // Header Widget
   Widget _buildHeader(HomeController controller, BuildContext context) {
@@ -116,15 +122,26 @@ class CategoryNewsCard extends StatelessWidget {
                     ],
                   ],
                 ),
-                Text('${news.publisherType ?? ""} · ${news.totalFollowers ?? "0"} followers', style: AppTextStyles.overline.copyWith(color: AppColors.textTertiary)),
+                Obx(() {
+                  final socialCtrl = Get.find<SocialInteractionController>();
+                  socialCtrl.initFollowerCount(news);
+                  final count = socialCtrl.followerCounts[news.id] ?? news.totalFollowers ?? '0';
+                  return Text(
+                    '${news.publisherType ?? ""} · $count followers',
+                    style: AppTextStyles.overline.copyWith(color: AppColors.textTertiary),
+                  );
+                }),
               ],
             ),
           ),
+
           FollowButton(news: news),
+
           const SizedBox(width: 16),
+
           GestureDetector(
-            onTap: () => controller.hideNews(news),
-            child: const Icon(Icons.close, color: Color(0xFF6C6C6C), size: 20)),
+              onTap: () => controller.hideNews(news),
+              child: const Icon(Icons.close, color: Color(0xFF6C6C6C), size: 20)),
         ],
       ),
     );
@@ -140,13 +157,13 @@ class CategoryNewsCard extends StatelessWidget {
           NetworkOrFileImage(url: news.imageUrl),
           if (hasVideo)
             Center(
-              child: Container(
-                width: 45, height: 45,
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2)),
-                child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 35))),
+                child: Container(
+                    width: 45, height: 45,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2)),
+                    child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 35))),
         ],
       ),
     );
@@ -201,14 +218,14 @@ class CategoryNewsCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Image.asset(
-                        isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
-                        width: 20, height: 20,
-                        color: isLiked ? Colors.blue : Colors.white),
+                          isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
+                          width: 20, height: 20,
+                          color: isLiked ? Colors.blue : Colors.white),
                       const SizedBox(width: 4),
                       Text(
-                        socialCtrl.getAdjustedNewsLikes(news, type: tabType),
-                        style: AppTextStyles.labelMedium.copyWith(
-                            color: isLiked ? Colors.blue : Colors.white)),
+                          socialCtrl.getAdjustedNewsLikes(news, type: tabType),
+                          style: AppTextStyles.labelMedium.copyWith(
+                              color: isLiked ? Colors.blue : Colors.white)),
                     ],
                   ),
                 );

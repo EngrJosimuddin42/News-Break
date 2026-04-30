@@ -19,13 +19,16 @@ class SocialInteractionController extends GetxController {
   final likedIds = <String>{}.obs;
   final dislikedIds = <String>{}.obs;
   final savedIds = <String>{}.obs;
-  final followedPublishers = <String>{}.obs;
   final blockedSources = <String>{}.obs;
   final hiddenIds = <String>{}.obs;
   final reportedIds = <String>{}.obs;
   final joinedCommunityIds = <int>{}.obs;
   final reactions = <String, String>{}.obs;
   final commentCounts = <dynamic, RxInt>{}.obs;
+  final Map<String, bool> followedPublishers = {};
+  final Map<int, int> _baseFollowerCounts = {};
+  final ValueNotifier<int> followNotifier = ValueNotifier<int>(0);
+  final followerCounts = <int, String>{}.obs;
   var likedComments = <String>[].obs;
   var dislikedComments = <String>[].obs;
   var savedItems = <String>[].obs;
@@ -170,9 +173,11 @@ class SocialInteractionController extends GetxController {
     if (!AuthHelper.checkLogin()) return;
 
     String name = "";
+    int? newsId;
 
     if (item is NewsModel) {
       name = item.publisherName;
+      newsId = item.id;
     } else if (item is CommentModel) {
       name = item.userName;
     } else {
@@ -181,31 +186,44 @@ class SocialInteractionController extends GetxController {
 
     if (name.isEmpty) return;
 
-    if (followedPublishers.contains(name)) {
-      // Unfollow logic
-      followedPublishers.remove(name);
+    if (item is NewsModel) initFollowerCount(item);
+
+    if (followedPublishers[name] == true) {
+      followedPublishers[name] = false;
       item.isFollowing = false;
-      if (item is NewsModel) _updateFollowerCount(item, -1);
+      if (newsId != null) {
+        final base = _baseFollowerCounts[newsId]!;
+        followerCounts[newsId] = formatCount(base);
+      }
       AppSnackbar.success(message: 'Unfollowed $name');
     } else {
-      // Follow logic
-      followedPublishers.add(name);
+      followedPublishers[name] = true;
       item.isFollowing = true;
-      if (item is NewsModel) _updateFollowerCount(item, 1);
+      if (newsId != null) {
+        final base = _baseFollowerCounts[newsId]!;
+        followerCounts[newsId] = formatCount(base + 1);
+      }
       AppSnackbar.success(message: 'Following $name');
     }
-    update();
+
+    followNotifier.value++;
+
     if (Get.isRegistered<CommentController>()) {
       Get.find<CommentController>().commentsList.refresh();
     }
   }
 
-  void _updateFollowerCount(dynamic item, int change) {
-    if (item.totalFollowers != null) {
-      int current = _parseStatCount(item.totalFollowers.toString());
-      item.totalFollowers = formatCount(current + change);
+  void initFollowerCount(NewsModel news) {
+    if (!_baseFollowerCounts.containsKey(news.id)) {
+      _baseFollowerCounts[news.id] = _parseStatCount(news.totalFollowers?.toString() ?? '0');
+      followerCounts[news.id] = news.totalFollowers ?? '0';
     }
   }
+
+
+  bool isFollowing(String publisherName) =>
+      followedPublishers[publisherName] == true;
+
 
   void onFollow(String publisher) {
     if (!isLoggedIn) Get.toNamed(Routes.SIGNIN);
@@ -226,8 +244,6 @@ class SocialInteractionController extends GetxController {
     suggestedPeople.removeAt(index);
   }
 
-  bool isFollowing(String publisherName) =>
-      followedPublishers.contains(publisherName);
 
 
   // parse

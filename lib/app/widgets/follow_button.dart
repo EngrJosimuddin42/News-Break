@@ -15,16 +15,26 @@ class FollowButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SocialInteractionController>(
-      builder: (controller) {
+    final socialCtrl = Get.find<SocialInteractionController>();
+
+    return ValueListenableBuilder<int>(
+      valueListenable: socialCtrl.followNotifier,
+      builder: (context, _, __) {
+        final isFollowing = socialCtrl.followedPublishers[news.publisherName] == true;
+
         return TextButton(
-          onPressed: () => controller.toggleFollow(news),
+          onPressed: () => socialCtrl.toggleFollow(news),
           style: TextButton.styleFrom(
-              padding: EdgeInsets.zero,
+            padding: EdgeInsets.zero,
             minimumSize: Size.zero,
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-          child: Text(news.isFollowing ? 'Following' : 'Follow', style: AppTextStyles.bodyMedium.copyWith(
-              color: news.isFollowing ? Colors.grey : AppColors.textGreen)),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+          child: Text(
+            isFollowing ? 'Following' : 'Follow',
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: isFollowing ? Colors.grey : AppColors.textGreen,
+            ),
+          ),
         );
       },
     );

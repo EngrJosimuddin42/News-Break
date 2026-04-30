@@ -90,6 +90,7 @@ class _NewsCardState extends State<NewsCard> {
         children: [
           PublisherAvatar.fromNews(news: news),
           const SizedBox(width: 10),
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,27 +100,30 @@ class _NewsCardState extends State<NewsCard> {
                     Flexible(
                         child: GestureDetector(
                             onTap: () => AboutProfileSheet.showFromNews(context, news),
-                      child: Text(news.publisherName, style: AppTextStyles.bodyMedium,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1))),
+                            child: Text(news.publisherName, style: AppTextStyles.bodyMedium,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1))),
                   ],
                 ),
                 const SizedBox(height: 8),
+
                 Row(
                   children: [
                     Image.asset('assets/icons/location1.png', height: 14, width: 14),
                     const SizedBox(width: 3),
                     Expanded(
-                      child: Text(news.publisherMeta, style: AppTextStyles.overline.copyWith(color: AppColors.info,fontSize: 10),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1)),
+                        child: Text(news.publisherMeta, style: AppTextStyles.overline.copyWith(color: AppColors.info,fontSize: 10),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1)),
+
                     const SizedBox(width: 8),
+
                     Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                    Image.asset('assets/icons/time.png', height: 14, width: 14),
-                    const SizedBox(width: 3),
-                    Text(news.timeAgo, style: AppTextStyles.overline.copyWith(color: AppColors.info))]),
+                          Image.asset('assets/icons/time.png', height: 14, width: 14),
+                          const SizedBox(width: 3),
+                          Text(news.timeAgo, style: AppTextStyles.overline.copyWith(color: AppColors.info))]),
                   ],
                 ),
               ],
@@ -140,9 +144,9 @@ class _NewsCardState extends State<NewsCard> {
         builder: (context, constraints) {
           final textStyle = AppTextStyles.bodyMedium;
           final textPainter = TextPainter(
-            text: TextSpan(text: news.title, style: textStyle),
-            maxLines: 1,
-            textDirection: TextDirection.ltr)
+              text: TextSpan(text: news.title, style: textStyle),
+              maxLines: 1,
+              textDirection: TextDirection.ltr)
             ..layout(maxWidth: constraints.maxWidth);
 
           if (!textPainter.didExceedMaxLines) {
@@ -154,14 +158,14 @@ class _NewsCardState extends State<NewsCard> {
             child: _isExpanded
                 ? Text(news.title, style: textStyle)
                 : RichText(
-              text: TextSpan(style: textStyle,
-                children: [
-                  TextSpan(text: news.title),
-                  TextSpan(text: ' See more', style: textStyle.copyWith(color: AppColors.textSecondary)),
-                ],
-              ),
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis),
+                text: TextSpan(style: textStyle,
+                  children: [
+                    TextSpan(text: news.title),
+                    TextSpan(text: ' See more', style: textStyle.copyWith(color: AppColors.textSecondary)),
+                  ],
+                ),
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis),
           );
         },
       ),
@@ -176,7 +180,7 @@ class _NewsCardState extends State<NewsCard> {
         alignment: Alignment.center,
         children: [
           NetworkOrFileImage(
-            url: news.imageUrl, height: 220, width: double.infinity),
+              url: news.imageUrl, height: 220, width: double.infinity),
           if (hasVideo)
             Container(
                 padding: const EdgeInsets.all(8),
@@ -195,7 +199,6 @@ class _NewsCardState extends State<NewsCard> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
           _buildLikeButton(news, socialCtrl),
           const SizedBox(width: 24),
@@ -216,9 +219,9 @@ class _NewsCardState extends State<NewsCard> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(
-              isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
-              width: 20, height: 20,
-              color: isLiked ? Colors.blue : Colors.white),
+                isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
+                width: 20, height: 20,
+                color: isLiked ? Colors.blue : Colors.white),
             const SizedBox(width: 6),
             Text(label, style: AppTextStyles.bodySmall.copyWith(
                 color: isLiked ? Colors.blue : AppColors.textSecondary)),

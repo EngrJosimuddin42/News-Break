@@ -113,10 +113,10 @@ class HomeController extends GetxController {
 
   void onAI() {
     showModalBottomSheet(
-      context: Get.context!,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => const NBotSheet());}
+        context: Get.context!,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (_) => const NBotSheet());}
 
   void onChooseLocation() {
     showModalBottomSheet(
@@ -299,7 +299,7 @@ class HomeController extends GetxController {
       publisherName: 'shefinds',
       publisherType: 'Partner publisher.',
       publisherMeta: 'Beverly Hills, CA',
-      totalFollowers: '833.3K',
+      totalFollowers: '500',
       imageUrl: 'https://images.unsplash.com/photo-1495020689067-958852a7765e?w=800',
       category: 'OPINION',
       author: 'Staff',
@@ -310,9 +310,9 @@ class HomeController extends GetxController {
       body: 'Lorem ipsum dolor sit amet consectetur. Fames quisque feugiat fermentum dictum nulla netus cras pellentesque. ',
       secondaryImageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800',
       secondarySubtitle: 'Reach more than 40 million users across the U.S. and engage with your target audience at the right moment.',
-      reactions: '1.4K',
-      likes: '1.4K',
-      comments: '4K',
+      reactions: '25',
+      likes: '14',
+      comments: '4',
     ),
     NewsModel(
       id: 999999,
@@ -502,9 +502,9 @@ class HomeController extends GetxController {
       subtitle: "'The View' Fans Think Whoopi Goldberg Has 'Lost Her Mind' After She Suggests Donald Trump's Iran War Is A Distraction From Nancy Guthrie...",
       body: 'Full news content here...',
       videoUrl: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4',
-      reactions: '1.4K',
-      likes: '1.4K',
-      comments: '4K',
+      reactions: '11',
+      likes: '18',
+      comments: '4',
       isVerified: true,
     ),
     NewsModel(
@@ -544,9 +544,9 @@ class HomeController extends GetxController {
       title: 'Best Concert In The Town',
       subtitle: "'The View' Fans Think Whoopi Goldberg Has 'Lost Her Mind' After She Suggests Donald Trump's Iran War Is A Distraction From Nancy Guthrie...",
       body: 'News detail content here...',
-      reactions: '1.4K',
-      likes: '1.4K',
-      comments: '4K',
+      reactions: '7',
+      likes: '35',
+      comments: '13',
       isVerified: true,
     ),
     NewsModel(
@@ -584,9 +584,9 @@ class HomeController extends GetxController {
       title: 'Best Concert In The Town',
       subtitle: 'The View Fans Think Whoopi Goldberg Has Lost Her Mind After She Suggests Donald Trump`s Iran War Is A Distraction From Nancy Guthrie...',
       body: 'Full news content...',
-      reactions: '1.4K',
-      likes: '1.4K',
-      comments: '4K',
+      reactions: '45',
+      likes: '33',
+      comments: '15',
     ),
     NewsModel(
       id: 999999,
@@ -679,9 +679,9 @@ class HomeController extends GetxController {
       title: 'Best Concert In The Town',
       subtitle: "'The View' Fans Think Whoopi Goldberg Has 'Lost Her Mind'...",
       body: 'Full content here...',
-      reactions: '1.4K',
-      likes: '1.4K',
-      comments: '4K',
+      reactions: '51',
+      likes: '70K',
+      comments: '27K',
     ),
     NewsModel(
       id: 102,
@@ -751,9 +751,9 @@ class HomeController extends GetxController {
       title: 'Best Concert In The Town',
       subtitle: "'The View' Fans Think Whoopi Goldberg Has 'Lost Her Mind'...",
       body: 'Full content here...',
-      reactions: '1.4K',
-      likes: '1.4K',
-      comments: '4K',
+      reactions: '37',
+      likes: '88',
+      comments: '64',
     ),
     NewsModel(
       id: 102,
@@ -823,9 +823,9 @@ class HomeController extends GetxController {
       title: 'Best Concert In The Town',
       subtitle: "'The View' Fans Think Whoopi Goldberg Has 'Lost Her Mind'...",
       body: 'Full content here...',
-      reactions: '1.4K',
-      likes: '1.4K',
-      comments: '4K',
+      reactions: '42',
+      likes: '101',
+      comments: '52',
     ),
     NewsModel(
       id: 102,
@@ -896,9 +896,9 @@ class HomeController extends GetxController {
       title: 'Best Concert In The Town',
       subtitle: "'The View' Fans Think Whoopi Goldberg Has 'Lost Her Mind'...",
       body: 'Full content here...',
-      reactions: '1.4K',
-      likes: '1.4K',
-      comments: '4K',
+      reactions: '38',
+      likes: '99',
+      comments: '22',
     ),
     NewsModel(
       id: 102,
@@ -969,9 +969,9 @@ class HomeController extends GetxController {
       title: 'Best Concert In The Town',
       subtitle: "'The View' Fans Think Whoopi Goldberg Has 'Lost Her Mind' After She Suggests Donald Trump's Iran War Is A Distraction From Nancy Guthrie...",
       body: 'Full news content here...',
-      reactions: '1.4K',
-      likes: '1.4K',
-      comments: '4K',
+      reactions: '44',
+      likes: '420',
+      comments: '43',
     ),
     NewsModel(
       id: 102,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:news_break/app/widgets/app_snackbar.dart';
 import '../../models/news_model.dart';
 import '../../models/user_model.dart';
 import '../../modules/ai/nbot_sheet.dart';
@@ -49,15 +48,6 @@ class NotificationController extends GetxController with GetSingleTickerProvider
     isLockScreenEnabled.value = !isLockScreenEnabled.value;
   }
 
-  void showLessAbout(String topic) {
-    AppSnackbar.success(message:
-      "We'll show you fewer stories about $topic.");
-  }
-
-  void blockSource(String sourceName) {
-    AppSnackbar.error(message:
-      "You won't see stories from $sourceName anymore.");
-  }
 
   void openSupportChat() {
     Get.bottomSheet(
@@ -111,9 +101,9 @@ class NotificationController extends GetxController with GetSingleTickerProvider
       timeAgo: '9hr',
       imageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=200',
       body: 'Full news content goes here...',
-      likes: '1.4K',
-      reactions: '1.4K',
-      comments: '4.3k',
+      likes: '25',
+      reactions: '18',
+      comments: '4',
       shares: '2.8k',
     ),
     NewsModel(

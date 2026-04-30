@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../controllers/notification/notification_controller.dart';
+import '../controllers/social_interaction_controller.dart';
 import '../models/news_model.dart';
 import '../models/reel_model.dart';
 import '../models/socials_model.dart';
@@ -13,7 +14,7 @@ class OptionsBottomSheet {
     required Widget reportSheet,
   }) {
     final controller = Get.find<NotificationController>();
-
+    final socialCtrl = Get.find<SocialInteractionController>();
 
     String author = 'Author';
     String category = 'Category';
@@ -37,7 +38,7 @@ class OptionsBottomSheet {
       context: context,
       backgroundColor: const Color(0xFF252525),
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -47,8 +48,8 @@ class OptionsBottomSheet {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: const Color(0xFF444444),
-                borderRadius: BorderRadius.circular(12)),
+                  color: const Color(0xFF444444),
+                  borderRadius: BorderRadius.circular(12)),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -59,7 +60,7 @@ class OptionsBottomSheet {
                     title: 'Show less about: $author',
                     onTap: () {
                       Get.back();
-                      controller.showLessAbout(author);
+                      socialCtrl.showLessAbout(author);
                     },
                   ),
 
@@ -69,7 +70,7 @@ class OptionsBottomSheet {
                     title: 'Show less about: $category',
                     onTap: () {
                       Get.back();
-                      controller.showLessAbout(category);
+                      socialCtrl.showLessAbout(category);
                     },
                   ),
 
@@ -80,7 +81,7 @@ class OptionsBottomSheet {
                     title: 'Block source: $publisher',
                     onTap: () {
                       Get.back();
-                      controller.blockSource(publisher);
+                      socialCtrl.blockSource(publisher);
                     },
                   ),
 
@@ -98,27 +99,27 @@ class OptionsBottomSheet {
               ),
             ),
 
-          const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-          // Support/AI Request Container
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF000000),
-              borderRadius: BorderRadius.circular(12)),
-            child: _optionTile(
-              icon: 'assets/icons/add.png',
-              iconColor: Colors.blueAccent,
-              title: 'Ask/request/report anything',
-              onTap: () {
-                Get.back();
-                controller.openSupportChat();
-              },
+            // Support/AI Request Container
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                  color: const Color(0xFF000000),
+                  borderRadius: BorderRadius.circular(12)),
+              child: _optionTile(
+                icon: 'assets/icons/add.png',
+                iconColor: Colors.blueAccent,
+                title: 'Ask/request/report anything',
+                onTap: () {
+                  Get.back();
+                  controller.openSupportChat();
+                },
+              ),
             ),
-          ),
-          const SizedBox(height: 30),
-        ],
-          ),
+            const SizedBox(height: 30),
+          ],
+        ),
       ),
     );
   }
@@ -152,8 +153,8 @@ class OptionsBottomSheet {
               Icon(icon as IconData, color: iconColor, size: 20),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(title, style: AppTextStyles.caption.copyWith(color: titleColor),
-                overflow: TextOverflow.ellipsis)),
+                child: Text(title, style: AppTextStyles.caption.copyWith(color: titleColor),
+                    overflow: TextOverflow.ellipsis)),
           ],
         ),
       ),

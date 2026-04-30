@@ -297,6 +297,7 @@ class SocialInteractionController extends GetxController {
     AppSnackbar.success(message: 'Content from $userName hidden');
   }
 
+
   bool isBlocked(String publisherName) =>
       blockedSources.contains(publisherName);
 
@@ -307,6 +308,12 @@ class SocialInteractionController extends GetxController {
     hiddenIds.add(key);
     AppSnackbar.success(message: 'Content hidden from your feed');
   }
+
+  void showLessAbout(String topic) {
+    AppSnackbar.success(message:
+    "We'll show you fewer stories about $topic.");
+  }
+
 
   bool isHidden(int id, {String type = 'news'}) =>
       hiddenIds.contains('${type}_$id');

@@ -24,7 +24,7 @@ class SocialInteractionController extends GetxController {
   final reportedIds = <String>{}.obs;
   final joinedCommunityIds = <int>{}.obs;
   final reactions = <String, String>{}.obs;
-  final commentCounts = <dynamic, RxInt>{}.obs;
+  final Map<dynamic, RxInt> commentCounts = {};
   final Map<String, bool> followedPublishers = {};
   final Map<int, int> _baseFollowerCounts = {};
   final ValueNotifier<int> followNotifier = ValueNotifier<int>(0);

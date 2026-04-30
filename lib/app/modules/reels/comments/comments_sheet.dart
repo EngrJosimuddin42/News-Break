@@ -11,8 +11,7 @@ import '../../../controllers/social_interaction_controller.dart';
 import '../../../models/comment_model.dart';
 import '../../../models/comment_source.dart';
 import 'option_sheet.dart';
-
-class CommentsSheet extends StatelessWidget {
+class CommentsSheet extends StatefulWidget {
   final dynamic id;
   final CommentSource source;
 
@@ -23,11 +22,24 @@ class CommentsSheet extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final authController = Get.find<AuthController>();
-    final commentController = Get.find<CommentController>();
-    final socialCtrl = Get.find<SocialInteractionController>();
+  State<CommentsSheet> createState() => _CommentsSheetState();
+}
 
+class _CommentsSheetState extends State<CommentsSheet> {
+  late final AuthController _authController;
+  late final CommentController _commentController;
+  late final SocialInteractionController _socialCtrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _authController = Get.find<AuthController>();
+    _commentController = Get.find<CommentController>();
+    _socialCtrl = Get.find<SocialInteractionController>();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.7,
       decoration: const BoxDecoration(
@@ -45,9 +57,10 @@ class CommentsSheet extends StatelessWidget {
               children: [
                 Expanded(
                   child: Obx(() => Text(
-                      '${socialCtrl.formatCount(commentController.commentsList.length)} Comments',
+                      '${_socialCtrl.formatCount(_commentController.commentsList.length)} Comments',
                       textAlign: TextAlign.center,
-                      style: AppTextStyles.bodyMedium))),
+                      style: AppTextStyles.bodyMedium)),
+                ),
                 GestureDetector(
                     onTap: () => Get.back(),
                     child: const Icon(Icons.close, color: Colors.white, size: 20)),
@@ -58,33 +71,35 @@ class CommentsSheet extends StatelessWidget {
           // Comments list
           Expanded(
             child: Obx(() {
-              if (commentController.isCommentsLoading.value) {
+              if (_commentController.isCommentsLoading.value) {
                 return const Center(
                     child: CircularProgressIndicator(color: Colors.white));
               }
-              if (commentController.commentsList.isEmpty) {
+              if (_commentController.commentsList.isEmpty) {
                 return const Center(
-                    child: Text("No comments yet", style: TextStyle(color: Colors.white)));
+                    child: Text("No comments yet",
+                        style: TextStyle(color: Colors.white)));
               }
               return ListView.builder(
                 padding: const EdgeInsets.only(top: 8),
-                itemCount: commentController.commentsList.length,
+                itemCount: _commentController.commentsList.length,
                 itemBuilder: (_, i) => _buildComment(
-                    context,
-                    commentController.commentsList[i],
-                    commentController,
-                    socialCtrl),
+                    context, _commentController.commentsList[i]),
               );
             }),
           ),
 
           // Write comment input
           Container(
-            padding: EdgeInsets.only(left: 12, right: 12, top: 12,
+            padding: EdgeInsets.only(
+                left: 12,
+                right: 12,
+                top: 12,
                 bottom: MediaQuery.of(context).viewInsets.bottom + 12),
             child: GestureDetector(
-              onTap: () => _showWriteCommentSheet(context, id),
-              child: Container( height: 44,
+              onTap: () => _showWriteCommentSheet(context, widget.id),
+              child: Container(
+                height: 44,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                     color: const Color(0xFF333333),
@@ -94,16 +109,18 @@ class CommentsSheet extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: Obx(() => Image.network(
-                        authController.user.value?.profileImageUrl ?? '',
+                        _authController.user.value?.profileImageUrl ?? '',
                         width: 24,
                         height: 24,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => const Icon(
-                            Icons.account_circle,
-                            color: Colors.grey,
-                            size: 28)))),
+                        errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.account_circle,
+                            color: Colors.grey, size: 28),
+                      )),
+                    ),
                     const SizedBox(width: 10),
-                    Text('Write a comment...', style: AppTextStyles.overline.copyWith(fontSize: 10)),
+                    Text('Write a comment...',
+                        style: AppTextStyles.overline.copyWith(fontSize: 10)),
                   ],
                 ),
               ),
@@ -115,14 +132,14 @@ class CommentsSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildComment(BuildContext context, CommentModel comment,
-      CommentController commentController,SocialInteractionController socialCtrl) {
+  Widget _buildComment(BuildContext context, CommentModel comment) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar( radius: 18,
+          CircleAvatar(
+              radius: 18,
               backgroundImage: NetworkImage(comment.userProfileImage),
               backgroundColor: Colors.grey[800]),
           const SizedBox(width: 10),
@@ -143,19 +160,24 @@ class CommentsSheet extends StatelessWidget {
                         ],
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () => socialCtrl.toggleFollow(comment.userName),
-                      child: Obx(() {
-                        final bool isFollowing = socialCtrl.isFollowing(comment.userName);
-                        return Text(
-                          isFollowing ? 'Following' : 'Follow',
-                          style: AppTextStyles.overline.copyWith(
-                            color: isFollowing
-                                ? Colors.grey
-                                : AppColors.textGreen,
-                            fontWeight: FontWeight.bold),
+
+                    ValueListenableBuilder<int>(
+                      valueListenable: _socialCtrl.followNotifier,
+                      builder: (context, error, stackTrace) {
+                        final bool isFollowing =
+                        _socialCtrl.isFollowing(comment.userName);
+                        return GestureDetector(
+                          onTap: () => _socialCtrl.toggleFollow(comment),
+                          child: Text(
+                            isFollowing ? 'Following' : 'Follow',
+                            style: AppTextStyles.overline.copyWith(
+                                color: isFollowing
+                                    ? Colors.grey
+                                    : AppColors.textGreen,
+                                fontWeight: FontWeight.bold),
+                          ),
                         );
-                      }),
+                      },
                     ),
                   ],
                 ),
@@ -163,61 +185,75 @@ class CommentsSheet extends StatelessWidget {
                 _buildCommentBody(comment),
                 const SizedBox(height: 10),
 
-                // Actions
                 Row(
                   children: [
-                    // Reply Button
-                    _commentAction('assets/icons/comment.png', 'Reply', onTap: () {
-                      _showWriteCommentSheet(context, id,
+                    // Reply
+                    _commentAction('assets/icons/comment.png', 'Reply',
+                        onTap: () => _showWriteCommentSheet(
+                          context, widget.id,
                           replyToId: comment.id.toString(),
-                          replyToName: comment.userName
-                      );
-                    }),
-                    const SizedBox(width: 16),
+                          replyToName: comment.userName,
+                        )),
+                    const SizedBox(width: 12),
 
-                    //  LIKE Button
+                    // Like
                     Obx(() {
                       final commentId = comment.id.toString();
-                      final isLiked = socialCtrl.isCommentLiked(commentId);
-                      final currentLikes = socialCtrl.getAdjustedLikes(commentId, comment.likes);
-
+                      final isLiked = _socialCtrl.isCommentLiked(commentId);
+                      final currentLikes =
+                      _socialCtrl.getAdjustedLikes(commentId, comment.likes);
                       return _commentAction(
                         'assets/icons/like_up.png',
-                        socialCtrl.formatCount(currentLikes),
-                        onTap: () => socialCtrl.likeComment(commentId),
+                        _socialCtrl.formatCount(currentLikes),
+                        onTap: () => _socialCtrl.likeComment(commentId),
                         iconColor: isLiked ? Colors.blue : Colors.white,
                       );
                     }),
+                    const SizedBox(width: 12),
 
-                    const SizedBox(width: 16),
-
-                    // DISLIKE Button
+                    // Dislike
                     Obx(() {
                       final commentId = comment.id.toString();
-                      final isDisliked = socialCtrl.isCommentDisliked(commentId);
+                      final isDisliked =
+                      _socialCtrl.isCommentDisliked(commentId);
                       return _commentAction(
-                         'assets/icons/like_down.png','',
-                        onTap: () => socialCtrl.dislikeComment(commentId),
+                        'assets/icons/like_down.png', '',
+                        onTap: () => _socialCtrl.dislikeComment(commentId),
                         iconColor: isDisliked ? Colors.blue : Colors.white,
                       );
                     }),
+                    const SizedBox(width: 12),
 
-                    const SizedBox(width: 16),
+                    // Share
+                    _commentAction('assets/icons/share.png', 'Share',
+                        onTap: () => _socialCtrl.shareContent(
+                            comment.id.toString(),
+                            type: 'comment')),
 
-                    // SHARE Button
-                    _commentAction('assets/icons/share.png', 'Share', onTap: () {
-                      socialCtrl.shareContent(comment.id.toString(), type: 'comment');
-                    }),
 
-                    const Spacer(),
-                    Text(comment.createdAt,
-                        style: const TextStyle(color: Colors.grey, fontSize: 10)),
-                    const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: () =>
-                          _showCommentOptionsSheet(context, id, comment.userName),
-                      child: Icon(Icons.more_vert,
-                          color: AppColors.surface, size: 20)),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              comment.createdAt,
+                              style: const TextStyle(
+                                  color: Colors.grey, fontSize: 10),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          GestureDetector(
+                            onTap: () => _showCommentOptionsSheet(
+                                context, widget.id, comment.userName),
+                            child: Icon(Icons.more_vert,
+                                color: AppColors.surface, size: 20),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -228,28 +264,23 @@ class CommentsSheet extends StatelessWidget {
     );
   }
 
+
   Widget _buildCommentBody(CommentModel comment) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //  GIF
         if (comment.gifUrl != null && comment.gifUrl!.isNotEmpty)
-          _buildMediaFrame(
-            Image.network(
-              comment.gifUrl!,
+          _buildMediaFrame(Image.network(comment.gifUrl!,
               fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Text("GIF could not load",
+              errorBuilder: (context, error, stackTrace) => const Text(
+                  "GIF could not load",
                   style: TextStyle(color: Colors.red)))),
-
-        // Image
         if (comment.imagePath != null && comment.imagePath!.isNotEmpty)
-          _buildMediaFrame(
-            Image.file( File(comment.imagePath!),
+          _buildMediaFrame(Image.file(File(comment.imagePath!),
               fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Text("Image error",
+              errorBuilder: (context, error, stackTrace) => const Text(
+                  "Image error",
                   style: TextStyle(color: Colors.red)))),
-
-        // Text
         if (comment.text.isNotEmpty) ...[
           if (comment.gifUrl != null || comment.imagePath != null)
             const SizedBox(height: 6),
@@ -262,12 +293,13 @@ class CommentsSheet extends StatelessWidget {
   Widget _buildMediaFrame(Widget child) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
-      child: Container( height: 140, width: 180,
-          color: Colors.black12, child: child),
+      child: Container(
+          height: 140, width: 180, color: Colors.black12, child: child),
     );
   }
 
-  Widget _commentAction(String assetIcon, String label, {VoidCallback? onTap, Color iconColor = Colors.white}) {
+  Widget _commentAction(String assetIcon, String label,
+      {VoidCallback? onTap, Color iconColor = Colors.white}) {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -284,21 +316,29 @@ class CommentsSheet extends StatelessWidget {
     );
   }
 
-  void _showWriteCommentSheet(BuildContext context, dynamic id, {String? replyToId, String? replyToName}) {
+  void _showWriteCommentSheet(BuildContext context, dynamic id,
+      {String? replyToId, String? replyToName}) {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-        builder: (context) => WriteCommentSheet(reelId: id, onlyEmoji: false,replyToId: replyToId,replyToName: replyToName));
+        constraints:
+        BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+        builder: (context) => WriteCommentSheet(
+            reelId: id,
+            onlyEmoji: false,
+            replyToId: replyToId,
+            replyToName: replyToName));
   }
 
-  void _showCommentOptionsSheet(BuildContext context, dynamic id, String name) {
+  void _showCommentOptionsSheet(
+      BuildContext context, dynamic id, String name) {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+        constraints:
+        BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
         builder: (_) => OptionsSheet(reelId: id, authorName: name));
   }
 }

@@ -114,8 +114,7 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                         await commentController.submitComment(
                           widget.reelId,
                           gifUrl: gifUrl,
-                          imagePath: imagePath,
-                        );
+                          imagePath: imagePath);
                       }
                     },
 

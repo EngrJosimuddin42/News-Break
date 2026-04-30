@@ -318,6 +318,11 @@ class _CommentsSheetState extends State<CommentsSheet> {
 
   void _showWriteCommentSheet(BuildContext context, dynamic id,
       {String? replyToId, String? replyToName}) {
+
+    final commentCtrl = Get.find<CommentController>();
+    final String type = commentCtrl.currentTabType;
+    final String? author = commentCtrl.currentAuthor;
+
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -327,6 +332,8 @@ class _CommentsSheetState extends State<CommentsSheet> {
         builder: (context) => WriteCommentSheet(
             reelId: id,
             onlyEmoji: false,
+            type: type,
+            author: author,
             replyToId: replyToId,
             replyToName: replyToName));
   }

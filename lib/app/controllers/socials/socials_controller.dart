@@ -81,8 +81,8 @@ class SocialsController extends GetxController {
         'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600',
         'https://images.unsplash.com/photo-1495020689067-958852a7765e?w=600',
       ],
-      likes: '1.4K',
-      comments: '4K',
+      likes: '520',
+      comments: '150',
       shares: '67',
     ),
     SocialsModel(
@@ -95,7 +95,7 @@ class SocialsController extends GetxController {
       text: 'Lorem ipsum dolor sit amet consectetur. Ut sed elementum pellentesque erat. In nisl facilisis ornare felis cras purus amet cursus.',
       imageUrls: ['https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=600'],
       likes: '980',
-      comments: '2.1K',
+      comments: '22',
       shares: '34',
     ),
   ];

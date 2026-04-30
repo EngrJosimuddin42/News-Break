@@ -20,6 +20,42 @@ class SocialsPostCard extends StatelessWidget {
     required this.post,
   });
 
+  //  Helper: tempNews from post
+  NewsModel _buildTempNews() {
+    return NewsModel(
+      id: post.id,
+      category: post.category,
+      title: post.text,
+      author: post.userName,
+      publisherName: post.userRole,
+      timeAgo: post.timeAgo,
+      imageUrl: post.imageUrls.isNotEmpty ? post.imageUrls[0] : '',
+      body: post.text,
+      publisherMeta: post.userRole,
+      likes: post.likes,
+      comments: post.comments,
+    );
+  }
+
+  void _navigateToDetail() {
+    Get.toNamed(Routes.NEWS_DETAIL, arguments: {
+      'news': NewsModel(
+        id: post.id,
+        category: post.category,
+        title: post.text,
+        author: post.userName,
+        publisherName: post.userRole,
+        timeAgo: post.timeAgo,
+        imageUrl: post.imageUrls.isNotEmpty ? post.imageUrls[0] : '',
+        body: post.text,
+        publisherMeta: post.userRole,
+        likes: post.likes,
+        comments: post.comments,
+      ),
+      'tabType': 'post',
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,28 +69,18 @@ class SocialsPostCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PublisherAvatar.fromUrl(
-                imageUrl: post.userImageUrl,
-                name: post.userName,
-                size: 42),
+                  imageUrl: post.userImageUrl,
+                  name: post.userName,
+                  size: 42),
               const SizedBox(width: 10),
               Expanded(
-                child: Text(post.userName, style: AppTextStyles.bodyMedium)),
+                  child: Text(post.userName, style: AppTextStyles.bodyMedium)),
 
               GestureDetector(
                 onTap: () {
-                  final postAsNews = NewsModel(
-                    id: post.id,
-                    category: post.category,
-                    title: post.text,
-                    author: post.userName,
-                    publisherName: post.userRole,
-                    timeAgo: post.timeAgo,
-                    imageUrl: post.imageUrls.isNotEmpty ? post.imageUrls[0] : '',
-                    body: post.text,
-                    publisherMeta: post.userRole);
-                   OptionsBottomSheet.show(
+                  OptionsBottomSheet.show(
                     context,
-                    news: postAsNews,
+                    news: _buildTempNews(),
                     reportSheet: const SocialsReportSheet(),
                   );
                 },
@@ -63,129 +89,107 @@ class SocialsPostCard extends StatelessWidget {
             ],
           ),
 
-       // Post Text
+          // Post Text + Images
           const SizedBox(height: 8),
-        GestureDetector(
-          onTap: () => Get.toNamed(Routes.NEWS_DETAIL, arguments: NewsModel(
-            id: post.id,
-            category: post.category,
-            title: post.text,
-            author: post.userName,
-            publisherName: post.userRole,
-            timeAgo: post.timeAgo,
-            imageUrl: post.imageUrls.isNotEmpty ? post.imageUrls[0] : '',
-            body: post.text,
-            publisherMeta: post.userRole,
-            likes: post.likes,
-            comments: post.comments)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Text
-              Text(post.text, style: AppTextStyles.bodyLarge.copyWith(color: Colors.white),
-                maxLines: 4,
-                overflow: TextOverflow.ellipsis),
-              const SizedBox(height: 10),
+          GestureDetector(
+            onTap: _navigateToDetail,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  post.text,
+                  style: AppTextStyles.bodyLarge.copyWith(color: Colors.white),
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis),
 
-             // Images
-              if (post.imageUrls.isNotEmpty)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Column(
-                    children: post.imageUrls.map((url) => NetworkOrFileImage(
-                      url: url,
-                      width: double.infinity,
-                    )).toList())),
-            ],
+                const SizedBox(height: 10),
+
+                if (post.imageUrls.isNotEmpty)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Column(
+                      children: post.imageUrls.map((url) => NetworkOrFileImage(
+                        url: url,
+                        width: double.infinity,
+                      )).toList(),
+                    ),
+                  ),
+              ],
+            ),
           ),
-        ),
 
           // Engagement
           const SizedBox(height: 10),
-                 Row(
-                  children: [
+          Row(
+            children: [
 
-                    //  Like
-                    Obx(() {
-                      final tempNews = NewsModel(
-                        id: post.id,
-                        author: post.userName,
-                        title: post.text,
-                        category: post.category,
-                        publisherName: post.userName,
-                        timeAgo: post.timeAgo,
-                        imageUrl: post.imageUrls.isNotEmpty ? post.imageUrls[0] : '',
-                        body: post.text,
-                        publisherMeta: post.userRole,
-                      );
+              // Like
+              Obx(() {
+                final tempNews = _buildTempNews();
+                final ctrl = SocialInteractionController.to;
+                final isLiked = ctrl.isLiked(tempNews, type: 'post');
 
-                      final isLiked = SocialInteractionController.to.isLiked(tempNews, type: 'post');
-
-                      return GestureDetector(
-                        onTap: () => SocialInteractionController.to.toggleLike(tempNews, type: 'post'),
-                        child: Row(
-                          children: [
-                            Image.asset('assets/icons/heart.png',
-                                width: 20, height: 20,
-                                color: isLiked ? Colors.red : AppColors.surface),
-                            const SizedBox(width: 4),
-
-                            Text( SocialInteractionController.to.getAdjustedNewsLikes(tempNews, type: 'post'),
-                                style: AppTextStyles.bodyLarge.copyWith(color: isLiked ? Colors.red : AppColors.surface)
-                            ),
-                          ],
+                return GestureDetector(
+                  onTap: () => ctrl.toggleLike(tempNews, type: 'post'),
+                  child: Row(
+                    children: [
+                      Image.asset( 'assets/icons/heart.png', width: 20, height: 20,
+                        color: isLiked ? Colors.red : AppColors.surface),
+                      const SizedBox(width: 4),
+                      Text(
+                        ctrl.getAdjustedNewsLikes(tempNews, type: 'post'),
+                        style: AppTextStyles.bodyLarge.copyWith(
+                          color: isLiked ? Colors.red : AppColors.surface,
                         ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+
+              const SizedBox(width: 20),
+
+              // Comment
+              GestureDetector(
+                onTap: () => SocialInteractionController.to
+                    .openComments(post.id, CommentSource.social, tabType: 'post', author: post.userName),
+                child: Row(
+                  children: [
+                    Image.asset('assets/icons/comment.png', width: 20, height: 20),
+                    const SizedBox(width: 4),
+                    Obx(() {
+                      final tempNews = _buildTempNews();
+                      final count = SocialInteractionController.to
+                          .getCommentCount(tempNews, source: 'post');
+
+                      return Text(
+                        SocialInteractionController.to.formatCount(count.value),
+                        style: AppTextStyles.bodyLarge.copyWith(color: AppColors.surface),
                       );
                     }),
+                  ],
+                ),
+              ),
 
-                    const SizedBox(width: 20),
+              const SizedBox(width: 20),
 
-                    //Comment
-                    GestureDetector(
-                      onTap: () => SocialInteractionController.to.openComments(post.id, CommentSource.social),
-                      child: Row(
-                        children: [
-                          Image.asset('assets/icons/comment.png', width: 20, height: 20),
-                          const SizedBox(width: 4),
-                          Obx(() {
-                            final tempNews = NewsModel(
-                              id: post.id,
-                              author: post.userName,
-                              title: post.text,
-                              category: post.category,
-                              publisherName: post.userName,
-                              timeAgo: post.timeAgo,
-                              imageUrl: post.imageUrls.isNotEmpty ? post.imageUrls[0] : '',
-                              body: post.text,
-                              publisherMeta: post.userRole,
-                            );
-
-                            final count = SocialInteractionController.to.getCommentCount(tempNews, source: 'post');
-
-                            return Text(
-                                SocialInteractionController.to.formatCount(count.value),
-                                style: AppTextStyles.bodyLarge.copyWith(color: AppColors.surface)
-                            );
-                          }),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(width: 20),
-
-                    // Share
-                    GestureDetector(
-                      onTap: () => SocialInteractionController.to.share(id: post.id, title: post.text, type: 'post'),
-                      child: Row(
-                        children: [
-                          Image.asset('assets/icons/share.png', width: 20, height: 20),
-                          const SizedBox(width: 4),
-                          Text(post.shares, style: AppTextStyles.bodyLarge.copyWith(color: AppColors.surface)),
-                        ],
-                      ),
+              // Share
+              GestureDetector(
+                onTap: () => SocialInteractionController.to
+                    .share(id: post.id, title: post.text, type: 'post'),
+                child: Row(
+                  children: [
+                    Image.asset('assets/icons/share.png', width: 20, height: 20),
+                    const SizedBox(width: 4),
+                    Text( post.shares,
+                      style: AppTextStyles.bodyLarge.copyWith(color: AppColors.surface),
                     ),
                   ],
                 ),
+              ),
+            ],
+          ),
+
           const SizedBox(height: 12),
           const Divider(color: Colors.white12, height: 1),
         ],

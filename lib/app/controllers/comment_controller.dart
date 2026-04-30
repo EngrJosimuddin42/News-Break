@@ -32,23 +32,27 @@ class CommentController extends GetxController {
     super.onClose();
   }
 
-  void loadComments(dynamic id, CommentSource source, {String tabType = 'news', String? author}) {
+  void loadComments(dynamic id, CommentSource source,
+      {String tabType = 'news', String? author}) {
     currentId = id;
     currentSource = source;
     currentTabType = tabType;
     currentAuthor = author;
-    final String key = _getCacheKey(id, tabType);
 
-    if (_allCommentsCache.containsKey(key) && _allCommentsCache[key]!.isNotEmpty) {
+
+    final String key = _getCacheKey(id, source);
+
+    if (_allCommentsCache.containsKey(key) &&
+        _allCommentsCache[key]!.isNotEmpty) {
       commentsList.assignAll(_allCommentsCache[key]!);
     } else {
-      fetchComments(id, tabType: tabType);
+      fetchComments(id, source: source);
     }
   }
 
-  //tabType unique key
-  String _getCacheKey(dynamic id, String tabType) {
-    return '${tabType}_$id';
+
+  String _getCacheKey(dynamic id, CommentSource source) {
+    return '${source.name}_$id';
   }
 
   Future<void> submitComment(dynamic id, {String? gifUrl, String? imagePath}) async {
@@ -73,11 +77,10 @@ class CommentController extends GetxController {
 
     commentsList.insert(0, newComment);
 
-    // tabType  cache save
-    final String key = _getCacheKey(id, currentTabType);
+
+    final String key = _getCacheKey(id, currentSource!);
     _allCommentsCache[key] = List.from(commentsList);
 
-    // tabType  count increment
     Get.find<SocialInteractionController>()
         .incrementCommentCount(id, source: currentTabType, author: currentAuthor);
 
@@ -91,7 +94,8 @@ class CommentController extends GetxController {
     Get.back();
   }
 
-  Future<void> fetchComments(dynamic id, {String tabType = 'news'}) async {
+
+  Future<void> fetchComments(dynamic id, {CommentSource source = CommentSource.news}) async {
     try {
       isCommentsLoading(true);
       await Future.delayed(const Duration(milliseconds: 500));
@@ -119,7 +123,7 @@ class CommentController extends GetxController {
 
       commentsList.assignAll(dummyComments);
 
-      final String key = _getCacheKey(id, tabType);
+      final String key = _getCacheKey(id, source);
       _allCommentsCache[key] = List.from(dummyComments);
     } finally {
       isCommentsLoading(false);

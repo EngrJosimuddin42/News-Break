@@ -29,9 +29,17 @@ class NewsCard extends StatefulWidget {
   @override
   State<NewsCard> createState() => _NewsCardState();
 }
-
 class _NewsCardState extends State<NewsCard> {
   bool _isExpanded = false;
+  late final SocialInteractionController _socialCtrl;
+  late final RxInt _commentCount;
+
+  @override
+  void initState() {
+    super.initState();
+    _socialCtrl = Get.find<SocialInteractionController>();
+    _commentCount = _socialCtrl.getCommentCount(widget.news, source: widget.tabType);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +51,8 @@ class _NewsCardState extends State<NewsCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Publisher Row
           _buildPublisherRow(news),
-
-          SizedBox(height:24),
-
+          const SizedBox(height: 24),
           GestureDetector(
             onTap: () {
               if (hasVideo) {
@@ -59,29 +64,21 @@ class _NewsCardState extends State<NewsCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Media Section (Image/Video)
                 _buildMediaSection(news, hasVideo),
-
-                SizedBox(height:16),
-
-                // News Title (Text)
+                const SizedBox(height: 16),
                 _buildTitleSection(news),
               ],
             ),
           ),
-
-          // Action Row (Like/Comment)
           _buildActionRow(news),
-
-          SizedBox(height:16),
+          const SizedBox(height: 16),
           const Divider(color: Colors.white12, height: 2, thickness: 3),
-          SizedBox(height:4),
+          const SizedBox(height: 4),
         ],
       ),
     );
   }
 
-  // Publisher Header
   Widget _buildPublisherRow(NewsModel news) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
@@ -90,7 +87,6 @@ class _NewsCardState extends State<NewsCard> {
         children: [
           PublisherAvatar.fromNews(news: news),
           const SizedBox(width: 10),
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,32 +94,44 @@ class _NewsCardState extends State<NewsCard> {
                 Row(
                   children: [
                     Flexible(
-                        child: GestureDetector(
-                            onTap: () => AboutProfileSheet.showFromNews(context, news),
-                            child: Text(news.publisherName, style: AppTextStyles.bodyMedium,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1))),
+                      child: GestureDetector(
+                        onTap: () => AboutProfileSheet.showFromNews(context, news),
+                        child: Text(
+                          news.publisherName,
+                          style: AppTextStyles.bodyMedium,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 8),
-
                 Row(
                   children: [
                     Image.asset('assets/icons/location1.png', height: 14, width: 14),
                     const SizedBox(width: 3),
                     Expanded(
-                        child: Text(news.publisherMeta, style: AppTextStyles.overline.copyWith(color: AppColors.info,fontSize: 10),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1)),
-
+                      child: Text(
+                        news.publisherMeta,
+                        style: AppTextStyles.overline.copyWith(
+                            color: AppColors.info, fontSize: 10),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
                     const SizedBox(width: 8),
-
                     Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Image.asset('assets/icons/time.png', height: 14, width: 14),
-                          const SizedBox(width: 3),
-                          Text(news.timeAgo, style: AppTextStyles.overline.copyWith(color: AppColors.info))]),
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset('assets/icons/time.png', height: 14, width: 14),
+                        const SizedBox(width: 3),
+                        Text(
+                          news.timeAgo,
+                          style: AppTextStyles.overline.copyWith(color: AppColors.info),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -136,7 +144,6 @@ class _NewsCardState extends State<NewsCard> {
     );
   }
 
-  // Title Section with "See more"
   Widget _buildTitleSection(NewsModel news) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 10, 16, 10),
@@ -144,10 +151,10 @@ class _NewsCardState extends State<NewsCard> {
         builder: (context, constraints) {
           final textStyle = AppTextStyles.bodyMedium;
           final textPainter = TextPainter(
-              text: TextSpan(text: news.title, style: textStyle),
-              maxLines: 1,
-              textDirection: TextDirection.ltr)
-            ..layout(maxWidth: constraints.maxWidth);
+            text: TextSpan(text: news.title, style: textStyle),
+            maxLines: 1,
+            textDirection: TextDirection.ltr,
+          )..layout(maxWidth: constraints.maxWidth);
 
           if (!textPainter.didExceedMaxLines) {
             return Text(news.title, style: textStyle);
@@ -156,23 +163,33 @@ class _NewsCardState extends State<NewsCard> {
           return GestureDetector(
             onTap: () => setState(() => _isExpanded = !_isExpanded),
             child: _isExpanded
-                ? Text(news.title, style: textStyle)
+                ? Text(
+              news.title,
+              style: textStyle,
+              softWrap: true,
+              overflow: TextOverflow.visible,
+            )
                 : RichText(
-                text: TextSpan(style: textStyle,
-                  children: [
-                    TextSpan(text: news.title),
-                    TextSpan(text: ' See more', style: textStyle.copyWith(color: AppColors.textSecondary)),
-                  ],
-                ),
-                maxLines: 4,
-                overflow: TextOverflow.ellipsis),
+              text: TextSpan(
+                style: textStyle,
+                children: [
+                  TextSpan(text: news.title),
+                  TextSpan(
+                    text: ' See more',
+                    style: textStyle.copyWith(
+                        color: AppColors.textSecondary),
+                  ),
+                ],
+              ),
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
+            ),
           );
         },
       ),
     );
   }
 
-  // Media Section
   Widget _buildMediaSection(NewsModel news, bool hasVideo) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -183,57 +200,60 @@ class _NewsCardState extends State<NewsCard> {
               url: news.imageUrl, height: 220, width: double.infinity),
           if (hasVideo)
             Container(
-                padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(
-                    color: Colors.black45,
-                    shape: BoxShape.circle),
-                child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 40)),
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                  color: Colors.black45, shape: BoxShape.circle),
+              child: const Icon(Icons.play_arrow_rounded,
+                  color: Colors.white, size: 40),
+            ),
         ],
       ),
     );
   }
 
-  // Action Row
   Widget _buildActionRow(NewsModel news) {
-    final socialCtrl = Get.find<SocialInteractionController>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Row(
         children: [
-          _buildLikeButton(news, socialCtrl),
+          _buildLikeButton(news),
           const SizedBox(width: 24),
-          _buildCommentButton(news, socialCtrl),
+          _buildCommentButton(news),
         ],
       ),
     );
   }
 
-  Widget _buildLikeButton(NewsModel news, SocialInteractionController socialCtrl) {
+  Widget _buildLikeButton(NewsModel news) {
     return Obx(() {
-      final isLiked = socialCtrl.isLiked(news.id, type: widget.tabType);
-      final label = socialCtrl.getAdjustedNewsLikes(news, type: widget.tabType);
+      final isLiked = _socialCtrl.isLiked(news.id, type: widget.tabType);
+      final label = _socialCtrl.getAdjustedNewsLikes(news, type: widget.tabType);
       return GestureDetector(
-        onTap: () => socialCtrl.toggleLike(news.id, type: widget.tabType),
+        onTap: () => _socialCtrl.toggleLike(news.id, type: widget.tabType),
         behavior: HitTestBehavior.opaque,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(
-                isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
-                width: 20, height: 20,
-                color: isLiked ? Colors.blue : Colors.white),
+              isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
+              width: 20, height: 20,
+              color: isLiked ? Colors.blue : Colors.white,
+            ),
             const SizedBox(width: 6),
-            Text(label, style: AppTextStyles.bodySmall.copyWith(
-                color: isLiked ? Colors.blue : AppColors.textSecondary)),
+            Text(
+              label,
+              style: AppTextStyles.bodySmall.copyWith(
+                  color: isLiked ? Colors.blue : AppColors.textSecondary),
+            ),
           ],
         ),
       );
     });
   }
 
-  Widget _buildCommentButton(NewsModel news, SocialInteractionController socialCtrl) {
+  Widget _buildCommentButton(NewsModel news) {
     return GestureDetector(
-      onTap: () => socialCtrl.openComments(
+      onTap: () => _socialCtrl.openComments(
           news.id, CommentSource.news, tabType: widget.tabType),
       behavior: HitTestBehavior.opaque,
       child: Row(
@@ -243,8 +263,7 @@ class _NewsCardState extends State<NewsCard> {
               width: 20, height: 20, color: Colors.white),
           const SizedBox(width: 6),
           Obx(() => Text(
-            socialCtrl.formatCount(
-                socialCtrl.getCommentCount(news, source: widget.tabType).value),
+            _socialCtrl.formatCount(_commentCount.value),
             style: AppTextStyles.bodySmall.copyWith(
                 color: AppColors.textSecondary),
           )),

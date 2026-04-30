@@ -49,9 +49,11 @@ class SocialInteractionController extends GetxController {
 
 
   // LIKE
-  void toggleLike(int id, {String type = 'news'}) {
+  void toggleLike(NewsModel news, {String type = 'news'}) {
     if (!AuthHelper.checkLogin()) return;
-    final key = '${type}_$id';
+
+    final key = _getEffectiveKey(news.id, news.author, type);
+
     if (likedIds.contains(key)) {
       likedIds.remove(key);
     } else {
@@ -60,9 +62,10 @@ class SocialInteractionController extends GetxController {
     }
   }
 
-  bool isLiked(dynamic id, {String type = 'news'}) =>
-      likedIds.contains('${type}_$id');
-
+  bool isLiked(NewsModel news, {String type = 'news'}) {
+    final key = _getEffectiveKey(news.id, news.author, type);
+    return likedIds.contains(key);
+  }
 
   void likeComment(String id) {
     if (!likedComments.contains(id)) {
@@ -101,7 +104,7 @@ class SocialInteractionController extends GetxController {
 
   String getAdjustedNewsLikes(NewsModel news, {String type = 'news'}) {
     int currentLikes = _parseStatCount(news.likes);
-    if (isLiked(news.id, type: type)) {
+    if (isLiked(news, type: type)) {
       return formatCount(currentLikes + 1);
     }
     return news.likes;
@@ -359,9 +362,9 @@ class SocialInteractionController extends GetxController {
 
 
   // COMMENT
-  void openComments(int id, CommentSource source, {String tabType = 'news'}) {
+  void openComments(int id, CommentSource source, {String tabType = 'news', String? author}) {
     if (!AuthHelper.checkLogin()) return;
-    Get.find<CommentController>().loadComments(id, source, tabType: tabType);
+    Get.find<CommentController>().loadComments(id, source, tabType: tabType, author: author);
     showModalBottomSheet(
       context: Get.context!,
       isScrollControlled: true,
@@ -386,7 +389,7 @@ class SocialInteractionController extends GetxController {
   }
 
   RxInt getCommentCount(NewsModel news, {String source = 'news'}) {
-    final key = '${source}_${news.id}';
+    final key = _getEffectiveKey(news.id, news.author, source);
     if (!commentCounts.containsKey(key)) {
       int initialCount = _parseStatCount(news.comments);
       commentCounts[key] = initialCount.obs;
@@ -395,8 +398,10 @@ class SocialInteractionController extends GetxController {
   }
 
 
-  void incrementCommentCount(dynamic id, {String source = 'news'}) {
-    final key = '${source}_$id';
+  void incrementCommentCount(dynamic id, {String source = 'news', String? author}) {
+    final key = (author != null)
+        ? _getEffectiveKey(id, author, source)
+        : '${source}_$id';
     if (commentCounts.containsKey(key)) {
       commentCounts[key]!.value++;
     }
@@ -410,14 +415,16 @@ class SocialInteractionController extends GetxController {
 
 
   // Reaction
-  void updateReaction(dynamic id, String type, String emoji) {
+  void updateReaction(NewsModel news, String type, String emoji) {
     if (!AuthHelper.checkLogin()) return;
-    final String key = '${type}_$id';
+    final key = _getEffectiveKey(news.id, news.author, type);
     reactions[key] = emoji;
   }
 
-  String getSelectedReaction(dynamic id, {String type = 'news'}) =>
-      reactions['${type}_$id'] ?? '';
+  String getSelectedReaction(NewsModel news, {String type = 'news'}) {
+    final key = _getEffectiveKey(news.id, news.author, type);
+    return reactions[key] ?? '';
+  }
 
   String getMyReaction(dynamic id, String type) {
     return reactions['${type}_$id'] ?? '';
@@ -425,7 +432,7 @@ class SocialInteractionController extends GetxController {
 
 
   RxInt getReactionCount(NewsModel news, {String source = 'news'}) {
-    final key = '${source}_${news.id}';
+    final key = _getEffectiveKey(news.id, news.author, source);
     if (!reactionCounts.containsKey(key)) {
       int initialCount = _parseStatCount(news.reactions);
       reactionCounts[key] = initialCount.obs;
@@ -433,16 +440,13 @@ class SocialInteractionController extends GetxController {
     return reactionCounts[key]!;
   }
 
-  void incrementReactionCount(dynamic id, {String source = 'news'}) {
-    final key = '${source}_$id';
+  void incrementReactionCount(NewsModel news, {String source = 'news'}) {
+    final key = _getEffectiveKey(news.id, news.author, source);
     if (!reactionCounts.containsKey(key)) {
       reactionCounts[key] = 0.obs;
     }
     reactionCounts[key]!.value++;
-    reactionCounts[key]!.refresh();
-    update();
   }
-
 
 
   // JOIN COMMUNITY
@@ -458,6 +462,17 @@ class SocialInteractionController extends GetxController {
   }
 
   bool isJoined(int communityId) =>  joinedCommunityIds.contains(communityId);
+
+
+  // Other Logic
+  String _getEffectiveKey(dynamic newsId, String? author, String source) {
+    final currentUser = AuthController.to.user.value?.name ?? 'Me';
+    if (author == 'Me' || author == currentUser) {
+      return 'user_post_$newsId';
+    }
+    return '${source}_$newsId';
+  }
+
 
   final RxList<Map<String, dynamic>> suggestedPeople = [
     {

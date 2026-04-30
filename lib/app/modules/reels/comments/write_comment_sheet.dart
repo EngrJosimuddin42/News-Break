@@ -16,7 +16,8 @@ class WriteCommentSheet extends StatefulWidget {
   final String? replyToId;
   final String? replyToName;
   final bool onlyEmoji;
-  const WriteCommentSheet({super.key, required this.reelId,this.type = 'news',this.replyToId,this.replyToName, this.onlyEmoji = false});
+  final String? author;
+  const WriteCommentSheet({super.key, required this.reelId,this.type = 'news',this.replyToId,this.replyToName,this.author, this.onlyEmoji = false});
 
   @override
   State<WriteCommentSheet> createState() => _WriteCommentSheetState();
@@ -96,32 +97,38 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: AppColors.primary))
                       : GestureDetector(
-                    onTap: () {
+
+                    onTap: () async {
+                      final text = commentController.commentTextController.text.trim();
+
                       if (widget.onlyEmoji) {
-                        final emoji = commentController.commentTextController.text.trim();
-                        if (emoji.isNotEmpty) {
+                        // ১. যদি শুধু ইমোজি বা রিঅ্যাকশন মোড হয় (যেমন রিলস বা কুইক ইমোজি)
+                        if (text.isNotEmpty) {
                           final socialCtrl = Get.find<SocialInteractionController>();
 
-                          socialCtrl.updateReaction(widget.reelId, widget.type, emoji);
+                          // SocialInteractionController এর মেথড কল হচ্ছে
+                          socialCtrl.updateReaction(widget.reelId, widget.type, text);
                           socialCtrl.incrementReactionCount(widget.reelId, source: widget.type);
 
                           commentController.commentTextController.clear();
-                          Get.back();
+                          Get.back(); // শিট বন্ধ হবে
                         }
                       } else {
-
+                        // ২. যদি সাধারণ কমেন্ট মোড হয়
                         final String? gifUrl = utility.selectedGifUrl.value;
                         final String? imagePath = utility.selectedImage.value?.path;
 
-                        commentController.submitComment(
+                        // তখন এই CommentController এর মেথড কল হবে
+                        await commentController.submitComment(
                           widget.reelId,
                           gifUrl: gifUrl,
                           imagePath: imagePath,
                         );
                       }
                     },
+
                     child: Image.asset('assets/icons/send2.png', height: 24, width: 24),
-                  )),
+                  ),),
                 ],
               ),
             ),

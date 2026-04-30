@@ -70,6 +70,7 @@ class _CategoryNewsCardState extends State<CategoryNewsCard> {
                 });
               }
             },
+
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -221,7 +222,7 @@ class _CategoryNewsCardState extends State<CategoryNewsCard> {
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
                   builder: (context) =>
-                      WriteCommentSheet(reelId: news.id, onlyEmoji: true,type: widget.tabType),
+                      WriteCommentSheet(reelId: news, onlyEmoji: true,type: widget.tabType,author: news.author),
                 );
               },
               child: Obx(() {
@@ -250,9 +251,9 @@ class _CategoryNewsCardState extends State<CategoryNewsCard> {
               SizedBox(
                 width: 60,
                 child: Obx(() {
-                  final isLiked = _socialCtrl.isLiked(news.id, type: widget.tabType);
+                  final isLiked = _socialCtrl.isLiked(news, type: widget.tabType);
                   return GestureDetector(
-                    onTap: () => _socialCtrl.toggleLike(news.id, type: widget.tabType),
+                    onTap: () => _socialCtrl.toggleLike(news, type: widget.tabType),
                     behavior: HitTestBehavior.opaque,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -283,7 +284,7 @@ class _CategoryNewsCardState extends State<CategoryNewsCard> {
                 width: 55,
                 child: GestureDetector(
                   onTap: () => _socialCtrl.openComments(
-                      news.id, CommentSource.news, tabType: widget.tabType),
+                      news.id, CommentSource.news, tabType: widget.tabType,author: news.author),
                   behavior: HitTestBehavior.opaque,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,

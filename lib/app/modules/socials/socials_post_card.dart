@@ -104,17 +104,35 @@ class SocialsPostCard extends StatelessWidget {
           const SizedBox(height: 10),
                  Row(
                   children: [
+
                     //  Like
                     Obx(() {
-                      final isLiked = SocialInteractionController.to.isLiked(post.id, type: 'post');
+                      final tempNews = NewsModel(
+                        id: post.id,
+                        author: post.userName,
+                        title: post.text,
+                        category: post.category,
+                        publisherName: post.userName,
+                        timeAgo: post.timeAgo,
+                        imageUrl: post.imageUrls.isNotEmpty ? post.imageUrls[0] : '',
+                        body: post.text,
+                        publisherMeta: post.userRole,
+                      );
+
+                      final isLiked = SocialInteractionController.to.isLiked(tempNews, type: 'post');
+
                       return GestureDetector(
-                        onTap: () => SocialInteractionController.to.toggleLike(post.id, type: 'post'),
+                        onTap: () => SocialInteractionController.to.toggleLike(tempNews, type: 'post'),
                         child: Row(
                           children: [
-                            Image.asset('assets/icons/heart.png', width: 20, height: 20,
-                              color: isLiked ? Colors.red : AppColors.surface),
+                            Image.asset('assets/icons/heart.png',
+                                width: 20, height: 20,
+                                color: isLiked ? Colors.red : AppColors.surface),
                             const SizedBox(width: 4),
-                            Text(post.likes, style: AppTextStyles.bodyLarge.copyWith( color: isLiked ? Colors.red : AppColors.surface)),
+
+                            Text( SocialInteractionController.to.getAdjustedNewsLikes(tempNews, type: 'post'),
+                                style: AppTextStyles.bodyLarge.copyWith(color: isLiked ? Colors.red : AppColors.surface)
+                            ),
                           ],
                         ),
                       );
@@ -124,12 +142,31 @@ class SocialsPostCard extends StatelessWidget {
 
                     //Comment
                     GestureDetector(
-                      onTap: () => SocialInteractionController.to.openComments( post.id, CommentSource.social),
+                      onTap: () => SocialInteractionController.to.openComments(post.id, CommentSource.social),
                       child: Row(
                         children: [
                           Image.asset('assets/icons/comment.png', width: 20, height: 20),
                           const SizedBox(width: 4),
-                          Text(post.comments, style: AppTextStyles.bodyLarge.copyWith(color: AppColors.surface)),
+                          Obx(() {
+                            final tempNews = NewsModel(
+                              id: post.id,
+                              author: post.userName,
+                              title: post.text,
+                              category: post.category,
+                              publisherName: post.userName,
+                              timeAgo: post.timeAgo,
+                              imageUrl: post.imageUrls.isNotEmpty ? post.imageUrls[0] : '',
+                              body: post.text,
+                              publisherMeta: post.userRole,
+                            );
+
+                            final count = SocialInteractionController.to.getCommentCount(tempNews, source: 'post');
+
+                            return Text(
+                                SocialInteractionController.to.formatCount(count.value),
+                                style: AppTextStyles.bodyLarge.copyWith(color: AppColors.surface)
+                            );
+                          }),
                         ],
                       ),
                     ),

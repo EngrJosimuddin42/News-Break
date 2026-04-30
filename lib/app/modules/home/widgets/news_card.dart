@@ -53,14 +53,19 @@ class _NewsCardState extends State<NewsCard> {
         children: [
           _buildPublisherRow(news),
           const SizedBox(height: 24),
+
           GestureDetector(
             onTap: () {
               if (hasVideo) {
                 Get.to(() => FullScreenVideoPlayer(url: news.videoUrl!));
               } else {
-                Get.toNamed(Routes.NEWS_DETAIL, arguments: news);
+                Get.toNamed(Routes.NEWS_DETAIL, arguments: {
+                  'news': news,
+                  'tabType': widget.tabType,
+                });
               }
             },
+
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -226,10 +231,10 @@ class _NewsCardState extends State<NewsCard> {
 
   Widget _buildLikeButton(NewsModel news) {
     return Obx(() {
-      final isLiked = _socialCtrl.isLiked(news.id, type: widget.tabType);
+      final isLiked = _socialCtrl.isLiked(news, type: widget.tabType);
       final label = _socialCtrl.getAdjustedNewsLikes(news, type: widget.tabType);
       return GestureDetector(
-        onTap: () => _socialCtrl.toggleLike(news.id, type: widget.tabType),
+        onTap: () => _socialCtrl.toggleLike(news, type: widget.tabType),
         behavior: HitTestBehavior.opaque,
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -254,7 +259,7 @@ class _NewsCardState extends State<NewsCard> {
   Widget _buildCommentButton(NewsModel news) {
     return GestureDetector(
       onTap: () => _socialCtrl.openComments(
-          news.id, CommentSource.news, tabType: widget.tabType),
+          news.id, CommentSource.news, tabType: widget.tabType,author: news.author),
       behavior: HitTestBehavior.opaque,
       child: Row(
         mainAxisSize: MainAxisSize.min,

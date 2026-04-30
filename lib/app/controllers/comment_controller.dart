@@ -24,6 +24,7 @@ class CommentController extends GetxController {
   dynamic currentId;
   CommentSource? currentSource;
   String currentTabType = 'news';
+  String? currentAuthor;
 
   @override
   void onClose() {
@@ -31,10 +32,11 @@ class CommentController extends GetxController {
     super.onClose();
   }
 
-  void loadComments(dynamic id, CommentSource source, {String tabType = 'news'}) {
+  void loadComments(dynamic id, CommentSource source, {String tabType = 'news', String? author}) {
     currentId = id;
     currentSource = source;
     currentTabType = tabType;
+    currentAuthor = author;
     final String key = _getCacheKey(id, tabType);
 
     if (_allCommentsCache.containsKey(key) && _allCommentsCache[key]!.isNotEmpty) {
@@ -77,7 +79,7 @@ class CommentController extends GetxController {
 
     // tabType  count increment
     Get.find<SocialInteractionController>()
-        .incrementCommentCount(id, source: currentTabType);
+        .incrementCommentCount(id, source: currentTabType, author: currentAuthor);
 
     // Reset UI
     commentTextController.clear();

@@ -209,13 +209,14 @@ class NewsDetailView extends GetView<HomeController> {
                   // Like, Comment, Share Action Buttons
                 Obx(() {
 
-                  final isLiked = socialCtrl.isLiked(news.id, type: tabType);
+                  final isLiked = socialCtrl.isLiked(news, type: tabType);
+
                   final likeCount = socialCtrl.getAdjustedNewsLikes(news, type: tabType);
 
                   return _actionItem(
                     isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
                     likeCount,
-                        () => socialCtrl.toggleLike(news.id, type: tabType),
+                        () => socialCtrl.toggleLike(news, type: tabType),
                     color: isLiked ? Colors.blue : Colors.white,
                   );
                 }),
@@ -227,7 +228,7 @@ class NewsDetailView extends GetView<HomeController> {
                   return _actionItem(
                       null,
                       socialCtrl.formatCount(commentCount.value),
-                          () => socialCtrl.openComments(news.id, CommentSource.news, tabType: tabType),
+                          () => socialCtrl.openComments(news.id, CommentSource.news, tabType: tabType,author: news.author),
                       asset: 'assets/icons/comment.png'
                   );
                 }),

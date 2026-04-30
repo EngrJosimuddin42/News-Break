@@ -100,25 +100,17 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
 
                     onTap: () async {
                       final text = commentController.commentTextController.text.trim();
-
                       if (widget.onlyEmoji) {
-                        // ১. যদি শুধু ইমোজি বা রিঅ্যাকশন মোড হয় (যেমন রিলস বা কুইক ইমোজি)
                         if (text.isNotEmpty) {
                           final socialCtrl = Get.find<SocialInteractionController>();
-
-                          // SocialInteractionController এর মেথড কল হচ্ছে
                           socialCtrl.updateReaction(widget.reelId, widget.type, text);
                           socialCtrl.incrementReactionCount(widget.reelId, source: widget.type);
-
                           commentController.commentTextController.clear();
-                          Get.back(); // শিট বন্ধ হবে
+                          Get.back();
                         }
                       } else {
-                        // ২. যদি সাধারণ কমেন্ট মোড হয়
                         final String? gifUrl = utility.selectedGifUrl.value;
                         final String? imagePath = utility.selectedImage.value?.path;
-
-                        // তখন এই CommentController এর মেথড কল হবে
                         await commentController.submitComment(
                           widget.reelId,
                           gifUrl: gifUrl,

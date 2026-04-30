@@ -153,89 +153,104 @@ class CategoryNewsCard extends StatelessWidget {
   }
 
   // Engagement Row Widget
-  Widget _buildEngagementRow(SocialInteractionController socialCtrl, BuildContext context,String tabType) {
+  Widget _buildEngagementRow(SocialInteractionController socialCtrl, BuildContext context, String tabType) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 12, 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder: (context) => WriteCommentSheet(
-                      reelId: news.id,
-                      onlyEmoji: true),
-                  );
-                },
-                child: Obx(() {
-                  final String myEmoji = socialCtrl.getSelectedReaction(news.id, type: 'news');
 
-                  return Row(
+          // Reaction Button
+          GestureDetector(
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => WriteCommentSheet(reelId: news.id, onlyEmoji: true),
+              );
+            },
+            child: Obx(() {
+              final String myEmoji = socialCtrl.getSelectedReaction(news.id, type: 'news');
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (myEmoji.isNotEmpty) ...[
+                    Text(myEmoji, style: const TextStyle(fontSize: 18)),
+                    const SizedBox(width: 4),
+                  ],
+                  Image.asset('assets/icons/reactions.png', width: 50, height: 20),
+                  const SizedBox(width: 4),
+                  Text(news.reactions, style: AppTextStyles.labelMedium),
+                ],
+              );
+            }),
+          ),
+
+          // Like + Comment + Share
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Like
+              Obx(() {
+                final isLiked = socialCtrl.isLiked(news.id, type: tabType);
+                return GestureDetector(
+                  onTap: () => socialCtrl.toggleLike(news.id, type: tabType),
+                  behavior: HitTestBehavior.opaque,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (myEmoji.isNotEmpty) ...[
-                        Text(myEmoji, style: const TextStyle(fontSize: 18)),
-                        const SizedBox(width: 4),
-                      ],
-                      Image.asset('assets/icons/reactions.png', width: 50, height: 20),
+                      Image.asset(
+                        isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
+                        width: 20, height: 20,
+                        color: isLiked ? Colors.blue : Colors.white),
                       const SizedBox(width: 4),
-                      Text(news.reactions, style: AppTextStyles.labelMedium),
+                      Text(
+                        socialCtrl.getAdjustedNewsLikes(news, type: tabType),
+                        style: AppTextStyles.labelMedium.copyWith(
+                            color: isLiked ? Colors.blue : Colors.white)),
                     ],
-                  );
-                }),
+                  ),
+                );
+              }),
+
+              const SizedBox(width: 16),
+
+              // Comment
+              GestureDetector(
+                onTap: () => socialCtrl.openComments(news.id, CommentSource.news, tabType: tabType),
+                behavior: HitTestBehavior.opaque,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset('assets/icons/comment.png', width: 20, height: 20, color: Colors.white),
+                    const SizedBox(width: 4),
+                    Obx(() => Text(
+                      socialCtrl.formatCount(
+                          socialCtrl.getCommentCount(news, source: tabType).value),
+                      style: AppTextStyles.labelMedium,
+                    )),
+                  ],
+                ),
+              ),
+
+              const SizedBox(width: 16),
+
+              // Share
+              GestureDetector(
+                onTap: () => socialCtrl.share(id: news.id, title: news.title, type: 'news'),
+                behavior: HitTestBehavior.opaque,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset('assets/icons/share.png', width: 20, height: 20, color: Colors.white),
+                    const SizedBox(width: 4),
+                    Text('Share', style: AppTextStyles.labelMedium),
+                  ],
+                ),
               ),
             ],
           ),
-
-          Row(
-            children: [
-
-              // Like Button
-              Obx(() {
-                final isLiked = socialCtrl.isLiked(news.id, type: tabType);
-                return _engagementItem(
-                  isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
-                  socialCtrl.getAdjustedNewsLikes(news, type: tabType),
-                  onTap: () => socialCtrl.toggleLike(news.id, type: tabType),
-                  color: isLiked ? Colors.blue : Colors.white,
-                );
-              }),
-
-              const SizedBox(width: 16),
-
-              // Comment Button
-              Obx(() {
-                return _engagementItem(
-                  'assets/icons/comment.png',
-                  socialCtrl.formatCount(
-                    socialCtrl.getCommentCount(news, source: tabType).value),
-                  onTap: () => socialCtrl.openComments(news.id, CommentSource.news, tabType: tabType),
-                );
-              }),
-
-              const SizedBox(width: 16),
-              _engagementItem( 'assets/icons/share.png', 'Share',
-                onTap: () => socialCtrl.share(id: news.id, title: news.title, type: 'news')),
-            ]
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _engagementItem(String asset, String label, {required VoidCallback onTap, Color color = Colors.white}) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Row(
-        children: [
-          Image.asset(asset, width: 20, height: 20, color: color),
-          const SizedBox(width: 4),
-          Text(label, style: AppTextStyles.labelMedium.copyWith(color: color)),
         ],
       ),
     );

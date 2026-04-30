@@ -113,7 +113,7 @@ class _NewsCardState extends State<NewsCard> {
                       child: Text(news.publisherMeta, style: AppTextStyles.overline.copyWith(color: AppColors.info,fontSize: 10),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1)),
-                    const SizedBox(width: 2),
+                    const SizedBox(width: 8),
                     Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -195,9 +195,10 @@ class _NewsCardState extends State<NewsCard> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           _buildLikeButton(news, socialCtrl),
-          const SizedBox(width: 80),
+          const SizedBox(width: 24),
           _buildCommentButton(news, socialCtrl),
         ],
       ),
@@ -207,38 +208,43 @@ class _NewsCardState extends State<NewsCard> {
   Widget _buildLikeButton(NewsModel news, SocialInteractionController socialCtrl) {
     return Obx(() {
       final isLiked = socialCtrl.isLiked(news.id, type: widget.tabType);
-      return _engagementItem(
-        isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
-        socialCtrl.getAdjustedNewsLikes(news, type: widget.tabType),
-            () => socialCtrl.toggleLike(news.id, type: widget.tabType),
-        color: isLiked ? Colors.blue : Colors.white,
+      final label = socialCtrl.getAdjustedNewsLikes(news, type: widget.tabType);
+      return GestureDetector(
+        onTap: () => socialCtrl.toggleLike(news.id, type: widget.tabType),
+        behavior: HitTestBehavior.opaque,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              isLiked ? 'assets/icons/like_filled.png' : 'assets/icons/like.png',
+              width: 20, height: 20,
+              color: isLiked ? Colors.blue : Colors.white),
+            const SizedBox(width: 6),
+            Text(label, style: AppTextStyles.bodySmall.copyWith(
+                color: isLiked ? Colors.blue : AppColors.textSecondary)),
+          ],
+        ),
       );
     });
   }
 
   Widget _buildCommentButton(NewsModel news, SocialInteractionController socialCtrl) {
-    return _engagementItem(
-      'assets/icons/comment.png',
-      Obx(() => Text( socialCtrl.formatCount(
-          socialCtrl.getCommentCount(news, source: widget.tabType).value),
-        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary))),
-          () => socialCtrl.openComments(news.id, CommentSource.news, tabType: widget.tabType),
-    );
-  }
-
-  Widget _engagementItem(String asset, dynamic label, VoidCallback onTap,
-      {Color color = Colors.white}) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () => socialCtrl.openComments(
+          news.id, CommentSource.news, tabType: widget.tabType),
       behavior: HitTestBehavior.opaque,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(asset, width: 20, height: 20, color: color),
+          Image.asset('assets/icons/comment.png',
+              width: 20, height: 20, color: Colors.white),
           const SizedBox(width: 6),
-          label is Widget
-              ? label
-              : Text(label.toString(),
-              style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
+          Obx(() => Text(
+            socialCtrl.formatCount(
+                socialCtrl.getCommentCount(news, source: widget.tabType).value),
+            style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.textSecondary),
+          )),
         ],
       ),
     );

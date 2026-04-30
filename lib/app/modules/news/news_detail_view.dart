@@ -6,6 +6,7 @@ import '../../controllers/home_controller.dart';
 import '../../controllers/nbot_controller.dart';
 import '../../controllers/signin_controller.dart';
 import '../../controllers/social_interaction_controller.dart';
+import '../../models/comment_source.dart';
 import '../../models/news_model.dart';
 import '../../routes/app_pages.dart';
 import '../../widgets/about_profile_sheet.dart';
@@ -22,10 +23,16 @@ class NewsDetailView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final socialCtrl = Get.find<SocialInteractionController>();
+
     final HomeController controller = Get.isRegistered<HomeController>()
         ? Get.find<HomeController>()
         : Get.put(HomeController());
-    final NewsModel news = Get.arguments;
+
+
+    final dynamic args = Get.arguments;
+    final NewsModel news = (args is Map) ? args['news'] : args;
+    final String tabType = (args is Map) ? (args['tabType'] ?? 'news') : 'news';
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -201,16 +208,29 @@ class NewsDetailView extends GetView<HomeController> {
 
                   // Like, Comment, Share Action Buttons
                 Obx(() {
-                  final isLiked = socialCtrl.isLiked(news.id);
+
+                  final isLiked = socialCtrl.isLiked(news.id, type: tabType);
+                  final likeCount = socialCtrl.getAdjustedNewsLikes(news, type: tabType);
+
                   return _actionItem(
                     isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
-                    news.likes, () => socialCtrl.toggleLike(news.id),
-                    color: isLiked ? Colors.blue : Colors.white);
+                    likeCount,
+                        () => socialCtrl.toggleLike(news.id, type: tabType),
+                    color: isLiked ? Colors.blue : Colors.white,
+                  );
                 }),
 
                 const SizedBox(width: 16),
-                  _actionItem(null, news.comments, () {
-                    socialCtrl.onCommentPressed(news);}, asset: 'assets/icons/comment.png'),
+
+                Obx(() {
+                  final commentCount = socialCtrl.getCommentCount(news, source: tabType);
+                  return _actionItem(
+                      null,
+                      socialCtrl.formatCount(commentCount.value),
+                          () => socialCtrl.openComments(news.id, CommentSource.news, tabType: tabType),
+                      asset: 'assets/icons/comment.png'
+                  );
+                }),
 
                   const SizedBox(width: 16),
                    _actionItem(null, 'Share', () => socialCtrl.onSharePressed(news), asset: 'assets/icons/share.png'),

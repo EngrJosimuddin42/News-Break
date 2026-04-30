@@ -64,7 +64,10 @@ class _CategoryNewsCardState extends State<CategoryNewsCard> {
               if (hasVideo) {
                 Get.to(() => FullScreenVideoPlayer(url: news.videoUrl!));
               } else {
-                Get.toNamed(Routes.NEWS_DETAIL, arguments: news);
+                Get.toNamed(Routes.NEWS_DETAIL, arguments: {
+                  'news': news,
+                  'tabType': widget.tabType,
+                });
               }
             },
             child: Column(

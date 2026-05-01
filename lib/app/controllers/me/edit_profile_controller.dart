@@ -101,8 +101,7 @@ class EditProfileController extends GetxController {
         website: websiteController.text,
         gender: selectedGender.value,
         birthYear: DateFormat('dd/MM/yyyy').format(selectedBirthDate.value),
-        newImageUrl: AuthController.to.user.value?.profileImageUrl,
-      );
+        newImageUrl: AuthController.to.user.value?.profileImageUrl);
 
       Get.back();
       AppSnackbar.success(message: 'Profile updated successfully');

@@ -94,13 +94,7 @@ class OptionsBottomSheet {
                     titleColor: Colors.red,
                     onTap: () {
                       Get.back();
-
-                      if (onReportClick != null) {
-                        onReportClick();
-                      }
-                      Future.delayed(const Duration(milliseconds: 150), () {
-                        _showReportSheet(context, reportSheet);
-                      });
+                      _showReportSheet(context, reportSheet);
                     },
                   ),
                 ],

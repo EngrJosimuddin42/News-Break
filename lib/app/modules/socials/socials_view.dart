@@ -5,6 +5,7 @@ import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/ad_banner_controller.dart';
 import '../../controllers/auth/auth_controller.dart';
+import '../../controllers/social_interaction_controller.dart';
 import '../../controllers/socials/socials_controller.dart';
 import '../../widgets/publisher_avatar.dart';
 import 'community_insight_view.dart';
@@ -40,6 +41,8 @@ class SocialsBodyView extends GetView<SocialsController> {
   @override
   Widget build(BuildContext context) {
     final adBanner = Get.find<AdBannerController>();
+    final socialInteractionCtrl = Get.find<SocialInteractionController>();
+
     return ListView(
       children: [
 
@@ -140,14 +143,29 @@ class SocialsBodyView extends GetView<SocialsController> {
           if (controller.isPostsLoading.value) {
             return const Center(child: CircularProgressIndicator());
           }
+
+          final filteredPosts = controller.posts.where((post) {
+            if (socialInteractionCtrl.blockedSources.contains(post.userName)) return false;
+            if (socialInteractionCtrl.blockedTopics.contains(post.category)) return false;
+            if (socialInteractionCtrl.hiddenIds.contains('socials_${post.id}')) return false;
+            return true;
+          }).toList();
+
+          if (filteredPosts.isEmpty) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 40),
+                child: Text("No posts to show", style: TextStyle(color: Colors.grey))),
+            );
+          }
+
           return ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: controller.posts.length,
-          itemBuilder: (context, index) {
-            final post = controller.posts[index];
-            return SocialsPostCard(
-              post: post);
+            itemCount: filteredPosts.length,
+            itemBuilder: (context, index) {
+              final post = filteredPosts[index];
+              return SocialsPostCard(post: post);
           },
           );
         },

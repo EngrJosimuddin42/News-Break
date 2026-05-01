@@ -85,10 +85,6 @@ class SocialsPostCard extends StatelessWidget {
                       contentId: post.id,
                       contentType: 'post',
                     ),
-                    onReportClick: () {
-
-                      Get.find<SocialInteractionController>().openReport(post.id, 'post');
-                    },
                   );
                 },
                 child: const Icon(Icons.more_vert, color: Color(0xFF959595), size: 24),

@@ -341,9 +341,7 @@ class SocialInteractionController extends GetxController {
     final key = '${reportContentType.value}_${reportContentId.value}';
     reportedIds.add(key);
     isReportSubmitted.value = true;
-    AppSnackbar.success(message: 'Reported successfully');
   }
-
 
   bool isReported(int id, {String type = 'news'}) =>
       reportedIds.contains('${type}_$id');

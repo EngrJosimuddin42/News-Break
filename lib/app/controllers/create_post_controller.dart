@@ -120,7 +120,7 @@ class CreatePostController extends GetxController {
           ?? utility.selectedGifUrl.value;
 
       if (isSocialPost) {
-        Get.find<SocialsController>().submitPost(
+        await  Get.find<SocialsController>().submitPost(
           textController.text,
           imageUrl: mediaUrl,
         );
@@ -142,7 +142,11 @@ class CreatePostController extends GetxController {
       utility.clearTags();
       resetAll();
       Get.until((route) => route.settings.name == Routes.HOME);
-      AppSnackbar.success(message: successMsg);
+
+      Future.delayed(const Duration(milliseconds: 300), () {
+        AppSnackbar.success(message: successMsg);
+      });
+
     } catch (e) {
       AppSnackbar.error(message: 'Something went wrong while uploading.');
     } finally {
@@ -153,32 +157,32 @@ class CreatePostController extends GetxController {
 
   //  Type validation
   bool _validate() {
-    if (isReelPost && selectedMedia.value == null) {
-      AppSnackbar.warning(title: 'Video Required', message: 'Please select a video.');
-      return false;
-    }
-    if (!isReelPost &&
-        textController.text.trim().isEmpty &&
-        selectedMedia.value == null &&
-        utility.selectedImage.value == null &&
-        utility.selectedGifUrl.value == null) {
-      AppSnackbar.warning(title: 'Empty Post', message: 'Please add some text or media.');
-      return false;
+    final hasText = textController.text.trim().isNotEmpty;
+    final hasMedia = selectedMedia.value != null ||
+        utility.selectedImage.value != null ||
+        utility.selectedGifUrl.value != null;
+
+    if (isReelPost) {
+      if (selectedMedia.value == null) {
+        AppSnackbar.warning(title: 'Video Required', message: 'Please select a video.');
+        return false;
+      }
+    } else {
+      if (!hasText && !hasMedia) {
+        AppSnackbar.warning(title: 'Empty Post', message: 'Please add some text or media.');
+        return false;
+      }
     }
     return true;
   }
 
   //  Type success message
   String _getSuccessMessage() {
-    switch (postType.value) {
-      case PostType.reel:
-        return 'Your reel has been posted!';
-      case PostType.social:
-        return 'Your post has been shared!';
-      case PostType.news:
-      default:
-        return 'Your news has been shared!';
-    }
+    return switch (postType.value) {
+      PostType.reel => 'Your reel has been posted!',
+      PostType.social => 'Your post has been shared!',
+      PostType.news => 'Your news has been shared!',
+    };
   }
 
   // Public reset

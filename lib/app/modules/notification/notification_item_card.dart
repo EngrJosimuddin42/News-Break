@@ -11,6 +11,7 @@ import '../../routes/app_pages.dart';
 import '../reels/comments/write_comment_sheet.dart';
 import '../reels/player/full_screen_video_player.dart';
 import '../../widgets/options_bottom_sheet.dart';
+import '../socials/socials_report_sheet.dart';
 import 'notification_report_sheet.dart';
 
 class NotificationItemCard extends StatelessWidget {
@@ -120,9 +121,34 @@ class NotificationItemCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         GestureDetector(
-          onTap: () => OptionsBottomSheet.show(context,
+          onTap: () {
+            Widget selectedReportSheet;
+
+            if (currentItem is NewsModel) {
+              selectedReportSheet = NotificationReportSheet(
+                contentId: currentItem.id,
+                contentType: 'news',
+              );
+            } else if (currentItem is SocialsModel) {
+              selectedReportSheet = SocialsReportSheet(
+                contentId: currentItem.id,
+                contentType: 'post',
+              );
+            } else if (currentItem is ReelModel) {
+              selectedReportSheet = NotificationReportSheet(
+                contentId: currentItem.id ?? 0,
+                contentType: 'reel',
+              );
+            } else {
+              selectedReportSheet = const SocialsReportSheet();
+            }
+
+            OptionsBottomSheet.show(
+              context,
               news: currentItem,
-              reportSheet: const NotificationReportSheet()),
+              reportSheet: selectedReportSheet,
+            );
+          },
           child: const Padding(
             padding: EdgeInsets.all(4.0),
             child: Icon(Icons.more_vert, color: Colors.grey, size: 20),

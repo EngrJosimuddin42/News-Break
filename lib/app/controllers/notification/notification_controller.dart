@@ -108,11 +108,11 @@ class NotificationController extends GetxController with GetSingleTickerProvider
     ),
     NewsModel(
       id: 2,
-      category: 'Breaking News',
+      category: 'Trending News',
       title: 'FCC chair threatens over Iran war coverage',
       subtitle: 'For seven long years, he served without ever asking for anything in... ',
-      publisherName: 'USA TODAY',
-      author: 'Hary',
+      publisherName: 'Daily Brief',
+      author: 'Smith',
       publisherMeta: 'Partner publisher',
       timeAgo: '9hr',
       imageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=200',
@@ -125,7 +125,7 @@ class NotificationController extends GetxController with GetSingleTickerProvider
     ),
     NewsModel(
       id: 3,
-      category: 'Breaking News',
+      category: 'Top Stories',
       title: 'FCC chair threatens over Iran war coverage',
       subtitle: 'For seven long years, he served without ever asking for anything in... ',
       author: 'John Doe',

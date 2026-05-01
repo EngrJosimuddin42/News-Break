@@ -30,6 +30,8 @@ class SocialInteractionController extends GetxController {
   final Map<int, int> _baseFollowerCounts = {};
   final ValueNotifier<int> followNotifier = ValueNotifier<int>(0);
   final followerCounts = <int, String>{}.obs;
+  final blockedTopics = <String>{}.obs;
+  final blockedAuthors = <String>{}.obs;
   var likedComments = <String>[].obs;
   var dislikedComments = <String>[].obs;
   var savedItems = <String>[].obs;
@@ -248,8 +250,6 @@ class SocialInteractionController extends GetxController {
     suggestedPeople.removeAt(index);
   }
 
-
-
   // parse
   int _parseStatCount(String count) {
     count = count.toLowerCase().replaceAll(',', '');
@@ -309,11 +309,15 @@ class SocialInteractionController extends GetxController {
     AppSnackbar.success(message: 'Content hidden from your feed');
   }
 
-  void showLessAbout(String topic) {
-    AppSnackbar.success(message:
-    "We'll show you fewer stories about $topic.");
+  void showLessAboutAuthor(String author) {
+    blockedAuthors.add(author);
+    AppSnackbar.success(message: "We'll show you fewer stories about $author.");
   }
 
+  void showLessAboutTopic(String topic) {
+    blockedTopics.add(topic);
+    AppSnackbar.success(message: "We'll show you fewer stories about $topic.");
+  }
 
   bool isHidden(int id, {String type = 'news'}) =>
       hiddenIds.contains('${type}_$id');
@@ -323,7 +327,8 @@ class SocialInteractionController extends GetxController {
   void openReport(int id, String type) {
     reportContentId.value = id;
     reportContentType.value = type;
-    resetReport();
+    selectedReason.value = null;
+    isReportSubmitted.value = false;
   }
 
   void resetReport() {

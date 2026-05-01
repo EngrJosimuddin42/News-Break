@@ -12,13 +12,14 @@ class OptionsBottomSheet {
   static void show(BuildContext context, {
     required dynamic news,
     required Widget reportSheet,
+    VoidCallback? onReportClick,
   }) {
     final controller = Get.find<NotificationController>();
     final socialCtrl = Get.find<SocialInteractionController>();
 
-    String author = 'Author';
-    String category = 'Category';
-    String publisher = 'Source';
+    String author = '';
+    String category = '';
+    String publisher = '';
 
     if (news is NewsModel) {
       author = news.author;
@@ -37,6 +38,7 @@ class OptionsBottomSheet {
     showModalBottomSheet(
       context: context,
       backgroundColor: const Color(0xFF252525),
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => SingleChildScrollView(
@@ -60,7 +62,7 @@ class OptionsBottomSheet {
                     title: 'Show less about: $author',
                     onTap: () {
                       Get.back();
-                      socialCtrl.showLessAbout(author);
+                      socialCtrl.showLessAboutAuthor(author);
                     },
                   ),
 
@@ -70,7 +72,7 @@ class OptionsBottomSheet {
                     title: 'Show less about: $category',
                     onTap: () {
                       Get.back();
-                      socialCtrl.showLessAbout(category);
+                      socialCtrl.showLessAboutTopic(category);
                     },
                   ),
 
@@ -92,13 +94,18 @@ class OptionsBottomSheet {
                     titleColor: Colors.red,
                     onTap: () {
                       Get.back();
-                      _showReportSheet(context, reportSheet);
+
+                      if (onReportClick != null) {
+                        onReportClick();
+                      }
+                      Future.delayed(const Duration(milliseconds: 150), () {
+                        _showReportSheet(context, reportSheet);
+                      });
                     },
                   ),
                 ],
               ),
             ),
-
             const SizedBox(height: 16),
 
             // Support/AI Request Container
@@ -129,7 +136,6 @@ class OptionsBottomSheet {
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
         builder: (_) => reportSheet);
   }
 

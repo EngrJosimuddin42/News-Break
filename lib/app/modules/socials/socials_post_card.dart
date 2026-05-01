@@ -80,8 +80,15 @@ class SocialsPostCard extends StatelessWidget {
                 onTap: () {
                   OptionsBottomSheet.show(
                     context,
-                    news: _buildTempNews(),
-                    reportSheet: const SocialsReportSheet(),
+                    news: post,
+                    reportSheet: SocialsReportSheet(
+                      contentId: post.id,
+                      contentType: 'post',
+                    ),
+                    onReportClick: () {
+
+                      Get.find<SocialInteractionController>().openReport(post.id, 'post');
+                    },
                   );
                 },
                 child: const Icon(Icons.more_vert, color: Color(0xFF959595), size: 24),

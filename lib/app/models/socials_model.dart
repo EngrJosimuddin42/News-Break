@@ -2,10 +2,10 @@ class SocialsModel {
   final int id;
   final String type = 'social';
   final String category;
-  final String userName;
+  final String author;
   final String userImageUrl;
   final String text;
-  final String userRole;
+  final String publisherName;
   final String timeAgo;
   final List<String> imageUrls;
   final String likes;
@@ -15,10 +15,10 @@ class SocialsModel {
   SocialsModel({
     required this.id,
     this.category = 'Social',
-    required this.userName,
+    required this.author,
     required this.userImageUrl,
     required this.text,
-    required this.userRole,
+    required this.publisherName,
     required this.timeAgo,
     required this.imageUrls,
     this.likes = '5',

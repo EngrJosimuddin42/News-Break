@@ -26,12 +26,12 @@ class SocialsPostCard extends StatelessWidget {
       id: post.id,
       category: post.category,
       title: post.text,
-      author: post.userName,
-      publisherName: post.userRole,
+      author: post.author,
+      publisherName: post.publisherName,
       timeAgo: post.timeAgo,
       imageUrl: post.imageUrls.isNotEmpty ? post.imageUrls[0] : '',
       body: post.text,
-      publisherMeta: post.userRole,
+      publisherMeta: post.publisherName,
       likes: post.likes,
       comments: post.comments,
     );
@@ -43,12 +43,12 @@ class SocialsPostCard extends StatelessWidget {
         id: post.id,
         category: post.category,
         title: post.text,
-        author: post.userName,
-        publisherName: post.userRole,
+        author: post.author,
+        publisherName: post.publisherName,
         timeAgo: post.timeAgo,
         imageUrl: post.imageUrls.isNotEmpty ? post.imageUrls[0] : '',
         body: post.text,
-        publisherMeta: post.userRole,
+        publisherMeta: post.publisherName,
         likes: post.likes,
         comments: post.comments,
       ),
@@ -70,11 +70,11 @@ class SocialsPostCard extends StatelessWidget {
             children: [
               PublisherAvatar.fromUrl(
                   imageUrl: post.userImageUrl,
-                  name: post.userName,
+                  name: post.author,
                   size: 42),
               const SizedBox(width: 10),
               Expanded(
-                  child: Text(post.userName, style: AppTextStyles.bodyMedium)),
+                  child: Text(post.author, style: AppTextStyles.bodyMedium)),
 
               GestureDetector(
                 onTap: () {
@@ -155,7 +155,7 @@ class SocialsPostCard extends StatelessWidget {
               // Comment
               GestureDetector(
                 onTap: () => SocialInteractionController.to
-                    .openComments(post.id, CommentSource.social, tabType: 'post', author: post.userName),
+                    .openComments(post.id, CommentSource.social, tabType: 'post', author: post.author),
                 child: Row(
                   children: [
                     Image.asset('assets/icons/comment.png', width: 20, height: 20),

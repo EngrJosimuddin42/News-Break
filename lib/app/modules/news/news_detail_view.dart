@@ -228,7 +228,17 @@ class NewsDetailView extends GetView<HomeController> {
                   return _actionItem(
                       null,
                       socialCtrl.formatCount(commentCount.value),
-                          () => socialCtrl.openComments(news.id, CommentSource.news, tabType: tabType,author: news.author),
+                          () {
+                        final source = (tabType == 'post')
+                            ? CommentSource.social
+                            : (tabType == 'reel' ? CommentSource.reel : CommentSource.news);
+                        socialCtrl.openComments(
+                            news.id,
+                            source,
+                            tabType: tabType,
+                            author: news.author
+                        );
+                      },
                       asset: 'assets/icons/comment.png'
                   );
                 }),

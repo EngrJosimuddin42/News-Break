@@ -145,9 +145,9 @@ class SocialsBodyView extends GetView<SocialsController> {
           }
 
           final filteredPosts = controller.posts.where((post) {
-            if (socialInteractionCtrl.blockedSources.contains(post.userName)) return false;
+            if (socialInteractionCtrl.blockedSources.contains(post.publisherName)) return false;
             if (socialInteractionCtrl.blockedTopics.contains(post.category)) return false;
-            if (socialInteractionCtrl.hiddenIds.contains('socials_${post.id}')) return false;
+            if (socialInteractionCtrl.blockedAuthors.contains(post.author)) return false;
             return true;
           }).toList();
 

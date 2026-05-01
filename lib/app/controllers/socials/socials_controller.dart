@@ -57,8 +57,8 @@ class SocialsController extends GetxController {
     final newPost = SocialsModel(
       id: DateTime.now().millisecondsSinceEpoch,
       category: 'General',
-      userName: AuthController.to.user.value?.name ?? 'Me',
-      userRole: 'Member',
+      author: AuthController.to.user.value?.name ?? 'Me',
+      publisherName: 'Member',
       timeAgo: 'Just now',
       userImageUrl: AuthController.to.user.value?.profileImageUrl ?? '',
       text: content,
@@ -72,8 +72,8 @@ class SocialsController extends GetxController {
     SocialsModel(
       id: 1,
       category: 'Iran',
-      userName: 'Donald Trump',
-      userRole: 'The guardian',
+      author: 'Donald Trump',
+      publisherName: 'The guardian',
       timeAgo: '2d ago',
       userImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
       text: 'Lorem ipsum dolor sit amet consectetur. Ut sed elementum pellentesque erat. In nisl facilisis ornare felis cras purus amet cursus.',
@@ -88,8 +88,8 @@ class SocialsController extends GetxController {
     SocialsModel(
       id: 2,
       category: 'Politics',
-      userName: 'Jordan',
-      userRole: 'Premium Member',
+      author: 'Jordan',
+      publisherName: 'Premium Member',
       timeAgo: '2h ago',
       userImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
       text: 'Lorem ipsum dolor sit amet consectetur. Ut sed elementum pellentesque erat. In nisl facilisis ornare felis cras purus amet cursus.',

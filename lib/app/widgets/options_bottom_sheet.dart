@@ -30,9 +30,9 @@ class OptionsBottomSheet {
       category = 'Reels';
       publisher = news.userName;
     } else if (news is SocialsModel) {
-      author = news.userName;
+      author = news.author;
       category = news.category;
-      publisher = news.userName;
+      publisher = news.publisherName;
     }
 
     showModalBottomSheet(

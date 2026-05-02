@@ -84,7 +84,7 @@ class _ReelsViewState extends State<ReelsView> {
            );
           }),
 
-          // Top camera icon
+          // Top Right camera icon
           Positioned(
             top: MediaQuery.of(context).padding.top + 8,
             right: 16,
@@ -107,6 +107,7 @@ class _ReelsViewState extends State<ReelsView> {
     );
   }
 
+  // Top Left profile card
   Widget _buildProfileCard(dynamic reel) {
     return Container( width: 279,  height: 60,
       padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
@@ -133,7 +134,11 @@ class _ReelsViewState extends State<ReelsView> {
             ],
           ),
           const SizedBox(width: 12),
+
+
           ReelsFollowButton(reel: reel),
+
+
         ],
       ),
     );

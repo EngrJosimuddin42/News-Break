@@ -30,6 +30,10 @@ class ReelsController extends GetxController {
 
   SocialInteractionController get _social => Get.find<SocialInteractionController>();
 
+  final Map<String, bool> _followedUsers = {};
+  bool isUserFollowing(String userName) => _followedUsers[userName] ?? false;
+
+
   @override
   void onClose() {
     pageController.dispose();
@@ -87,20 +91,33 @@ class ReelsController extends GetxController {
 
   void toggleFollow(dynamic item) {
     if (item == null) return;
-    item.isFollowing = !(item.isFollowing ?? false);
-    try {
-      if (item.totalFollowers != null) {
-        int currentFollowers = _parseStatCount(item.totalFollowers.toString());
-        currentFollowers = item.isFollowing
-            ? currentFollowers + 1
-            : (currentFollowers > 0 ? currentFollowers - 1 : 0);
-        item.totalFollowers = _social.formatCount(currentFollowers);
+    final String userName = item.userName ?? '';
+    if (userName.isEmpty) return;
+
+    final bool currentState = _followedUsers[userName] ?? false;
+    _followedUsers[userName] = !currentState;
+
+    for (var reel in reelsList) {
+      if (reel.userName == userName) {
+        reel.isFollowing = !currentState;
+        // follower count update
+        try {
+          if (reel.totalFollowers != null) {
+            int count = _parseStatCount(reel.totalFollowers.toString());
+            count = !currentState ? count + 1 : (count > 0 ? count - 1 : 0);
+            reel.totalFollowers = _social.formatCount(count);
+          }
+        } catch (e) {
+          debugPrint("ToggleFollow Error: $e");
+        }
       }
-    } catch (e) {
-      debugPrint("ToggleFollow Error: $e");
     }
     reelsList.refresh();
     update();
+  }
+
+  int getUserPostCount(String userName) {
+    return reelsList.where((r) => r.userName == userName).length;
   }
 
 
@@ -189,15 +206,34 @@ class ReelsController extends GetxController {
     required String text,
   }) {
     final user = AuthController.to.user.value;
+    final String currentUserName = user?.name ?? 'Me';
+
+    final existingReel = reelsList.firstWhereOrNull((r) => r.userName == currentUserName);
+
+    String followers = existingReel?.totalFollowers?.toString() ?? "0";
+    bool currentlyFollowing = isUserFollowing(currentUserName);
+
     final newReel = ReelModel(
       id: DateTime.now().millisecondsSinceEpoch,
       videoUrl: videoPath,
       imageUrl: thumbnailPath,
-      userName: user?.name ?? 'Me',
+      userName: currentUserName,
       userProfileImage: user?.profileImageUrl ?? '',
       description: text,
+      totalFollowers: followers,
+      isFollowing: currentlyFollowing,
+      totalPosts: existingReel?.totalPosts ?? "1",
+      likes: 0,
+      comments: 0,
+      shares: 0,
     );
+
     reelsList.insert(0, newReel);
+
+    int currentPosts = _parseStatCount(newReel.totalPosts?.toString() ?? '0');
+    newReel.totalPosts = _social.formatCount(currentPosts + 1);
+
+    reelsList.refresh();
   }
 
 
@@ -216,7 +252,6 @@ class ReelsController extends GetxController {
           source: '6 days ago',
           location: 'Chicago, USA',
           userSince: 'Mar 2026',
-          totalPosts: '45',
           totalViews: '12',
           totalFollowers: '15',
           likes: 25,
@@ -247,10 +282,9 @@ class ReelsController extends GetxController {
           source: '2 month ago',
           location: 'New York, USA',
           userSince: 'january 2026',
-          totalPosts: '25',
-          totalViews: '5k',
-          totalFollowers: '2.5k',
-          likes: 1500,
+          totalViews: '5',
+          totalFollowers: '25',
+          likes: 150,
           comments: 800,
           shares: 450,
           isFollowing: false,

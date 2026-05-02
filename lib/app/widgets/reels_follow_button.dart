@@ -16,7 +16,8 @@ class ReelsFollowButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<ReelsController>(
       builder: (controller) {
-        final bool isFollowing = reel.isFollowing ?? false;
+        final String userName = reel.userName ?? '';
+        final bool isFollowing = controller.isUserFollowing(userName);
 
         return GestureDetector(
           onTap: () {
@@ -25,13 +26,22 @@ class ReelsFollowButton extends StatelessWidget {
             }
           },
           child: isFollowing
-              ? Text('Following', style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFFC4C4C4)))
+              ? Text(
+            'Following',
+            style: AppTextStyles.bodySmall
+                .copyWith(color: const Color(0xFFC4C4C4)),
+          )
               : Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 8, vertical: 3),
             decoration: BoxDecoration(
-              color: const Color(0xFF3597FA),
-              borderRadius: BorderRadius.circular(8)),
-            child: Text('+ Follow', style: AppTextStyles.buttonOutline)),
+                color: const Color(0xFF3597FA),
+                borderRadius: BorderRadius.circular(8)),
+            child: Text(
+              '+ Follow',
+              style: AppTextStyles.buttonOutline,
+            ),
+          ),
         );
       },
     );

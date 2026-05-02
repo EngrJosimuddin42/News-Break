@@ -11,7 +11,7 @@ import '../routes/app_pages.dart';
 import '../widgets/app_snackbar.dart';
 import 'auth/auth_controller.dart';
 import 'auth/auth_helper.dart';
-import 'comment_controller.dart';
+import 'reels/comment_controller.dart';
 
 class SocialInteractionController extends GetxController {
   static SocialInteractionController get to => Get.find();

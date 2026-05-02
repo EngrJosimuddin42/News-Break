@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/widgets/bottom_sheet_handle.dart';
-import '../../../controllers/comment_controller.dart';
+import '../../../controllers/reels/comment_controller.dart';
 import '../../../controllers/social_interaction_controller.dart';
 import '../../../controllers/social_utility_controller.dart';
 import '../../../theme/app_colors.dart';

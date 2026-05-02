@@ -2,10 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:news_break/app/controllers/reels/reels_controller.dart';
 import 'package:news_break/app/controllers/social_interaction_controller.dart';
-import '../models/comment_model.dart';
-import '../models/comment_source.dart';
-import 'auth/auth_controller.dart';
+import '../../models/comment_model.dart';
+import '../../models/comment_source.dart';
+import '../auth/auth_controller.dart';
 
 class CommentController extends GetxController {
   final RxList<CommentModel> commentsList = <CommentModel>[].obs;
@@ -77,12 +78,16 @@ class CommentController extends GetxController {
 
     commentsList.insert(0, newComment);
 
-
-    final String key = _getCacheKey(id, currentSource!);
+    final String key = _getCacheKey(id, currentSource ?? CommentSource.news);
     _allCommentsCache[key] = List.from(commentsList);
 
     Get.find<SocialInteractionController>()
         .incrementCommentCount(id, source: currentTabType, author: currentAuthor);
+
+    if (currentSource == CommentSource.reel &&
+        Get.isRegistered<ReelsController>()) {
+      Get.find<ReelsController>().incrementComment(id);
+    }
 
     // Reset UI
     commentTextController.clear();

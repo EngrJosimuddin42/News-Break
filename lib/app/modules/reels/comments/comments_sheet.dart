@@ -6,7 +6,7 @@ import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import 'package:news_break/app/widgets/bottom_sheet_handle.dart';
 import '../../../controllers/auth/auth_controller.dart';
-import '../../../controllers/comment_controller.dart';
+import '../../../controllers/reels/comment_controller.dart';
 import '../../../controllers/social_interaction_controller.dart';
 import '../../../models/comment_model.dart';
 import '../../../models/comment_source.dart';

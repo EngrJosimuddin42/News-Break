@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import '../controllers/ad_banner_controller.dart';
 import '../controllers/auth/auth_controller.dart';
-import '../controllers/comment_controller.dart';
+import '../controllers/reels/comment_controller.dart';
 import '../controllers/create_post_controller.dart';
 import '../controllers/home_controller.dart';
 import '../controllers/me/me_controller.dart';

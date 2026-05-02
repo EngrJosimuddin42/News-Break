@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
-import '../../../controllers/comment_controller.dart';
+import '../../../controllers/reels/comment_controller.dart';
 import '../../../controllers/reels/reels_controller.dart';
 import '../../../controllers/social_interaction_controller.dart';
 import '../../../widgets/report_success.dart';

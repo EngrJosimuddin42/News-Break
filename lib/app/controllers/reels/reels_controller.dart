@@ -19,6 +19,7 @@ class ReelsController extends GetxController {
   var currentIndex = 0.obs;
   bool useCustomList = false;
   int initialIndex = 0;
+  bool _isSharing = false;
 
 
   PageController pageController = PageController();
@@ -154,8 +155,12 @@ class ReelsController extends GetxController {
     Get.back();
   }
 
+
   void onShareOptionTap(int reelId, String platform,
       {String? shareUrl, String? userName}) async {
+    if (_isSharing) return;
+    _isSharing = true;
+
     int index = reelsList.indexWhere((r) => r.id == reelId);
     final String url = shareUrl ??
         (index != -1
@@ -173,6 +178,8 @@ class ReelsController extends GetxController {
       await Share.share('Check out this story by $author: $url');
       if (index != -1) incrementShare(index);
     }
+
+    _isSharing = false;
   }
 
 
@@ -210,11 +217,11 @@ class ReelsController extends GetxController {
           location: 'Chicago, USA',
           userSince: 'Mar 2026',
           totalPosts: '45',
-          totalViews: '12k',
-          totalFollowers: '1.5k',
-          likes: 2500,
-          comments: 3500,
-          shares: 1200,
+          totalViews: '12',
+          totalFollowers: '15',
+          likes: 25,
+          comments: 35,
+          shares: 12,
           isFollowing: false,
           isLiked: false,
         userVideos: [
@@ -246,8 +253,8 @@ class ReelsController extends GetxController {
           likes: 1500,
           comments: 800,
           shares: 450,
-          isFollowing: true,
-          isLiked: true,
+          isFollowing: false,
+          isLiked: false,
           userVideos: [
             {'id': 'v1','imageUrl': 'https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=400','videoUrl': 'https://www.w3schools.com/html/mov_bbb.mp4', 'title': 'Love for animals', 'views': '904'},
             {'id': 'v2','imageUrl': 'https://images.unsplash.com/photo-1484406566174-9da000fda645?w=400','videoUrl': 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', 'title': ' Dear', 'views': '1024'},

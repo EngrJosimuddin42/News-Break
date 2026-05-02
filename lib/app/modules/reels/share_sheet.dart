@@ -11,7 +11,11 @@ class ShareSheet extends GetView<ReelsController> {
   final ReelModel reel;
   final bool isProfileShare;
 
-  const ShareSheet({super.key, required this.reel,this.isProfileShare = false,});
+  const ShareSheet({
+    super.key,
+    required this.reel,
+    this.isProfileShare = false,
+  });
 
   static const List<Map<String, dynamic>> _shareOptions = [
     {'label': 'Instagram', 'icon': Icons.camera_alt, 'isAsset': false},
@@ -19,7 +23,7 @@ class ShareSheet extends GetView<ReelsController> {
     {'label': 'Copy link', 'icon': Icons.copy_outlined, 'isAsset': false},
     {'label': 'Facebook', 'icon': Icons.facebook, 'isAsset': false},
     {'label': 'Email', 'icon': Icons.email_outlined, 'isAsset': false},
-    {'label': 'Text message', 'icon': 'assets/icons/message.png', 'isAsset':true},
+    {'label': 'Text message', 'icon': 'assets/icons/message.png', 'isAsset': true},
     {'label': 'WhatsApp', 'icon': 'assets/icons/whatsup.png', 'isAsset': true},
     {'label': 'Facebook messenger', 'icon': 'assets/icons/messenger.png', 'isAsset': true},
     {'label': 'X', 'icon': 'assets/icons/x_logo.png', 'isAsset': true},
@@ -38,7 +42,6 @@ class ShareSheet extends GetView<ReelsController> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Drag Handle
             const BottomSheetHandle(),
             const SizedBox(height: 20),
 
@@ -63,23 +66,31 @@ class ShareSheet extends GetView<ReelsController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   PublisherAvatar.fromUrl(
-                    imageUrl: isProfileShare ? reel.userProfileImage : reel.imageUrl,
-                    name: reel.userName,
-                    size: isProfileShare ? 100 : 42,
-                    shape: BoxShape.rectangle),
+                      imageUrl: isProfileShare
+                          ? reel.userProfileImage
+                          : reel.imageUrl,
+                      name: reel.userName,
+                      size: isProfileShare ? 100 : 42,
+                      shape: BoxShape.rectangle),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (isProfileShare) ...[
-                          Text(controller.mediaAccountLabel, style: AppTextStyles.overline),
+                          Text(controller.mediaAccountLabel,
+                              style: AppTextStyles.overline),
                           const SizedBox(height: 4),
                           RichText(
                             text: TextSpan(
                               children: [
-                                TextSpan(text: controller.checkOutPrefix, style: AppTextStyles.small),
-                                TextSpan(text: reel.userName, style: AppTextStyles.labelMedium.copyWith(color: AppColors.textOnDark)),
+                                TextSpan(
+                                    text: controller.checkOutPrefix,
+                                    style: AppTextStyles.small),
+                                TextSpan(
+                                    text: reel.userName,
+                                    style: AppTextStyles.labelMedium
+                                        .copyWith(color: AppColors.textOnDark)),
                               ],
                             ),
                           ),
@@ -101,7 +112,10 @@ class ShareSheet extends GetView<ReelsController> {
                             ],
                           ),
                           const SizedBox(height: 8),
-                          Text(reel.description, style: AppTextStyles.small, maxLines: 3, overflow: TextOverflow.ellipsis),
+                          Text(reel.description,
+                              style: AppTextStyles.small,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis),
                         ],
                       ],
                     ),
@@ -110,41 +124,54 @@ class ShareSheet extends GetView<ReelsController> {
               ),
             ),
 
-            // Share Options Box
+            // Share Options
             Flexible(
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
-                    color:Color(0xFF333333),
+                    color: const Color(0xFF333333),
                     borderRadius: BorderRadius.circular(12)),
                 child: ListView.separated(
                   shrinkWrap: true,
                   physics: const ClampingScrollPhysics(),
                   itemCount: _shareOptions.length,
-                  separatorBuilder: (context, index) => const Divider(color: Colors.white10, height: 1, indent: 16, endIndent: 16),
+                  separatorBuilder: (context, index) => const Divider(
+                      color: Colors.white10,
+                      height: 1,
+                      indent: 16,
+                      endIndent: 16),
                   itemBuilder: (context, index) {
                     final option = _shareOptions[index];
-                    return ListTile(
-                        title: Text(option['label'], style: AppTextStyles.caption),
-                        trailing: option['isAsset']
-                            ? Image.asset(
-                            option['icon'],
-                            width: 20,
-                            height: 20,
-                            color: Colors.white)
-                            : Icon(
-                            option['icon'],
-                            color: Colors.white,
-                            size: 20),
-                        onTap: () {
-                          controller.onShareOptionTap(
-                            reel.id ?? 0,
-                            option['label'],
-                            userName: reel.userName,
-                            shareUrl: 'https://newsbreak.com/news/${reel.id}',
-                          );
-                        },
-                        dense: true);
+                    return InkWell(
+                      borderRadius: index == 0
+                          ? const BorderRadius.vertical(top: Radius.circular(12))
+                          : index == _shareOptions.length - 1
+                          ? const BorderRadius.vertical(bottom: Radius.circular(12))
+                          : BorderRadius.zero,
+                      onTap: () {
+                        controller.onShareOptionTap(
+                          reel.id ?? 0,
+                          option['label'],
+                          userName: reel.userName,
+                          shareUrl: 'https://newsbreak.com/news/${reel.id}',
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 14),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(option['label'], style: AppTextStyles.caption),
+                            option['isAsset']
+                                ? Image.asset(option['icon'],
+                                width: 20, height: 20, color: Colors.white)
+                                : Icon(option['icon'] as IconData,
+                                color: Colors.white, size: 20),
+                          ],
+                        ),
+                      ),
+                    );
                   },
                 ),
               ),

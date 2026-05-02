@@ -8,7 +8,7 @@ import 'package:news_break/app/modules/reels/profile/profile_view.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/auth/auth_helper.dart';
-import '../../controllers/comment_controller.dart';
+import '../../controllers/reels/comment_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/reels/reels_controller.dart';
 import '../../controllers/social_interaction_controller.dart';
@@ -211,24 +211,33 @@ class _ReelsViewState extends State<ReelsView> {
               const SizedBox(height: 16),
 
               // Comment
-              _actionBtn(
-                assetIcon: 'assets/icons/comment2.png',
-                color: Colors.white,
-                count: socialCtrl.formatCount(reel.comments),
-                onTap: () {
-                 if (AuthHelper.checkLogin()) {
-                   Get.find<CommentController>().loadComments(reel.id, CommentSource.reel);
-                   showModalBottomSheet(
-                     context: context,
-                     isScrollControlled: true,
-                     backgroundColor: Colors.transparent,
-                     constraints: BoxConstraints( maxWidth: MediaQuery.of(context) .size.width),
-                     builder: (context) =>
-                         CommentsSheet( id: reel.id,  source: CommentSource.reel),
-                   );
-                 }
-                },
-              ),
+              Obx(() {
+                final currentReel = controller.reelsList.firstWhere(
+                      (r) => r.id == reel.id,
+                  orElse: () => reel,
+                );
+                return _actionBtn(
+                  assetIcon: 'assets/icons/comment2.png',
+                  color: Colors.white,
+                  count: socialCtrl.formatCount(currentReel.comments),
+                  onTap: () {
+                    if (AuthHelper.checkLogin()) {
+                      Get.find<CommentController>().loadComments(
+                          reel.id, CommentSource.reel);
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width),
+                        builder: (context) =>
+                            CommentsSheet(id: reel.id, source: CommentSource.reel),
+                      );
+                    }
+                  },
+                );
+              }),
+
               const SizedBox(height: 16),
 
               // Share Button

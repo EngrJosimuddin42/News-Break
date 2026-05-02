@@ -4,6 +4,7 @@ import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/nbot_controller.dart';
 import '../../../controllers/reels/reels_controller.dart';
+import '../../../widgets/app_snackbar.dart';
 import '../../ai/nbot_sheet.dart';
 
 class ThreeDotSheet extends StatelessWidget {
@@ -66,12 +67,20 @@ class ThreeDotSheet extends StatelessWidget {
                             onTap: () => controller.saveReel(reelId));
                         }),
 
+
                         const Divider(color: Colors.white12, height: 1),
                         _optionTile(
                           icon: Icons.not_interested,
                           iconColor: AppColors.surface,
                           label: 'Show less from author: $authorName',
-                          onTap: () => controller.hideAuthorContent(authorName)),
+                          onTap: () {
+                            bool isHidden = controller.hideAuthorContent(authorName);
+                            if (isHidden) {
+                              Get.back();
+                              AppSnackbar.success(message: 'Content from $authorName will be hidden');
+                            }
+                          },
+                        ),
 
                         const Divider(color: Colors.white12, height: 1),
                         _optionTile(
@@ -94,6 +103,7 @@ class ThreeDotSheet extends StatelessWidget {
                       iconColor: Colors.blueAccent,
                       label: 'Ask/request/report anything',
                       onTap: () {
+                        Get.back();
                         if (!Get.isRegistered<NBotController>()) {
                           Get.lazyPut(() => NBotController());
                         }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flick_video_player/flick_video_player.dart';
+import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
+
+import '../../../models/reel_model.dart';
 
 class FullScreenVideoPlayer extends StatefulWidget {
   final String url;
@@ -50,6 +53,8 @@ class _FullScreenVideoPlayerState extends State<FullScreenVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    final ReelModel item = Get.arguments;
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(

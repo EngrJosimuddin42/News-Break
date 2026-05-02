@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/auth/auth_controller.dart';
+import '../../routes/app_pages.dart';
 import '../../widgets/about_profile_sheet.dart';
 import '../premium/widgets/premium_banner.dart';
 import '../../controllers/home_controller.dart';
@@ -130,7 +131,9 @@ class MeBody extends GetView<MeController> {
                           publisherMeta: AuthController.to.user.value?.publisherMeta ?? 'Joined recently'),
                           child: Text( AuthController.to.user.value?.name ?? 'User',
                           style:AppTextStyles.bodyMedium.copyWith(color: Color(0xFFC4C4C4)))),
+
               const SizedBox(height: 16),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
@@ -381,27 +384,64 @@ class MeBody extends GetView<MeController> {
   }
 
   Widget _buildSharedSavedView() {
-    return Column(
-      children: [
-        Obx(() {
-          return Padding(
+    return Obx(() {
+      final savedItems = controller.savedReelsData;
+
+      return Column(
+        children: [
+          Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             child: Row(
               children: [
                 _chip('All',
-                  controller.selectedChipIndex.value == 0,
-                      () => controller.updateChip(0)),
+                    controller.selectedChipIndex.value == 0,
+                        () => controller.updateChip(0)),
               ],
             ),
-          );
-        }),
-        const SizedBox(height: 40),
-        Text('No Saved articles', style: AppTextStyles.bodyMedium),
-        const SizedBox(height: 8),
-        Text("You haven't saved anything. Yet.", style: AppTextStyles.overline),
-        const SizedBox(height: 40),
-      ],
-    );
+          ),
+
+          if (savedItems.isEmpty) ...[
+            const SizedBox(height: 40),
+            Text('No Saved articles', style: AppTextStyles.bodyMedium),
+            const SizedBox(height: 8),
+            Text("You haven't saved anything. Yet.", style: AppTextStyles.overline),
+            const SizedBox(height: 40),
+          ]
+          else ...[
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: savedItems.length,
+              separatorBuilder: (context, index) => const Divider(color: Colors.white12),
+              itemBuilder: (context, index) {
+                final item = savedItems[index];
+                return ListTile(
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: Image.network(item.imageUrl, width: 50, height: 50, fit: BoxFit.cover),
+                  ),
+                  title: Text(item.userName, style: AppTextStyles.caption),
+                  subtitle: Text(item.description ?? '', style: AppTextStyles.overline),
+                  onTap: () {
+                    if (item.type == 'reel') {
+                      Get.toNamed(
+                        Routes.FULLSCREEN,
+                        arguments: item,
+                      );
+                    } else {
+                      Get.toNamed(
+                        Routes.NEWS_DETAIL,
+                        arguments: item,
+                      );
+                    }
+                  },
+                );
+              },
+            ),
+          ],
+        ],
+      );
+    });
   }
 
 

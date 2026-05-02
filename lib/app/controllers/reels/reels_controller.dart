@@ -125,8 +125,9 @@ class ReelsController extends GetxController {
     reelsList.refresh();
   }
 
-
   void saveReel(int id) {
+    Navigator.of(Get.context!).pop();
+
     if (savedReels.contains(id)) {
       savedReels.remove(id);
       AppSnackbar.success(message: 'Removed from saved reels');
@@ -135,7 +136,6 @@ class ReelsController extends GetxController {
       AppSnackbar.success(message: 'Reel saved successfully!');
     }
   }
-
 
   void reportReel(int id, BuildContext context) {
     Get.back();

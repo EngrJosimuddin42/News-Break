@@ -8,6 +8,7 @@ import '../../modules/ai/nbot_sheet.dart';
 import '../../modules/me/creator_dashboard_view.dart';
 import '../../modules/me/creator_onboard_view.dart';
 import '../../modules/me/edit_profile_view.dart';
+import '../reels/reels_controller.dart';
 
 class MeController extends GetxController {
 
@@ -30,6 +31,7 @@ class MeController extends GetxController {
   final isCreator = false.obs;
   final loggedInTabs = ['Content', 'Reactions', 'Saved', 'History'];
   final loggedOutTabs = ['Saved', 'History'];
+  final ReelsController _reelsController = Get.find<ReelsController>();
 
 
   void updateChip(int index) => selectedChipIndex.value = index;
@@ -115,6 +117,10 @@ class MeController extends GetxController {
       return loggedInTabs.where((tab) => tab != 'Content').toList();
     }
   }
+
+  List get savedReelsData => _reelsController.reelsList
+      .where((reel) => _reelsController.savedReels.contains(reel.id))
+      .toList();
 
   void onClearAll(BuildContext context) {
     showDialog(

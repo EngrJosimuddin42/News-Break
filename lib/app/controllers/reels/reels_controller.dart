@@ -102,11 +102,10 @@ class ReelsController extends GetxController {
         reel.isFollowing = !currentState;
         // follower count update
         try {
-          if (reel.totalFollowers != null) {
             int count = _parseStatCount(reel.totalFollowers.toString());
             count = !currentState ? count + 1 : (count > 0 ? count - 1 : 0);
             reel.totalFollowers = _social.formatCount(count);
-          }
+
         } catch (e) {
           debugPrint("ToggleFollow Error: $e");
         }
@@ -211,7 +210,7 @@ class ReelsController extends GetxController {
     final existingReel = reelsList.firstWhereOrNull((r) =>
     r.userName == currentUserName);
 
-    String followers = existingReel?.totalFollowers?.toString() ?? "0";
+    String followers = existingReel?.totalFollowers.toString() ?? "0";
     bool currentlyFollowing = isUserFollowing(currentUserName);
 
     final newReel = ReelModel(
@@ -233,7 +232,7 @@ class ReelsController extends GetxController {
 
     reelsList.insert(0, newReel);
 
-    int currentPosts = _parseStatCount(newReel.totalPosts?.toString() ?? '0');
+    int currentPosts = _parseStatCount(newReel.totalPosts.toString());
     newReel.totalPosts = _social.formatCount(currentPosts + 1);
 
     reelsList.refresh();

@@ -208,13 +208,16 @@ class ReelsController extends GetxController {
     final user = AuthController.to.user.value;
     final String currentUserName = user?.name ?? 'Me';
 
-    final existingReel = reelsList.firstWhereOrNull((r) => r.userName == currentUserName);
+    final existingReel = reelsList.firstWhereOrNull((r) =>
+    r.userName == currentUserName);
 
     String followers = existingReel?.totalFollowers?.toString() ?? "0";
     bool currentlyFollowing = isUserFollowing(currentUserName);
 
     final newReel = ReelModel(
-      id: DateTime.now().millisecondsSinceEpoch,
+      id: DateTime
+          .now()
+          .millisecondsSinceEpoch,
       videoUrl: videoPath,
       imageUrl: thumbnailPath,
       userName: currentUserName,
@@ -234,8 +237,14 @@ class ReelsController extends GetxController {
     newReel.totalPosts = _social.formatCount(currentPosts + 1);
 
     reelsList.refresh();
-  }
 
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (pageController.hasClients) {
+        pageController.jumpToPage(0);
+        currentIndex.value = 0;
+      }
+    });
+  }
 
   void fetchReels() async {
     try {

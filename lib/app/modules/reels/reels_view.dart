@@ -77,6 +77,7 @@ class _ReelsViewState extends State<ReelsView> {
           );
           }
            return PageView.builder(
+             key: ValueKey(controller.reelsList.length),
              controller: controller.pageController,
             scrollDirection: Axis.vertical,
              itemCount: controller.reelsList.length,

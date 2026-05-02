@@ -32,6 +32,7 @@ class SocialInteractionController extends GetxController {
   final followerCounts = <int, String>{}.obs;
   final blockedTopics = <String>{}.obs;
   final blockedAuthors = <String>{}.obs;
+  final commentList = <CommentModel>[].obs;
   var likedComments = <String>[].obs;
   var dislikedComments = <String>[].obs;
   var savedItems = <String>[].obs;
@@ -422,6 +423,12 @@ class SocialInteractionController extends GetxController {
     Clipboard.setData(ClipboardData(text: text));
     Get.back();
     AppSnackbar.success(message: 'Copied to clipboard');
+  }
+
+  void addComment(CommentModel comment) {
+    commentList.add(comment);
+    incrementCommentCount(comment.reelId, source: 'reel');
+    commentList.refresh();
   }
 
 

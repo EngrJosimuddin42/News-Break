@@ -66,6 +66,7 @@ class CommentController extends GetxController {
 
     final newComment = CommentModel(
       id: DateTime.now().millisecondsSinceEpoch,
+      reelId: (currentSource == CommentSource.reel) ? id : 0,
       userName: user?.name ?? 'Guest',
       location: user?.location ?? 'Online',
       text: text,
@@ -77,6 +78,10 @@ class CommentController extends GetxController {
     );
 
     commentsList.insert(0, newComment);
+
+    if (currentSource == CommentSource.reel) {
+      Get.find<SocialInteractionController>().addComment(newComment);
+    }
 
     final String key = _getCacheKey(id, currentSource ?? CommentSource.news);
     _allCommentsCache[key] = List.from(commentsList);
@@ -108,6 +113,7 @@ class CommentController extends GetxController {
       final dummyComments = [
         CommentModel(
           id: 101,
+          reelId: 500,
           userName: 'Joser',
           location: 'New York',
           text: 'I wonder if they order that or not',
@@ -117,6 +123,7 @@ class CommentController extends GetxController {
         ),
         CommentModel(
           id: 102,
+          reelId: 600,
           userName: 'Zayan',
           location: 'London',
           text: 'This is a beautiful shot! 🔥',

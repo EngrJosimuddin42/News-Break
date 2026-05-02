@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 class CommentModel {
   final int id;
+  final int reelId;
   final String userName;
   final String userProfileImage;
   final String text;
@@ -15,6 +16,7 @@ class CommentModel {
 
   CommentModel({
     required this.id,
+    required this.reelId,
     required this.userName,
     required this.userProfileImage,
     this.text = '',

@@ -5,6 +5,7 @@ import 'package:news_break/app/modules/reels/comments/write_comment_sheet.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import 'package:news_break/app/widgets/bottom_sheet_handle.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import '../../../controllers/auth/auth_controller.dart';
 import '../../../controllers/reels/comment_controller.dart';
 import '../../../controllers/social_interaction_controller.dart';
@@ -237,7 +238,10 @@ class _CommentsSheetState extends State<CommentsSheet> {
                         children: [
                           Flexible(
                             child: Text(
-                              comment.createdAt,
+                              timeago.format(
+                                  comment.createdAt,
+                                  locale: 'en_short' // 'en_short' দিলে 1m, 2h, 5h
+                              ),
                               style: const TextStyle(
                                   color: Colors.grey, fontSize: 10),
                               overflow: TextOverflow.ellipsis,

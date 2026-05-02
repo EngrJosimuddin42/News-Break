@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 class CommentModel {
   final int id;
   final int reelId;
@@ -8,7 +9,7 @@ class CommentModel {
   final String? gifUrl;
   final String? imagePath;
   final String location;
-  final String createdAt;
+  final DateTime createdAt;
   final Uint8List? imageBytes;
   int likes;
   bool isLiked;

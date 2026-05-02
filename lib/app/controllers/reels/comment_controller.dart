@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:news_break/app/controllers/reels/reels_controller.dart';
 import 'package:news_break/app/controllers/social_interaction_controller.dart';
 import '../../models/comment_model.dart';
@@ -74,7 +75,7 @@ class CommentController extends GetxController {
       imagePath: imagePath,
       userProfileImage: user?.profileImageUrl ?? '',
       likes: 0,
-      createdAt: 'Just now',
+      createdAt: DateTime.now(),
     );
 
     commentsList.insert(0, newComment);
@@ -119,7 +120,7 @@ class CommentController extends GetxController {
           text: 'I wonder if they order that or not',
           userProfileImage: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
           likes: 1400,
-          createdAt: '2h',
+          createdAt: DateTime.now().subtract(const Duration(hours: 2)),
         ),
         CommentModel(
           id: 102,
@@ -129,7 +130,7 @@ class CommentController extends GetxController {
           text: 'This is a beautiful shot! 🔥',
           userProfileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200',
           likes: 850,
-          createdAt: '5h',
+          createdAt: DateTime.now().subtract(const Duration(hours: 5)),
         ),
       ];
 

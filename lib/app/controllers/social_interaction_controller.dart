@@ -250,6 +250,7 @@ class SocialInteractionController extends GetxController {
     suggestedPeople.removeAt(index);
   }
 
+
   // parse
   int _parseStatCount(String count) {
     count = count.toLowerCase().replaceAll(',', '');

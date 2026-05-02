@@ -11,6 +11,7 @@ import '../../controllers/auth/auth_helper.dart';
 import '../../controllers/comment_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/reels/reels_controller.dart';
+import '../../controllers/social_interaction_controller.dart';
 import '../../models/comment_source.dart';
 import '../../widgets/publisher_avatar.dart';
 import '../../widgets/reels_follow_button.dart';
@@ -139,6 +140,7 @@ class _ReelsViewState extends State<ReelsView> {
   }
 
   Widget _buildReel(dynamic reel, int index) {
+    final socialCtrl = Get.find<SocialInteractionController>();
     return Stack(
       children: [
         // Background image
@@ -198,7 +200,7 @@ class _ReelsViewState extends State<ReelsView> {
                 color: reel.isLiked == true
                     ? AppColors.linkColor
                     : AppColors.surface,
-                count: controller.formatCount(reel.likes),
+                count: socialCtrl.formatCount(reel.likes),
                 onTap: () {
                   if (AuthHelper.checkLogin()) {
                     controller.toggleLike(index);
@@ -212,7 +214,7 @@ class _ReelsViewState extends State<ReelsView> {
               _actionBtn(
                 assetIcon: 'assets/icons/comment2.png',
                 color: Colors.white,
-                count: controller.formatCount(reel.comments),
+                count: socialCtrl.formatCount(reel.comments),
                 onTap: () {
                  if (AuthHelper.checkLogin()) {
                    Get.find<CommentController>().loadComments(reel.id, CommentSource.reel);
@@ -233,7 +235,7 @@ class _ReelsViewState extends State<ReelsView> {
               _actionBtn(
                 assetIcon: 'assets/icons/share2.png',
                 color: Colors.white,
-                count: controller.formatCount(reel.shares),
+                count: socialCtrl.formatCount(reel.shares),
                 onTap: () {
                   showModalBottomSheet(
                     context: context,

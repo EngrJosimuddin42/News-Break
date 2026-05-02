@@ -7,8 +7,8 @@ import '../../modules/reels/comments/report_comment_sheet.dart';
 import '../../modules/reels/three_dot/report_reels_sheet.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
-
 import '../auth/auth_controller.dart';
+import '../social_interaction_controller.dart';
 
 class ReelsController extends GetxController {
 
@@ -27,6 +27,7 @@ class ReelsController extends GetxController {
   final String checkOutPrefix = 'Check out ';
   final String sendStoryLabel = 'Send this story';
 
+  SocialInteractionController get _social => Get.find<SocialInteractionController>();
 
   @override
   void onClose() {
@@ -34,12 +35,16 @@ class ReelsController extends GetxController {
     super.onClose();
   }
 
-  String formatCount(int count) {
-    if (count >= 1000) {
-      return '${(count / 1000).toStringAsFixed(1)}k';
+  int _parseStatCount(String count) {
+    count = count.toLowerCase().replaceAll(',', '');
+    if (count.contains('k')) {
+      return (double.parse(count.replaceAll('k', '')) * 1000).toInt();
+    } else if (count.contains('m')) {
+      return (double.parse(count.replaceAll('m', '')) * 1000000).toInt();
     }
-    return count.toString();
+    return int.tryParse(count) ?? 0;
   }
+
 
   void incrementComment(int reelId) {
     int index = reelsList.indexWhere((r) => r.id == reelId);
@@ -55,13 +60,121 @@ class ReelsController extends GetxController {
     fetchReels();
   }
 
-
   void updatePage(int index) {
     currentIndex.value = index;
     if (pageController.hasClients) {
       pageController.jumpToPage(index);
     }
   }
+
+  void toggleLike(int index) {
+    reelsList[index].isLiked = !reelsList[index].isLiked;
+    reelsList[index].isLiked
+        ? reelsList[index].likes++
+        : reelsList[index].likes--;
+    reelsList.refresh();
+  }
+
+
+
+  void incrementProfileView(dynamic user) {
+    int currentViews = _parseStatCount(user.totalViews.toString());
+    currentViews++;
+    user.totalViews = _social.formatCount(currentViews);
+    reelsList.refresh();
+  }
+
+  void toggleFollow(dynamic item) {
+    if (item == null) return;
+    item.isFollowing = !(item.isFollowing ?? false);
+    try {
+      if (item.totalFollowers != null) {
+        int currentFollowers = _parseStatCount(item.totalFollowers.toString());
+        currentFollowers = item.isFollowing
+            ? currentFollowers + 1
+            : (currentFollowers > 0 ? currentFollowers - 1 : 0);
+        item.totalFollowers = _social.formatCount(currentFollowers);
+      }
+    } catch (e) {
+      debugPrint("ToggleFollow Error: $e");
+    }
+    reelsList.refresh();
+    update();
+  }
+
+
+  void incrementShare(int index) {
+    reelsList[index].shares++;
+    reelsList.refresh();
+  }
+
+
+  void saveReel(int id) {
+    if (savedReels.contains(id)) {
+      savedReels.remove(id);
+      AppSnackbar.success(message: 'Removed from saved reels');
+    } else {
+      savedReels.add(id);
+      AppSnackbar.success(message: 'Reel saved successfully!');
+    }
+  }
+
+
+  void reportReel(int id, BuildContext context) {
+    Get.back();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+      builder: (context) => ReportReelsSheet(reelId: id),
+    );
+  }
+
+
+  void reportComment(int id, BuildContext context) {
+    Get.back();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+      builder: (context) => const ReportCommentSheet(),
+    );
+  }
+
+  void openHelpCenter() {
+    Get.back();
+    Get.to(() => const LegalView(type: LegalType.terms));
+  }
+
+  void hideAuthorContent(String authorName) {
+    reelsList.removeWhere((r) => r.userName == authorName);
+    reelsList.refresh();
+    Get.back();
+  }
+
+  void onShareOptionTap(int reelId, String platform,
+      {String? shareUrl, String? userName}) async {
+    int index = reelsList.indexWhere((r) => r.id == reelId);
+    final String url = shareUrl ??
+        (index != -1
+            ? 'https://newsbreak.com/reels/$reelId'
+            : 'https://newsbreak.com/news/$reelId');
+    final String author =
+        userName ?? (index != -1 ? reelsList[index].userName : '');
+
+    if (platform == 'Copy link') {
+      await Clipboard.setData(ClipboardData(text: url));
+      if (index != -1) incrementShare(index);
+      Get.back();
+    } else if (platform == 'More') {
+      Get.back();
+      await Share.share('Check out this story by $author: $url');
+      if (index != -1) incrementShare(index);
+    }
+  }
+
 
   void addUserReel({
     required String videoPath,
@@ -80,131 +193,6 @@ class ReelsController extends GetxController {
     reelsList.insert(0, newReel);
   }
 
-
-  void toggleLike(int index) {
-    reelsList[index].isLiked = !reelsList[index].isLiked;
-    reelsList[index].isLiked ? reelsList[index].likes++ : reelsList[index].likes--;
-    reelsList.refresh();
-  }
-
-
-  void incrementProfileView(dynamic user) {
-    int currentViews = _parseStatCount(user.totalViews.toString());
-    currentViews++;
-    user.totalViews = formatCount(currentViews);
-    reelsList.refresh();
-  }
-
-  int _parseStatCount(String count) {
-    count = count.toLowerCase().replaceAll(',', '');
-    if (count.contains('k')) {
-      return (double.parse(count.replaceAll('k', '')) * 1000).toInt();
-    } else if (count.contains('m')) {
-      return (double.parse(count.replaceAll('m', '')) * 1000000).toInt();
-    }
-    return int.tryParse(count) ?? 0;
-  }
-
-
-  void toggleFollow(dynamic item) {
-    if (item == null) return;
-    item.isFollowing = !(item.isFollowing ?? false);
-    try {
-      if (item.totalFollowers != null) {
-        int currentFollowers = _parseStatCount(item.totalFollowers.toString());
-        if (item.isFollowing) {
-          currentFollowers++;
-        } else {
-          currentFollowers = currentFollowers > 0 ? currentFollowers - 1 : 0;
-        }
-        item.totalFollowers = formatCount(currentFollowers);
-      }
-    } catch (e) {
-      debugPrint("ToggleFollow Error: $e");
-    }
-    reelsList.refresh();
-    update();
-  }
-
-
-  void incrementShare(int index) {
-    reelsList[index].shares++;
-    reelsList.refresh();
-  }
-
-  void copyComment(String text) {
-    Clipboard.setData(ClipboardData(text: text));
-    Get.back();
-    AppSnackbar.success(message:'Copied to clipboard');
-  }
-
-  void onShareOptionTap(int reelId, String platform, {String? shareUrl, String? userName}) async {
-    int index = reelsList.indexWhere((r) => r.id == reelId);
-    final String url = shareUrl ??
-        (index != -1
-            ? 'https://newsbreak.com/reels/$reelId'
-            : 'https://newsbreak.com/news/$reelId');
-
-    final String author = userName ??
-        (index != -1 ? reelsList[index].userName : '');
-
-    if (platform == 'Copy link') {
-      await Clipboard.setData(ClipboardData(text: url));
-      if (index != -1) incrementShare(index);
-      Get.back();
-
-    } else if (platform == 'More') {
-      Get.back();
-      await Share.share('Check out this story by $author: $url');
-      if (index != -1) incrementShare(index);
-    }
-  }
-
-  void saveReel(int id) {
-    if (savedReels.contains(id)) {
-      savedReels.remove(id);
-      AppSnackbar.success(message:'Removed from saved reels');
-    } else {
-      savedReels.add(id);
-      AppSnackbar.success(message: 'Reel saved successfully!');
-    }
-  }
-
-  void reportReel(int id, BuildContext context) {
-    Get.back();
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width),
-      builder: (context) => ReportReelsSheet(reelId: id),
-    );
-  }
-
-  void reportComment(int id, BuildContext context) {
-    Get.back();
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width,
-      ),
-      builder: (context) => const ReportCommentSheet(),
-    );
-  }
-
-  void openHelpCenter() {
-    Get.back();
-    Get.to(() => const LegalView(type: LegalType.terms));
-  }
-
-  void hideAuthorContent(String authorName) {
-    reelsList.removeWhere((r) => r.userName == authorName);
-    reelsList.refresh();
-    Get.back();
-  }
 
   void fetchReels() async {
     try {

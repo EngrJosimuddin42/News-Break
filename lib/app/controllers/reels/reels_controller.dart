@@ -77,6 +77,14 @@ class ReelsController extends GetxController {
     reelsList[index].isLiked
         ? reelsList[index].likes++
         : reelsList[index].likes--;
+
+    final key = 'reel_${reelsList[index].id}';
+    if (reelsList[index].isLiked) {
+      _social.likedIds.add(key);
+    } else {
+      _social.likedIds.remove(key);
+    }
+
     reelsList.refresh();
   }
 

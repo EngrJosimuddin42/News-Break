@@ -11,6 +11,10 @@ class UserModel {
   final String? location;
   final String? timeAgo;
   final bool isHighlighted;
+  String get userName => username ?? name;
+  String get userProfileImage => profileImageUrl ?? '';
+  List<Map<String, String>> get userReactions => [];
+
 
   UserModel({
     required this.name,

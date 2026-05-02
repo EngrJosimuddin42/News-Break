@@ -8,7 +8,6 @@ import '../../controllers/signin_controller.dart';
 import '../../controllers/social_interaction_controller.dart';
 import '../../models/comment_source.dart';
 import '../../models/news_model.dart';
-import '../../routes/app_pages.dart';
 import '../../widgets/about_profile_sheet.dart';
 import '../../widgets/follow_button.dart';
 import '../../widgets/network_or_file_image.dart';
@@ -23,12 +22,6 @@ class NewsDetailView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final socialCtrl = Get.find<SocialInteractionController>();
-
-    final HomeController controller = Get.isRegistered<HomeController>()
-        ? Get.find<HomeController>()
-        : Get.put(HomeController());
-
-
     final dynamic args = Get.arguments;
     final NewsModel news = (args is Map) ? args['news'] : args;
     final String tabType = (args is Map) ? (args['tabType'] ?? 'news') : 'news';
@@ -67,19 +60,21 @@ class NewsDetailView extends GetView<HomeController> {
           ),
         ),
         actions: [
+          Obx(() {
+            final saved = socialCtrl.isSaved(news.id, type: 'news');
+            return IconButton(
+              icon: Icon(
+                saved ? Icons.bookmark : Icons.bookmark_border,
+                color: saved ? Colors.blueAccent : AppColors.textOnDark,
+                size: 20,
+              ),
+              onPressed: () => socialCtrl.onSaveNews(news),
+            );
+          }),
           IconButton(
-            icon: Icon(Icons.bookmark_border, color: AppColors.textOnDark, size: 20),
-            onPressed: () {
-              if (controller.isLoggedIn) {
-                socialCtrl.onSaveNews(news);
-              } else {
-                Get.toNamed(Routes.SIGNIN);
-              }
-            },
+            icon: Icon(Icons.more_vert, color: AppColors.textOnDark, size: 24),
+            onPressed: () => NewsBottomSheets.showMoreSheet(context, news),
           ),
-          IconButton(
-            icon: Icon(Icons.more_vert, color:AppColors.textOnDark,size: 24,),
-    onPressed: () => NewsBottomSheets.showMoreSheet(context, news)),
         ],
       ),
       body: Column(

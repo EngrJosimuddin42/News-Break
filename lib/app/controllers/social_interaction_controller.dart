@@ -33,6 +33,7 @@ class SocialInteractionController extends GetxController {
   final blockedTopics = <String>{}.obs;
   final blockedAuthors = <String>{}.obs;
   final commentList = <CommentModel>[].obs;
+  final savedNewsItems = <NewsModel>[].obs;
   var likedComments = <String>[].obs;
   var dislikedComments = <String>[].obs;
   var savedItems = <String>[].obs;
@@ -162,13 +163,19 @@ class SocialInteractionController extends GetxController {
 
   void onSaveNews(NewsModel news) {
     if (!isLoggedIn) {
-      if (!Get.isRegistered<SignInController>()) {
-        Get.lazyPut(() => SignInController());
-      }
       Get.toNamed(Routes.SIGNIN);
       return;
     }
-    AppSnackbar.success(message: "News saved to your bookmarks");
+    final key = 'news_${news.id}';
+    if (savedIds.contains(key)) {
+      savedIds.remove(key);
+      savedNewsItems.removeWhere((n) => n.id == news.id);
+      AppSnackbar.success(message: 'Removed from bookmarks');
+    } else {
+      savedIds.add(key);
+      savedNewsItems.add(news);
+      AppSnackbar.success(message: 'News saved to your bookmarks');
+    }
   }
 
   bool isSaved(int id, {String type = 'news'}) =>

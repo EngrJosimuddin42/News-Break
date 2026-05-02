@@ -3,12 +3,18 @@ import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_colors.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/auth/auth_controller.dart';
+import '../../controllers/reels/reels_controller.dart';
+import '../../controllers/social_interaction_controller.dart';
 import '../../routes/app_pages.dart';
 import '../../widgets/about_profile_sheet.dart';
 import '../premium/widgets/premium_banner.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/me/me_controller.dart';
+import '../reels/player/full_screen_video_player.dart';
 import 'history_item.dart';
+import 'package:news_break/app/modules/reels/profile/reactions_tab.dart' as ReelsReactions;
+
+
 
 // AppBar
 class MeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -286,17 +292,11 @@ class MeBody extends GetView<MeController> {
             const SizedBox(height: 40),
           ],
         );
+
       case 'Reactions':
-        return Padding(
-          padding: EdgeInsets.only(top: 60),
-          child: Column(
-            children: [
-              Text('No Reactions', style:AppTextStyles.bodyMedium),
-              SizedBox(height: 8),
-              Text("This user hasn't commented on\nor reacted to any articles. Yet.",
-                textAlign: TextAlign.center, style:AppTextStyles.overline),
-            ],
-          ),
+        return ReelsReactions.ReactionsTab(
+          user: AuthController.to.user.value,
+          controller: Get.find<ReelsController>(),
         );
 
       case 'Saved':
@@ -384,8 +384,13 @@ class MeBody extends GetView<MeController> {
   }
 
   Widget _buildSharedSavedView() {
+    final socialCtrl = Get.find<SocialInteractionController>();
+
     return Obx(() {
-      final savedItems = controller.savedReelsData;
+      final reelItems = controller.savedReelsData;
+      final newsItems = socialCtrl.savedNewsItems;
+
+      final bool isEmpty = reelItems.isEmpty && newsItems.isEmpty;
 
       return Column(
         children: [
@@ -393,51 +398,64 @@ class MeBody extends GetView<MeController> {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             child: Row(
               children: [
-                _chip('All',
-                    controller.selectedChipIndex.value == 0,
+                _chip('All', controller.selectedChipIndex.value == 0,
                         () => controller.updateChip(0)),
               ],
             ),
           ),
 
-          if (savedItems.isEmpty) ...[
+          if (isEmpty) ...[
             const SizedBox(height: 40),
             Text('No Saved articles', style: AppTextStyles.bodyMedium),
             const SizedBox(height: 8),
             Text("You haven't saved anything. Yet.", style: AppTextStyles.overline),
             const SizedBox(height: 40),
-          ]
-          else ...[
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: savedItems.length,
-              separatorBuilder: (context, index) => const Divider(color: Colors.white12),
-              itemBuilder: (context, index) {
-                final item = savedItems[index];
-                return ListTile(
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: Image.network(item.imageUrl, width: 50, height: 50, fit: BoxFit.cover),
-                  ),
-                  title: Text(item.userName, style: AppTextStyles.caption),
-                  subtitle: Text(item.description ?? '', style: AppTextStyles.overline),
-                  onTap: () {
-                    if (item.type == 'reel') {
-                      Get.toNamed(
-                        Routes.FULLSCREEN,
-                        arguments: item,
-                      );
-                    } else {
-                      Get.toNamed(
-                        Routes.NEWS_DETAIL,
-                        arguments: item,
-                      );
-                    }
-                  },
-                );
-              },
-            ),
+          ] else ...[
+            // Reels
+            if (reelItems.isNotEmpty)
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: reelItems.length,
+                separatorBuilder: (context, index) => const Divider(color: Colors.white12),
+                itemBuilder: (context, index) {
+                  final item = reelItems[index];
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: Image.network(item.imageUrl, width: 50, height: 50, fit: BoxFit.cover),
+                    ),
+                    title: Text(item.userName, style: AppTextStyles.caption),
+                    subtitle: Text(item.description, style: AppTextStyles.overline),
+                    onTap: () => Get.to(
+                          () => FullScreenVideoPlayer(url: item.videoUrl ?? ''),
+                      arguments: item,
+                    ),
+                  );
+                },
+              ),
+
+            // News
+            if (newsItems.isNotEmpty)
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: newsItems.length,
+                separatorBuilder: (context, index)
+                => const Divider(color: Colors.white12),
+                itemBuilder: (context, index) {
+                  final item = newsItems[index];
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: Image.network(item.imageUrl, width: 50, height: 50, fit: BoxFit.cover),
+                    ),
+                    title: Text(item.title, style: AppTextStyles.caption),
+                    subtitle: Text(item.publisherName, style: AppTextStyles.overline),
+                    onTap: () => Get.toNamed(Routes.NEWS_DETAIL, arguments: item),
+                  );
+                },
+              ),
           ],
         ],
       );
@@ -478,5 +496,4 @@ class MeBody extends GetView<MeController> {
     )
         : _buildNoHistoryView());
   }
-
 }

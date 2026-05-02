@@ -40,6 +40,7 @@ class _ReelsViewState extends State<ReelsView> {
     } else {
       controller = Get.put(ReelsController());
     }
+
     if (hasCustomList) {
       controller.reelsList.clear();
       controller.reelsList.assignAll(homeController.customReelsForNavigation);
@@ -50,10 +51,10 @@ class _ReelsViewState extends State<ReelsView> {
           controller.pageController.jumpToPage(initialIndex);
         }
       });
-
     } else {
-      controller.reelsList.clear();
-      controller.fetchReels();
+      if (controller.reelsList.isEmpty) {
+        controller.fetchReels();
+      }
     }
   }
 
@@ -199,20 +200,21 @@ class _ReelsViewState extends State<ReelsView> {
               const SizedBox(height: 16),
 
               // Like
-              _actionBtn(
-                icon: reel.isLiked == true
-                    ? Icons.thumb_up
-                    : Icons.thumb_up_outlined,
-                color: reel.isLiked == true
-                    ? AppColors.linkColor
-                    : AppColors.surface,
-                count: socialCtrl.formatCount(reel.likes),
-                onTap: () {
-                  if (AuthHelper.checkLogin()) {
-                    controller.toggleLike(index);
-                  }
-                },
-              ),
+              Obx(() {
+                final isLiked = socialCtrl.likedIds.contains('reel_${reel.id}');
+                final currentReel = controller.reelsList.firstWhere(
+                        (r) => r.id == reel.id, orElse: () => reel);
+                return _actionBtn(
+                  icon: isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+                  color: isLiked ? AppColors.linkColor : AppColors.surface,
+                  count: socialCtrl.formatCount(currentReel.likes),
+                  onTap: () {
+                    if (AuthHelper.checkLogin()) {
+                      controller.toggleLike(index);
+                    }
+                  },
+                );
+              }),
 
               const SizedBox(height: 16),
 

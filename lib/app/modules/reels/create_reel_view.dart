@@ -141,16 +141,15 @@ class _CreateReelViewState extends State<CreateReelView> {
       return GestureDetector(
         onTap: () async {
           controller.changeTab(index);
+
           if (index == 0) {
-            await controller.onAddMedia();
-            if (controller.selectedMedia.value != null) {
-              final file = controller.selectedMedia.value!;
-              await Get.delete<CreatePostController>();
-              final postController = Get.put(CreatePostController());
-              postController.selectedMedia.value = file;
-              postController.isReel.value = true;
-              postController.postType.value = PostType.reel;
-              await postController.generateThumbnail(file.path);
+            final postController = Get.put(CreatePostController());
+            postController.postType.value = PostType.reel;
+            postController.isReel.value = true;
+
+            await postController.onAddMedia();
+
+            if (postController.selectedMedia.value != null) {
               Get.to(() => const CreatePostView());
             }
           }

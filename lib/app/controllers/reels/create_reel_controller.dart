@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -13,7 +12,6 @@ class CreateReelController extends GetxController {
   var isCameraBtnPressed = false.obs;
   var isMicBtnPressed = false.obs;
 
-  final ImagePicker _picker = ImagePicker();
 
   @override
   void onInit() {
@@ -55,24 +53,6 @@ class CreateReelController extends GetxController {
     } else if (status.isPermanentlyDenied) {
       AppSnackbar.warning(title: 'Permission',message:'Please enable microphone from settings',
           mainButton: TextButton(onPressed: () => openAppSettings(), child: const Text('Open')));
-    }
-  }
-
-
-  Future<void> onAddMedia() async {
-    try {
-      final XFile? pickedFile = await _picker.pickVideo(
-        source: ImageSource.gallery,
-        maxDuration: const Duration(seconds: 60),
-      );
-
-      if (pickedFile != null) {
-        selectedMedia.value = File(pickedFile.path);
-      } else {
-        selectedMedia.value = null;
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Could not pick video: $e');
     }
   }
 

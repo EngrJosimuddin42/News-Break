@@ -92,20 +92,25 @@ class CreatePostController extends GetxController {
     }
   }
 
-  void onAddMedia() async {
-    final XFile? pickedFile = isReel.value
-        ? await _picker.pickVideo(source: ImageSource.gallery)
-        : await _picker.pickImage(source: ImageSource.gallery);
+  Future<void> onAddMedia() async {
+    try {
+      final XFile? pickedFile = isReel.value
+          ? await _picker.pickVideo(source: ImageSource.gallery, maxDuration: const Duration(seconds: 60))
+          : await _picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile != null) {
-      selectedMedia.value = File(pickedFile.path);
-      if (isReel.value) {
-        await generateThumbnail(pickedFile.path);
-      } else {
-        videoThumbnail.value = null;
+      if (pickedFile != null) {
+        selectedMedia.value = File(pickedFile.path);
+        if (isReel.value) {
+          await generateThumbnail(pickedFile.path);
+        } else {
+          videoThumbnail.value = null;
+        }
       }
+    } catch (e) {
+      AppSnackbar.error(message: 'Could not pick media: $e');
     }
   }
+
 
   //  Post type  validation & submit
   void onPost() async {

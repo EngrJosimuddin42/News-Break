@@ -9,6 +9,8 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/reels/reels_controller.dart';
 import 'package:news_break/app/modules/reels/profile/reactions_tab.dart';
 
+import '../../../widgets/app_snackbar.dart';
+
 class ProfileView extends StatefulWidget {
   final dynamic user;
   const ProfileView({super.key, this.user});
@@ -41,21 +43,35 @@ class _ProfileViewState extends State<ProfileView> {
             onTap: () => Get.back(),
             child: Icon(Icons.arrow_back_ios,
                 color: AppColors.textOnDark, size: 20)),
+
         actions: [
           GestureDetector(
-              onTap: () {
-                ProfileOptionSheet.showOptions(
-                  context,
-                  user: widget.user,
-                  onBlockConfirm: () {},
-                  onReportSubmit: (String reason) {},
-                );
-              },
-              child: const Padding(
-                  padding: EdgeInsets.only(right: 16),
-                  child: Icon(Icons.more_vert, color: AppColors.textOnDark, size: 24))),
+            onTap: () {
+              ProfileOptionSheet.showOptions(
+                context,
+                user: widget.user,
+                onBlockConfirm: () {
+                  final ReelsController controller = Get.find<ReelsController>();
+
+                  bool isBlocked = controller.hideAuthorContent(widget.user?.userName ?? '');
+
+                  if (isBlocked) {
+                    Get.back();
+                    Get.back();
+                    AppSnackbar.success(message: 'User blocked successfully');
+                  }
+                },
+                onReportSubmit: (String reason) {},
+              );
+            },
+            child: const Padding(
+              padding: EdgeInsets.only(right: 16),
+              child: Icon(Icons.more_vert, color: AppColors.textOnDark, size: 24),
+            ),
+          ),
         ],
       ),
+
       body: GetBuilder<ReelsController>(
         builder: (controller) {
           final String userName = widget.user?.userName ?? '';
@@ -64,7 +80,7 @@ class _ProfileViewState extends State<ProfileView> {
           final String followerCount = controller.reelsList
               .firstWhereOrNull((r) => r.userName == userName)
               ?.totalFollowers
-              ?.toString() ??
+              .toString() ??
               widget.user?.totalFollowers?.toString() ??
               '0';
 

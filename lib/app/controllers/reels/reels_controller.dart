@@ -165,10 +165,15 @@ class ReelsController extends GetxController {
     Get.to(() => const LegalView(type: LegalType.terms));
   }
 
-  void hideAuthorContent(String authorName) {
+  bool hideAuthorContent(String authorName) {
+    final loginUserName = Get.find<AuthController>().user.value?.name ?? '';
+    if (authorName == loginUserName) {
+      AppSnackbar.error(message: "You cannot block yourself!");
+      return false;
+    }
     reelsList.removeWhere((r) => r.userName == authorName);
     reelsList.refresh();
-    Get.back();
+    return true;
   }
 
 

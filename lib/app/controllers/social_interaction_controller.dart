@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:news_break/app/controllers/signin_controller.dart';
 import 'package:news_break/app/models/comment_source.dart';
 import 'package:share_plus/share_plus.dart';
 import '../models/comment_model.dart';
@@ -34,6 +33,7 @@ class SocialInteractionController extends GetxController {
   final blockedAuthors = <String>{}.obs;
   final commentList = <CommentModel>[].obs;
   final savedNewsItems = <NewsModel>[].obs;
+  final userPosts = <NewsModel>[].obs;
   var likedComments = <String>[].obs;
   var dislikedComments = <String>[].obs;
   var savedItems = <String>[].obs;

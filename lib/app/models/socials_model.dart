@@ -1,3 +1,5 @@
+import 'package:timeago/timeago.dart' as timeago;
+
 class SocialsModel {
   final int id;
   final String type = 'social';
@@ -11,6 +13,7 @@ class SocialsModel {
   final String likes;
   final String comments;
   final String shares;
+  final DateTime createdAt;
 
   SocialsModel({
     required this.id,
@@ -24,5 +27,8 @@ class SocialsModel {
     this.likes = '5',
     this.comments = '3',
     this.shares = '2',
-  });
+    DateTime? createdAt,
+  }): createdAt = createdAt ?? DateTime.now();
+
+  String get formattedTime => timeago.format(createdAt, locale: 'en_short');
 }

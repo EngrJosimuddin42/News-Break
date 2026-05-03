@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:news_break/app/controllers/reels/reels_controller.dart';
+import 'package:news_break/app/controllers/social_interaction_controller.dart';
 import 'package:news_break/app/controllers/social_utility_controller.dart';
 import 'package:news_break/app/controllers/socials/socials_controller.dart';
 import 'package:news_break/app/widgets/app_snackbar.dart';
@@ -10,6 +11,7 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 import '../models/news_model.dart';
 import '../modules/create_post/tag_location_sheet.dart';
 import '../routes/app_pages.dart';
+import 'auth/auth_controller.dart';
 import 'home_controller.dart';
 
 //  Post type enum
@@ -124,8 +126,10 @@ class CreatePostController extends GetxController {
           ?? utility.selectedImage.value?.path
           ?? utility.selectedGifUrl.value;
 
+      final socialCtrl = Get.find<SocialInteractionController>();
+
       if (isSocialPost) {
-        await  Get.find<SocialsController>().submitPost(
+        await Get.find<SocialsController>().submitPost(
           textController.text,
           imageUrl: mediaUrl,
         );
@@ -135,13 +139,25 @@ class CreatePostController extends GetxController {
           imageUrl: mediaUrl,
           location: selectedLocation.value,
         );
+        socialCtrl.userPosts.add(NewsModel(
+          id: DateTime.now().millisecondsSinceEpoch,
+          category: 'News',
+          title: textController.text,
+          author: AuthController.to.user.value?.name ?? '',
+          timeAgo: 'Just now',
+          publisherName: AuthController.to.user.value?.name ?? '',
+          publisherMeta: '',
+          imageUrl: mediaUrl ?? '',
+          body: textController.text,
+        ));
       } else if (isReelPost) {
         Get.find<ReelsController>().addUserReel(
-        videoPath: selectedMedia.value!.path,
-        thumbnailPath: videoThumbnail.value?.path ?? '',
-         text: textController.text,
+          videoPath: selectedMedia.value!.path,
+          thumbnailPath: videoThumbnail.value?.path ?? '',
+          text: textController.text,
         );
       }
+
       final successMsg = _getSuccessMessage();
       utility.clearAllMedia();
       utility.clearTags();

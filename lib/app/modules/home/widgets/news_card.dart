@@ -131,10 +131,8 @@ class _NewsCardState extends State<NewsCard> {
                       children: [
                         Image.asset('assets/icons/time.png', height: 14, width: 14),
                         const SizedBox(width: 3),
-                        Text(
-                          news.timeAgo,
-                          style: AppTextStyles.overline.copyWith(color: AppColors.info),
-                        ),
+                        Text(news.formattedTime,
+                          style: AppTextStyles.overline.copyWith(color: AppColors.info))
                       ],
                     ),
                   ],

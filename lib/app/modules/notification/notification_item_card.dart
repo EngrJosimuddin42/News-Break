@@ -41,7 +41,7 @@ class NotificationItemCard extends StatelessWidget {
       title = item.title;
       category = item.category;
       publisher = item.publisherName;
-      time = item.timeAgo;
+      time = item.formattedTime;
       imageUrl = item.imageUrl;
       videoUrl = item.videoUrl ?? '';
       shares = item.shares;
@@ -52,7 +52,7 @@ class NotificationItemCard extends StatelessWidget {
       title = item.description;
       category = 'Reel';
       publisher = item.userName;
-      time = 'Just now';
+      time = item.formattedTime;
       imageUrl = item.imageUrl;
       videoUrl = item.videoUrl ?? '';
       shares = item.shares.toString();
@@ -62,7 +62,7 @@ class NotificationItemCard extends StatelessWidget {
       title = item.text;
       category = item.category;
       publisher = item.userName;
-      time = item.timeAgo;
+      time = item.formattedTime;
       imageUrl = item.imageUrls.isNotEmpty ? item.imageUrls[0] : '';
       shares = item.shares;
     }

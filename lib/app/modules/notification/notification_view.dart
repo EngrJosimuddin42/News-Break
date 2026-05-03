@@ -205,7 +205,7 @@ class FollowNotificationItem extends StatelessWidget {
                     const SizedBox(width: 3),
                     Flexible(
                         flex: 2,
-                        child: Text(user.timeAgo ?? 'Just now',
+                        child: Text(user.formattedTime,
                             style: AppTextStyles.labelSmall
                                 .copyWith(color: AppColors.light),
                             overflow: TextOverflow.ellipsis,

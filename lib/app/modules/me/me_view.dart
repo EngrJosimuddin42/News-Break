@@ -5,6 +5,8 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../controllers/auth/auth_controller.dart';
 import '../../controllers/reels/reels_controller.dart';
 import '../../controllers/social_interaction_controller.dart';
+import '../../controllers/socials/socials_controller.dart';
+import '../../models/news_model.dart';
 import '../../routes/app_pages.dart';
 import '../../widgets/about_profile_sheet.dart';
 import '../../widgets/network_or_file_image.dart';
@@ -267,7 +269,7 @@ class MeBody extends GetView<MeController> {
       case 'Content':
         return Column(
           children: [
-            // Sub chips
+
             Obx(() => Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
               child: Row(
@@ -287,11 +289,89 @@ class MeBody extends GetView<MeController> {
               ),
             )),
 
-            const SizedBox(height: 40),
-            Text('No Post', style: AppTextStyles.bodyMedium),
-            const SizedBox(height: 8),
-            Text(' You haven`t posted anything.Yet.', style:AppTextStyles.overline ),
-            const SizedBox(height: 40),
+
+            Obx(() {
+              final index = controller.selectedChipIndex.value;
+              final loginName = AuthController.to.user.value?.name ?? '';
+
+              if (index == 0) {
+                return _buildUserContentList(
+                  items: Get.find<ReelsController>().reelsList
+                      .where((r) => r.userName == loginName)
+                      .toList(),
+                  emptyMessage: "You haven't posted any reels yet.",
+                  isReel: true,
+                );
+              } else if (index == 1) {
+                return _buildUserContentList(
+                  items: Get.find<SocialInteractionController>().userPosts,
+                  emptyMessage: "You haven't published any posts yet.",
+                );
+              } else {
+                final myPosts = Get.find<SocialsController>().posts
+                    .where((p) => p.author == loginName)
+                    .toList();
+
+                if (myPosts.isEmpty) {
+                  return Column(
+                    children: [
+                      const SizedBox(height: 60),
+                      Text('No Content', style: AppTextStyles.bodyMedium),
+                      const SizedBox(height: 8),
+                      Text("You haven't shared anything in community yet.",
+                          style: AppTextStyles.overline),
+                      const SizedBox(height: 40),
+                    ],
+                  );
+                }
+
+                return ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: myPosts.length,
+                  separatorBuilder: (_, __) => const Divider(color: Colors.white12),
+                  itemBuilder: (context, i) {
+                    final item = myPosts[i];
+                    final imageUrl = item.imageUrls.isNotEmpty ? item.imageUrls.first : '';
+                    return ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      leading: SizedBox(
+                        width: 50, height: 50,
+                        child: NetworkOrFileImage(
+                          url: imageUrl,
+                          width: 50, height: 50,
+                          fit: BoxFit.cover,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                      title: Text(item.author, style: AppTextStyles.caption),
+                      subtitle: Text(item.text,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.overline),
+                      onTap: () {
+                        Get.toNamed(Routes.NEWS_DETAIL, arguments: {
+                          'news': NewsModel(
+                            id: item.id,
+                            category: item.category,
+                            title: item.text,
+                            author: item.author,
+                            publisherName: item.publisherName,
+                            timeAgo: item.timeAgo,
+                            imageUrl: item.imageUrls.isNotEmpty ? item.imageUrls.first : '',
+                            body: item.text,
+                            publisherMeta: item.publisherName,
+                            likes: item.likes,
+                            comments: item.comments,
+                          ),
+                          'tabType': 'post',
+                        });
+                      },
+                    );
+                  },
+                );
+              }
+            }),
           ],
         );
 
@@ -513,5 +593,68 @@ class MeBody extends GetView<MeController> {
       ],
     )
         : _buildNoHistoryView());
+  }
+
+
+  Widget _buildUserContentList({
+    required List items,
+    required String emptyMessage,
+    bool isReel = false,
+  }) {
+    if (items.isEmpty) {
+      return Column(
+        children: [
+          const SizedBox(height: 60),
+          Text('No Content', style: AppTextStyles.bodyMedium),
+          const SizedBox(height: 8),
+          Text(emptyMessage, style: AppTextStyles.overline),
+          const SizedBox(height: 40),
+        ],
+      );
+    }
+
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: items.length,
+      separatorBuilder: (context, index) => const Divider(color: Colors.white12),
+      itemBuilder: (context, index) {
+        final item = items[index];
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          leading: SizedBox(
+            width: 50,
+            height: 50,
+            child: NetworkOrFileImage(
+              url: item.imageUrl ?? '',
+              width: 50,
+              height: 50,
+              fit: BoxFit.cover,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          title: Text(
+            isReel ? (item.userName ?? '') : (item.title ?? ''),
+            style: AppTextStyles.caption,
+          ),
+          subtitle: Text(
+            isReel ? (item.description ?? '') : (item.body ?? ''),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.overline,
+          ),
+          onTap: () {
+            if (isReel) {
+              Get.to(
+                    () => FullScreenVideoPlayer(url: item.videoUrl ?? ''),
+                arguments: item,
+              );
+            } else {
+              Get.toNamed(Routes.NEWS_DETAIL, arguments: item);
+            }
+          },
+        );
+      },
+    );
   }
 }

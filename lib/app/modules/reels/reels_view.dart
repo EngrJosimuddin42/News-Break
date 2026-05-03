@@ -132,7 +132,7 @@ class _ReelsViewState extends State<ReelsView> {
             children: [
               Text(reel.userName ?? "User",
                 style: AppTextStyles.bodyMedium),
-              Text(reel.source?? "Just now", style: AppTextStyles.overline),
+              Text(reel.formattedTime, style: AppTextStyles.overline),
             ],
           ),
           const SizedBox(width: 12),

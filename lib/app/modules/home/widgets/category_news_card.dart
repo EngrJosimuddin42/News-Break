@@ -98,9 +98,10 @@ class _CategoryNewsCardState extends State<CategoryNewsCard> {
                       Image.asset('assets/icons/time.png', height: 14, width: 14),
                       const SizedBox(width: 3),
                       Flexible(
-                          child: Text(news.timeAgo,
-                              style: AppTextStyles.overline.copyWith(color: AppColors.info),
-                              overflow: TextOverflow.ellipsis, maxLines: 1)),
+                        child: Text( news.formattedTime,
+                          style: AppTextStyles.overline.copyWith(color: AppColors.info),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1)),
                     ],
                   ),
                 ),

@@ -1,3 +1,5 @@
+import 'package:timeago/timeago.dart' as timeago;
+
 class NewsModel {
   final int id;
   final String type = 'news';
@@ -23,12 +25,13 @@ class NewsModel {
   final String reactions;
   final bool isVerified;
   bool isFollowing;
+  final DateTime createdAt;
 
-   NewsModel({
-     required this.id,
+  NewsModel({
+    required this.id,
     required this.category,
     required this.title,
-     this.subtitle='',
+    this.subtitle = '',
     required this.author,
     required this.timeAgo,
     required this.publisherName,
@@ -38,15 +41,19 @@ class NewsModel {
     this.publisherImageUrl = 'assets/images/publisher.png',
     required this.imageUrl,
     this.secondaryImageUrl,
-     this.secondarySubtitle,
+    this.secondarySubtitle,
     this.videoUrl,
     this.imageCaption = '',
     required this.body,
     this.likes = '20',
     this.comments = '15',
-    this.shares='10',
+    this.shares = '10',
     this.reactions = '5',
     this.isVerified = true,
     this.isFollowing = false,
-  });
+    DateTime? createdAt,
+  }) : createdAt = createdAt ?? DateTime.now();
+
+  // timeago formatted string
+  String get formattedTime => timeago.format(createdAt, locale: 'en_short');
 }

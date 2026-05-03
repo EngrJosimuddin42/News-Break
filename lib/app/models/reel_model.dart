@@ -1,3 +1,5 @@
+import 'package:timeago/timeago.dart' as timeago;
+
 class ReelModel {
   int? id;
   final String type = 'reel';
@@ -17,6 +19,7 @@ class ReelModel {
   int shares;
   bool isFollowing;
   bool isLiked;
+  final DateTime createdAt;
   final List<Map<String, String>> userVideos;
   final List<Map<String, String>> userReactions;
 
@@ -38,7 +41,10 @@ class ReelModel {
     this.shares = 0,
     this.isFollowing = false,
     this.isLiked = false,
+    DateTime? createdAt,
     this.userVideos = const [],
     this.userReactions = const [],
-  });
+  }): createdAt = createdAt ?? DateTime.now();
+
+  String get formattedTime => timeago.format(createdAt, locale: 'en_short');
 }

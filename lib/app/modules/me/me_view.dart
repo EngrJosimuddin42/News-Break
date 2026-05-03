@@ -248,6 +248,7 @@ class MeBody extends GetView<MeController> {
         const SizedBox(height: 16),
         const Divider(color: Colors.white12, height: 1),
         const SizedBox(height: 16),
+
         // Tabs
         Obx(() => _buildTabBar(context, controller.tabs)),
 

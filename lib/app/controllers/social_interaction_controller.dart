@@ -29,6 +29,8 @@ class SocialInteractionController extends GetxController {
   final Map<int, int> _baseFollowerCounts = {};
   final ValueNotifier<int> followNotifier = ValueNotifier<int>(0);
   final followerCounts = <int, String>{}.obs;
+  final followingCount = 0.obs;
+  final followersCount = 0.obs;
   final blockedTopics = <String>{}.obs;
   final blockedAuthors = <String>{}.obs;
   final commentList = <CommentModel>[].obs;
@@ -212,6 +214,7 @@ class SocialInteractionController extends GetxController {
     if (followedPublishers[name] == true) {
       followedPublishers[name] = false;
       item.isFollowing = false;
+      followingCount.value--;
       if (newsId != null) {
         final base = _baseFollowerCounts[newsId]!;
         followerCounts[newsId] = formatCount(base);
@@ -220,6 +223,7 @@ class SocialInteractionController extends GetxController {
     } else {
       followedPublishers[name] = true;
       item.isFollowing = true;
+      followingCount.value++;
       if (newsId != null) {
         final base = _baseFollowerCounts[newsId]!;
         followerCounts[newsId] = formatCount(base + 1);

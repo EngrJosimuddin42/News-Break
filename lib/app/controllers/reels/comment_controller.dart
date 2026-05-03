@@ -69,7 +69,7 @@ class CommentController extends GetxController {
     final newComment = CommentModel(
       id: DateTime.now().millisecondsSinceEpoch,
       reelId: (currentSource == CommentSource.reel) ? id : 0,
-      newsId: (currentSource == CommentSource.news) ? id : null,
+      newsId: (currentSource == CommentSource.news || currentSource == CommentSource.social) ? id : null,
       userName: user?.name ?? 'Guest',
       location: user?.location ?? 'Online',
       text: text,
@@ -83,8 +83,7 @@ class CommentController extends GetxController {
     commentsList.insert(0, newComment);
     socialCtrl.addComment(newComment);
 
-    if (currentSource == CommentSource.news && currentNews != null) {
-      if (!socialCtrl.commentedNewsItems.any((n) => n.id == currentNews!.id)) {
+    if ((currentSource == CommentSource.news || currentSource == CommentSource.social) && currentNews != null) {      if (!socialCtrl.commentedNewsItems.any((n) => n.id == currentNews!.id)) {
         socialCtrl.commentedNewsItems.add(currentNews!);
       }
     }

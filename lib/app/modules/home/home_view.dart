@@ -17,6 +17,7 @@ import 'package:news_break/app/modules/home/widgets/tabs/weather_tab.dart';
 import 'package:news_break/app/modules/socials/socials_view.dart';
 import '../../theme/app_colors.dart';
 import '../me/me_view.dart';
+import '../me/widgets/me_app_bar.dart';
 import '../notification/notification_view.dart';
 import '../reels/reels_view.dart';
 import '../../controllers/home_controller.dart';

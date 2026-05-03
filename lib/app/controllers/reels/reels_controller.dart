@@ -105,6 +105,13 @@ class ReelsController extends GetxController {
     final bool currentState = _followedUsers[userName] ?? false;
     _followedUsers[userName] = !currentState;
 
+    final socialCtrl = Get.find<SocialInteractionController>();
+    if (!currentState) {
+      socialCtrl.followingCount.value++;
+    } else {
+      socialCtrl.followingCount.value--;
+    }
+
     for (var reel in reelsList) {
       if (reel.userName == userName) {
         reel.isFollowing = !currentState;

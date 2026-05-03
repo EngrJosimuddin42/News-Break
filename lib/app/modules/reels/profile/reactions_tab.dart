@@ -75,7 +75,7 @@ class ReactionsTab extends StatelessWidget {
 
           if (isMyProfile) {
             if (news.author == loginUserName || news.author == loginName || news.author == 'Me') return false;
-            final bool isLikedByMe = socialCtrl.likedIds.contains(newsKey);
+            final bool isLikedByMe = socialCtrl.likedIds.any((key) => key.endsWith('_${news.id}'));
             final bool hasCommentedByMe = socialCtrl.commentList.any((c) =>
             c.newsId == news.id && (c.userName == loginUserName || c.userName == loginName));
             return isLikedByMe || hasCommentedByMe;
@@ -121,10 +121,7 @@ class ReactionsTab extends StatelessWidget {
 
             // News UI
             ...reactedNews.map((news) {
-              final String newsKey = (news.author == loginUserName || news.author == loginName || news.author == 'Me')
-                  ? 'user_post_${news.id}'
-                  : 'news_${news.id}';
-              final bool isLiked = socialCtrl.likedIds.contains(newsKey);
+              final bool isLiked = socialCtrl.likedIds.any((key) => key.endsWith('_${news.id}'));
               final String targetUser = isMyProfile ? loginUserName : profileOwnerName;
               final bool hasComment = socialCtrl.commentList.any((c) =>
               c.newsId == news.id && (c.userName == targetUser || (isMyProfile && (c.userName == loginName || c.userName == loginUserName))));
@@ -279,8 +276,7 @@ class ReactionsTab extends StatelessWidget {
                                 width: 64,
                                 height: 48,
                                 fit: BoxFit.cover,
-                                borderRadius: const BorderRadius.only(topRight: Radius.circular(6), bottomRight: Radius.circular(6))
-                            ),
+                                borderRadius: const BorderRadius.only(topRight: Radius.circular(6), bottomRight: Radius.circular(6))),
                             if (isVideo)
                               Container(
                                 padding: const EdgeInsets.all(2),

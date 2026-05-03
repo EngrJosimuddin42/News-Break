@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_break/app/theme/app_text_styles.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../controllers/me/me_controller.dart';
-import '../../models/history_model.dart';
-import '../../theme/app_colors.dart';
+import '../../../controllers/me/me_controller.dart';
+import '../../../models/history_model.dart';
+import '../../../theme/app_colors.dart';
 
 
 class HistoryItem extends StatelessWidget {

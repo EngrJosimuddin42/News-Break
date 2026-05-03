@@ -155,7 +155,7 @@ class SocialsPostCard extends StatelessWidget {
               // Comment
               GestureDetector(
                 onTap: () => SocialInteractionController.to
-                    .openComments(post.id, CommentSource.social, tabType: 'post', author: post.author),
+                    .openComments(post.id, CommentSource.social, tabType: 'post', author: post.author, news: _buildTempNews()),
                 child: Row(
                   children: [
                     Image.asset('assets/icons/comment.png', width: 20, height: 20),

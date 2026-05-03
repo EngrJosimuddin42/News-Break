@@ -379,6 +379,7 @@ class MeBody extends GetView<MeController> {
         return ReelsReactions.ReactionsTab(
           user: AuthController.to.user.value,
           controller: Get.find<ReelsController>(),
+          isFullActivity: true, // news + reels
         );
 
       case 'Saved':

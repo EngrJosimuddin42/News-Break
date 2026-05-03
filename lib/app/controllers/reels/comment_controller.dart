@@ -2,11 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:news_break/app/controllers/reels/reels_controller.dart';
 import 'package:news_break/app/controllers/social_interaction_controller.dart';
 import '../../models/comment_model.dart';
 import '../../models/comment_source.dart';
+import '../../models/news_model.dart';
 import '../auth/auth_controller.dart';
 
 class CommentController extends GetxController {
@@ -14,7 +14,6 @@ class CommentController extends GetxController {
   final RxBool isCommentsLoading = false.obs;
   final RxBool isSendingComment = false.obs;
 
-  // Write comment
   final TextEditingController commentTextController = TextEditingController();
   final Rx<File?> selectedImage = Rx<File?>(null);
   final Rx<Uint8List?> selectedImageBytes = Rx<Uint8List?>(null);
@@ -22,8 +21,8 @@ class CommentController extends GetxController {
 
   final Map<String, List<CommentModel>> _allCommentsCache = {};
 
-  // Current source tracking
   dynamic currentId;
+  NewsModel? currentNews;
   CommentSource? currentSource;
   String currentTabType = 'news';
   String? currentAuthor;
@@ -35,26 +34,26 @@ class CommentController extends GetxController {
   }
 
   void loadComments(dynamic id, CommentSource source,
-      {String tabType = 'news', String? author}) {
+      {String tabType = 'news', String? author, NewsModel? news}) {
     currentId = id;
     currentSource = source;
     currentTabType = tabType;
     currentAuthor = author;
+    currentNews = news;
 
-
-    final String key = _getCacheKey(id, source);
+    final String key = _getCacheKey(id, source, tabType);
 
     if (_allCommentsCache.containsKey(key) &&
         _allCommentsCache[key]!.isNotEmpty) {
       commentsList.assignAll(_allCommentsCache[key]!);
     } else {
-      fetchComments(id, source: source);
+      fetchComments(id, source: source, tabType: tabType);
     }
   }
 
 
-  String _getCacheKey(dynamic id, CommentSource source) {
-    return '${source.name}_$id';
+  String _getCacheKey(dynamic id, CommentSource source, [String tabType = 'news']) {
+    return '${source.name}_${tabType}_$id';
   }
 
   Future<void> submitComment(dynamic id, {String? gifUrl, String? imagePath}) async {
@@ -84,7 +83,15 @@ class CommentController extends GetxController {
       Get.find<SocialInteractionController>().addComment(newComment);
     }
 
-    final String key = _getCacheKey(id, currentSource ?? CommentSource.news);
+
+    if (currentSource == CommentSource.news && currentNews != null) {
+      final socialCtrl = Get.find<SocialInteractionController>();
+      if (!socialCtrl.commentedNewsItems.any((n) => n.id == currentNews!.id)) {
+        socialCtrl.commentedNewsItems.add(currentNews!);
+      }
+    }
+
+    final String key = _getCacheKey(id, currentSource ?? CommentSource.news, currentTabType);
     _allCommentsCache[key] = List.from(commentsList);
 
     Get.find<SocialInteractionController>()
@@ -95,7 +102,6 @@ class CommentController extends GetxController {
       Get.find<ReelsController>().incrementComment(id);
     }
 
-    // Reset UI
     commentTextController.clear();
     selectedGifUrl.value = null;
     selectedImage.value = null;
@@ -105,8 +111,8 @@ class CommentController extends GetxController {
     Get.back();
   }
 
-
-  Future<void> fetchComments(dynamic id, {CommentSource source = CommentSource.news}) async {
+  Future<void> fetchComments(dynamic id,
+      {CommentSource source = CommentSource.news, String tabType = 'news'}) async {
     try {
       isCommentsLoading(true);
       await Future.delayed(const Duration(milliseconds: 500));
@@ -136,7 +142,7 @@ class CommentController extends GetxController {
 
       commentsList.assignAll(dummyComments);
 
-      final String key = _getCacheKey(id, source);
+      final String key = _getCacheKey(id, source, tabType);
       _allCommentsCache[key] = List.from(dummyComments);
     } finally {
       isCommentsLoading(false);

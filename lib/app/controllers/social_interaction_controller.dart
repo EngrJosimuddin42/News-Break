@@ -34,6 +34,8 @@ class SocialInteractionController extends GetxController {
   final commentList = <CommentModel>[].obs;
   final savedNewsItems = <NewsModel>[].obs;
   final userPosts = <NewsModel>[].obs;
+  final likedNewsItems = <NewsModel>[].obs;
+  final commentedNewsItems = <NewsModel>[].obs;
   var likedComments = <String>[].obs;
   var dislikedComments = <String>[].obs;
   var savedItems = <String>[].obs;
@@ -55,14 +57,16 @@ class SocialInteractionController extends GetxController {
   // LIKE
   void toggleLike(NewsModel news, {String type = 'news'}) {
     if (!AuthHelper.checkLogin()) return;
-
     final key = _getEffectiveKey(news.id, news.author, type);
-
     if (likedIds.contains(key)) {
       likedIds.remove(key);
+      likedNewsItems.removeWhere((n) => n.id == news.id);
     } else {
       likedIds.add(key);
       dislikedIds.remove(key);
+      if (!likedNewsItems.any((n) => n.id == news.id)) {
+        likedNewsItems.add(news);
+      }
     }
   }
 
@@ -381,9 +385,9 @@ class SocialInteractionController extends GetxController {
 
 
   // COMMENT
-  void openComments(int id, CommentSource source, {String tabType = 'news', String? author}) {
+  void openComments(int id, CommentSource source, {String tabType = 'news', String? author, NewsModel? news}) {
     if (!AuthHelper.checkLogin()) return;
-    Get.find<CommentController>().loadComments(id, source, tabType: tabType, author: author);
+    Get.find<CommentController>().loadComments(id, source, tabType: tabType, author: author, news: news);
     showModalBottomSheet(
       context: Get.context!,
       isScrollControlled: true,

@@ -257,7 +257,7 @@ class _NewsCardState extends State<NewsCard> {
   Widget _buildCommentButton(NewsModel news) {
     return GestureDetector(
       onTap: () => _socialCtrl.openComments(
-          news.id, CommentSource.news, tabType: widget.tabType,author: news.author),
+          news.id, CommentSource.news, tabType: widget.tabType, author: news.author, news: news),
       behavior: HitTestBehavior.opaque,
       child: Row(
         mainAxisSize: MainAxisSize.min,

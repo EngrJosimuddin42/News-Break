@@ -119,7 +119,7 @@ class _ProfileViewState extends State<ProfileView> {
               const SizedBox(height: 8),
 
               if (_selectedTab == 0) PostsTab(  user: widget.user, controller: controller),
-              if (_selectedTab == 1) ReactionsTab( user: widget.user, controller: controller),
+              if (_selectedTab == 1) ReactionsTab( user: widget.user, controller: controller,  isFullActivity: false),
             ],
           );
         },

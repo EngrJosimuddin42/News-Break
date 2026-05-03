@@ -6,6 +6,7 @@ import 'package:news_break/app/widgets/bottom_sheet_handle.dart';
 import '../../../controllers/reels/comment_controller.dart';
 import '../../../controllers/social_interaction_controller.dart';
 import '../../../controllers/social_utility_controller.dart';
+import '../../../models/news_model.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/my_gif_picker.dart';
@@ -97,7 +98,6 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: AppColors.primary))
                       : GestureDetector(
-
                     onTap: () async {
                       final text = commentController.commentTextController.text.trim();
                       if (widget.onlyEmoji) {
@@ -114,7 +114,19 @@ class _WriteCommentSheetState extends State<WriteCommentSheet> {
                         await commentController.submitComment(
                           widget.reelId,
                           gifUrl: gifUrl,
-                          imagePath: imagePath);
+                          imagePath: imagePath,
+                        );
+
+                        if (widget.type == 'news') {
+                          final commentCtrl = Get.find<CommentController>();
+                          final news = commentCtrl.currentNews;
+                          if (news != null) {
+                            final socialCtrl = Get.find<SocialInteractionController>();
+                            if (!socialCtrl.commentedNewsItems.any((n) => n.id == news.id)) {
+                              socialCtrl.commentedNewsItems.add(news);
+                            }
+                          }
+                        }
                       }
                     },
 

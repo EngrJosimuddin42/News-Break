@@ -6,6 +6,7 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/reels/reels_controller.dart';
 import '../../../controllers/auth/auth_controller.dart';
 import '../../../controllers/social_interaction_controller.dart';
+import '../../../routes/app_pages.dart';
 import '../../../widgets/network_or_file_image.dart';
 import '../player/full_screen_video_player.dart';
 
@@ -24,361 +25,298 @@ class ReactionsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String profileOwnerName = user?.userName ?? '';
-    final String loginUserName = Get.find<AuthController>().user.value?.userName ?? '';
-    final String loginName = Get.find<AuthController>().user.value?.name ?? '';
+    final authCtrl = Get.find<AuthController>();
+    final String loginUserName = authCtrl.user.value?.userName ?? '';
+    final String loginName = authCtrl.user.value?.name ?? '';
+
     final bool isMyProfile = profileOwnerName == loginUserName;
     final socialCtrl = Get.find<SocialInteractionController>();
     String currentTime = DateFormat('EEEE h:mm a').format(DateTime.now());
 
     return Obx(() {
+      //  Reels Filter Logic
       final reactedReels = controller.reelsList.where((reel) {
+        final String effectiveKey = (reel.userName == loginUserName || reel.userName == loginName || reel.userName == 'Me')
+            ? 'user_post_${reel.id}'
+            : 'reel_${reel.id}';
+
         if (isMyProfile) {
-          if (reel.userName == loginUserName || reel.userName == loginName) return false;
-          final bool isLikedByMe = socialCtrl.likedIds.contains('reel_${reel.id}');
-          final String myEmoji = socialCtrl.getMyReaction(reel.id, 'reel');
+          if (reel.userName == loginUserName || reel.userName == loginName || reel.userName == 'Me') return false;
+          final bool isLikedByMe = socialCtrl.likedIds.contains(effectiveKey);
           final bool hasCommentedByMe = socialCtrl.commentList.any((c) =>
-          c.reelId == reel.id &&
-              (c.userName == loginUserName || c.userName == loginName));
-          return isLikedByMe || myEmoji.isNotEmpty || hasCommentedByMe;
+          c.reelId == reel.id && (c.userName == loginUserName || c.userName == loginName));
+          return isLikedByMe || hasCommentedByMe;
         } else {
           if (reel.userName == profileOwnerName) return false;
-          final bool isLikedByOwner = socialCtrl.likedIds.contains('reel_${reel.id}');
+          final bool isLikedByOwner = socialCtrl.likedIds.contains(effectiveKey);
           final bool commentedByOwner = socialCtrl.commentList.any((c) =>
           c.reelId == reel.id && c.userName == profileOwnerName);
           return isLikedByOwner || commentedByOwner;
         }
       }).toList();
 
+      // News Filter Logic
       List reactedNews = [];
-      if (isMyProfile) {
-        final combined = <int, dynamic>{};
-        for (final news in socialCtrl.likedNewsItems) {
-          combined[news.id] = news;
+      if (isFullActivity || isMyProfile) {
+        final allRelatedNews = [...socialCtrl.likedNewsItems, ...socialCtrl.commentedNewsItems];
+        final uniqueNewsIds = <int>{};
+        final uniqueNewsList = <dynamic>[];
+
+        for (var n in allRelatedNews) {
+          if (uniqueNewsIds.add(n.id)) {
+            uniqueNewsList.add(n);
+          }
         }
-        for (final news in socialCtrl.commentedNewsItems) {
-          combined[news.id] = news;
-        }
-        reactedNews = combined.values.where((news) {
-          final bool isLiked = socialCtrl.likedIds.any((key) => key.contains('${news.id}'));
-          final bool hasCommented = socialCtrl.commentList.any((c) =>
-          c.reelId == news.id &&
-              (c.userName == loginUserName || c.userName == loginName));
-          return isLiked || hasCommented;
+
+        reactedNews = uniqueNewsList.where((news) {
+          final String newsKey = (news.author == loginUserName || news.author == loginName || news.author == 'Me')
+              ? 'user_post_${news.id}'
+              : 'news_${news.id}';
+
+          if (isMyProfile) {
+            if (news.author == loginUserName || news.author == loginName || news.author == 'Me') return false;
+            final bool isLikedByMe = socialCtrl.likedIds.contains(newsKey);
+            final bool hasCommentedByMe = socialCtrl.commentList.any((c) =>
+            c.newsId == news.id && (c.userName == loginUserName || c.userName == loginName));
+            return isLikedByMe || hasCommentedByMe;
+          } else {
+            final bool isLikedByOwner = socialCtrl.likedIds.contains(newsKey);
+            final bool commentedByOwner = socialCtrl.commentList.any((c) =>
+            c.newsId == news.id && c.userName == profileOwnerName);
+            return isLikedByOwner || commentedByOwner;
+          }
         }).toList();
       }
 
       final staticReactions = user?.userReactions ?? [];
-
-      if (reactedReels.isEmpty && staticReactions.isEmpty && reactedNews.isEmpty) {
-        return Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40),
-            child: Column(
-              children: [
-                Text('No Reactions', style: AppTextStyles.bodyMedium),
-                const SizedBox(height: 8),
-                Text(
-                  "This user hasn't commented on\nor reacted to any articles. Yet.",
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.overline,
-                ),
-              ],
-            ),
-          ),
-        );
+      if (reactedReels.isEmpty && reactedNews.isEmpty && staticReactions.isEmpty) {
+        return _buildEmptyState();
       }
 
       return SingleChildScrollView(
         child: Column(
           children: [
-            // Reels Reactions
+
+            // Reels UI
             ...reactedReels.map((reel) {
-              String reactionText = 'liked';
-              Widget reactionIcon = Container(
-                width: 16, height: 16,
-                decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
-                child: const Icon(Icons.thumb_up, color: Colors.white, size: 10),
-              );
+              final String uiKey = (reel.userName == loginUserName || reel.userName == loginName || reel.userName == 'Me')
+                  ? 'user_post_${reel.id}'
+                  : 'reel_${reel.id}';
+              final bool isLiked = socialCtrl.likedIds.contains(uiKey);
+              final String targetUser = isMyProfile ? loginUserName : profileOwnerName;
+              final bool hasComment = socialCtrl.commentList.any((c) =>
+              c.reelId == reel.id && (c.userName == targetUser || (isMyProfile && (c.userName == loginName || c.userName == loginUserName))));
 
-              if (isMyProfile) {
-                final String emoji = socialCtrl.getMyReaction(reel.id, 'reel');
-                final bool hasCommentedByMe = socialCtrl.commentList.any((c) =>
-                c.reelId == reel.id &&
-                    (c.userName == loginUserName || c.userName == loginName));
-
-                if (emoji.isNotEmpty) {
-                  reactionText = 'reacted $emoji';
-                  reactionIcon = const SizedBox.shrink();
-                } else if (hasCommentedByMe) {
-                  reactionText = 'commented';
-                  reactionIcon = const Icon(Icons.comment, color: Colors.white, size: 14);
-                } else if (socialCtrl.likedIds.contains('reel_${reel.id}')) {
-                  reactionText = 'liked';
-                }
-              }
-
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      radius: 16,
-                      backgroundImage: NetworkImage(user?.userProfileImage ?? ""),
-                      backgroundColor: Colors.grey[800],
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(profileOwnerName,
-                                  style: AppTextStyles.textSmall.copyWith(color: AppColors.secondary)),
-                              const SizedBox(width: 6),
-                              Text(reactionText,
-                                  style: AppTextStyles.display.copyWith(color: AppColors.secondary)),
-                              const SizedBox(width: 6),
-                              if (reactionText == 'liked' || reactionText == 'commented')
-                                reactionIcon,
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(currentTime,
-                              style: AppTextStyles.display.copyWith(
-                                  color: AppColors.textOnDark, fontSize: 10)),
-                          const SizedBox(height: 12),
-                          GestureDetector(
-                            onTap: () {
-                              if (isMyProfile) {
-                                Get.to(
-                                      () => FullScreenVideoPlayer(url: reel.videoUrl ?? ''),
-                                  arguments: reel,
-                                );
-                              } else {
-                                int index = controller.reelsList.indexWhere((r) => r.id == reel.id);
-                                if (index != -1) {
-                                  controller.updatePage(index);
-                                  Get.back();
-                                }
-                              }
-                            },
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    height: 48,
-                                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                                    alignment: Alignment.centerLeft,
-                                    decoration: BoxDecoration(
-                                        color: const Color(0xFF333333),
-                                        borderRadius: BorderRadius.circular(6)),
-                                    child: Text(reel.description,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppTextStyles.textSmall.copyWith(color: AppColors.surface)),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    NetworkOrFileImage(
-                                      url: reel.imageUrl,
-                                      width: 64,
-                                      height: 48,
-                                      fit: BoxFit.cover,
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    const Icon(Icons.play_arrow, color: Colors.white, size: 18),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+              return _buildItemFromData(
+                isLiked: isLiked,
+                hasComment: hasComment,
+                userName: profileOwnerName,
+                time: currentTime,
+                title: reel.description,
+                imageUrl: reel.imageUrl,
+                isVideo: true,
+                onTap: () => Get.to(() => FullScreenVideoPlayer(url: reel.videoUrl ?? ''), arguments: reel),
               );
             }),
 
-            // News Reactions
-            if (isFullActivity)
-              ...reactedNews.map((news) {
-                final bool isLiked = socialCtrl.likedIds.any((key) => key.contains('${news.id}'));
-                String newsReactionText = isLiked ? 'liked' : 'commented';
+            // News UI
+            ...reactedNews.map((news) {
+              final String newsKey = (news.author == loginUserName || news.author == loginName || news.author == 'Me')
+                  ? 'user_post_${news.id}'
+                  : 'news_${news.id}';
+              final bool isLiked = socialCtrl.likedIds.contains(newsKey);
+              final String targetUser = isMyProfile ? loginUserName : profileOwnerName;
+              final bool hasComment = socialCtrl.commentList.any((c) =>
+              c.newsId == news.id && (c.userName == targetUser || (isMyProfile && (c.userName == loginName || c.userName == loginUserName))));
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CircleAvatar(
-                        radius: 16,
-                        backgroundImage: NetworkImage(user?.userProfileImage ?? ""),
-                        backgroundColor: Colors.grey[800],
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(profileOwnerName,
-                                    style: AppTextStyles.textSmall.copyWith(color: AppColors.secondary)),
-                                const SizedBox(width: 6),
-                                Text(newsReactionText,
-                                    style: AppTextStyles.display.copyWith(color: AppColors.secondary)),
-                                const SizedBox(width: 6),
-                                Container(
-                                  width: 16, height: 16,
-                                  decoration: BoxDecoration(
-                                      color: newsReactionText == 'liked' ? Colors.blue : Colors.green,
-                                      shape: BoxShape.circle),
-                                  child: Icon(
-                                      newsReactionText == 'liked' ? Icons.thumb_up : Icons.comment,
-                                      color: Colors.white, size: 10),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Text(currentTime,
-                                style: AppTextStyles.display.copyWith(
-                                    color: AppColors.textOnDark, fontSize: 10)),
-                            const SizedBox(height: 12),
-                            GestureDetector(
-                              onTap: () {},
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 48,
-                                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                                      alignment: Alignment.centerLeft,
-                                      decoration: BoxDecoration(
-                                          color: const Color(0xFF333333),
-                                          borderRadius: BorderRadius.circular(6)),
-                                      child: Text(news.title,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: AppTextStyles.textSmall.copyWith(color: AppColors.surface)),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  NetworkOrFileImage(
-                                    url: news.imageUrl,
-                                    width: 64,
-                                    height: 48,
-                                    fit: BoxFit.cover,
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
+              final bool newsHasVideo = news.videoUrl != null && news.videoUrl!.isNotEmpty;
 
-            // Static Reactions (Fallback Data)
-            ...staticReactions.map<Widget>((reaction) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      radius: 16,
-                      backgroundImage: NetworkImage(user?.userProfileImage ?? ""),
-                      backgroundColor: Colors.grey[800],
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(profileOwnerName,
-                                  style: AppTextStyles.textSmall.copyWith(color: AppColors.secondary)),
-                              const SizedBox(width: 6),
-                              Text('reacted',
-                                  style: AppTextStyles.display.copyWith(color: AppColors.secondary)),
-                              const SizedBox(width: 6),
-                              Container(
-                                width: 16, height: 16,
-                                decoration: BoxDecoration(
-                                    color: AppColors.textGreen, shape: BoxShape.circle),
-                                child: Icon(Icons.thumb_up, color: AppColors.surface, size: 10),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(reaction['time'] ?? "",
-                              style: AppTextStyles.display.copyWith(
-                                  color: AppColors.textOnDark, fontSize: 10)),
-                          const SizedBox(height: 12),
-                          GestureDetector(
-                            onTap: () {
-                              int indexInMainList = controller.reelsList.indexWhere(
-                                      (reel) => reel.id.toString() == reaction['id'].toString());
-                              if (indexInMainList != -1) {
-                                controller.updatePage(indexInMainList);
-                                Get.back();
-                              } else if (reaction['videoUrl'] != null && reaction['videoUrl'] != "") {
-                                Get.to(() => FullScreenVideoPlayer(url: reaction['videoUrl']));
-                              }
-                            },
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    height: 48,
-                                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                                    alignment: Alignment.centerLeft,
-                                    decoration: BoxDecoration(
-                                        color: const Color(0xFF333333),
-                                        borderRadius: BorderRadius.circular(6)),
-                                    child: Text(reaction['title'] ?? "",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppTextStyles.textSmall.copyWith(color: AppColors.surface)),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    NetworkOrFileImage(
-                                      url: reaction['imageUrl'] ?? '',
-                                      width: 64,
-                                      height: 48,
-                                      fit: BoxFit.cover,
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    const Icon(Icons.play_arrow, color: Colors.white, size: 18),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+              return _buildItemFromData(
+                isLiked: isLiked,
+                hasComment: hasComment,
+                userName: profileOwnerName,
+                time: currentTime,
+                title: news.title,
+                imageUrl: news.imageUrl,
+                isVideo: newsHasVideo,
+                onTap: () {
+                  if (newsHasVideo) {
+                    Get.to(() => FullScreenVideoPlayer(url: news.videoUrl!));
+                  } else {
+                    Get.toNamed(
+                      Routes.NEWS_DETAIL,
+                      arguments: {
+                        'news': news,
+                        'tabType': 'news',
+                      },
+                    );
+                  }
+                },
               );
-            }).toList(),
+            }),
+
+            // Static Reactions
+            ...staticReactions.map<Widget>((res) {
+              final bool staticHasVideo = res['videoUrl'] != null && res['videoUrl'].toString().isNotEmpty;
+              return _buildReactionItem(
+                userName: profileOwnerName,
+                reactionText: 'reacted',
+                reactionIcon: _buildSingleIcon(Icons.thumb_up, Colors.blue),
+                time: res['time'] ?? '',
+                title: res['title'] ?? '',
+                imageUrl: res['imageUrl'] ?? '',
+                isVideo: staticHasVideo,
+                onTap: () {
+                  if(staticHasVideo) {
+                    Get.to(() => FullScreenVideoPlayer(url: res['videoUrl']));
+                  }
+                },
+              );
+            }),
           ],
         ),
       );
     });
+  }
+
+  //  Helper Methods
+  Widget _buildItemFromData({
+    required bool isLiked,
+    required bool hasComment,
+    required String userName,
+    required String time,
+    required String title,
+    required String imageUrl,
+    required bool isVideo,
+    required VoidCallback onTap,
+  }) {
+    String text = 'reacted';
+    Widget icon = const SizedBox.shrink();
+
+    if (isLiked && hasComment) {
+      text = 'liked & commented';
+      icon = _buildDualIcon(Icons.thumb_up, Icons.comment, Colors.blue, Colors.green);
+    } else if (isLiked) {
+      text = 'liked';
+      icon = _buildSingleIcon(Icons.thumb_up, Colors.blue);
+    } else if (hasComment) {
+      text = 'commented';
+      icon = _buildSingleIcon(Icons.comment, Colors.green);
+    }
+
+    return _buildReactionItem(
+      userName: userName,
+      reactionText: text,
+      reactionIcon: icon,
+      time: time,
+      title: title,
+      imageUrl: imageUrl,
+      isVideo: isVideo,
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 40),
+        child: Column(
+          children: [
+            Text('No Reactions', style: AppTextStyles.bodyMedium),
+            const SizedBox(height: 8),
+            Text("This user hasn't reacted to anything yet.",
+                textAlign: TextAlign.center, style: AppTextStyles.overline),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReactionItem({
+    required String userName,
+    required String reactionText,
+    required Widget reactionIcon,
+    required String time,
+    required String title,
+    required String imageUrl,
+    required bool isVideo,
+    required VoidCallback onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(radius: 16, backgroundImage: NetworkImage(user?.userProfileImage ?? "")),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(userName, style: AppTextStyles.textSmall.copyWith(color: AppColors.secondary)),
+                    const SizedBox(width: 6),
+                    Text(reactionText, style: AppTextStyles.display.copyWith(color: AppColors.secondary)),
+                    const SizedBox(width: 6),
+                    reactionIcon,
+                  ],
+                ),
+                Text(time, style: AppTextStyles.display.copyWith(color: AppColors.textOnDark, fontSize: 10)),
+                const SizedBox(height: 8),
+                GestureDetector(
+                  onTap: onTap,
+                  child: Container(
+                    decoration: BoxDecoration(color: const Color(0xFF333333), borderRadius: BorderRadius.circular(6)),
+                    child: Row(
+                      children: [
+                        Expanded(child: Padding(padding: const EdgeInsets.all(12), child: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppTextStyles.textSmall))),
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            NetworkOrFileImage(
+                                url: imageUrl,
+                                width: 64,
+                                height: 48,
+                                fit: BoxFit.cover,
+                                borderRadius: const BorderRadius.only(topRight: Radius.circular(6), bottomRight: Radius.circular(6))
+                            ),
+                            if (isVideo)
+                              Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: const BoxDecoration(
+                                  color: Colors.black26,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.play_arrow, color: Colors.white, size: 20),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSingleIcon(IconData icon, Color color) {
+    return Container(
+      width: 16, height: 16,
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+      child: Icon(icon, color: Colors.white, size: 10),
+    );
+  }
+
+  Widget _buildDualIcon(IconData i1, IconData i2, Color c1, Color c2) {
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      _buildSingleIcon(i1, c1),
+      const SizedBox(width: 2),
+      _buildSingleIcon(i2, c2),
+    ]);
   }
 }

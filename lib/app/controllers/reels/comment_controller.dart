@@ -56,6 +56,7 @@ class CommentController extends GetxController {
     return '${source.name}_${tabType}_$id';
   }
 
+
   Future<void> submitComment(dynamic id, {String? gifUrl, String? imagePath}) async {
     final String text = commentTextController.text.trim();
     if (text.isEmpty && gifUrl == null && imagePath == null) return;
@@ -63,10 +64,12 @@ class CommentController extends GetxController {
     isSendingComment.value = true;
 
     final user = Get.find<AuthController>().user.value;
+    final socialCtrl = Get.find<SocialInteractionController>();
 
     final newComment = CommentModel(
       id: DateTime.now().millisecondsSinceEpoch,
       reelId: (currentSource == CommentSource.reel) ? id : 0,
+      newsId: (currentSource == CommentSource.news) ? id : null,
       userName: user?.name ?? 'Guest',
       location: user?.location ?? 'Online',
       text: text,
@@ -78,14 +81,9 @@ class CommentController extends GetxController {
     );
 
     commentsList.insert(0, newComment);
-
-    if (currentSource == CommentSource.reel) {
-      Get.find<SocialInteractionController>().addComment(newComment);
-    }
-
+    socialCtrl.addComment(newComment);
 
     if (currentSource == CommentSource.news && currentNews != null) {
-      final socialCtrl = Get.find<SocialInteractionController>();
       if (!socialCtrl.commentedNewsItems.any((n) => n.id == currentNews!.id)) {
         socialCtrl.commentedNewsItems.add(currentNews!);
       }
@@ -94,11 +92,9 @@ class CommentController extends GetxController {
     final String key = _getCacheKey(id, currentSource ?? CommentSource.news, currentTabType);
     _allCommentsCache[key] = List.from(commentsList);
 
-    Get.find<SocialInteractionController>()
-        .incrementCommentCount(id, source: currentTabType, author: currentAuthor);
+    socialCtrl.incrementCommentCount(id, source: currentTabType, author: currentAuthor);
 
-    if (currentSource == CommentSource.reel &&
-        Get.isRegistered<ReelsController>()) {
+    if (currentSource == CommentSource.reel && Get.isRegistered<ReelsController>()) {
       Get.find<ReelsController>().incrementComment(id);
     }
 
@@ -107,9 +103,12 @@ class CommentController extends GetxController {
     selectedImage.value = null;
     selectedImageBytes.value = null;
     isSendingComment.value = false;
+
     FocusManager.instance.primaryFocus?.unfocus();
     Get.back();
   }
+
+
 
   Future<void> fetchComments(dynamic id,
       {CommentSource source = CommentSource.news, String tabType = 'news'}) async {

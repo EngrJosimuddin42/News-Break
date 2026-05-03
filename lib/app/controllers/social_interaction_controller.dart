@@ -68,7 +68,10 @@ class SocialInteractionController extends GetxController {
         likedNewsItems.add(news);
       }
     }
+    likedIds.refresh();
+    likedNewsItems.refresh();
   }
+
 
   bool isLiked(NewsModel news, {String type = 'news'}) {
     final key = _getEffectiveKey(news.id, news.author, type);
@@ -436,9 +439,14 @@ class SocialInteractionController extends GetxController {
     AppSnackbar.success(message: 'Copied to clipboard');
   }
 
+  void addCommentedNews(NewsModel news) {
+    if (!commentedNewsItems.any((n) => n.id == news.id)) {
+      commentedNewsItems.add(news);
+    }
+  }
+
   void addComment(CommentModel comment) {
     commentList.add(comment);
-    incrementCommentCount(comment.reelId, source: 'reel');
     commentList.refresh();
   }
 

@@ -6,6 +6,7 @@ import 'package:news_break/app/theme/app_text_styles.dart';
 import '../../../controllers/reels/reels_controller.dart';
 import '../../../controllers/auth/auth_controller.dart';
 import '../../../controllers/social_interaction_controller.dart';
+import '../../../widgets/network_or_file_image.dart';
 import '../player/full_screen_video_player.dart';
 
 class ReactionsTab extends StatelessWidget {
@@ -29,7 +30,6 @@ class ReactionsTab extends StatelessWidget {
 
     return Obx(() {
       final reactedReels = controller.reelsList.where((reel) {
-
         if (isMyProfile) {
           if (reel.userName == loginUserName || reel.userName == loginName) return false;
           final bool isLikedByMe = socialCtrl.likedIds.contains('reel_${reel.id}');
@@ -37,9 +37,7 @@ class ReactionsTab extends StatelessWidget {
           final bool hasCommentedByMe = socialCtrl.commentList.any((c) =>
           c.reelId == reel.id && c.userName == loginUserName);
           return isLikedByMe || myEmoji.isNotEmpty || hasCommentedByMe;
-
         } else {
-
           if (reel.userName == profileOwnerName) return false;
           final bool isLikedByOwner = socialCtrl.likedIds.contains('reel_${reel.id}');
           final bool commentedByOwner = socialCtrl.commentList.any((c) =>
@@ -58,9 +56,11 @@ class ReactionsTab extends StatelessWidget {
               children: [
                 Text('No Reactions', style: AppTextStyles.bodyMedium),
                 const SizedBox(height: 8),
-                Text( "This user hasn't commented on\nor reacted to any articles. Yet.",
+                Text(
+                  "This user hasn't commented on\nor reacted to any articles. Yet.",
                   textAlign: TextAlign.center,
-                  style: AppTextStyles.overline),
+                  style: AppTextStyles.overline,
+                ),
               ],
             ),
           ),
@@ -74,7 +74,8 @@ class ReactionsTab extends StatelessWidget {
             Widget reactionIcon = Container(
               width: 16, height: 16,
               decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
-              child: const Icon(Icons.thumb_up, color: Colors.white, size: 10));
+              child: const Icon(Icons.thumb_up, color: Colors.white, size: 10),
+            );
 
             if (isMyProfile) {
               final String emoji = socialCtrl.getMyReaction(reel.id, 'reel');
@@ -100,7 +101,8 @@ class ReactionsTab extends StatelessWidget {
                   CircleAvatar(
                     radius: 16,
                     backgroundImage: NetworkImage(user?.userProfileImage ?? ""),
-                    backgroundColor: Colors.grey[800]),
+                    backgroundColor: Colors.grey[800],
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Column(
@@ -119,14 +121,17 @@ class ReactionsTab extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 4),
-                        Text(currentTime, style: AppTextStyles.display.copyWith(
+                        Text(currentTime,
+                            style: AppTextStyles.display.copyWith(
                                 color: AppColors.textOnDark, fontSize: 10)),
                         const SizedBox(height: 12),
                         GestureDetector(
                           onTap: () {
                             if (isMyProfile) {
-                              Get.to( () => FullScreenVideoPlayer(url: reel.videoUrl ?? ''),
-                                arguments: reel);
+                              Get.to(
+                                    () => FullScreenVideoPlayer(url: reel.videoUrl ?? ''),
+                                arguments: reel,
+                              );
                             } else {
                               int index = controller.reelsList.indexWhere((r) => r.id == reel.id);
                               if (index != -1) {
@@ -148,22 +153,22 @@ class ReactionsTab extends StatelessWidget {
                                   child: Text(reel.description,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: AppTextStyles.textSmall.copyWith(color: AppColors.surface)))),
-                              const SizedBox(width: 8),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Image.network(
-                                      reel.imageUrl,
-                                      width: 64, height: 48,
-                                      fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) =>
-                                          Container(width: 64, height: 48, color: Colors.grey[800])),
-                                    const Icon(Icons.play_arrow, color: Colors.white, size: 18),
-                                  ],
+                                      style: AppTextStyles.textSmall.copyWith(color: AppColors.surface)),
                                 ),
+                              ),
+                              const SizedBox(width: 8),
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  NetworkOrFileImage(
+                                    url: reel.imageUrl,
+                                    width: 64,
+                                    height: 48,
+                                    fit: BoxFit.cover,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  const Icon(Icons.play_arrow, color: Colors.white, size: 18),
+                                ],
                               ),
                             ],
                           ),
@@ -186,7 +191,8 @@ class ReactionsTab extends StatelessWidget {
                   CircleAvatar(
                     radius: 16,
                     backgroundImage: NetworkImage(user?.userProfileImage ?? ""),
-                    backgroundColor: Colors.grey[800]),
+                    backgroundColor: Colors.grey[800],
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Column(
@@ -197,13 +203,15 @@ class ReactionsTab extends StatelessWidget {
                             Text(profileOwnerName,
                                 style: AppTextStyles.textSmall.copyWith(color: AppColors.secondary)),
                             const SizedBox(width: 6),
-                            Text('reacted', style: AppTextStyles.display.copyWith(color: AppColors.secondary)),
+                            Text('reacted',
+                                style: AppTextStyles.display.copyWith(color: AppColors.secondary)),
                             const SizedBox(width: 6),
                             Container(
                               width: 16, height: 16,
                               decoration: BoxDecoration(
                                   color: AppColors.textGreen, shape: BoxShape.circle),
-                              child: Icon(Icons.thumb_up, color: AppColors.surface, size: 10)),
+                              child: Icon(Icons.thumb_up, color: AppColors.surface, size: 10),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 4),
@@ -235,22 +243,22 @@ class ReactionsTab extends StatelessWidget {
                                   child: Text(reaction['title'] ?? "",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: AppTextStyles.textSmall.copyWith(color: AppColors.surface)))),
-                              const SizedBox(width: 8),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Image.network(
-                                      reaction['imageUrl']!,
-                                      width: 64, height: 48,
-                                      fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) =>
-                                          Container(width: 64, height: 48, color: Colors.grey[800])),
-                                    const Icon(Icons.play_arrow, color: Colors.white, size: 18),
-                                  ],
+                                      style: AppTextStyles.textSmall.copyWith(color: AppColors.surface)),
                                 ),
+                              ),
+                              const SizedBox(width: 8),
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  NetworkOrFileImage(
+                                    url: reaction['imageUrl'] ?? '',
+                                    width: 64,
+                                    height: 48,
+                                    fit: BoxFit.cover,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  const Icon(Icons.play_arrow, color: Colors.white, size: 18),
+                                ],
                               ),
                             ],
                           ),

@@ -7,6 +7,7 @@ import '../../controllers/reels/reels_controller.dart';
 import '../../controllers/social_interaction_controller.dart';
 import '../../routes/app_pages.dart';
 import '../../widgets/about_profile_sheet.dart';
+import '../../widgets/network_or_file_image.dart';
 import '../premium/widgets/premium_banner.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/me/me_controller.dart';
@@ -384,13 +385,13 @@ class MeBody extends GetView<MeController> {
     return Container( height: 30,  width: 1,  color: Color(0xFF333333));
   }
 
+
   Widget _buildSharedSavedView() {
     final socialCtrl = Get.find<SocialInteractionController>();
 
     return Obx(() {
       final reelItems = controller.savedReelsData;
       final newsItems = socialCtrl.savedNewsItems;
-
       final bool isEmpty = reelItems.isEmpty && newsItems.isEmpty;
 
       return Column(
@@ -412,6 +413,7 @@ class MeBody extends GetView<MeController> {
             Text("You haven't saved anything. Yet.", style: AppTextStyles.overline),
             const SizedBox(height: 40),
           ] else ...[
+
             // Reels
             if (reelItems.isNotEmpty)
               ListView.separated(
@@ -422,9 +424,17 @@ class MeBody extends GetView<MeController> {
                 itemBuilder: (context, index) {
                   final item = reelItems[index];
                   return ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: Image.network(item.imageUrl, width: 50, height: 50, fit: BoxFit.cover),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    leading: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: NetworkOrFileImage(
+                        url: item.imageUrl,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
                     title: Text(item.userName, style: AppTextStyles.caption),
                     subtitle: Text(item.description, style: AppTextStyles.overline),
@@ -442,14 +452,21 @@ class MeBody extends GetView<MeController> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: newsItems.length,
-                separatorBuilder: (context, index)
-                => const Divider(color: Colors.white12),
+                separatorBuilder: (context, index) => const Divider(color: Colors.white12),
                 itemBuilder: (context, index) {
                   final item = newsItems[index];
                   return ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: Image.network(item.imageUrl, width: 50, height: 50, fit: BoxFit.cover),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    leading: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: NetworkOrFileImage(
+                        url: item.imageUrl,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
                     title: Text(item.title, style: AppTextStyles.caption),
                     subtitle: Text(item.publisherName, style: AppTextStyles.overline),

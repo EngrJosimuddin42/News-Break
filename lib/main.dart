@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'app/bindings/app_binding.dart';
 import 'app/routes/app_pages.dart';
@@ -15,6 +16,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ScreenUtilInit(
+        designSize: const Size(375, 812),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
     return GetMaterialApp(
       title: 'Newsbreak',
       debugShowCheckedModeBanner: false,
@@ -22,8 +28,10 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.black,
           fontFamily: 'Roboto'),
       initialBinding: AppBinding(),
-      initialRoute:AppPages.initial,
+      initialRoute: AppPages.initial,
       getPages: AppPages.routes,
     );
+  }
+  );
   }
 }

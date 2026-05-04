@@ -20,12 +20,13 @@ class MeTabsView extends GetView<MeController> {
 
   @override
   Widget build(BuildContext context) {
-    final tabs = isLoggedIn ? controller.tabs : ['Saved', 'History'];
-
     return Column(
       children: [
-        // Tabs
-        Obx(() => _buildTabBar(context, tabs)),
+
+        Obx(() {
+          final currentTabs = isLoggedIn ? controller.tabs : ['Saved', 'History'];
+          return _buildTabBar(context, currentTabs);
+        }),
 
         Obx(() => isLoggedIn
             ? _buildLoggedInTabContent(context)

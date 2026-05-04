@@ -36,7 +36,7 @@ class SocialInteractionController extends GetxController {
   final commentList = <CommentModel>[].obs;
   final savedNewsItems = <NewsModel>[].obs;
   final userPosts = <NewsModel>[].obs;
-  final likedNewsItems = <NewsModel>[].obs;
+  final likedNewsMap = <String, NewsModel>{}.obs;
   final commentedNewsItems = <NewsModel>[].obs;
   var likedComments = <String>[].obs;
   var dislikedComments = <String>[].obs;
@@ -60,18 +60,18 @@ class SocialInteractionController extends GetxController {
   void toggleLike(NewsModel news, {String type = 'news'}) {
     if (!AuthHelper.checkLogin()) return;
     final key = _getEffectiveKey(news.id, news.author, type);
+    final mapKey = '${type}_${news.id}';
+
     if (likedIds.contains(key)) {
       likedIds.remove(key);
-      likedNewsItems.removeWhere((n) => n.id == news.id);
+      likedNewsMap.remove(mapKey);
     } else {
       likedIds.add(key);
       dislikedIds.remove(key);
-      if (!likedNewsItems.any((n) => n.id == news.id)) {
-        likedNewsItems.add(news);
-      }
+      likedNewsMap[mapKey] = news;
     }
     likedIds.refresh();
-    likedNewsItems.refresh();
+    likedNewsMap.refresh();
   }
 
 
@@ -450,6 +450,11 @@ class SocialInteractionController extends GetxController {
   }
 
   void addComment(CommentModel comment) {
+    commentList.add(comment);
+    commentList.refresh();
+  }
+
+  void addNewsComment(CommentModel comment) {
     commentList.add(comment);
     commentList.refresh();
   }

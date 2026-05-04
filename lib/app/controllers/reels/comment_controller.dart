@@ -81,7 +81,12 @@ class CommentController extends GetxController {
     );
 
     commentsList.insert(0, newComment);
-    socialCtrl.addComment(newComment);
+
+    if (currentSource == CommentSource.reel) {
+      socialCtrl.addComment(newComment);
+    } else {
+      socialCtrl.addNewsComment(newComment);
+    }
 
     if ((currentSource == CommentSource.news || currentSource == CommentSource.social) && currentNews != null) {      if (!socialCtrl.commentedNewsItems.any((n) => n.id == currentNews!.id)) {
         socialCtrl.commentedNewsItems.add(currentNews!);

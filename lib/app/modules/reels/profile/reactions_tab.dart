@@ -58,7 +58,7 @@ class ReactionsTab extends StatelessWidget {
       // News Filter Logic
       List reactedNews = [];
       if (isFullActivity || isMyProfile) {
-        final allRelatedNews = [...socialCtrl.likedNewsItems, ...socialCtrl.commentedNewsItems];
+        final allRelatedNews = [ ...socialCtrl.likedNewsMap.values, ...socialCtrl.commentedNewsItems];
         final uniqueNewsIds = <int>{};
         final uniqueNewsList = <dynamic>[];
 
